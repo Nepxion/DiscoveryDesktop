@@ -5,6 +5,10 @@ import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
 import 'normalize.css'
+import 'element-ui/lib/theme-chalk/index.css';
+import '@/assets/iconfont/iconfont.css'
+// global css
+import '@/styles/index.scss'
 
 Vue.use(ElementUI)
 
