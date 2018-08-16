@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "d3": "^5.5.0",
     "element-ui": "^2.4.5",
+    "loadsh": "^1.0.1",
     "mockjs": "^1.0.1-beta3",
     "normalize.css": "^8.0.0",
     "vue": "^2.5.2",
