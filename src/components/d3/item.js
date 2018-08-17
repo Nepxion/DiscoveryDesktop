@@ -1,5 +1,4 @@
 
-import { type, bgColor, icon, name } from './enum'
 import * as utils from '@/utils'
 import * as d3 from 'd3'
 
@@ -11,7 +10,6 @@ class Item {
     this.y = params.y
     this.name = params.name
     this.title = params.title
-    this.type = type[params.type]
 
     // 记录input/output元素的id和连线对象
     this.inputIds = params.inputIds || new Set()
@@ -453,8 +451,8 @@ class Item {
    * @private
    */
   _onGroupDragstart() {
-    this._dragDeltaX = d3.event.x - this.x
-    this._dragDeltaY = d3.event.y - this.y
+    this._dragDeltaX = d3.event.x - this.x;
+    this._dragDeltaY = d3.event.y - this.y;
   }
 
   /**
@@ -462,8 +460,8 @@ class Item {
    * @private
    */
   _onGroupDrag() {
-    this.x = d3.event.x - this._dragDeltaX
-    this.y = d3.event.y - this._dragDeltaY
+    this.x = d3.event.x - this._dragDeltaX;
+    this.y = d3.event.y - this._dragDeltaY;
     this._group.raise().attr('transform', `translate(${this.x}, ${this.y})`)
     this.onDrag(this)
   }

@@ -1,6 +1,6 @@
 
 import Item from './item'
-import Line from './line'
+import Line from './trace/line'
 import * as d3 from 'd3'
 import _ from 'loadsh'
 

@@ -1,5 +1,4 @@
 
-import { portDelta } from './enum'
 import * as utils from '@/utils'
 import * as d3 from 'd3'
 
@@ -93,8 +92,8 @@ class Line {
    */
   _getPortPosition(type, item) {
     let delta = {
-      x: type === 'input' ? portDelta.INPUT_X : item.getItemWidth(),
-      y: portDelta.Y
+      x: type === 'input' ? 0 : item.getItemWidth(),
+      y: 15
     }
     return {
       x: item.x + delta.x,
