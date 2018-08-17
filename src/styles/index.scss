@@ -1,5 +1,7 @@
 html,body,#app,.wrapper {
+  width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 
 .el-container {
@@ -52,8 +54,6 @@ html,body,#app,.wrapper {
 
   /deep/ .item_label {
     font-size: 13px;
-    fill: #fff;
-    stroke-width: 0;
     user-select: none;
   }
 

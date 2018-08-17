@@ -5,23 +5,53 @@
 <script>
   import * as d3 from "d3";
   var data = [
-    {"name": "ArrayInterpolator"},
-    {"name": "ColorInterpolator",
-      "children": [
-        {"name": "ColorInterpolator"},
-        {"name": "CommunityStructure"},
-        {"name": "HierarchicalCluster"},
-        {"name": "MergeEdge"}
-      ]},
-    {"name": "DateInterpolator"},
-    {"name": "Interpolator"},
-    {"name": "MatrixInterpolator"},
-    {"name": "NumberInterpolator"},
-    {"name": "ObjectInterpolator"},
-    {"name": "PointInterpolator"},
-    {"name": "RectangleInterpolator"},
-    {"name": "RectangleInterpolator"}
-  ];
+    {
+      "name": "demo1", "description": "Atlas of Global Agriculture"
+    },
+    {
+      "name": "demo2", "description": "Atlas of Global Agriculture"
+    },
+    {
+      "name": "demo3", "description": "Atlas of Global Agriculture"
+    },
+      {
+        "name": "demo4", "description": "Virtual Lab of Global Agriculture",
+        "children": [
+          {
+            "name": "demo41",
+            "address": "http://d3js.org",
+            "note": "Prototype Infographics on Excess Fertilizer Nutrients"
+          },
+          {
+            "name": "demo42",
+            "address": "http://d3js.org",
+            "note": "The gap between attainable yields and actual yields, with modeled yields assuming the percentage of gap closed."
+          },
+          {"name": "Fertilizer", "address": "http://sunsp.net"}
+        ]
+      },
+      {
+        "name": "demo5", "description": "Profiles of Country",
+        "children": [
+          {"name": "demo51", "address": "http://d3js.org"},
+          {"name": "demo52", "address": "http://d3js.org"},
+          {"name": "demo53", "address": "http://d3js.org"},
+          {"name": "demo54", "address": "http://uis.edu/ens"},
+          {"name": "demo55", "address": "http://uis.edu/ens"},
+          {"name": "demo56", "address": "http://uis.edu/ens"},
+          {"name": "demo57", "address": "http://uis.edu/ens"}
+        ]
+      },
+      {
+        "name": "demo6", "description": "Crop Data in 5 minutes grid",
+        "children": [
+          {"name": "demo61", "address": "http://www.earthstat.org/"},
+          {"name": "demo62", "address": "http://www.earthstat.org/"},
+          {"name": "demo6", "address": "http://www.earthstat.org/"},
+          {"name": "demo6", "address": "http://www.earthstat.org/"}
+        ]
+      }
+    ];
 
   export default {
     name: "instance",
