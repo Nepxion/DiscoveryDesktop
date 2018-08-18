@@ -93,7 +93,7 @@ class Line {
   _getPortPosition(type, item) {
     let delta = {
       x: type === 'input' ? 0 : item.getItemWidth(),
-      y: 15
+      y: 20
     }
     return {
       x: item.x + delta.x,

@@ -1,8 +1,8 @@
 
 let icon = {
-  esc: require('./images/report.png'),
-  api: require('./images/online.png'),
-  gateway: require('./images/condition.png'),
+  esc: 'https://g.alicdn.com/aliyun/ros/1.5.4/styles/icons/ecs.svg',
+  api: 'https://g.alicdn.com/aliyun/ros/1.5.4/styles/icons/ecs.svg',
+  gateway: 'https://g.alicdn.com/aliyun/ros/1.5.4/styles/icons/ecs.svg',
 }
 
 let btnIcon = {

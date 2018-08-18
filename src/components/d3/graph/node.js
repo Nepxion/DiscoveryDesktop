@@ -83,7 +83,7 @@ class Node {
       .attr('text-anchor', 'start');
 
     group.append('image')
-      .attr('href', 'https://gw.alipayobjects.com/zos/rmsportal/MXXetJAxlqrbisIuZxDO.svg')
+      .attr('href', require('../images/normal.svg'))
       .attr('x', this.width - 20)
       .attr('y', 12)
       .attr('width', 16)

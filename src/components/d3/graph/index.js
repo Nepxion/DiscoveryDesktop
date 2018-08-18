@@ -16,8 +16,6 @@ class Graph {
     this.svgHeight = this.dom.clientHeight - this._padding;
     this.svg.attr("width", this.svgWidth).attr("height", this.svgHeight);
 
-    console.log(this.svgWidth)
-
     this.data = [];
     this.list = {};
   }

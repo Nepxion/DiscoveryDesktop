@@ -22,29 +22,43 @@
 </template>
 
 <script>
-  import graph from './graph.vue'
-  import bubble from './bubble.vue'
-  import instance from './instance.vue'
 
   import Graph from "@/components/d3/graph"
+  import Trace from "@/components/d3/trace"
 
   export default {
-    components: {graph, bubble, instance},
     name: "home",
     data() {
       return {}
     },
     mounted() {
-      let svg = new Graph("#graph");
-      svg.addNode({title: "服务a"});
-      svg.addNode({title: "服务b"});
-      svg.addNode({title: "服务c"});
-      svg.addNode({title: "服务d"});
-      svg.addNode({title: "服务d"});
+      //this.initGraph();
+      this.initTrace();
+    },
+    methods: {
+      initGraph: function () {
+        let svg = new Graph("#graph");
+        svg.addNode({title: "服务a"});
+        svg.addNode({title: "服务b"});
+        svg.addNode({title: "服务c"});
+        svg.addNode({title: "服务d"});
+        svg.addNode({title: "服务d"});
 
-      svg.addGroup({title: "服务群组a", child: [{title: "服务a1"}, {title: "服务a2"}]});
-      svg.addGroup({title: "服务群组b", child: [{title: "服务b1"}, {title: "服务b2"}]});
-      svg.addGroup({title: "服务群组c", child: [{title: "服务c1"}, {title: "服务c2"}]});
+        svg.addGroup({title: "服务群组a", child: [{title: "服务a1"}, {title: "服务a2"}]});
+        svg.addGroup({title: "服务群组b", child: [{title: "服务b1"}, {title: "服务b2"}]});
+        svg.addGroup({title: "服务群组c", child: [{title: "服务c1"}, {title: "服务c2"}]});
+      },
+      initTrace: function () {
+        let svg = new Trace("#graph");
+        svg.loadData([
+          {id: "1", title: "服务a", outputIds: ["2"]},
+          {id: "2", title: "服务b", inputIds: ["1"], outputIds: ["3"]},
+          {id: "3", title: "服务c", inputIds: ["2"], outputIds: ["4","5"]},
+          {id: "4", title: "服务d1", inputIds: ["3"]},
+          {id: "5", title: "服务d2", inputIds: ["3"]}
+          ]);
+
+      }
     }
   }
 </script>
