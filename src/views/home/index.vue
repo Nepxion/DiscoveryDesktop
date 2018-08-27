@@ -25,6 +25,7 @@
 
   import Graph from "@/components/d3/graph"
   import Trace from "@/components/d3/trace"
+  import Tree from "@/components/d3/tree"
 
   export default {
     name: "home",
@@ -50,13 +51,26 @@
       },
       initTrace: function () {
         let svg = new Trace("#graph");
-        svg.loadData([
-          {id: "1", title: "服务a", outputIds: ["2"]},
-          {id: "2", title: "服务b", inputIds: ["1"], outputIds: ["3"]},
-          {id: "3", title: "服务c", inputIds: ["2"], outputIds: ["4","5"]},
-          {id: "4", title: "服务d1", inputIds: ["3"]},
-          {id: "5", title: "服务d2", inputIds: ["3"]}
-          ]);
+        const data = {
+          "title": "root",
+          "children": [
+            {
+              "title": "parent A",
+              "children": [
+                { "title": "child A1" },
+                { "title": "child A2" },
+                { "title": "child A3" }
+              ]
+            }, {
+              "title": "parent B",
+              "children": [
+                { "title": "child B1" },
+                { "title": "child B2" }
+              ]
+            }
+          ]
+        };
+        svg.loadData(data);
 
       }
     }
@@ -72,4 +86,5 @@
   .toolbar {
     float: right;
   }
+
 </style>

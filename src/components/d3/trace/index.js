@@ -3,7 +3,6 @@ import * as d3 from 'd3';
 import Span from './span';
 import * as utils from '@/utils';
 import Line from "./line";
-import _ from 'loadsh';
 
 class Trace {
   constructor(selector) {
@@ -17,25 +16,29 @@ class Trace {
     this.svgHeight = this.dom.clientHeight - this._padding;
     this.svg.attr("width", this.svgWidth).attr("height", this.svgHeight);
 
+    this.treemap = d3.tree()
+      .size([this.svgWidth - this._padding, this.svgHeight - this._padding]);
+
     this.data = [];
     this.list = {};
     this.lineList = {}
   }
 
   loadData(data) {
-    this.data = data;
-    data.forEach((span, i) => {
+    this.data = this._addKey(data);
+
+    var nodes = d3.hierarchy(this.data);
+    nodes = this.treemap(nodes);
+    var lines= nodes.links();
+    var descendants=nodes.descendants();
+    //console.log(nodes,descendants,lines);
+
+    descendants.forEach((span, i) => {
       this.addSpan(span);
     });
-    _.forEach(this.list, fromItem => {
-      fromItem.outputIds.forEach(outputId => {
-        let targetItem = this.list[outputId]
-        let line = this._addLine(fromItem, 'output', targetItem, 'input')
-        line.updatePath();
-        line.fromItem['outputPathIds'].add(line.id);
-        line.targetItem['inputPathIds'].add(line.id);
-        this.lineList[line.id] = line;
-      })
+
+    lines.forEach((line, i) => {
+      this._addLine(line.source,line.target);
     });
   }
 
@@ -44,41 +47,50 @@ class Trace {
       svg: this.svg,
       svgWidth: this.svgWidth,
       svgHeight: this.svgHeight,
-      id: params.id || utils.makeId(),
-      x: params.x || this._x,
-      y: params.y || this._y,
-      title: params.title,
-      inputIds: params.inputIds,
-      outputIds: params.outputIds,
+      x: params.x,
+      y: params.y,
+      id: params.data.id || utils.makeId(),
+      title: params.data.title,
       onDrag: this._onItemDrag.bind(this),
       onClick: this._onItemClick.bind(this),
+
+      depth: params.depth,
     });
-    let l=item.width + this._padding;
-    this._x = this._x + l;
-    if (this._x > this.svgWidth-l) {
-      this._x = 0;
-      this._y = this._y + item.height + this._padding;
-    }
 
     this.list[item.id] = item;
   }
 
+  _addKey(obj) {
+    if (typeof obj === 'object') {
+      obj.id = obj.id || utils.makeId();
+      if (obj.children) {
+        obj.children = obj.children.map(item => {
+          return this._addKey(item);
+        })
+      }
+      return obj;
+    }
+  }
   /**
    * 创建连线
-   * @param fromItem
-   * @param portType
+   * @param sourceItem
+   * @param targetItem
    * @returns {Line}
    * @private
    */
-  _addLine(fromItem, fromPortType, targetItem, targetPortType) {
-    return new Line({
+  _addLine(sourceItem, targetItem) {
+    const sourceId = sourceItem.data.id;
+    const targetId = targetItem.data.id;
+    let line = new Line({
       container: this.svg,
-      fromItem: fromItem,
-      fromPortType: fromPortType,
-      targetItem: targetItem,
-      targetPortType: targetPortType,
+      sourceItem: this.list[sourceId],
+      targetItem: this.list[targetId],
       onClick: this._onLineClick.bind(this)
     })
+    this.list[sourceId]['outputPathIds'].add(line.id);
+    this.list[targetId]['inputPathIds'].add(line.id);
+
+    this.lineList[line.id] = line;
   }
 
   /**
