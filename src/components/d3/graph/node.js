@@ -1,24 +1,35 @@
 
-import * as d3 from 'd3';
+import * as d3 from '../d3';
 import * as utils from '@/utils';
 
 class Node {
   constructor(params) {
+    this.params = params.params;
     this.svg = params.svg;
+    this.tip = params.tip;
+
+    console.log(this.params.version)
+
     this.svgWidth = params.svgWidth;
     this.svgHeight = params.svgHeight;
     this.id = params.id || utils.makeId();
     this.x = params.x;
     this.y = params.y;
     this.title = params.title;
+    this.drag = params.drag;
 
     this.width = 150;
     this.height = 40;
+
+    this._imgWidth = 30;
 
     // 私有属性
     this._group = null;
     this._dragDeltaX = 0;
     this._dragDeltaY = 0;
+
+    this.width = utils.getTextWidth(this.title)+this._imgWidth+40;
+    //console.log(itemWidth);
 
     this._createElement();
     this._bindEvent();
@@ -82,12 +93,27 @@ class Node {
       .attr('dy', '0.35em')
       .attr('text-anchor', 'start');
 
-    group.append('image')
-      .attr('href', require('../images/normal.svg'))
-      .attr('x', this.width - 20)
-      .attr('y', 12)
-      .attr('width', 16)
-      .attr('height', 16);
+    let circle = group.append('g').attr('transform',`translate(${this.width - 20}, 20)`);
+    circle.append("circle")
+      .attr("r", 18)
+      .attr('stroke-width', 2)
+      .attr('stroke', '#169ce4')
+      .attr('fill', '#fff');
+
+    circle.append('text')
+      .text(this.params.version)
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('dy', '0.35em')
+      .attr('style', 'font-size: 10px;')
+      .attr('text-anchor', 'middle');
+
+    // group.append('image')
+    //   .attr('href', require('../images/normal.svg'))
+    //   .attr('x', this.width - 20)
+    //   .attr('y', 12)
+    //   .attr('width', 16)
+    //   .attr('height', 16);
 
     this._group = group;
   }
@@ -97,10 +123,20 @@ class Node {
    * @private
    */
   _bindEvent() {
-    let drag = d3.drag()
-      .on("start", this._onGroupDragstart.bind(this))
-      .on("drag", this._onGroupDrag.bind(this));
-    this._group.call(drag);
+    if(!this.drag){
+      let drag = d3.drag()
+        .on("start", this._onGroupDragstart.bind(this))
+        .on("drag", this._onGroupDrag.bind(this));
+      this._group.call(drag);
+    }
+
+    // this._group.on('mouseover', this.tip.html(function(d) { return 'ok'; }).show())
+    //   .on('mouseout', this.tip.hide())
+
+    this._group.on('mouseover', this.tip
+      .html('host:'+ this.params.host+'<br />'+'port:'+this.params.port)
+      .show)
+      .on('mouseout',  this.tip.hide)
   }
 
   /**

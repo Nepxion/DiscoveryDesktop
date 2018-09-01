@@ -27,4 +27,44 @@ let getTextWidth = function(text) {
   return width
 }
 
-export { makeId, getTextWidth }
+const getGroups = function(obj) {
+  const groups = [];
+  Object.keys(obj).forEach(key => {
+    const childs=obj[key];
+    childs&&childs.forEach(v => {
+      const metadate=v.metaData;
+      const groupKey = metadate["spring.application.group.key"];
+      if(groupKey){
+        const group = metadate[groupKey];
+        if (groups.indexOf(group) == -1) {
+          groups.push(group);
+        }
+      }
+    });
+  });
+  return groups;
+}
+
+const filterGroups = function(obj,group) {
+  let data = {};
+  if (group && group !== '') {
+    Object.keys(obj).forEach(key => {
+      const childs = obj[key].filter(child => {
+        const metadate = child.metaData;
+        const groupKey = metadate["spring.application.group.key"];
+        if (groupKey) {
+          const groupVal = metadate[groupKey];
+          return groupVal === group;
+        }
+      });
+      if (childs.length > 0) {
+        data[key] = childs;
+      }
+    });
+    return data;
+  } else {
+    return obj;
+  }
+}
+
+export { makeId, getTextWidth, getGroups, filterGroups }

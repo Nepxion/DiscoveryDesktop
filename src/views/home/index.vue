@@ -3,13 +3,15 @@
     <el-container>
       <el-header height="42px">
         <el-row>
-          <el-button type="text"><i class="el-iconfont-ecs"></i> 显示服务拓扑图</el-button>
+          <el-button type="text" @click="onDialogVisible(true)"><i class="el-iconfont-ecs"></i> 显示服务拓扑图</el-button>
           <span class="separator"></span>
           <el-button type="text" disabled><i class="el-iconfont-fabu"></i> 执行灰度发布</el-button>
           <span class="separator"></span>
           <el-button type="text" disabled><i class="el-iconfont-luyou"></i> 执行灰度路由</el-button>
           <span class="toolbar">
-          <el-button type="text" title="全屏"><i class="el-iconfont-fullscreen"></i></el-button>
+            <el-tooltip content="全屏">
+              <screenfull />
+            </el-tooltip>
           </span>
         </el-row>
       </el-header>
@@ -17,38 +19,50 @@
 
       </el-main>
     </el-container>
+
+    <instance-group-dialog
+      title="服务集群选取"
+      :visible="dialogVisible"
+      :clusters="instanceMap"
+      @dialogClose="onDialogVisible"
+    >
+    </instance-group-dialog>
   </div>
   <!-- 创建图容器 -->
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
 
-  import Graph from "@/components/d3/graph"
-  import Trace from "@/components/d3/trace"
-  import Tree from "@/components/d3/tree"
+  import Graph from "@/components/D3/Graph"
+  import Trace from "@/components/D3/Trace"
+
+  import Screenfull from '@/components/Screenfull'
+  import InstanceGroupDialog from "@/components/InstanceGroupDialog"
+
+  import { filterGroups } from '@/utils'
 
   export default {
     name: "home",
+    components: {
+      Screenfull,
+      InstanceGroupDialog
+    },
     data() {
-      return {}
+      return {
+        dialogVisible: false
+      }
+    },
+    computed: {
+      ...mapGetters([
+        'instanceMap'
+      ])
     },
     mounted() {
-      //this.initGraph();
-      this.initTrace();
+
+      //this.initTrace();
     },
     methods: {
-      initGraph: function () {
-        let svg = new Graph("#graph");
-        svg.addNode({title: "服务a"});
-        svg.addNode({title: "服务b"});
-        svg.addNode({title: "服务c"});
-        svg.addNode({title: "服务d"});
-        svg.addNode({title: "服务d"});
-
-        svg.addGroup({title: "服务群组a", child: [{title: "服务a1"}, {title: "服务a2"}]});
-        svg.addGroup({title: "服务群组b", child: [{title: "服务b1"}, {title: "服务b2"}]});
-        svg.addGroup({title: "服务群组c", child: [{title: "服务c1"}, {title: "服务c2"}]});
-      },
       initTrace: function () {
         let svg = new Trace("#graph");
         const data = {
@@ -72,6 +86,19 @@
         };
         svg.loadData(data);
 
+      },
+
+      onDialogVisible: function (visible, isok, group) {
+        this.dialogVisible = visible;
+        if (visible) {
+          this.$store.dispatch('GetInstanceMap');
+        } else {
+          if (isok) {
+            const data = filterGroups(this.instanceMap, group);
+            let svg = new Graph("#graph");
+            svg.loadData(data);
+          }
+        }
       }
     }
   }
