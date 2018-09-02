@@ -1,4 +1,4 @@
-# discoveryui
+# Nepxion Discovery UI
 
 > Discovert for UI
 
