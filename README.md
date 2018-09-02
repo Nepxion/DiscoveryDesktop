@@ -1,5 +1,7 @@
 # Nepxion Discovery UI
 
+> UI for Discovery
+
 ## Build Setup
 
 ``` bash
