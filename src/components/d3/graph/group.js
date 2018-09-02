@@ -2,11 +2,16 @@
 import * as d3 from 'd3';
 import * as utils from '@/utils';
 
+import Node from './node';
+
 import { btnIcon } from '../enum';
 
 class Group {
   constructor(params) {
+    this.params = params;
     this.svg = params.svg;
+    this.tip = params.tip;
+
     this.svgWidth = params.svgWidth;
     this.svgHeight = params.svgHeight;
     this.id = params.id || utils.makeId();
@@ -29,6 +34,9 @@ class Group {
     this._width = 150;
     this._height = 40;
     this._padding = 10;
+    this._imgWidth = 30;
+
+    this.width = utils.getTextWidth(this.title)+this._imgWidth+80;
 
     this._createElement();
     this._bindEvent();
@@ -96,83 +104,31 @@ class Group {
       .attr('height', 16);
 
     if(this.open) {
-      let y=this._height + (this._padding / 2);
+      let y = this._height + (this._padding / 2);
       let groupNode = group.append('g')
         .attr('transform', `translate(` + this._padding + `, ` + y + `)`)
-      this.child.forEach((node, i) => this._createNode({
-        svg: groupNode,
-        title: node.title,
-        x: this._padding,
-        y: i * (this._height + this._padding),
-      }));
+      this.child.forEach((node, i) => {
+        const nd = new Node({
+          svg: groupNode,
+          tip: this.tip,
+          svgWidth: this._width,
+          svgHeight: this._height,
+          id: node.id || utils.makeId(),
+          x: this._padding,
+          y: i * (this._height + this._padding),
+          title: node.serviceId,
+          drag: true,
+          params: node,
+        });
+        if (nd.width > this.width - 80) {
+          //this.width = nd.width;
+          //updateWidth
+
+        }
+      });
     }
 
     this._group = group;
-  }
-
-  _createNode(params) {
-    let group = params.svg.append('g')
-      .attr('transform', `translate(${params.x}, ${params.y})`);
-
-    group.append('rect')
-      .attr('width', this._width)
-      .attr('height', this._height)
-      .attr('rx', 5)
-      .attr('rx', 5)
-      .attr('fill', '#fff')
-      .attr('stroke', '#169ce4')
-      .attr('stroke-width', '1')
-      .attr('class', 'item item-rect')
-
-    let iconGroup = group.append('g')
-    iconGroup.append('rect')
-      .attr('x', 0)
-      .attr('y', 0)
-      .attr('rx', 5)
-      .attr('rx', 5)
-      .attr('width', 6)
-      .attr('height', this._height)
-      .attr('fill', '#169ce4')
-      .attr('stroke', '#169ce4')
-      .attr('stroke-width', '1')
-
-    iconGroup.append('rect')
-      .attr('x', 4)
-      .attr('y', 1)
-      .attr('width', 30)
-      .attr('height', 38)
-      .attr('fill', '#fff')
-
-    iconGroup.append('image')
-      .attr('href', 'https://g.alicdn.com/aliyun/ros/1.5.4/styles/icons/ecs.svg')
-      .attr('x', 8)
-      .attr('y', 8)
-      .attr('width', 22)
-      .attr('height', 22)
-
-    let iconLine = d3.path()
-    iconLine.moveTo(34, 0)
-    iconLine.lineTo(34, this._height)
-    iconGroup.append('path')
-      .attr('stroke-width', 0.5)
-      .attr('stroke', '#000')
-      .attr('stroke-opacity', 0.1)
-      .attr('d', iconLine)
-
-    group.append('text')
-      .text(params.title)
-      .attr('x', 43)
-      .attr('y', 20)
-      .attr('dy', '0.35em')
-      .attr('class', 'item_label')
-      .attr('text-anchor', 'start')
-
-    group.append('image')
-      .attr('href', require('../images/normal.svg'))
-      .attr('x', this._width - 20)
-      .attr('y', 12)
-      .attr('width', 16)
-      .attr('height', 16)
   }
 
   /**

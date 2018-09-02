@@ -12,12 +12,15 @@
   "dependencies": {
     "axios": "^0.18.0",
     "d3": "^5.5.0",
+    "d3-tip": "^0.9.1",
     "element-ui": "^2.4.5",
-    "loadsh": "^1.0.1",
     "mockjs": "^1.0.1-beta3",
     "normalize.css": "^8.0.0",
+    "nprogress": "0.2.0",
+    "screenfull": "3.3.2",
     "vue": "^2.5.2",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vuex": "3.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
@@ -40,6 +43,7 @@
     "eslint-config-standard": "^10.2.1",
     "eslint-friendly-formatter": "^3.0.0",
     "eslint-loader": "^1.7.1",
+    "eslint-plugin-html": "^4.0.5",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-node": "^5.2.0",
     "eslint-plugin-promise": "^3.4.0",

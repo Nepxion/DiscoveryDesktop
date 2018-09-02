@@ -16,17 +16,17 @@ class Span {
     this.height = 40;
 
     // 记录input/output元素的id和连线对象
-    this.inputIds = params.inputIds || new Set();
-    this.outputIds = params.outputIds || new Set();
     this.inputPathIds = new Set();
     this.outputPathIds = new Set();
 
     // 私有属性
-    this._group = null;
     this._dragDeltaX = 0;
     this._dragDeltaY = 0;
-    this._input = null;
-    this._output = null;
+
+    this.depth=params.depth||0;
+    this.parent=params.parent||null;
+    this.children=params.children||null;
+
 
     // 回调事件
     this.onDrag = params.onDrag;
@@ -36,24 +36,12 @@ class Span {
     this._bindEvent();
   }
 
-  /**
-   * 获取input具柄
-   * @returns {null|*}
-   */
-  getInputPort() {
-    return this._input
-  }
-
-  /**
-   * 获取output具柄
-   * @returns {null|*}
-   */
-  getOutputPort() {
-    return this._output
-  }
-
   getItemWidth() {
-    return parseInt(this._group.select('rect').attr('width'))
+    return this.width;
+  }
+
+  getItemHeight() {
+    return this.height;
   }
   /**
    * 创建svg元素
@@ -68,6 +56,7 @@ class Span {
       .attr('rx', 5)
       .attr('rx', 5)
       .attr('fill', '#fff')
+      .attr('style', 'cursor: move')
       .attr('stroke', '#169ce4')
       .attr('stroke-width', '1');
 
@@ -88,7 +77,8 @@ class Span {
       .attr('y', 1)
       .attr('width', 30)
       .attr('height', this.height - 2)
-      .attr('fill', '#fff');
+      .attr('fill', '#fff')
+      .attr('stroke-width', '0');
 
     iconGroup.append('image')
       .attr('href', 'https://g.alicdn.com/aliyun/ros/1.5.4/styles/icons/ecs.svg')
@@ -120,25 +110,6 @@ class Span {
       .attr('width', 16)
       .attr('height', 16);
 
-    if(this.inputIds.length>0){
-      let input = group.append('g').attr('transform', 'translate(-5, 14)');
-      this._input = input;
-      input.append('rect')
-        .attr('rx', 3)
-        .attr('ry', 3)
-        .attr('width', 10)
-        .attr('height', 10);
-    }
-    if(this.outputIds.length>0) {
-      let output = group.append('g').attr('transform', 'translate(145, 14)');
-      this._output = output;
-      output.append('rect')
-        .attr('rx', 3)
-        .attr('ry', 3)
-        .attr('width', 10)
-        .attr('height', 10);
-    }
-
     this._group = group;
   }
 
@@ -148,16 +119,22 @@ class Span {
    */
   _bindEvent() {
     let drag = d3.drag()
-      .on("start", this._onGroupDragstart.bind(this))
+      .on("start", this._onGroupDragStart.bind(this))
       .on("drag", this._onGroupDrag.bind(this));
     this._group.call(drag);
+
+    this._group.on("mouseover", function(d) {
+      d3.select(this).select("rect").style("stroke", "#3393db");
+    }).on("mouseout", function(d) {
+      d3.select(this).select("rect").style("stroke", "#169ce4");
+    });
   }
 
   /**
    * 开始拖拽
    * @private
    */
-  _onGroupDragstart() {
+  _onGroupDragStart() {
     this._dragDeltaX = d3.event.x - this.x;
     this._dragDeltaY = d3.event.y - this.y;
   }

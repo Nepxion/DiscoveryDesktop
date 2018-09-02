@@ -6,9 +6,7 @@ class Line {
   constructor(params) {
     this.container = params.container
     this.id = utils.makeId()
-    this.fromPortType = params.fromPortType
-    this.fromItem = params.fromItem
-    this.targetPortType = params.targetPortType
+    this.sourceItem = params.sourceItem
     this.targetItem = params.targetItem
     this.path = null
 
@@ -24,30 +22,16 @@ class Line {
    * @param _targetPosition 目标坐标，如果targetPosition未传直接使用targetPort的坐标
    */
   updatePath(_targetPosition) {
-    let fromPortPosition = this._getPortPosition(this.fromPortType, this.fromItem)
-    let targetPosition = _targetPosition || this._getPortPosition(this.targetPortType, this.targetItem)
+    let fromPortPosition = this._getPortPosition(this.sourceItem)
+    let targetPosition = _targetPosition || this._getPortPosition(this.targetItem)
+    let bezierY = this.targetItem.getItemHeight()
     let path = d3.path()
-    let deltaX = fromPortPosition.x - targetPosition.x
-    let bezierX = deltaX * 0.5
-    if((this.fromPortType === 'input' && deltaX > 0) || (this.fromPortType === 'output' && deltaX < 0)) {
-      bezierX = - bezierX
-    }
     path.moveTo(fromPortPosition.x, fromPortPosition.y)
-    path.bezierCurveTo(fromPortPosition.x + bezierX, fromPortPosition.y, targetPosition.x - bezierX, targetPosition.y, targetPosition.x, targetPosition.y)
-    this.path.attr("d", path)
-  }
 
-  /**
-   * 删除连线
-   */
-  remove() {
-    this.path.remove()
-    if(this.fromItem && this.targetItem) {
-      this.fromItem[this.fromPortType + 'Ids'].delete(this.targetItem.id)
-      this.fromItem[this.fromPortType + 'PathIds'].delete(this.id)
-      this.targetItem[this.targetPortType + 'Ids'].delete(this.fromItem.id)
-      this.targetItem[this.targetPortType + 'PathIds'].delete(this.id)
-    }
+
+    path.bezierCurveTo(fromPortPosition.x, fromPortPosition.y, targetPosition.x,
+      targetPosition.y - bezierY, targetPosition.x, targetPosition.y - bezierY)
+    this.path.attr("d", path)
   }
 
   /**
@@ -62,7 +46,13 @@ class Line {
    * @private
    */
   _createElement() {
-    this.path = this.container.append("path").attr('class', 'line').lower()
+    this.path = this.container
+      .append("path")
+      .attr('fill', 'none')
+      .attr('stroke', '#ccc')
+      .attr('stroke-width', '3')
+      .lower()
+    this.updatePath()
   }
 
   /**
@@ -70,7 +60,13 @@ class Line {
    * @private
    */
   _bindEvent() {
-    this.path.on('click', this._onClick.bind(this))
+    this.path.on('click', this._onClick.bind(this));
+
+    this.path.on("mouseover", function(d) {
+      d3.select(this).style("stroke", "#999");
+    }).on("mouseout", function(d) {
+      d3.select(this).style("stroke", "#ccc");
+    });
   }
 
   /**
@@ -90,10 +86,10 @@ class Line {
    * @returns {{x: *, y: *}}
    * @private
    */
-  _getPortPosition(type, item) {
+  _getPortPosition(item) {
     let delta = {
-      x: type === 'input' ? 0 : item.getItemWidth(),
-      y: 20
+      x: item.getItemWidth()/2,
+      y: item.getItemHeight()
     }
     return {
       x: item.x + delta.x,
