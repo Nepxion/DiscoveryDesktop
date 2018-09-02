@@ -1,7 +1,5 @@
 # Nepxion Discovery UI
 
-> Discovert for UI
-
 ## Build Setup
 
 ``` bash
