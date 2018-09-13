@@ -38,6 +38,9 @@ class Group {
 
     this.width = utils.getTextWidth(this.title)+this._imgWidth+80;
 
+    // 回调事件
+    this._onNodeClick = params.onNodeClick;
+
     this._createElement();
     this._bindEvent();
   }
@@ -119,6 +122,7 @@ class Group {
           title: node.serviceId,
           drag: true,
           params: node,
+          onClick: this._onNodeClick.bind(this),
         });
         if (nd.width > this.width - 80) {
           //this.width = nd.width;

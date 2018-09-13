@@ -10,7 +10,10 @@ class Graph {
     this._x = 0;
     this._y = 0;
 
-    this.dom = document.querySelector(selector)
+    this.dom = document.querySelector(selector) || document.querySelector('body');
+    while (this.dom.firstChild) {
+      this.dom.removeChild(this.dom.firstChild);
+    }
     this.svg = d3.select(this.dom).append("svg");
     this.svgWidth = this.dom.clientWidth - this._padding;
     this.svgHeight = this.dom.clientHeight - this._padding;
@@ -21,6 +24,8 @@ class Graph {
 
     this.data = {};
     this.list = {};
+    this.selectedNode = null;
+    this.onNodeChecked = null;
   }
 
   loadData(data) {
@@ -35,7 +40,7 @@ class Graph {
     });
   }
 
-  addGroup(group,child) {
+  addGroup(group, child) {
     let item = new Group({
       svg: this.svg,
       tip: this.tip,
@@ -46,10 +51,11 @@ class Graph {
       y: child.y || this._y,
       title: group,
       child: child,
+      onNodeClick: this._onNodeClick.bind(this),
     });
-    let l=item.width + this._padding;
+    let l = item.width + this._padding;
     this._x = this._x + l;
-    if (this._x > this.svgWidth-l) {
+    if (this._x > this.svgWidth - l) {
       this._x = 0;
       this._y = this._y + item.height + this._padding;
     }
@@ -68,15 +74,29 @@ class Graph {
       y: params.y || this._y,
       title: params.serviceId,
       params: params,
+      onClick: this._onNodeClick.bind(this),
     });
-    let l=item.width + this._padding;
+    let l = item.width + this._padding;
     this._x = this._x + l;
-    if (this._x > this.svgWidth-l) {
+    if (this._x > this.svgWidth - l) {
       this._x = 0;
       this._y = this._y + item.height + this._padding;
     }
 
     this.list[item.id] = item;
+  }
+
+  /**
+   * 节点点击事件
+   * @private
+   */
+  _onNodeClick(node) {
+    if (node === this.selectedNode) return;
+    if (this.selectedNode) {
+      this.selectedNode.blur();
+    }
+    this.selectedNode = node;
+    utils.isPlugin(node.params) && this.onNodeChecked && this.onNodeChecked(node.params);//触发节点回调
   }
 }
 

@@ -1,4 +1,4 @@
 module.exports = {
   NODE_ENV: '"production"',
-  SERVICE_API: '""'
+  SERVICE_API: '"http://localhost:2222/"'
 }

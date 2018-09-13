@@ -4,7 +4,10 @@ import * as utils from '@/utils';
 
 class Span {
   constructor(params) {
+    this.params = params.params;
     this.svg = params.svg;
+    this.tip = params.tip;
+
     this.svgWidth = params.svgWidth;
     this.svgHeight = params.svgHeight;
     this.id = params.id || utils.makeId();
@@ -14,6 +17,12 @@ class Span {
 
     this.width = 150;
     this.height = 40;
+
+    this._imgWidth = 30;
+    this.width = utils.getTextWidth(this.title)+this._imgWidth+40;
+
+
+    this.x = params.x - (this.width/2);
 
     // 记录input/output元素的id和连线对象
     this.inputPathIds = new Set();
@@ -56,7 +65,6 @@ class Span {
       .attr('rx', 5)
       .attr('rx', 5)
       .attr('fill', '#fff')
-      .attr('style', 'cursor: move')
       .attr('stroke', '#169ce4')
       .attr('stroke-width', '1');
 
@@ -103,12 +111,21 @@ class Span {
       .attr('dy', '0.35em')
       .attr('text-anchor', 'start');
 
-    group.append('image')
-      .attr('href', require('../images/normal.svg'))
-      .attr('x', this.width - 20)
-      .attr('y', 12)
-      .attr('width', 16)
-      .attr('height', 16);
+
+    let circle = group.append('g').attr('transform',`translate(${this.width - 20}, 20)`);
+    circle.append("circle")
+      .attr("r", 18)
+      .attr('stroke-width', 2)
+      .attr('stroke', '#169ce4')
+      .attr('fill', '#fff');
+
+    circle.append('text')
+      .text(this.params.data.version)
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('dy', '0.35em')
+      .attr('style', 'font-size: 10px;')
+      .attr('text-anchor', 'middle');
 
     this._group = group;
   }

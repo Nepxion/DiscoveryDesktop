@@ -8,7 +8,9 @@ class Line {
     this.id = utils.makeId()
     this.sourceItem = params.sourceItem
     this.targetItem = params.targetItem
+    this.group = null
     this.path = null
+    this.title = undefined
 
     // 回调事件
     this.onClick = params.onClick
@@ -31,7 +33,18 @@ class Line {
 
     path.bezierCurveTo(fromPortPosition.x, fromPortPosition.y, targetPosition.x,
       targetPosition.y - bezierY, targetPosition.x, targetPosition.y - bezierY)
-    this.path.attr("d", path)
+    this.path.attr("d", path);
+
+    console.log(path);
+
+    if(this.title&&this.title!=='-1') {
+      // this.group.append('text')
+      //   .text('1111')
+      //   .attr('x', path._x0)
+      //   .attr('y', path._y0)
+      //   .attr('dy', '0.35em')
+      //   .attr('text-anchor', 'start');
+    }
   }
 
   /**
@@ -46,7 +59,8 @@ class Line {
    * @private
    */
   _createElement() {
-    this.path = this.container
+    this.group=this.container.append('g');
+    this.path = this.group
       .append("path")
       .attr('fill', 'none')
       .attr('stroke', '#ccc')

@@ -32,12 +32,14 @@ const getGroups = function(obj) {
   Object.keys(obj).forEach(key => {
     const childs=obj[key];
     childs&&childs.forEach(v => {
-      const metadate=v.metaData;
-      const groupKey = metadate["spring.application.group.key"];
-      if(groupKey){
-        const group = metadate[groupKey];
-        if (groups.indexOf(group) == -1) {
-          groups.push(group);
+      if(isPlugin(v)){
+        const metadate=v.metadata;
+        const groupKey = metadate["spring.application.group.key"];
+        if(groupKey){
+          const group = metadate[groupKey];
+          if (groups.indexOf(group) == -1) {
+            groups.push(group);
+          }
         }
       }
     });
@@ -50,11 +52,13 @@ const filterGroups = function(obj,group) {
   if (group && group !== '') {
     Object.keys(obj).forEach(key => {
       const childs = obj[key].filter(child => {
-        const metadate = child.metaData;
-        const groupKey = metadate["spring.application.group.key"];
-        if (groupKey) {
-          const groupVal = metadate[groupKey];
-          return groupVal === group;
+        if(isPlugin(v)) {
+          const metadate = child.metadata;
+          const groupKey = metadate["spring.application.group.key"];
+          if (groupKey) {
+            const groupVal = metadate[groupKey];
+            return groupVal === group;
+          }
         }
       });
       if (childs.length > 0) {
@@ -67,4 +71,27 @@ const filterGroups = function(obj,group) {
   }
 }
 
-export { makeId, getTextWidth, getGroups, filterGroups }
+const isPlugin = function(obj) {
+  const metadate = obj.metadata || {};
+  return Object.keys(metadate).indexOf("spring.application.discovery.plugin") > -1;
+}
+
+const getPluginService = function(obj, without) {
+  let data = [];
+  Object.keys(obj).forEach(key => {
+    if(key!==without){
+      const childs = obj[key].find(child => isPlugin(child));
+      if (childs) {
+        data.push(key);
+      }
+    }
+  });
+  return data;
+}
+
+const convRoutes = function(obj) {
+  const json = JSON.parse(JSON.stringify(obj).replace(/nexts/g, "children"));
+  return json;
+}
+
+export { makeId, getTextWidth, getGroups, filterGroups, isPlugin, getPluginService, convRoutes }

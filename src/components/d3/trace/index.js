@@ -10,11 +10,15 @@ class Trace {
     this._x = 0;
     this._y = 0;
 
-    this.dom = document.querySelector(selector)
+    this.dom = document.querySelector(selector) || document.querySelector('body');
+    while (this.dom.firstChild) {
+      this.dom.removeChild(this.dom.firstChild);
+    }
     this.svg = d3.select(this.dom).append("svg");
     this.svgWidth = this.dom.clientWidth - this._padding;
     this.svgHeight = this.dom.clientHeight - this._padding;
     this.svg.attr("width", this.svgWidth).attr("height", this.svgHeight);
+
 
     this.treemap = d3.tree()
       .size([this.svgWidth - this._padding, this.svgHeight - this._padding]);
@@ -29,16 +33,16 @@ class Trace {
 
     var nodes = d3.hierarchy(this.data);
     nodes = this.treemap(nodes);
-    var lines= nodes.links();
-    var descendants=nodes.descendants();
-    //console.log(nodes,descendants,lines);
+    var lines = nodes.links();
+    var descendants = nodes.descendants();
 
     descendants.forEach((span, i) => {
       this.addSpan(span);
     });
 
     lines.forEach((line, i) => {
-      this._addLine(line.source,line.target);
+      const weight=line.target.data.weight;
+      this._addLine(line.source,line.target,weight);
     });
   }
 
@@ -50,10 +54,11 @@ class Trace {
       x: params.x,
       y: params.y,
       id: params.data.id || utils.makeId(),
-      title: params.data.title,
+      title: params.data.serviceId,
       onDrag: this._onItemDrag.bind(this),
       onClick: this._onItemClick.bind(this),
 
+      params: params,
       depth: params.depth,
     });
 
@@ -78,13 +83,14 @@ class Trace {
    * @returns {Line}
    * @private
    */
-  _addLine(sourceItem, targetItem) {
+  _addLine(sourceItem, targetItem, weight) {
     const sourceId = sourceItem.data.id;
     const targetId = targetItem.data.id;
     let line = new Line({
       container: this.svg,
       sourceItem: this.list[sourceId],
       targetItem: this.list[targetId],
+      title: weight,
       onClick: this._onLineClick.bind(this)
     })
     this.list[sourceId]['outputPathIds'].add(line.id);
@@ -127,6 +133,14 @@ class Trace {
    */
   _onItemClick(span) {
 
+  }
+
+  destroy() {
+    if (this.svg) {
+      while (this.dom.firstChild) {
+        this.dom.removeChild(this.dom.firstChild);
+      }
+    }
   }
 }
 

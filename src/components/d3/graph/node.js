@@ -8,8 +8,6 @@ class Node {
     this.svg = params.svg;
     this.tip = params.tip;
 
-    console.log(this.params.version)
-
     this.svgWidth = params.svgWidth;
     this.svgHeight = params.svgHeight;
     this.id = params.id || utils.makeId();
@@ -28,8 +26,13 @@ class Node {
     this._dragDeltaX = 0;
     this._dragDeltaY = 0;
 
+    this._checked = false;
+
     this.width = utils.getTextWidth(this.title)+this._imgWidth+40;
     //console.log(itemWidth);
+
+    // 回调事件
+    this.onClick = params.onClick;
 
     this._createElement();
     this._bindEvent();
@@ -123,6 +126,7 @@ class Node {
    * @private
    */
   _bindEvent() {
+    this._group.on('click', this._onClick.bind(this));
     if(!this.drag){
       let drag = d3.drag()
         .on("start", this._onGroupDragstart.bind(this))
@@ -137,6 +141,24 @@ class Node {
       .html('host:'+ this.params.host+'<br />'+'port:'+this.params.port)
       .show)
       .on('mouseout',  this.tip.hide)
+  }
+
+  /**
+   * 点击事件
+   * @private
+   */
+  _onClick() {
+    d3.event.stopPropagation();
+    this._group.classed('active', true)
+    this._checked = true;
+    this.onClick(this);
+  }
+  /**
+   * 取消选中
+   */
+  blur() {
+    this._group.classed('active', false)
+    this._checked = false;
   }
 
   /**

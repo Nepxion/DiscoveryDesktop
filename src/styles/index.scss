@@ -43,6 +43,22 @@ html,body,#app,.wrapper {
   background-position: -1px -1px;
 }
 
+.el-main g.active>rect{
+  stroke:#000000;
+  stroke-width: 1.5px;
+}
+
+.el-dialog.is-fullscreen{
+  //overflow: hidden;
+}
+.el-dialog.is-fullscreen .el-dialog__body{
+  //overflow: auto;
+  //height: 100%;
+}
+.el-dialog .el-tabs__header{
+  margin: 0;
+}
+
 .d3-tip {
   background: #fff;
   min-width: 150px;
