@@ -1,4 +1,4 @@
-import { fetchInstanceMap,fetchConfigType } from '../../api';
+import { fetchInstanceMap,fetchConfigType,fetchConfigUpdateByGroup,fetchConfigClearByGroup } from '../../api';
 import { getGroups } from '../../utils';
 
 const console = {
@@ -38,7 +38,25 @@ const console = {
           reject(error);
         });
       });
-    }
+    },
+    UpdateConfigByGroup({ commit }, data) {
+      return new Promise((resolve, reject) => {
+        fetchConfigUpdateByGroup(data.group, data.serviceId, data.config).then((data) => {
+          resolve(data);
+        }).catch(error => {
+          reject(error);
+        });
+      });
+    },
+    ClearConfigByGroup({ commit },data) {
+      return new Promise((resolve, reject) => {
+        fetchConfigClearByGroup(data.group,data.serviceId).then((data) => {
+          resolve(data);
+        }).catch(error => {
+          reject(error);
+        });
+      });
+    },
   }
 };
 

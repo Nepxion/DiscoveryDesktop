@@ -280,3 +280,7 @@ Mock.mock('/config/view', 'get', ["<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<
 Mock.mock(/\/config\/clear-[\s\S]*?/, 'post', 'ok');
 
 Mock.mock(/\/config\/update-[\s\S]*?/, 'post', 'ok');
+
+Mock.mock(/\/console\/\/remote-config\/\/clear\/[\s\S]*?/, 'post', 'ok');
+
+Mock.mock(/\/console\/\/remote-config\/\/update\/[\s\S]*?/, 'post', 'ok');
