@@ -1,4 +1,6 @@
 # Nepxion Discovery UI
+[![Total lines](https://tokei.rs/b1/github/Nepxion/DiscoveryUI?category=lines)](https://github.com/Nepxion/DiscoveryUI)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?label=license)](https://github.com/Nepxion/DiscoveryUI/blob/master/LICENSE)
 
 > UI for Discovery
 
