@@ -1,4 +1,5 @@
 import Mock from 'mockjs';
+import console from "../store/modules/console";
 
 Mock.setup({
   timeout: 800, // 设置延迟响应，模拟向后端请求数据
@@ -6,7 +7,7 @@ Mock.setup({
 
 Mock.mock('/console/config-type', 'get', 'Nacos');
 
-Mock.mock('/console/instance-map', 'get', {
+Mock.mock('/console/instance-map11', 'get', {
   "springcloud-example-eureka": [
     {
       "serviceId": "springcloud-example-eureka",
@@ -203,6 +204,39 @@ Mock.mock('/console/instance-map', 'get', {
       }
     }
   ]
+});
+
+Mock.mock('/console/instance-map', 'get', function() {
+  let data = {};
+  for (let i = 0; i < 1000; i++) {
+    let services = [];
+    const m = Math.round(Math.random() * 10);
+    const key = 'springcloud-example-' + i;
+    for (let j = 0; j < m; j++) {
+      services.push({
+        "serviceId": key,
+        "version": "1."+j,
+        "region": "qa",
+        "host": "10.83." + i + ".10" + j,
+        "port": 110 + j,
+        "metadata": {
+          "spring.application.config.rest.control.enabled": "true",
+          "management.port": "5101",
+          "jmx.port": "65243",
+          "spring.application.context-path": "/",
+          "spring.application.discovery.plugin": "Eureka Plugin",
+          "version": "1.1",
+          "spring.application.register.control.enabled": "true",
+          "spring.application.group.key": "group",
+          "region": "qa",
+          "spring.application.discovery.control.enabled": "true",
+          "group": "example-service-group"
+        }
+      })
+    }
+    data[key] = services;
+  }
+  return data
 });
 
 //springcloud-example-zuul;springcloud-example-a;springcloud-example-b;springcloud-example-c

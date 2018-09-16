@@ -70,6 +70,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
+  import { Loading } from 'element-ui';
 
   import Graph from "@/components/D3/Graph"
 
@@ -138,11 +139,19 @@
           this.$store.dispatch('GetInstanceMap');
         } else {
           if (isok) {
-            this.Nodes = filterGroups(this.instanceMap, group);
+            let loadingInstance = Loading.service({fullscreen: true});
+            try {
+              setTimeout(() => {
+                this.Nodes = filterGroups(this.instanceMap, group);
 
-            let svg = new Graph("#graph");
-            svg.onNodeChecked=this.onNodeChecked;
-            svg.loadData(this.Nodes);
+                let svg = new Graph("#graph");
+                svg.onNodeChecked = this.onNodeChecked;
+                svg.loadData(this.Nodes);
+                loadingInstance.close();
+              }, 10);
+            } catch (e) {
+              console.log(e);
+            }
           }
         }
       },

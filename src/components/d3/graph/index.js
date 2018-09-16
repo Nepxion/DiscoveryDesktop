@@ -3,6 +3,7 @@ import * as d3 from '../d3';
 import Node from './node';
 import Group from './group';
 import * as utils from '@/utils';
+import console from "../../../store/modules/console";
 
 class Graph {
   constructor(selector) {
@@ -29,15 +30,23 @@ class Graph {
   }
 
   loadData(data) {
-    this.data = data;
-    Object.keys(data).forEach(key => {
-      if (data[key].length > 1) {
-        this.addGroup(key, data[key]);
-      } else {
-        const node = data[key][0];
-        this.addNode(node);
-      }
-    });
+    try {
+      this.data = data;
+      const keys = Object.keys(data);
+      keys.forEach(key => {
+        if (data[key].length > 1) {
+          this.addGroup(key, data[key]);
+        } else {
+          const node = data[key][0];
+          if (node) {
+            this.addNode(node);
+          }
+        }
+      });
+    } catch (e) {
+
+      console.log(e)
+    }
   }
 
   addGroup(group, child) {
@@ -58,32 +67,40 @@ class Graph {
     if (this._x > this.svgWidth - l) {
       this._x = 0;
       this._y = this._y + item.height + this._padding;
+      if(this._y>this.svgHeight) {
+        this.svgHeight = this._y + this._padding;
+        this.svg.attr("height", this.svgHeight);
+      }
     }
 
     this.list[item.id] = item;
   }
 
   addNode(params) {
-    let item = new Node({
-      svg: this.svg,
-      tip: this.tip,
-      svgWidth: this.svgWidth,
-      svgHeight: this.svgHeight,
-      id: params.id || utils.makeId(),
-      x: params.x || this._x,
-      y: params.y || this._y,
-      title: params.serviceId,
-      params: params,
-      onClick: this._onNodeClick.bind(this),
-    });
-    let l = item.width + this._padding;
-    this._x = this._x + l;
-    if (this._x > this.svgWidth - l) {
-      this._x = 0;
-      this._y = this._y + item.height + this._padding;
-    }
+    try {
+      let item = new Node({
+        svg: this.svg,
+        tip: this.tip,
+        svgWidth: this.svgWidth,
+        svgHeight: this.svgHeight,
+        id: utils.makeId(),
+        x: params.x || this._x,
+        y: params.y || this._y,
+        title: params.serviceId,
+        params: params,
+        onClick: this._onNodeClick.bind(this),
+      });
+      let l = item.width + this._padding;
+      this._x = this._x + l;
+      if (this._x > this.svgWidth - l) {
+        this._x = 0;
+        this._y = this._y + item.height + this._padding;
+      }
 
-    this.list[item.id] = item;
+      this.list[item.id] = item;
+
+    } catch (e) {
+    }
   }
 
   /**

@@ -26,6 +26,7 @@
     data() {
       return {
         dialogVisible: this.visible,
+        loading: false,
         form: {
           cluster:''
         },
