@@ -84,7 +84,7 @@
         const serviceIds = this.form.services.join(";")
         console.log(url, serviceIds);
 
-        this.$store.dispatch('GetGrayRoutes', url, serviceIds).then((data) => {
+        this.$store.dispatch('GetGrayRoutes', {baseURL:url, serviceIds:serviceIds}).then((data) => {
           this.loading = false;
           this.$message({
             message: '执行成功！',

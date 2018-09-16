@@ -37,17 +37,6 @@ export function fetchVersion(baseURL) {
   })
 }
 
-export function fetchConfig(baseURL) {
-  if(process.env.NODE_ENV==='development') {
-    baseURL = '';
-  }
-  return request({
-    baseURL: baseURL,
-    url: '/config/view',
-    method: 'get'
-  })
-}
-
 export function fetchVersionClear(baseURL,pushType) {
   if(process.env.NODE_ENV==='development') {
     baseURL = '';
@@ -59,13 +48,9 @@ export function fetchVersionClear(baseURL,pushType) {
   })
 }
 
-export function fetchConfigClear(baseURL,pushType) {
-  if(process.env.NODE_ENV==='development') {
-    baseURL = '';
-  }
+export function fetchVersionClearByService(serviceId,pushType) {
   return request({
-    baseURL: baseURL,
-    url: '/config/clear-'+pushType,
+    url: '/console/version/clear-' + pushType + '/' + serviceId,
     method: 'post'
   })
 }
@@ -82,6 +67,57 @@ export function fetchVersionUpdate(baseURL,pushType,version) {
   })
 }
 
+export function fetchVersionUpdateByService(serviceId,pushType,version) {
+  return request({
+    url: '/console/version/update-' + pushType + '/' + serviceId,
+    method: 'post',
+    version
+  })
+}
+
+export function fetchConfig(baseURL) {
+  if(process.env.NODE_ENV==='development') {
+    baseURL = '';
+  }
+  return request({
+    baseURL: baseURL,
+    url: '/config/view',
+    method: 'get'
+  })
+}
+
+export function fetchConfigByGroup(group,serviceId) {
+  return request({
+    url: '/console/remote-config/view/' + group + '/' + serviceId,
+    method: 'get'
+  })
+}
+
+export function fetchConfigClear(baseURL,pushType) {
+  if(process.env.NODE_ENV==='development') {
+    baseURL = '';
+  }
+  return request({
+    baseURL: baseURL,
+    url: '/config/clear-'+pushType,
+    method: 'post'
+  })
+}
+
+export function fetchConfigClearByGroup(group,serviceId) {
+  return request({
+    url: '/console/remote-config/clear/' + group + '/' + serviceId,
+    method: 'post'
+  })
+}
+
+export function fetchConfigClearByService(serviceId,pushType) {
+  return request({
+    url: '/console/version/clear-' + pushType + '/' + serviceId,
+    method: 'post'
+  })
+}
+
 export function fetchConfigUpdate(baseURL,pushType,config) {
   if(process.env.NODE_ENV==='development') {
     baseURL = '';
@@ -89,6 +125,22 @@ export function fetchConfigUpdate(baseURL,pushType,config) {
   return request({
     baseURL: baseURL,
     url: '/config/update-'+pushType,
+    method: 'post',
+    config
+  })
+}
+
+export function fetchConfigUpdateByGroup(group,serviceId,config) {
+  return request({
+    url: '/console/remote-config/update/' + group + '/' + serviceId,
+    method: 'post',
+    config
+  })
+}
+
+export function fetchConfigUpdateByService(serviceId,pushType,config) {
+  return request({
+    url: '/console/config/update-' + pushType + '/' + serviceId,
     method: 'post',
     config
   })

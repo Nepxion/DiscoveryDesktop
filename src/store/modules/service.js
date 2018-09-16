@@ -20,9 +20,9 @@ const service = {
   },
 
   actions: {
-    GetGrayRoutes({ commit }, baseURL, serviceIds) {
+    GetGrayRoutes({ commit }, data) {
       return new Promise((resolve, reject) => {
-        fetchRoutes(baseURL, serviceIds).then((data) => {
+        fetchRoutes(data.baseURL, data.serviceIds).then((data) => {
           commit('setGrayRoutes',data);
           resolve(data);
         }).catch(error => {
@@ -50,9 +50,9 @@ const service = {
         });
       });
     },
-    ClearVersion({ commit },pushType, baseURL) {
+    ClearVersion({ commit, state }, data) {
       return new Promise((resolve, reject) => {
-        fetchVersionClear(baseURL,pushType).then((data) => {
+        fetchVersionClear(data.baseURL,data.pushType).then((data) => {
           //commit('setVersion',data);
           resolve(data);
         }).catch(error => {
@@ -60,9 +60,9 @@ const service = {
         });
       });
     },
-    ClearConfig({ commit },pushType, baseURL) {
+    ClearConfig({ commit, state }, data) {
       return new Promise((resolve, reject) => {
-        fetchConfigClear(baseURL,pushType).then((data) => {
+        fetchConfigClear(data.baseURL,data.pushType).then((data) => {
           //commit('setVersion',data);
           resolve(data);
         }).catch(error => {
@@ -71,27 +71,25 @@ const service = {
       });
 
     },
-    UpdateVersion({ commit },pushType, baseURL,version) {
+    UpdateVersion({ commit, state }, data) {
       return new Promise((resolve, reject) => {
-        fetchVersionUpdate(baseURL,pushType,version).then((data) => {
+        fetchVersionUpdate(data.baseURL,data.pushType,data.version).then((data) => {
           //commit('setVersion',data);
           resolve(data);
         }).catch(error => {
           reject(error);
         });
       });
-
     },
-    UpdateConfig({ commit },pushType, baseURL,config) {
+    UpdateConfig({ commit, state }, data) {
       return new Promise((resolve, reject) => {
-        fetchConfigUpdate(baseURL,pushType,config).then((data) => {
-          //commit('setVersion',data);
+        fetchConfigUpdate(data.baseURL,data.pushType,data.config).then((data) => {
+          //commit('setConfig',data);
           resolve(data);
         }).catch(error => {
           reject(error);
         });
       });
-
     },
   }
 };

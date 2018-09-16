@@ -174,7 +174,7 @@
       },
       handlleClearVersion:function () {
         const url = this.getUrl();
-        this.$store.dispatch('ClearVersion', this.pushType, url).then((data) => {
+        this.$store.dispatch('ClearVersion', {baseURL:url,pushType:this.pushType}).then((data) => {
           this.newVersion='';
         }).catch(() => {
           this.$message.error('清除初始化（本地）版本失败！');
@@ -182,7 +182,7 @@
       },
       handlleClearConfig:function () {
         const url = this.getUrl();
-        this.$store.dispatch('ClearConfig', this.pushType, url).then((data) => {
+        this.$store.dispatch('ClearConfig', {baseURL:url,pushType:this.pushType}).then((data) => {
           this.newConfig='';
         }).catch(() => {
           this.$message.error('清除初始化（本地）版本失败！');
@@ -190,7 +190,7 @@
       },
       handlleUpdateVersion:function () {
         const url = this.getUrl();
-        this.$store.dispatch('UpdateVersion', this.pushType, url, this.newVersion).then((data) => {
+        this.$store.dispatch('UpdateVersion', {baseURL:url,pushType:this.pushType, version:this.newVersion}).then((data) => {
           //this.newVersion='';
           this.$message({
             message: '更新成功！',
@@ -202,7 +202,7 @@
       },
       handlleUpdateConfig:function () {
         const url = this.getUrl();
-        this.$store.dispatch('UpdateConfig', this.pushType, url, this.newConfig).then((data) => {
+        this.$store.dispatch('UpdateConfig', {baseURL:url,pushType:this.pushType, config:this.newConfig}).then((data) => {
           //this.newConfig='';
           this.$message({
             message: '更新成功！',

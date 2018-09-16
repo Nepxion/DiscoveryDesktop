@@ -58,7 +58,7 @@
         loading: false,
         form: {
           value: '',
-          cluster: undefined
+          cluster: ''
         },
       }
     },
@@ -85,7 +85,16 @@
             if (valid) {
               this.loading = true;
 
-              this.onClose(isok);
+              this.$store.dispatch('UpdateConfigByGroup', {group:this.form.cluster, serviceId:this.form.cluster, config:this.form.value}).then((data) => {
+                this.$message({
+                  message: '更新成功！',
+                  type: 'success'
+                });
+              }).catch(() => {
+                this.$message.error('更新灰度规则失败！');
+              });
+
+              //this.onClose(isok);
             } else {
               //this.$message.error('更新失败！');
               return false;
