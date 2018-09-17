@@ -128,7 +128,7 @@
 
   #trace {
     border: #e9e9e9 1px solid;
-    min-height: calc(100vh - 200px);
+    min-height: calc(100vh - 210px);
     overflow: hidden;
     padding-top: 20px;
   }

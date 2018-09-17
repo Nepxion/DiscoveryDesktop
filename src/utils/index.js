@@ -94,4 +94,20 @@ const convRoutes = function(obj) {
   return json;
 }
 
-export { makeId, getTextWidth, getGroups, filterGroups, isPlugin, getPluginService, convRoutes }
+const getLineCentre = function(line) {
+  let x = line._x0;
+  let y = line._y0;
+  if (line._x0 > line._x1) {
+    x = (line._x0 - line._x1) / 2 + line._x1;
+  } else if (line._x0 < line._x1) {
+    x = (line._x1 - line._x0) / 2 + line._x0;
+  }
+  if (line._y0 > line._y1) {
+    y = (line._y0 - line._y1) / 2 + line._y1;
+  } else if (line._y0 < line._y1) {
+    y = (line._y1 - line._y0) / 2 + line._y0;
+  }
+  return {x, y};
+}
+
+export { makeId, getTextWidth, getGroups, filterGroups, isPlugin, getPluginService, convRoutes, getLineCentre }

@@ -8,9 +8,9 @@ class Line {
     this.id = utils.makeId()
     this.sourceItem = params.sourceItem
     this.targetItem = params.targetItem
-    this.group = null
+    this.text = null
     this.path = null
-    this.title = undefined
+    this.title = params.title
 
     // 回调事件
     this.onClick = params.onClick
@@ -35,15 +35,11 @@ class Line {
       targetPosition.y - bezierY, targetPosition.x, targetPosition.y - bezierY)
     this.path.attr("d", path);
 
-    console.log(path);
-
-    if(this.title&&this.title!=='-1') {
-      // this.group.append('text')
-      //   .text('1111')
-      //   .attr('x', path._x0)
-      //   .attr('y', path._y0)
-      //   .attr('dy', '0.35em')
-      //   .attr('text-anchor', 'start');
+    if (this.title && this.title !== '-1') {
+      const txtWidth = utils.getTextWidth(this.title)/2;
+      const location = utils.getLineCentre(path);
+      this.text.attr('x', location.x - txtWidth)
+        .attr('y', location.y);
     }
   }
 
@@ -59,14 +55,22 @@ class Line {
    * @private
    */
   _createElement() {
-    this.group=this.container.append('g');
-    this.path = this.group
-      .append("path")
+    const group = this.container.append('g');
+    this.path = group.append("path")
       .attr('fill', 'none')
       .attr('stroke', '#ccc')
       .attr('stroke-width', '3')
-      .lower()
-    this.updatePath()
+      .lower();
+
+    if (this.title && this.title !== '-1') {
+      this.text = group.append('text')
+        .text(this.title)
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('dy', '0.35em')
+        .attr('text-anchor', 'start');
+    }
+    this.updatePath();
   }
 
   /**

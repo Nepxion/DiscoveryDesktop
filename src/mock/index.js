@@ -208,7 +208,7 @@ Mock.mock('/console/instance-map11', 'get', {
 
 Mock.mock('/console/instance-map', 'get', function() {
   let data = {};
-  for (let i = 0; i < 1000; i++) {
+  for (let i = 0; i < 100; i++) {
     let services = [];
     const m = Math.round(Math.random() * 10);
     const key = 'springcloud-example-' + i;

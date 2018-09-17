@@ -99,6 +99,24 @@ class Group {
       .attr('dy', '0.35em')
       .attr('text-anchor', 'start');
 
+    let circle = group.append('g').attr('transform',`translate(${this.width - 40}, 20)`);
+    circle.append("circle")
+      .attr("r", 12)
+      .attr('stroke-width', 1)
+      .attr('stroke', '#fff')
+      .attr('fill', '#f56c6c');
+
+    const count=this.child.length>99?'99+':this.child.length;
+
+    circle.append('text')
+      .text(count)
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('dy', '0.35em')
+      .attr('fill', '#fff')
+      .attr('style', 'font-size: 10px;')
+      .attr('text-anchor', 'middle');
+
     this._btn = group.append('image')
       .attr('href', btnIcon[this.open])
       .attr('x', this.width - 20)

@@ -41,8 +41,8 @@ class Trace {
     });
 
     lines.forEach((line, i) => {
-      const weight=line.target.data.weight;
-      this._addLine(line.source,line.target,weight);
+      const weight = line.target.data.weight + '';
+      this._addLine(line.source, line.target, weight);
     });
   }
 

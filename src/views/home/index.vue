@@ -37,7 +37,6 @@
     <instance-group-dialog
       title="服务集群选取"
       :visible="dialogVisible"
-      :groups="groups"
       @dialogClose="onDialogVisible"
     >
     </instance-group-dialog>
@@ -127,6 +126,15 @@
           this.$message.error('获取ConfigType失败！');
         });
       },
+      showNodes(group){
+        return new Promise((resolve, reject) => {
+          this.Nodes = filterGroups(this.instanceMap, group);
+
+          let svg = new Graph("#graph");
+          svg.onNodeChecked = this.onNodeChecked;
+          svg.loadData(this.Nodes);
+        });
+      },
       onNodeChecked:function(node) {
         this.selectedNode = node;
 
@@ -135,20 +143,14 @@
 
       onDialogVisible: function (visible, isok, group) {
         this.dialogVisible = visible;
-        if (visible) {
-          this.$store.dispatch('GetInstanceMap');
-        } else {
+        if (!visible) {
           if (isok) {
-            let loadingInstance = Loading.service({fullscreen: true});
+            let loadingInstance = Loading.service({ fullscreen: true });
             try {
-              setTimeout(() => {
-                this.Nodes = filterGroups(this.instanceMap, group);
-
-                let svg = new Graph("#graph");
-                svg.onNodeChecked = this.onNodeChecked;
-                svg.loadData(this.Nodes);
+              this.showNodes(group).then(loadingInstance.close()).catch((e)=>{
+                console.log(e);
                 loadingInstance.close();
-              }, 10);
+              });
             } catch (e) {
               console.log(e);
             }
