@@ -1,4 +1,4 @@
-import { fetchInstanceMap,fetchConfigType,fetchConfigUpdateByGroup,fetchConfigClearByGroup } from '../../api';
+import { fetchGroups,fetchInstanceMap,fetchConfigType,fetchDiscoveryType,fetchConfigUpdateByGroup,fetchConfigClearByGroup } from '../../api';
 import { getGroups } from '../../utils';
 
 const console = {
@@ -6,22 +6,38 @@ const console = {
     instanceMap: {},
     groups:[],
     configType: undefined,
+    discoveryType: undefined,
   },
 
   mutations: {
+    setGroups(state, data) {
+      state.groups = data;
+    },
     setInstanceMap(state, data) {
       state.instanceMap = data;
-      state.groups = getGroups(data);
     },
     setConfigType(state, configType) {
       state.configType = configType;
-    }
+    },
+    setDiscoveryType(state, discoveryType) {
+      state.discoveryType = discoveryType;
+    },
   },
 
   actions: {
-    GetInstanceMap({ commit }) {
+    GetGroups({ commit }) {
       return new Promise((resolve, reject) => {
-        fetchInstanceMap().then((data) => {
+        fetchGroups().then((data) => {
+          commit('setGroups',data);
+          resolve(data);
+        }).catch(error => {
+          reject(error);
+        });
+      });
+    },
+    GetInstanceMap({ commit }, groups) {
+      return new Promise((resolve, reject) => {
+        fetchInstanceMap(groups).then((data) => {
           commit('setInstanceMap',data);
           resolve(data);
         }).catch(error => {
@@ -33,6 +49,16 @@ const console = {
       return new Promise((resolve, reject) => {
         fetchConfigType().then((data) => {
           commit('setConfigType',data);
+          resolve(data);
+        }).catch(error => {
+          reject(error);
+        });
+      });
+    },
+    GetDiscoveryType({ commit }) {
+      return new Promise((resolve, reject) => {
+        fetchDiscoveryType().then((data) => {
+          commit('setDiscoveryType',data);
           resolve(data);
         }).catch(error => {
           reject(error);

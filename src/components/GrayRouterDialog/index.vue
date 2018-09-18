@@ -81,8 +81,8 @@
           this.svg = new Trace("#trace");
         //}
         const url = this.getUrl();
-        const serviceIds = this.form.services.join(";")
-        console.log(url, serviceIds);
+        const serviceIds = this.form.services.join(";");
+        //console.log(serviceIds)
 
         this.$store.dispatch('GetGrayRoutes', {baseURL:url, serviceIds:serviceIds}).then((data) => {
           this.loading = false;

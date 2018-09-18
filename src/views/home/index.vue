@@ -97,13 +97,14 @@
         grayReleaseDialogVisible: false,
         globalReleaseDialogVisible: false,
         selectedNode: null,
-        Nodes: null,
         serviceList:[],
       }
     },
     computed: {
       ...mapGetters([
         'async',
+        'configType',
+        'discoveryType',
         'instanceMap',
         'groups'
       ]),
@@ -115,45 +116,58 @@
         }
       }
     },
-    mounted() {
-      this.init();
+    created() {
+      this.init(document.title);
     },
     methods: {
-      init:function () {
-        this.$store.dispatch('GetConfigType').then((data) => {
-          document.title=document.title+'['+data+'远程配置中心]'
+      init:function (title) {
+        this.$store.dispatch('GetDiscoveryType').then(()=>{
+          this.showTite(title);
+        }).catch(() => {
+          this.$message.error('获取DiscoveryType失败！');
+        });
+        this.$store.dispatch('GetConfigType').then(()=>{
+          this.showTite(title);
         }).catch(() => {
           this.$message.error('获取ConfigType失败！');
         });
       },
-      showNodes(group){
-        return new Promise((resolve, reject) => {
-          this.Nodes = filterGroups(this.instanceMap, group);
+      showTite:function(title){
+        if (this.discoveryType) {
+          title += '[' + this.discoveryType + '注册发现中心]';
+        }
+        if (this.configType) {
+          title += '[' + this.configType + '远程配置中心]';
+        }
 
+        document.title = title;
+      },
+      showNodes(data){
+        return new Promise((resolve, reject) => {
           let svg = new Graph("#graph");
           svg.onNodeChecked = this.onNodeChecked;
-          svg.loadData(this.Nodes);
+          svg.loadData(data);
         });
       },
       onNodeChecked:function(node) {
         this.selectedNode = node;
 
-        this.serviceList=getPluginService(this.Nodes,node.serviceId);
+        this.serviceList=getPluginService(this.instanceMap,node.serviceId);
       },
 
-      onDialogVisible: function (visible, isok, group) {
+      onDialogVisible: function (visible, isok, groups) {
         this.dialogVisible = visible;
         if (!visible) {
           if (isok) {
             let loadingInstance = Loading.service({ fullscreen: true });
-            try {
-              this.showNodes(group).then(loadingInstance.close()).catch((e)=>{
-                console.log(e);
+              this.$store.dispatch('GetInstanceMap',groups).then((data)=>{
+                this.showNodes(data).then(loadingInstance.close()).catch((e)=>{
+                  console.log(e);
+                  loadingInstance.close();
+                });
+              }).catch((e)=>{
                 loadingInstance.close();
               });
-            } catch (e) {
-              console.log(e);
-            }
           }
         }
       },

@@ -2,7 +2,7 @@
 import * as d3 from '../d3';
 import Node from './node';
 import Group from './group';
-import * as utils from '@/utils';
+import * as utils from '../../../utils';
 import console from "../../../store/modules/console";
 
 class Graph {
@@ -44,8 +44,6 @@ class Graph {
         }
       });
     } catch (e) {
-
-      console.log(e)
     }
   }
 
@@ -109,11 +107,17 @@ class Graph {
    */
   _onNodeClick(node) {
     if (node === this.selectedNode) return;
-    if (this.selectedNode) {
-      this.selectedNode.blur();
+    if (node.params) {
+      const isPlugin = utils.isPlugin(node.params);
+      if (isPlugin) {
+        if (this.selectedNode) {
+          this.selectedNode.blur();
+        }
+        this.selectedNode = node;
+        this.selectedNode.focus();
+        this.onNodeChecked && this.onNodeChecked(node.params);//触发节点回调
+      }
     }
-    this.selectedNode = node;
-    utils.isPlugin(node.params) && this.onNodeChecked && this.onNodeChecked(node.params);//触发节点回调
   }
 }
 

@@ -72,8 +72,8 @@ const filterGroups = function(obj,group) {
 }
 
 const isPlugin = function(obj) {
-  const metadate = obj.metadata || {};
-  return Object.keys(metadate).indexOf("spring.application.discovery.plugin") > -1;
+  const meta = obj.metadata || {};
+  return Object.keys(meta).indexOf("spring.application.discovery.plugin") > -1;
 }
 
 const getPluginService = function(obj, without) {

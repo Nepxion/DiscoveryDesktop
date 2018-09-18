@@ -149,10 +149,17 @@ class Node {
    */
   _onClick() {
     d3.event.stopPropagation();
-    this._group.classed('active', true)
-    this._checked = true;
     this.onClick(this);
   }
+
+  /**
+   * 选中
+   */
+  focus() {
+    this._group.classed('active', true)
+    this._checked = true;
+  }
+
   /**
    * 取消选中
    */
