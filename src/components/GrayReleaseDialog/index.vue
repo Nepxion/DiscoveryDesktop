@@ -7,10 +7,10 @@
     <el-card class="box-card" header="灰度版本操作">
       <el-tabs>
         <el-tab-pane label="灰度（动态）版本">
-          <el-input v-model="newVersion" placeholder="请输入内容"></el-input>
+          <el-input v-model="newVersion" placeholder="请输入版本号"></el-input>
         </el-tab-pane>
         <el-tab-pane label="初始化（本地）版本">
-          <el-input v-model="initVersion" placeholder="请输入内容" :disabled="true"></el-input>
+          <el-input v-model="initVersion" placeholder="请输入版本号" :disabled="true"></el-input>
         </el-tab-pane>
       </el-tabs>
 
@@ -25,8 +25,8 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-button @click="handlleUpdateVersion">更新灰度版本</el-button>
-          <el-button @click="handlleClearVersion">清除灰度版本</el-button>
+          <el-button @click="handleUpdateVersion">更新灰度版本</el-button>
+          <el-button @click="handleClearVersion">清除灰度版本</el-button>
         </el-col>
       </el-row>
     </el-card>
@@ -56,8 +56,8 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-button @click="handlleUpdateConfig">更新灰度规则</el-button>
-          <el-button @click="handlleClearConfig">清除灰度规则</el-button>
+          <el-button @click="handleUpdateConfig">更新灰度规则</el-button>
+          <el-button @click="handleClearConfig">清除灰度规则</el-button>
         </el-col>
       </el-row>
 
@@ -83,7 +83,8 @@
         initConfig: '',
         newVersion: '',
         newConfig: '',
-        editorDisabled: false
+        editorDisabled: false,
+        url: ''
       }
     },
     components: {
@@ -95,7 +96,9 @@
       ]),
     },
     mounted() {
-
+      if(this.dialogVisible){
+        this.init();
+      }
     },
     props: {
       visible: Boolean,
@@ -120,8 +123,8 @@
     },
     methods: {
       init() {
-        const url = this.getUrl();
-        this.$store.dispatch('GetVersion', url).then((data) => {
+        this.getUrl();
+        this.$store.dispatch('GetVersion', this.url).then((data) => {
           try{
             this.initVersion=data[0];
             this.newVersion=data[1];
@@ -132,7 +135,7 @@
         }).catch(() => {
           this.$message.error('获取初始化（本地）版本失败！');
         });
-        this.$store.dispatch('GetConfig', url).then((data) => {
+        this.$store.dispatch('GetConfig', this.url).then((data) => {
           try{
             this.initConfig=data[0];
             this.newConfig=data[1];
@@ -150,7 +153,7 @@
       onChange(value) {
         this.newConfig = value;
       },
-      destroy: function () {
+      destroy() {
         this.loading = false;
         this.editorDisabled = false;
         this.value = '';
@@ -160,8 +163,10 @@
         this.newVersion = '';
         this.newConfig = '';
       },
-      getUrl: function () {
-        return "http://" + this.selectedNode.host + ":" + this.selectedNode.port;
+      getUrl() {
+        if(this.selectedNode&&this.selectedNode.host&&this.selectedNode.port){
+          this.url="http://" + this.selectedNode.host + ":" + this.selectedNode.port;
+        }
       },
       handleClick(tab, event) {
         if (tab.name === '2') {
@@ -172,25 +177,22 @@
           this.value=this.newConfig;
         }
       },
-      handlleClearVersion:function () {
-        const url = this.getUrl();
-        this.$store.dispatch('ClearVersion', {baseURL:url,pushType:this.pushType}).then((data) => {
+      handleClearVersion() {
+        this.$store.dispatch('ClearVersion', {baseURL:this.url,pushType:this.pushType}).then((data) => {
           this.newVersion='';
         }).catch(() => {
           this.$message.error('清除初始化（本地）版本失败！');
         });
       },
-      handlleClearConfig:function () {
-        const url = this.getUrl();
-        this.$store.dispatch('ClearConfig', {baseURL:url,pushType:this.pushType}).then((data) => {
+      handleClearConfig() {
+        this.$store.dispatch('ClearConfig', {baseURL:this.url,pushType:this.pushType}).then((data) => {
           this.newConfig='';
         }).catch(() => {
           this.$message.error('清除初始化（本地）版本失败！');
         });
       },
-      handlleUpdateVersion:function () {
-        const url = this.getUrl();
-        this.$store.dispatch('UpdateVersion', {baseURL:url,pushType:this.pushType, version:this.newVersion}).then((data) => {
+      handleUpdateVersion() {
+        this.$store.dispatch('UpdateVersion', {baseURL:this.url,pushType:this.pushType, version:this.newVersion}).then((data) => {
           //this.newVersion='';
           this.$message({
             message: '更新成功！',
@@ -200,9 +202,8 @@
           this.$message.error('更新灰度版本失败！');
         });
       },
-      handlleUpdateConfig:function () {
-        const url = this.getUrl();
-        this.$store.dispatch('UpdateConfig', {baseURL:url,pushType:this.pushType, config:this.newConfig}).then((data) => {
+      handleUpdateConfig() {
+        this.$store.dispatch('UpdateConfig', {baseURL:this.url,pushType:this.pushType, config:this.newConfig}).then((data) => {
           //this.newConfig='';
           this.$message({
             message: '更新成功！',

@@ -1,4 +1,14 @@
-import { fetchGroups,fetchInstanceMap,fetchConfigType,fetchDiscoveryType,fetchConfigUpdateByGroup,fetchConfigClearByGroup } from '../../api';
+import { fetchGroups,
+  fetchInstanceMap,
+  fetchConfigType,
+  fetchDiscoveryType,
+  fetchConfigByGroup,
+  fetchConfigUpdateByGroup,
+  fetchConfigClearByGroup,
+  fetchConfigUpdateByService,
+  fetchConfigClearByService,
+  fetchVersionUpdateByService,
+  fetchVersionClearByService } from '../../api';
 import { getGroups } from '../../utils';
 
 const console = {
@@ -27,9 +37,9 @@ const console = {
   actions: {
     GetGroups({ commit }) {
       return new Promise((resolve, reject) => {
-        fetchGroups().then((data) => {
-          commit('setGroups',data);
-          resolve(data);
+        fetchGroups().then((ret) => {
+          commit('setGroups',ret);
+          resolve(ret);
         }).catch(error => {
           reject(error);
         });
@@ -37,9 +47,9 @@ const console = {
     },
     GetInstanceMap({ commit }, groups) {
       return new Promise((resolve, reject) => {
-        fetchInstanceMap(groups).then((data) => {
-          commit('setInstanceMap',data);
-          resolve(data);
+        fetchInstanceMap(groups).then((ret) => {
+          commit('setInstanceMap',ret);
+          resolve(ret);
         }).catch(error => {
           reject(error);
         });
@@ -47,9 +57,9 @@ const console = {
     },
     GetConfigType({ commit }) {
       return new Promise((resolve, reject) => {
-        fetchConfigType().then((data) => {
-          commit('setConfigType',data);
-          resolve(data);
+        fetchConfigType().then((ret) => {
+          commit('setConfigType',ret);
+          resolve(ret);
         }).catch(error => {
           reject(error);
         });
@@ -57,9 +67,18 @@ const console = {
     },
     GetDiscoveryType({ commit }) {
       return new Promise((resolve, reject) => {
-        fetchDiscoveryType().then((data) => {
-          commit('setDiscoveryType',data);
-          resolve(data);
+        fetchDiscoveryType().then((ret) => {
+          commit('setDiscoveryType',ret);
+          resolve(ret);
+        }).catch(error => {
+          reject(error);
+        });
+      });
+    },
+    GetConfigByGroup({ commit }, data) {
+      return new Promise((resolve, reject) => {
+        fetchConfigByGroup(data.group, data.serviceId).then((ret) => {
+          resolve(ret);
         }).catch(error => {
           reject(error);
         });
@@ -67,8 +86,8 @@ const console = {
     },
     UpdateConfigByGroup({ commit }, data) {
       return new Promise((resolve, reject) => {
-        fetchConfigUpdateByGroup(data.group, data.serviceId, data.config).then((data) => {
-          resolve(data);
+        fetchConfigUpdateByGroup(data.group, data.serviceId, data.config).then((ret) => {
+          resolve(ret);
         }).catch(error => {
           reject(error);
         });
@@ -76,8 +95,44 @@ const console = {
     },
     ClearConfigByGroup({ commit },data) {
       return new Promise((resolve, reject) => {
-        fetchConfigClearByGroup(data.group,data.serviceId).then((data) => {
-          resolve(data);
+        fetchConfigClearByGroup(data.group,data.serviceId).then((ret) => {
+          resolve(ret);
+        }).catch(error => {
+          reject(error);
+        });
+      });
+    },
+    UpdateConfigByService({ commit }, data) {
+      return new Promise((resolve, reject) => {
+        fetchConfigUpdateByService(data.pushType, data.serviceId, data.config).then((ret) => {
+          resolve(ret);
+        }).catch(error => {
+          reject(error);
+        });
+      });
+    },
+    ClearConfigByService({ commit },data) {
+      return new Promise((resolve, reject) => {
+        fetchConfigClearByService(data.pushType,data.serviceId).then((ret) => {
+          resolve(ret);
+        }).catch(error => {
+          reject(error);
+        });
+      });
+    },
+    UpdateVersionByService({ commit }, data) {
+      return new Promise((resolve, reject) => {
+        fetchVersionUpdateByService(data.pushType, data.serviceId, data.version).then((ret) => {
+          resolve(ret);
+        }).catch(error => {
+          reject(error);
+        });
+      });
+    },
+    ClearVersionByService({ commit },data) {
+      return new Promise((resolve, reject) => {
+        fetchVersionClearByService(data.pushType,data.serviceId).then((ret) => {
+          resolve(ret);
         }).catch(error => {
           reject(error);
         });

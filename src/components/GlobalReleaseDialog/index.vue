@@ -42,12 +42,14 @@
 
     <span slot="footer" class="dialog-footer">
       <el-button @click="dialogClose(false)">取 消</el-button>
-      <el-button :loading="loading" type="primary" @click="dialogClose(true)">更新灰度规则</el-button>
+      <el-button type="danger" @click="onClear()">清除灰度规则</el-button>
+      <el-button :loading="loading" type="primary" @click="onOK()">更新灰度规则</el-button>
     </span>
   </el-dialog>
 </template>
 
 <script>
+  import { mapGetters } from 'vuex';
   import MonacoEditor from "../MonacoEditor";
 
   export default {
@@ -65,41 +67,29 @@
     components: {
       MonacoEditor
     },
-    mounted() {
-
+    computed: {
+      ...mapGetters([
+        'groups'
+      ]),
     },
     props: {
       visible: Boolean,
       title: String,
-      groups: Array,
     },
     watch: {
       visible(val) {
         this.dialogVisible = val;
+        if (val && !this.groups) {
+          this.$store.dispatch('GetGroups');
+        }
       }
     },
     methods: {
+      init() {
+
+      },
       dialogClose(isok) {
         if(isok) {
-          this.$refs.editorForm.validate((valid) => {
-            if (valid) {
-              this.loading = true;
-
-              this.$store.dispatch('UpdateConfigByGroup', {group:this.form.cluster, serviceId:this.form.cluster, config:this.form.value}).then((data) => {
-                this.$message({
-                  message: '更新成功！',
-                  type: 'success'
-                });
-              }).catch(() => {
-                this.$message.error('更新灰度规则失败！');
-              });
-
-              //this.onClose(isok);
-            } else {
-              //this.$message.error('更新失败！');
-              return false;
-            }
-          });
         } else{
           this.onClose(isok);
         }
@@ -111,10 +101,45 @@
       onChange(value) {
         //this.value = value;
       },
-      destroy: function () {
+      destroy() {
         this.$refs.editorForm.resetFields();
         this.loading = false;
         //this.value = '';
+      },
+      onOK() {
+        this.$refs.editorForm.validate((valid) => {
+          if (valid) {
+            this.loading = true;
+
+            this.$store.dispatch('UpdateConfigByGroup', {group:this.form.cluster, serviceId:this.form.cluster, config:this.form.value}).then((data) => {
+              this.$message({
+                message: '更新成功！',
+                type: 'success'
+              });
+            }).catch(() => {
+              this.$message.error('更新灰度规则失败！');
+            });
+
+            //this.onClose(isok);
+          } else {
+            //this.$message.error('更新失败！');
+            return false;
+          }
+        });
+      },
+      onClear() {
+        if (this.form.cluster) {
+          this.$store.dispatch('ClearConfigByGroup', {
+            group: this.form.cluster,
+            serviceId: this.form.cluster
+          }).then((data) => {
+            this.$refs.editorForm.resetFields();
+          }).catch(() => {
+            this.$message.error('清除失败！');
+          });
+        } else {
+          this.$message.error('请选择服务集群组！');
+        }
       },
     }
   }

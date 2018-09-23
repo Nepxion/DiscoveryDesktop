@@ -5,9 +5,9 @@
         <el-row>
           <el-button type="text" @click="onDialogVisible(true)"><i class="el-iconfont-ecs"></i> 显示服务拓扑图</el-button>
           <span class="separator"></span>
-          <el-button type="text" @click="onGrayReleaseDialogVisible(true)" :disabled="isDisabled"><i class="el-iconfont-fabu"></i> 执行灰度发布</el-button>
+          <el-button type="text" @click="onGrayReleaseDialogVisible(true)" :disabled="grayReleaseDisabled"><i class="el-iconfont-fabu"></i> 执行灰度发布</el-button>
           <span class="separator"></span>
-          <el-button type="text" @click="onGrayRouterDialogVisible(true)" :disabled="isDisabled"><i class="el-iconfont-luyou"></i> 执行灰度路由</el-button>
+          <el-button type="text" @click="onGrayRouterDialogVisible(true)" :disabled="grayRouterDisabled"><i class="el-iconfont-luyou"></i> 执行灰度路由</el-button>
           <span class="separator"></span>
           <el-button type="text" @click="onGlobalReleaseDialogVisible(true)"><i class="el-iconfont-luyou"></i> 全链路灰度发布</el-button>
           <span class="separator"></span>
@@ -16,10 +16,11 @@
               <i class="el-iconfont-luyou"></i> 推送模式设置<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item :command="true"><div class="dropdownSpan"><i class="el-icon-check" v-if="async"></i></div> 异步推送</el-dropdown-item>
-              <el-dropdown-item :command="false"><div class="dropdownSpan"><i class="el-icon-check" v-if="!async"></i></div> 同步推送</el-dropdown-item>
+              <el-dropdown-item command="async|true"><div class="dropdownSpan"><i class="el-icon-check" v-if="async"></i></div> 异步推送</el-dropdown-item>
+              <el-dropdown-item command="async|false"><div class="dropdownSpan"><i class="el-icon-check" v-if="!async"></i></div> 同步推送</el-dropdown-item>
 
-              <!--<el-dropdown-item divided><div class="dropdownSpan"></div> 规则推送到远程配置中心</el-dropdown-item>-->
+              <el-dropdown-item command="ruleToConfig|true" divided><div class="dropdownSpan"><i class="el-icon-check" v-if="ruleToConfig"></i></div> 规则推送到远程配置中心</el-dropdown-item>
+              <el-dropdown-item command="ruleToConfig|false"><div class="dropdownSpan"><i class="el-icon-check" v-if="!ruleToConfig"></i></div> 规则推送到服务或服务集群</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
           <span class="toolbar">
@@ -34,6 +35,10 @@
       </el-main>
     </el-container>
 
+    <login-dialog
+      @dialogClose="onLoginDialogClose"
+    >
+    </login-dialog>
     <instance-group-dialog
       title="服务集群选取"
       :visible="dialogVisible"
@@ -63,6 +68,15 @@
       @dialogClose="onGlobalReleaseDialogVisible"
     >
     </global-release-dialog>
+
+
+    <gray-cluster-release-dialog
+      title="服务集群灰度发布"
+      :visible="grayClusterReleaseDialogVisible"
+      :selectedGroupNode="selectedGroupNode"
+      @dialogClose="onGrayReleaseDialogVisible"
+    >
+    </gray-cluster-release-dialog>
   </div>
   <!-- 创建图容器 -->
 </template>
@@ -71,6 +85,8 @@
   import { mapGetters } from 'vuex'
   import { Loading } from 'element-ui';
 
+  import LoginDialog from '@/components/LoginDialog'
+
   import Graph from "@/components/D3/Graph"
 
   import Screenfull from '@/components/Screenfull'
@@ -78,61 +94,63 @@
   import GrayRouterDialog from "@/components/GrayRouterDialog"
   import GrayReleaseDialog from "@/components/GrayReleaseDialog"
   import GlobalReleaseDialog from "@/components/GlobalReleaseDialog"
+  import GrayClusterReleaseDialog from "@/components/GrayClusterReleaseDialog"
 
   import { filterGroups,getPluginService } from '@/utils'
 
   export default {
     name: "home",
     components: {
+      LoginDialog,
       Screenfull,
       InstanceGroupDialog,
       GrayRouterDialog,
       GrayReleaseDialog,
-      GlobalReleaseDialog
+      GlobalReleaseDialog,
+      GrayClusterReleaseDialog,
     },
     data() {
       return {
         dialogVisible: false,
         grayRouterDialogVisible: false,
+        grayRouterDisabled: true,
         grayReleaseDialogVisible: false,
+        grayReleaseDisabled: true,
         globalReleaseDialogVisible: false,
+        grayClusterReleaseDialogVisible: false,
+        selectedGroupNode: null,
         selectedNode: null,
         serviceList:[],
       }
     },
     computed: {
       ...mapGetters([
+        'status',
         'async',
         'configType',
+        'ruleToConfig',
         'discoveryType',
         'instanceMap',
         'groups'
       ]),
-      isDisabled(){
-        if(this.selectedNode!=null){
-          return false;
-        }else{
-          return true;
-        }
-      }
     },
     created() {
-      this.init(document.title);
+      //this.init(document.title);
     },
     methods: {
       init:function (title) {
         this.$store.dispatch('GetDiscoveryType').then(()=>{
-          this.showTite(title);
+          this.showTitle(title);
         }).catch(() => {
           this.$message.error('获取DiscoveryType失败！');
         });
         this.$store.dispatch('GetConfigType').then(()=>{
-          this.showTite(title);
+          this.showTitle(title);
         }).catch(() => {
           this.$message.error('获取ConfigType失败！');
         });
       },
-      showTite:function(title){
+      showTitle:function(title){
         if (this.discoveryType) {
           title += '[' + this.discoveryType + '注册发现中心]';
         }
@@ -146,16 +164,31 @@
         return new Promise((resolve, reject) => {
           let svg = new Graph("#graph");
           svg.onNodeChecked = this.onNodeChecked;
+          svg.onGroupChecked = this.onGroupChecked;
           svg.loadData(data);
         });
       },
-      onNodeChecked:function(node) {
+      onNodeChecked(node) {
         this.selectedNode = node;
+        this.selectedGroupNode = undefined;
+
+        this.grayRouterDisabled=false;
+        this.grayReleaseDisabled=false;
+
 
         this.serviceList=getPluginService(this.instanceMap,node.serviceId);
       },
+      onGroupChecked(g) {
+        this.selectedNode = undefined;
+        this.selectedGroupNode = g;
 
-      onDialogVisible: function (visible, isok, groups) {
+        this.grayRouterDisabled=true;
+        this.grayReleaseDisabled=false;
+
+        this.serviceList=[];
+      },
+
+      onDialogVisible(visible, isok, groups) {
         this.dialogVisible = visible;
         if (!visible) {
           if (isok) {
@@ -172,20 +205,43 @@
         }
       },
 
-      onGrayRouterDialogVisible: function (visible, isok) {
+      onGrayRouterDialogVisible(visible, isok) {
         this.grayRouterDialogVisible = visible;
       },
 
-      onGrayReleaseDialogVisible: function (visible, isok) {
-        this.grayReleaseDialogVisible = visible;
+      onGrayReleaseDialogVisible(visible, isok) {
+        if(this.selectedNode){
+          this.grayReleaseDialogVisible = visible;
+        } else {
+          this.grayClusterReleaseDialogVisible = visible;
+        }
       },
 
-      onGlobalReleaseDialogVisible: function (visible, isok) {
+      onGlobalReleaseDialogVisible(visible, isok) {
         this.globalReleaseDialogVisible = visible;
       },
 
-      handleCommand:function (command) {
-        this.$store.dispatch('setAsync',command);
+      handleCommand(command) {
+        const strs = command.split('|');
+        if (strs.length == 2) {
+          if (strs[0] === 'async') {
+            if (strs[1] === 'true') {
+              this.$store.dispatch('setAsync', true);
+            } else {
+              this.$store.dispatch('setAsync', false);
+            }
+          } else {
+            if (strs[1] === 'true') {
+              this.$store.dispatch('setRuleToConfig', true);
+            } else {
+              this.$store.dispatch('setRuleToConfig', false);
+            }
+          }
+        }
+      },
+
+      onLoginDialogClose() {
+        this.init(document.title);
       }
     }
   }

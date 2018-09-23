@@ -3,14 +3,15 @@ import { Message } from 'element-ui';
 
 // 创建一个axios实例
 const request = axios.create({
-  baseURL: process.env.SERVICE_API,
-  timeout: 5000 // request timeout
+  timeout: 5000,
 });
 
 // 请求拦截器
 request.interceptors.request.use(
   config => {
-    return config
+    config.headers['Content-Type'] = 'application/json; charset=UTF-8';
+    config.baseURL = config.baseURL || localStorage.getItem("baseURL") || process.env.SERVICE_API;
+    return config;
   },
   error => {
     // Do something with request error
@@ -21,8 +22,11 @@ request.interceptors.request.use(
 
 // 响应拦截器
 request.interceptors.response.use(
-  //response => response,
-  response => response.data,
+  //response => response.data,
+  response => {
+    //console.log(response)
+    return response.data
+  },
   error => {
     console.log('err' + error); // for debug
     Message({

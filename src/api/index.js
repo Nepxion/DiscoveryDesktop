@@ -1,5 +1,14 @@
 import request from '../utils/request'
 
+
+export function fetchLogin(userId,password) {
+  return request({
+    url: '/console/authenticate',
+    method: 'post',
+    data: {userId, password}
+  })
+}
+
 /**
  * 获取注册发现中心类型
  */
@@ -87,7 +96,7 @@ export function fetchVersionClear(baseURL,pushType) {
   }
   return request({
     baseURL: baseURL,
-    url: '/version/clear-'+pushType,
+    url: '/version/clear-' + pushType,
     method: 'post'
   })
 }

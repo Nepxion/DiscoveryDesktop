@@ -22,9 +22,9 @@ const service = {
   actions: {
     GetGrayRoutes({ commit }, data) {
       return new Promise((resolve, reject) => {
-        fetchRoutes(data.baseURL, data.serviceIds).then((data) => {
-          commit('setGrayRoutes',data);
-          resolve(data);
+        fetchRoutes(data.baseURL, data.serviceIds).then((ret) => {
+          commit('setGrayRoutes',ret);
+          resolve(ret);
         }).catch(error => {
           reject(error);
         });
@@ -32,9 +32,9 @@ const service = {
     },
     GetVersion({ commit }, baseURL) {
       return new Promise((resolve, reject) => {
-        fetchVersion(baseURL).then((data) => {
-          commit('setVersion',data);
-          resolve(data);
+        fetchVersion(baseURL).then((ret) => {
+          commit('setVersion',ret);
+          resolve(ret);
         }).catch(error => {
           reject(error);
         });
@@ -42,9 +42,9 @@ const service = {
     },
     GetConfig({ commit }, baseURL) {
       return new Promise((resolve, reject) => {
-        fetchConfig(baseURL).then((data) => {
-          commit('setConfig',data);
-          resolve(data);
+        fetchConfig(baseURL).then((ret) => {
+          commit('setConfig',ret);
+          resolve(ret);
         }).catch(error => {
           reject(error);
         });
@@ -52,9 +52,9 @@ const service = {
     },
     ClearVersion({ commit, state }, data) {
       return new Promise((resolve, reject) => {
-        fetchVersionClear(data.baseURL,data.pushType).then((data) => {
+        fetchVersionClear(data.baseURL,data.pushType).then((ret) => {
           //commit('setVersion',data);
-          resolve(data);
+          resolve(ret);
         }).catch(error => {
           reject(error);
         });
@@ -62,9 +62,9 @@ const service = {
     },
     ClearConfig({ commit, state }, data) {
       return new Promise((resolve, reject) => {
-        fetchConfigClear(data.baseURL,data.pushType).then((data) => {
+        fetchConfigClear(data.baseURL,data.pushType).then((ret) => {
           //commit('setVersion',data);
-          resolve(data);
+          resolve(ret);
         }).catch(error => {
           reject(error);
         });
@@ -73,9 +73,9 @@ const service = {
     },
     UpdateVersion({ commit, state }, data) {
       return new Promise((resolve, reject) => {
-        fetchVersionUpdate(data.baseURL,data.pushType,data.version).then((data) => {
+        fetchVersionUpdate(data.baseURL,data.pushType,data.version).then((ret) => {
           //commit('setVersion',data);
-          resolve(data);
+          resolve(ret);
         }).catch(error => {
           reject(error);
         });
@@ -83,9 +83,9 @@ const service = {
     },
     UpdateConfig({ commit, state }, data) {
       return new Promise((resolve, reject) => {
-        fetchConfigUpdate(data.baseURL,data.pushType,data.config).then((data) => {
+        fetchConfigUpdate(data.baseURL,data.pushType,data.config).then((ret) => {
           //commit('setConfig',data);
-          resolve(data);
+          resolve(ret);
         }).catch(error => {
           reject(error);
         });
