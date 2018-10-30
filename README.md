@@ -1,8 +1,23 @@
-# Nepxion Discovery UI
-[![Total lines](https://tokei.rs/b1/github/Nepxion/DiscoveryUI?category=lines)](https://github.com/Nepxion/DiscoveryUI)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?label=license)](https://github.com/Nepxion/DiscoveryUI/blob/master/LICENSE)
+<h3 align="center">Nepxion Discovery UI</h2>
+<p align="center">
+ <img src="https://tokei.rs/b1/github/Nepxion/DiscoveryUI?category=lines" alt="Total lines">
+ <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg?label=license" alt="License">
+</p>
 
-> UI for Discovery
+## 简介
+
+Nepxion DiscoveryUI is a web framework based on Vue for Nepxion Discovery project [http://www.nepxion.com](http://www.nepxion.com/)
+
+## Nepxion Discovery
+
+- [项目源码](https://github.com/Nepxion/DiscoveryUI)
+- [入门教程](https://github.com/Nepxion/Docs/blob/master/discovery-doc/README_QUICK_START.md)
+
+## 准备工作
+
+- node.js环境（npm包管理器）
+- vue-cli 脚手架构建工具
+- cnpm npm的淘宝镜像
 
 ## Build Setup
 
@@ -10,8 +25,12 @@
 # install dependencies
 npm install
 
+# or 建议不要用cnpm  安装有各种诡异的bug 可以通过如下操作解决npm速度慢的问题
+npm install --registry=https://registry.npm.taobao.org
+
 # serve with hot reload at localhost:8080
 npm run dev
+# 打开浏览器访问 http://localhost:8080
 
 # build for production with minification
 npm run build
@@ -20,4 +39,24 @@ npm run build
 npm run build --report
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+也可以[下载](https://github.com/Nepxion/DiscoveryUI/releases)已发布版本！可以直接运行nginx，浏览器访问http://localhost:8080，可通过nginx配置(conf/nginx.conf)修改端口
+
+## 界面展示
+
+![拓扑图](/images/screenshot-1.png)
+
+![灰度路由](/images/screenshot-2.png)
+
+![灰度发布](/images/screenshot-3.png)
+
+### 依赖
+
+- vue
+- element-ui
+- d3
+- axios
+- mockjs
+
+### 作者
+
+[78552423@qq.com](https://github.com/eshun)
