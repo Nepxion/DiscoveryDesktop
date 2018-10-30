@@ -10,7 +10,7 @@
         <el-form-item
           prop="baseURL"
           label="服务地址"
-          :rules="{ required: true, message: '请输入服务地址！' }"
+          :rules="{ required: true, message: '请输入服务地址（http://）！' }"
         >
           <el-input
             v-model="loginForm.baseURL"
