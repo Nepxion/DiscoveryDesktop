@@ -59,9 +59,10 @@ export function fetchInstanceMap(groups) {
  * @param data 按调用服务名的前后次序排列，起始节点的服务名不能加上去。如果多个用“;”分隔，不允许出现空格（例如：service-a;service-b）
  */
 export function fetchRoutes(baseURL, data) {
-  if(process.env.NODE_ENV==='development') {
-    baseURL = '';
-  }
+  // if(process.env.NODE_ENV==='development') {
+  //   baseURL = '';
+  // }
+  debugger;
   return request({
     baseURL: baseURL,
     url: '/router/routes',
@@ -75,9 +76,6 @@ export function fetchRoutes(baseURL, data) {
  * @param baseURL 单个服務地址
  */
 export function fetchVersion(baseURL) {
-  if(process.env.NODE_ENV==='development') {
-    baseURL = '';
-  }
   return request({
     baseURL: baseURL,
     url: '/version/view',
@@ -91,9 +89,6 @@ export function fetchVersion(baseURL) {
  * @param pushType 异步|同步(sync|async)
  */
 export function fetchVersionClear(baseURL,pushType) {
-  if(process.env.NODE_ENV==='development') {
-    baseURL = '';
-  }
   return request({
     baseURL: baseURL,
     url: '/version/clear-' + pushType,
@@ -120,9 +115,6 @@ export function fetchVersionClearByService(serviceId,pushType) {
  * @param version 版本号，格式为[dynamicVersion]或者[dynamicVersion];[localVersion]
  */
 export function fetchVersionUpdate(baseURL,pushType,version) {
-  if(process.env.NODE_ENV==='development') {
-    baseURL = '';
-  }
   return request({
     baseURL: baseURL,
     url: '/version/update-'+pushType,
@@ -150,9 +142,6 @@ export function fetchVersionUpdateByService(serviceId,pushType,version) {
  * @param baseURL 单个服務地址
  */
 export function fetchConfig(baseURL) {
-  if(process.env.NODE_ENV==='development') {
-    baseURL = '';
-  }
   return request({
     baseURL: baseURL,
     url: '/config/view',
@@ -178,9 +167,6 @@ export function fetchConfigByGroup(group,serviceId) {
  * @param pushType  异步|同步(sync|async)
  */
 export function fetchConfigClear(baseURL,pushType) {
-  if(process.env.NODE_ENV==='development') {
-    baseURL = '';
-  }
   return request({
     baseURL: baseURL,
     url: '/config/clear-'+pushType,
@@ -219,9 +205,6 @@ export function fetchConfigClearByService(serviceId,pushType) {
  * @param config 规则配置内容，XML格式
  */
 export function fetchConfigUpdate(baseURL,pushType,config) {
-  if(process.env.NODE_ENV==='development') {
-    baseURL = '';
-  }
   return request({
     baseURL: baseURL,
     url: '/config/update-'+pushType,
