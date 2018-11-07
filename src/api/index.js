@@ -62,7 +62,6 @@ export function fetchRoutes(baseURL, data) {
   // if(process.env.NODE_ENV==='development') {
   //   baseURL = '';
   // }
-  debugger;
   return request({
     baseURL: baseURL,
     url: '/router/routes',
