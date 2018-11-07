@@ -95,3 +95,11 @@ html,body,#app,.wrapper {
   top: 100%;
   left: 0;
 }
+
+.link.inactive,
+.linkText.inactive,
+.node.inactive,
+.node.inactive image,
+.node.inactive text {
+  opacity: 0.2;
+}

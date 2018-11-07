@@ -23,6 +23,16 @@
               <el-dropdown-item command="ruleToConfig|false"><div class="dropdownSpan"><i class="el-icon-check" v-if="!ruleToConfig"></i></div> 规则推送到服务或服务集群</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
+          <span class="separator"></span>
+          <el-dropdown trigger="click" @command="handleShowMode">
+            <span>
+              <i class="el-iconfont-luyou"></i> 视图<i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="cluster"><div class="dropdownSpan"><i class="el-icon-check" v-if="showMode==='cluster'"></i></div> 树形</el-dropdown-item>
+              <el-dropdown-item command="force"><div class="dropdownSpan"><i class="el-icon-check" v-if="showMode==='force'"></i></div> 圆形</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
           <span class="toolbar">
             <el-tooltip content="全屏">
               <screenfull />
@@ -50,6 +60,7 @@
       :visible="grayRouterDialogVisible"
       :selectedNode="selectedNode"
       :serviceList="serviceList"
+      :showMode="showMode"
       @dialogClose="onGrayRouterDialogVisible"
     >
     </gray-router-dialog>
@@ -87,7 +98,8 @@
 
   import LoginDialog from '@/components/LoginDialog'
 
-  import Graph from "@/components/D3/Graph"
+  import Cluster from "../../components/D3/Cluster"
+  import Force from "../../components/D3/Force"
 
   import Screenfull from '@/components/Screenfull'
   import InstanceGroupDialog from "@/components/InstanceGroupDialog"
@@ -96,7 +108,7 @@
   import GlobalReleaseDialog from "@/components/GlobalReleaseDialog"
   import GrayClusterReleaseDialog from "@/components/GrayClusterReleaseDialog"
 
-  import { filterGroups,getPluginService } from '@/utils'
+  import { filterGroups,getPluginService,convMap } from '@/utils'
 
   export default {
     name: "home",
@@ -121,6 +133,9 @@
         selectedGroupNode: null,
         selectedNode: null,
         serviceList:[],
+        selectedGroup: '',
+        data: null,
+        showMode:'force'
       }
     },
     computed: {
@@ -135,7 +150,7 @@
       ]),
     },
     created() {
-      //this.init(document.title);
+      this.init(document.title);
     },
     methods: {
       init:function (title) {
@@ -161,22 +176,40 @@
         document.title = title;
       },
       showNodes(data){
+        this.data=convMap(data,this.selectedGroup);
         return new Promise((resolve, reject) => {
-          let svg = new Graph("#graph");
-          svg.onNodeChecked = this.onNodeChecked;
-          svg.onGroupChecked = this.onGroupChecked;
-          svg.loadData(data);
+          // let svg = new Graph("#graph");
+          // svg.onNodeChecked = this.onNodeChecked;
+          // svg.onGroupChecked = this.onGroupChecked;
+          // svg.loadData(data);
+
+
+          //let svg = new Cluster("#graph");
+          // svg.loadData(data);
+
+          this.handleShowMode(this.showMode);
+
         });
       },
       onNodeChecked(node) {
-        this.selectedNode = node;
-        this.selectedGroupNode = undefined;
+        if(node){
+          this.selectedNode = node;
+          this.selectedGroupNode = undefined;
 
-        this.grayRouterDisabled=false;
-        this.grayReleaseDisabled=false;
+          this.grayRouterDisabled=false;
+          this.grayReleaseDisabled=false;
 
 
-        this.serviceList=getPluginService(this.instanceMap,node.serviceId);
+          this.serviceList=getPluginService(this.instanceMap,node.serviceId);
+        } else {
+          this.selectedNode = undefined;
+          this.selectedGroupNode = undefined;
+
+          this.grayRouterDisabled=true;
+          this.grayReleaseDisabled=true;
+
+          this.serviceList=[];
+        }
       },
       onGroupChecked(g) {
         this.selectedNode = undefined;
@@ -194,6 +227,7 @@
           if (isok) {
             let loadingInstance = Loading.service({ fullscreen: true });
               this.$store.dispatch('GetInstanceMap',groups).then((data)=>{
+                this.selectedGroup=groups;
                 this.showNodes(data).then(loadingInstance.close()).catch((e)=>{
                   console.log(e);
                   loadingInstance.close();
@@ -242,6 +276,25 @@
 
       onLoginDialogClose() {
         this.init(document.title);
+      },
+
+      handleShowMode(command) {
+        this.showMode = command;
+        this.selectedNode = undefined;
+        this.selectedGroupNode = undefined;
+
+        this.grayRouterDisabled=true;
+        this.grayReleaseDisabled=true;
+
+        if(command==='force'){
+          let svg = new Force("#graph");
+          svg.loadData(this.data);
+          svg.onNodeChecked = this.onNodeChecked;
+        } else {
+          let svg = new Cluster("#graph");
+          svg.loadData(this.data);
+          svg.onNodeChecked = this.onNodeChecked;
+        }
       }
     }
   }

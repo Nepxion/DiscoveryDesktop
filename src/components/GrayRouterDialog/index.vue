@@ -27,8 +27,10 @@
 </template>
 
 <script>
-  import Trace from "../D3/Trace";
   import { convRoutes } from '../../utils'
+
+  import Cluster from "../D3/Cluster"
+  import Force from "../D3/Force"
 
   export default {
     name: "GrayRouterDialog",
@@ -50,6 +52,7 @@
       title: String,
       selectedNode: Object,
       serviceList: Array,
+      showMode: String,
     },
     watch: {
       visible(val) {
@@ -78,22 +81,29 @@
       },
       initTrace: function () {
         //if (!this.svg) {
-          this.svg = new Trace("#trace");
+        //this.svg = new Trace("#trace");
         //}
+        if (this.showMode === 'force') {
+          this.svg = new Force("#trace");
+
+        } else {
+          this.svg = new Cluster("#trace");
+        }
         const url = this.getUrl();
+        console.log(url);
         const serviceIds = this.form.services.join(";");
         //console.log(serviceIds)
 
-        this.$store.dispatch('GetGrayRoutes', {baseURL:url, serviceIds:serviceIds}).then((data) => {
+        this.$store.dispatch('GetGrayRoutes', { baseURL: url, serviceIds: serviceIds }).then((data) => {
           this.loading = false;
           this.$message({
             message: '执行成功！',
             type: 'success'
           });
-          try{
-            const newData=convRoutes(data);
+          try {
+            const newData = convRoutes(data);
 
-            this.svg.loadData(newData);
+            this.svg && this.svg.loadData(newData);
           } catch (e) {
             console.log(e);
           }

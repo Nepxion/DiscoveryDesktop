@@ -72,8 +72,12 @@ const filterGroups = function(obj,group) {
 }
 
 const isPlugin = function(obj) {
-  const meta = obj.metadata || {};
-  return Object.keys(meta).indexOf("spring.application.discovery.plugin") > -1;
+  if(obj&&obj.metadata){
+    const meta = obj.metadata || {};
+    return Object.keys(meta).indexOf("spring.application.discovery.plugin") > -1;
+  } else{
+    return false;
+  }
 }
 
 const getPluginService = function(obj, without) {
@@ -90,7 +94,7 @@ const getPluginService = function(obj, without) {
 }
 
 const convRoutes = function(obj) {
-  const json = JSON.parse(JSON.stringify(obj).replace(/nexts/g, "children"));
+  const json = JSON.parse(JSON.stringify(obj).replace(/nexts/g, "children").replace(/serviceId/g, "name"));
   return json;
 }
 
@@ -110,4 +114,59 @@ const getLineCentre = function(line) {
   return {x, y};
 }
 
-export { makeId, getTextWidth, getGroups, filterGroups, isPlugin, getPluginService, convRoutes, getLineCentre }
+const getLineMiddle = function (line) {
+  var x0=line.source.x;
+  var y0=line.source.y;
+  var x1=line.target.x;
+  var y1=line.target.y;
+
+  if (x0 > x1) {
+    x0 = (x0 - x1) / 2 + x1;
+  } else if (x0 < x1) {
+    x0 = (x1 - x0) / 2 + x0;
+  }
+  if (y0 > y1) {
+    y0 = (y0 - y1) / 2 + y1;
+  } else if (y0 < y1) {
+    y0 = (y1 - y0) / 2 + y0;
+  }
+  return {x:y0, y:x0};
+}
+
+const getNode = function(obj) {
+  var newData = [];
+  if (obj.children) {
+    newData = obj.children;
+    obj.children.forEach((item) => {
+      newData = newData.concat(item.children)
+    });
+  }
+  newData.push(obj);
+  if (obj.parent) {
+    newData.push(obj.parent);
+    if (obj.parent.parent) {
+      newData.push(obj.parent.parent);
+    }
+  }
+  return newData;
+}
+
+const convMap = function(obj,groups) {
+  const json = { name: !groups && groups !== '' ? groups : '全部集群', children: [] };
+  const keys = Object.keys(obj);
+  keys.forEach(key => {
+    const children=obj[key].map(child=>{
+        return {
+          ...child,
+          name:child.host+":"+child.port
+        };
+    });
+    json.children.push({
+      name: key,
+      children
+    });
+  });
+  return json;
+}
+
+export { makeId, getTextWidth, getGroups, filterGroups, isPlugin, getPluginService, convRoutes, getLineCentre, getLineMiddle, getNode, convMap }
