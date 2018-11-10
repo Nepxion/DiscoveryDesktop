@@ -1,8 +1,6 @@
-<h3 align="center">Nepxion Discovery UI</h2>
-<p align="center">
- <img src="https://tokei.rs/b1/github/Nepxion/DiscoveryUI?category=lines" alt="Total lines">
- <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg?label=license" alt="License">
-</p>
+# Nepxion DiscoveryUI
+[![Total lines](https://tokei.rs/b1/github/Nepxion/DiscoveryUI?category=lines)](https://github.com/Nepxion/Discovery)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?label=license)](https://github.com/Nepxion/Discovery/blob/master/LICENSE)
 
 ## 简介
 
