@@ -6,8 +6,8 @@ import {icon} from '../enum';
 class Cluster {
   constructor(selector) {
     this._padding = 40;
-    this.nodeWidth = 54;
-    this.nodeHeight = 130;
+    this.nodeWidth = 38;
+    this.nodeHeight = 120;
     this.maxSize=1,this.zoomSize=1;
 
     this.dom = document.querySelector(selector) || document.querySelector('body');
@@ -216,10 +216,14 @@ class Cluster {
         }
       })
       .attr('stroke-width', (d) => {
-        if (d._children && d._children.length > 0) {
-          return '2'
+        if(this.selectedNode===d.data){
+          return '4';
         } else {
-          return '1';
+          if (d._children && d._children.length > 0) {
+            return '2'
+          } else {
+            return '1';
+          }
         }
       });
 

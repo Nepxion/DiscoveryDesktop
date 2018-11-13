@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    title="用户登陆"
+    title="用户登录"
     :show-close="false"
     :close-on-click-modal="false"
     :close-on-press-escape="false"

@@ -7,7 +7,7 @@ class Force {
 
   constructor(selector) {
     this._padding = 40;
-    this.nodeWidth = 54;
+    this.nodeWidth = 38;
 
     this.dom = document.querySelector(selector) || document.querySelector('body');
     while (this.dom.firstChild) {
@@ -48,7 +48,7 @@ class Force {
       .force("charge", d3.forceManyBody())
       //.force("center", d3.forceCenter(this.svgWidth / 2, this.svgHeight / 2))
       .force("xAxis", d3.forceX(this.svgWidth / 2).strength(0.4))
-      .force("yAxis", d3.forceY(this.svgHeight / 2).strength(0.6))
+      .force("yAxis", d3.forceY(this.svgHeight / 2).strength(0.4))
       .force("repelForce", d3.forceManyBody().strength(-7000).distanceMax(900).distanceMin(10))
       .force("link", d3.forceLink().id((d) => {
         return d.id
@@ -72,7 +72,7 @@ class Force {
 
       this.updateData();
 
-      this.force.alphaTarget(0.3).restart();
+      //this.force.alphaTarget(0.3).restart();
     }
   }
 
@@ -183,10 +183,14 @@ class Force {
         }
       })
       .attr('stroke-width', (d) => {
-        if(d._children&&d._children.length>0){
-          return '2'
-        }else{
-          return '1';
+        if(this.selectedNode===d.data){
+          return '4';
+        } else {
+          if (d._children && d._children.length > 0) {
+            return '2'
+          } else {
+            return '1';
+          }
         }
       });
 
@@ -355,12 +359,12 @@ class Force {
         if (d.target.x - d.source.x > 60) {
           endx = d.target.x - 10;
         } else if (d.target.x - d.source.x < -60) {
-          endx = d.target.x + 60;
+          endx = d.target.x + 50;
         } else {
           endx = endx + this.nodeWidth / 2;
           if (d.target.y > d.source.y) {
             endy1 = endy1 - this.nodeWidth;
-            endy2 = endy1 + 20;
+            endy2 = endy1 + 10;
           } else {
             endy1 = endy1 + this.nodeWidth;
             endy2 = endy1 - 20;

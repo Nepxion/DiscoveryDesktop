@@ -48,7 +48,7 @@
       <el-row class="editor-info">
         <el-col :span="24">
           <el-alert
-            title="灰度规则，输入的格式为xml"
+            title="灰度规则，输入的格式为xml或json"
             :closable="false"
             type="info"
             show-icon />
