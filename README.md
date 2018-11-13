@@ -38,7 +38,9 @@ npm run build --report
 
 ## 界面展示
 
-![拓扑图](/images/screenshot-1.png)
+![拓扑图](/images/screenshot-1-1.jpg)
+
+![拓扑图](/images/screenshot-1-2.jpg)
 
 ![灰度路由](/images/screenshot-2.png)
 

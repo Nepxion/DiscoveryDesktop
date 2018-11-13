@@ -5,6 +5,8 @@ Mock.setup({
   timeout: 800, // 设置延迟响应，模拟向后端请求数据
 });
 
+Mock.mock('/console/authenticate', 'post', 'ok');
+
 Mock.mock('/console/discovery-type', 'get', 'Eureka');
 
 Mock.mock('/console/config-type', 'get', 'Nacos');
