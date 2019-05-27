@@ -1,6 +1,6 @@
 # Nepxion DiscoveryUI
-[![Total lines](https://tokei.rs/b1/github/Nepxion/DiscoveryUI?category=lines)](https://github.com/Nepxion/Discovery)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?label=license)](https://github.com/Nepxion/Discovery/blob/master/LICENSE)
+[![Total lines](https://tokei.rs/b1/github/Nepxion/DiscoveryUI?category=lines)](https://github.com/Nepxion/DiscoveryUI)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?label=license)](https://github.com/Nepxion/DiscoveryUI/blob/master/LICENSE)
 
 ## 简介
 
@@ -57,3 +57,7 @@ npm run build --report
 ### 作者
 
 [78552423@qq.com](https://github.com/eshun)
+
+## Star走势图
+
+[![Stargazers over time](https://starchart.cc/Nepxion/DiscoveryUI.svg)](https://starchart.cc/Nepxion/DiscoveryUI)
