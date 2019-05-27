@@ -60,4 +60,4 @@ npm run build --report
 
 ## Star走势图
 
-[![Stargazers over time](https://starchart.cc/Nepxion/DiscoveryUI.svg)](https://starchart.cc/Nepxion/DiscoveryUI) 
+[![Stargazers over time](https://starchart.cc/Nepxion/DiscoveryUI.svg)](https://starchart.cc/Nepxion/DiscoveryUI)
