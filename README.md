@@ -8,7 +8,7 @@ Nepxion DiscoveryUI is a web framework based on Vue for Nepxion Discovery projec
 
 参考[入门教程](https://github.com/Nepxion/Docs/blob/master/discovery-doc/README_QUICK_START.md)
 
-## 准备工作
+## 准备工作 
 
 - node.js环境（npm包管理器）
 - vue-cli 脚手架构建工具
