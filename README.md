@@ -34,7 +34,7 @@ npm run build
 npm run build --report
 ```
 
-也可以[下载](https://github.com/Nepxion/DiscoveryUI/releases)已发布版本！可以直接运行nginx，浏览器访问[http://localhost:8080](http://localhost:8080)，可通过nginx配置(conf/nginx.conf)修改端口
+也可以[下载](https://github.com/Nepxion/DiscoveryUI/releases)已发布版本！可以直接运行nginx，浏览器访问[http://localhost:8080](http://localhost:8080)，可通过nginx配置(conf/nginx.conf)修改端口 
 
 ## 界面展示
 
