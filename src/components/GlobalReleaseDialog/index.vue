@@ -116,7 +116,9 @@
                 message: '更新成功！',
                 type: 'success'
               });
+              this.loading = false;
             }).catch(() => {
+              this.loading = false;
               this.$message.error('更新灰度规则失败！');
             });
 
