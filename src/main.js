@@ -13,7 +13,7 @@ import '@/assets/iconfont/iconfont.css';
 // global css
 import '@/styles/index.scss';
 
-import './mock';
+//import './mock';
 
 Vue.use(ElementUI);
 
