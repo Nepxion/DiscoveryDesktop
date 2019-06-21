@@ -253,7 +253,6 @@ Mock.mock('/router/routes', 'post', {
   "host": "10.83.3.154",
   "port": 1400,
   "weight": -1,
-  "customMap": null,
   "contextPath": "/",
   "nexts": [
     {
@@ -263,7 +262,6 @@ Mock.mock('/router/routes', 'post', {
       "host": "10.83.3.154",
       "port": 1100,
       "weight": -1,
-      "customMap": null,
       "contextPath": "/",
       "nexts": [
         {
@@ -273,7 +271,6 @@ Mock.mock('/router/routes', 'post', {
           "host": "10.83.3.154",
           "port": 1200,
           "weight": -1,
-          "customMap": null,
           "contextPath": "/",
           "nexts": [
             {
@@ -283,9 +280,6 @@ Mock.mock('/router/routes', 'post', {
               "host": "10.83.3.154",
               "port": 1301,
               "weight": 10,
-              "customMap": {
-                "database": "prod"
-              },
               "contextPath": "/",
               "nexts": []
             },
@@ -296,9 +290,6 @@ Mock.mock('/router/routes', 'post', {
               "host": "10.83.3.154",
               "port": 1300,
               "weight": 90,
-              "customMap": {
-                "database": "prod"
-              },
               "contextPath": "/",
               "nexts": []
             }
