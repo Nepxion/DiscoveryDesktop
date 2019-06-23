@@ -14,7 +14,7 @@ Nepxion DiscoveryUI is a web framework based on Vue for Nepxion Discovery projec
 - vue-cli 脚手架构建工具
 - cnpm npm的淘宝镜像
 
-## 编译运行
+## 编译运行 
 
 ``` bash
 # install dependencies
