@@ -20,7 +20,7 @@ Nepxion DiscoveryUI is a web framework based on Vue for Nepxion Discovery projec
 # install dependencies
 npm install
 
-# or 建议不要用cnpm  安装有各种诡异的bug 可以通过如下操作解决npm速度慢的问题
+# or 建议不要用cnpm  安装有各种诡异的bug 可以通过如下操作解决npm速度慢的问题 
 npm install --registry=https://registry.npm.taobao.org
 
 # serve with hot reload at localhost:8080
