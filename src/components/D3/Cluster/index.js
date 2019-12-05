@@ -3,11 +3,12 @@ import * as d3 from '../d3';
 import * as utils from '../../../utils';
 import {icon} from '../enum';
 
-class Force {
-
+class Cluster {
   constructor(selector) {
     this._padding = 40;
     this.nodeWidth = 38;
+    this.nodeHeight = 120;
+    this.maxSize=1,this.zoomSize=1;
 
     this.dom = document.querySelector(selector) || document.querySelector('body');
     while (this.dom.firstChild) {
@@ -44,20 +45,19 @@ class Force {
     //.on("dblclick.zoom", null)
       .on("click", ()=>this.stopped(), true);
 
-    this.force = d3.forceSimulation()
-      .force("charge", d3.forceManyBody())
-      //.force("center", d3.forceCenter(this.svgWidth / 2, this.svgHeight / 2))
-      .force("xAxis", d3.forceX(this.svgWidth / 2).strength(0.4))
-      .force("yAxis", d3.forceY(this.svgHeight / 2).strength(0.4))
-      .force("repelForce", d3.forceManyBody().strength(-7000).distanceMax(900).distanceMin(10))
-      .force("link", d3.forceLink().id((d) => {
-        return d.id
-      }))
-      .force("collide", d3.forceCollide().radius((d) => {
-        return this.nodeWidth*2;
-      }).iterations(10).strength(1));
+    //var tree = D3.Cluster().size([height, width/2]); //集群图
+    this.tree = d3.tree()
+        .separation((a, b) => {
+            if(a&&a.children&&a.children.length>this.maxSize){
+              this.maxSize=a.children.length;
+            }
+            if(b&&b.children&&b.children.length>this.maxSize){
+              this.maxSize=b.children.length;
+            }
+            return (a.parent == b.parent ? 1 : 2); })
+        .size([this.svgHeight, this.svgWidth/2]); //树形图
 
-    this.force.on("tick", ()=>this.tick());
+    // tree.children = function(d) { return d.children; }
 
     this.selectedNode = null;
     this.onNodeChecked = null;
@@ -68,22 +68,42 @@ class Force {
 
   loadData(data) {
     if(data){
+      this.maxSize=data&&data.children?data.children.length:1;
       this.root = d3.hierarchy(data);
+      this.tree(this.root);
+      const maxHeight=this.maxSize*(this.nodeHeight);
+      if(maxHeight>this.svgHeight) {
+        this.zoomSize = this.svgHeight / maxHeight;
+
+        this.svgHeight = maxHeight;
+        //svg.attr("height", height);
+        this.tree.size([this.svgHeight, this.svgWidth / 2]);
+        this.tree(this.root);
+
+        //g.attr("transform","translate("+s+","+s+")scale("+zoomSize+")")
+        //zoom.transform(g, D3.zoomTransform(0).translate(s,s));
+        //zoom.scaleTo(svg,zoomSize);
+
+        //判断自动缩放等级
+        this.svg.call(this.zoom.transform, d3.zoomIdentity.translate(20, 0).scale(this.zoomSize));
+
+        this.svg.call(this.zoom)
+        //.on("dblclick.zoom", null)
+          .on("click", ()=>this.stopped(), true);
+      }
 
       this.updateData();
-
-      //this.force.alphaTarget(0.3).restart();
     }
   }
 
   updateData() {
-    const nodes=this.root.descendants();
+    const nodes = this.root.descendants();
     //var links=this.root.descendants().slice(1);
-    const links=this.root.links();
+    const links = this.root.links();
 
-    this.force.nodes(nodes).force("link").links(links);
-
-    this.linkBox = this.linkBox.data(links, function(d) { return d.id||utils.makeId(); });
+    this.linkBox = this.linkBox.data(links, function(d) {
+      return d.id || utils.makeId();
+    });
     this.linkBox.exit().remove();
 
     this.svg.append('defs').append('marker')
@@ -97,7 +117,7 @@ class Force {
       .append('svg:path')
       .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
       .attr('fill', '#3e78b7')
-      .attr('stroke','none');
+      .attr('stroke', 'none');
 
     this.linkBox = this.linkBox
       .enter().append("g");
@@ -113,9 +133,20 @@ class Force {
       .attr('marker-end', 'url(#arrow)')
       .style('stroke', '#3e78b7')
       .style('stroke-width', 2)
-      .attr("d", d3.linkHorizontal()
-        .x(function(d) { return d.y; })
-        .y(function(d) { return d.x; }));
+      // .attr("d", D3.linkHorizontal()
+      //   .x(function(d) {
+      //     return d.y;
+      //   })
+      //   .y(function(d) {
+      //     return d.x;
+      //   }));
+      .attr("d", (d) => {
+          //var twidth = getTextWidth(d.source.data.name);
+          return "M" + (d.source.y) + "," + d.source.x
+            + "C" + (d.source.y + d.target.y) / 2 + "," + d.source.x
+            + " " + (d.source.y + d.target.y) / 2 + "," + d.target.x
+            + " " + (d.target.y-10)+ "," + d.target.x;
+        });
 
     this.linkText=this.linkBox.append("text")
       .append("textPath")
@@ -131,12 +162,14 @@ class Force {
         }
       });
 
-    this.node = this.node.data(nodes, function(d) { return d.id||utils.makeId(); });
+    this.node = this.node.data(nodes, function(d) {
+      return d.id || utils.makeId();
+    });
     this.node.exit().remove();
     this.node = this.node
       .enter().append("g")
       .attr("class", (d) => {
-        return "node" + (d.children&&d.children.length>0 ? " node--internal" : " node--leaf");
+        return "node" + (d.children && d.children.length > 0 ? " node--internal" : " node--leaf");
       })
       .attr("transform", (d) => {
         return "translate(" + d.y + "," + d.x + ")";
@@ -147,13 +180,13 @@ class Force {
       .on('mouseout', () => {
         this.highlightObject(null);
       })
-      .on('click',(d) => {
+      .on('click', (d) => {
         d3.event.stopPropagation();
         this._onNodeClick(d.data);
       })
-      .on('dblclick',(d) => {
+      .on('dblclick', (d) => {
         d3.event.stopPropagation();
-        if (!d._children&&!d.children) {
+        if (!d._children && !d.children) {
           return false;
         }
         this.open(d);
@@ -161,7 +194,7 @@ class Force {
       .call(this.drag);
 
     this.nodeBox = this.node.append('rect')
-      .attr("class","nodeBox")
+      .attr("class", "nodeBox")
       .attr('width', this.nodeWidth)
       .attr('height', this.nodeWidth)
       .attr('rx', this.nodeWidth / 2)
@@ -197,10 +230,10 @@ class Force {
     this.node.append("image")
       .attr("class", "circle")
       .attr("xlink:href", (d) => {
-        if(!d.parent){
+        if (!d.parent) {
           return icon.colony;
-        }else{
-          if(!d.children&&!d._children){
+        } else {
+          if (!d.children && !d._children) {
             return icon.ecs;
           }
           else {
@@ -209,26 +242,23 @@ class Force {
         }
       })
       .attr('x', 10)
-      .attr("y", -this.nodeWidth/2+10)
-      .attr("width", this.nodeWidth-20)
-      .attr("height", this.nodeWidth-20);
+      .attr("y", -this.nodeWidth / 2 + 10)
+      .attr("width", this.nodeWidth - 20)
+      .attr("height", this.nodeWidth - 20);
 
     const nodeText = this.node.append("text")
-      .attr('x', this.nodeWidth/2)
-      .attr('y', this.nodeWidth-10)
+      .attr('x', this.nodeWidth / 2)
+      .attr('y', this.nodeWidth - 10)
       //.attr("fill", "#ffffff")
       .attr("cursor", "default")
       .style("text-anchor", "middle")
-      // .text((d) => {
-      //   return d.data.name
-      // });
       .text(null);
 
-      nodeText.append('tspan')
-        .attr('x', this.nodeWidth / 2)
-        .attr('dy', 0).text((d) => {
-        return d.data.name
-      });
+    nodeText.append('tspan')
+      .attr('x', this.nodeWidth / 2)
+      .attr('dy', 0).text((d) => {
+      return d.data.name
+    });
 
     nodeText.append('tspan')
       .text((d) => {
@@ -248,14 +278,15 @@ class Force {
       .attr('x', this.nodeWidth / 2)
       .attr('dy', 20);
 
-      nodeText.append('tspan')
-        .text((d) => {
-          if(d.data.region){
-            return d.data.region
-          }
-        })
-        .attr('x', this.nodeWidth / 2)
-        .attr('dy', 20);
+    nodeText.append('tspan')
+      .text((d) => {
+        if(d.data.region){
+          return d.data.region
+        }
+      })
+      .attr('x', this.nodeWidth / 2)
+      .attr('dy', 20);
+
   }
 
   /**
@@ -276,7 +307,6 @@ class Force {
   }
 
   dragstarted(d) {
-    if (!d3.event.active) this.force.alphaTarget(0.3).restart();
     d.fx = d.x;
     d.fy = d.y;
   }
@@ -287,7 +317,6 @@ class Force {
   }
 
   dragended(d) {
-    if (!d3.event.active) this.force.alphaTarget(0);
     d.fx = null;
     d.fy = null;
   }
@@ -300,10 +329,10 @@ class Force {
     if (obj) {
       this.dependsNode=utils.getNode(obj);
       this.node.classed('inactive',(d) => {
-        return (this.dependsNode.indexOf(d)==-1)
+        return (this.dependsNode && (this.dependsNode.indexOf(d) == -1))
       });
       this.link.classed('inactive', (d) => {
-        return ((this.dependsNode.indexOf(d.source)==-1)||(this.dependsNode.indexOf(d.target)==-1))
+        return (this.dependsNode&&(this.dependsNode.indexOf(d.source)==-1)||(this.dependsNode.indexOf(d.target)==-1))
       });
       this.linkText.classed('inactive',(d) => {
         return (this.dependsNode&&(this.dependsNode.indexOf(d.source)==-1)||(this.dependsNode.indexOf(d.target)==-1))
@@ -313,7 +342,6 @@ class Force {
       this.strokeTime=setInterval(() => {
         this.dynamicLink();
       }, 500);
-
     } else {
       this.dependsNode=null;
       clearInterval(this.strokeTime);
@@ -344,7 +372,7 @@ class Force {
    * tick
    */
   tick() {
-    if(this.link) {
+    if(this.link){
       this.link.attr("d", (d) => {
 
         // var dx = d.target.x - d.source.x,
@@ -359,12 +387,12 @@ class Force {
         if (d.target.x - d.source.x > 60) {
           endx = d.target.x - 10;
         } else if (d.target.x - d.source.x < -60) {
-          endx = d.target.x + 50;
+          endx = d.target.x + 60;
         } else {
           endx = endx + this.nodeWidth / 2;
           if (d.target.y > d.source.y) {
             endy1 = endy1 - this.nodeWidth;
-            endy2 = endy1 + 10;
+            endy2 = endy1 + 20;
           } else {
             endy1 = endy1 + this.nodeWidth;
             endy2 = endy1 - 20;
@@ -392,18 +420,18 @@ class Force {
    * 缩小放大
    */
   zoomed() {
-    //g.style("stroke-width", 1.5 / d3.event.transform.k + "px");
-    //g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")"); // no
+    //g.style("stroke-width", 1.5 / D3.event.transform.k + "px");
+    //g.attr("transform", "translate(" + D3.event.translate + ")scale(" + D3.event.scale + ")"); // no
     const transform = d3.event.transform;
-    if (transform.x < 0 || transform.y < 0 || transform.x + this.nodeWidth >= this.svgWidth || transform.y + this.nodeWidth >= this.svgHeight) {
-      return;
-    }
+    // if (transform.x < 0 || transform.y < 0 || transform.x + this.nodeWidth >= this.svgWidth || transform.y + this.nodeWidth >= this.svgHeight) {
+    //   return;
+    // }
     this.g.attr("transform", transform);
   }
 
   stopped() {
     if (d3.event.defaultPrevented) d3.event.stopPropagation();
-    //this.highlightObject(null);
+    this.highlightObject(null);
     this._onNodeClick(null);
   }
 
@@ -450,5 +478,4 @@ class Force {
     }
   }
 }
-
-export default Force;
+export default Cluster;
