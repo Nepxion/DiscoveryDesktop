@@ -1,7 +1,7 @@
 # Nepxion DiscoveryUI
 [![Total lines](https://tokei.rs/b1/github/Nepxion/DiscoveryUI?category=lines)](https://tokei.rs/b1/github/Nepxion/DiscoveryUI?category=lines) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?label=license)](https://github.com/Nepxion/DiscoveryUI/blob/master/LICENSE)  [![Stars](https://img.shields.io/github/stars/Nepxion/DiscoveryUI.svg?label=Stars&tyle=flat&logo=GitHub)](https://github.com/Nepxion/DiscoveryUI/stargazers)  [![Stars](https://gitee.com/Nepxion/DiscoveryUI/badge/star.svg)](https://gitee.com/nepxion/DiscoveryUI/stargazers)
 
-## 简介 
+## 简介
 
 Nepxion DiscoveryUI is a web framework based on Vue for Nepxion Discovery project [http://www.nepxion.com](http://www.nepxion.com/)
 
