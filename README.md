@@ -56,5 +56,4 @@ npm run build --report
 [78552423@qq.com](https://github.com/eshun)
 
 ## Star走势图
-
 [![Stargazers over time](https://starchart.cc/Nepxion/DiscoveryUI.svg)](https://starchart.cc/Nepxion/DiscoveryUI)
