@@ -95,6 +95,9 @@ public class ConsoleLogin extends JLoginDialog {
         editorPanel.add(passwordField, "1, 2");
         editorPanel.add(localeLabel, "0, 3");
         editorPanel.add(localeComboBox, "1, 3");
+
+        accountTextField.setText("admin");
+        passwordField.setText("admin");
     }
 
     @Override

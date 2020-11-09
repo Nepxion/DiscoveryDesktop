@@ -27,18 +27,18 @@ public class ConsoleFrame extends JBasicFrame {
     private static final Logger LOG = LoggerFactory.getLogger(ConsoleFrame.class);
 
     public ConsoleFrame() {
-        super(ConsoleLocale.getString("title") + " " + getSubTitle(), ConsoleIconFactory.getSwingIcon("ribbon/navigator_nepxion.png"), new Dimension(1280, 900));
+        super(ConsoleLocale.getString("title") + " " + getSubTitle(), ConsoleIconFactory.getSwingIcon("ribbon/navigator_nepxion.png"), new Dimension(1600, 1200));
     }
 
     public void launch() {
-        ConsoleHierarchy deployHierarchy = new ConsoleHierarchy(new JBlackHeaderTextureStyle(), new JGreenOutlookTextureStyle());
+        ConsoleHierarchy consoleHierarchy = new ConsoleHierarchy(new JBlackHeaderTextureStyle(), new JGreenOutlookTextureStyle());
 
         JReflectionHierarchy reflectionHierarchy = new JReflectionHierarchy(20, 20);
-        reflectionHierarchy.setContentPane(deployHierarchy);
+        reflectionHierarchy.setContentPane(consoleHierarchy);
 
         getContentPane().add(reflectionHierarchy);
 
-        setExtendedState(ConsoleFrame.MAXIMIZED_BOTH);
+        // setExtendedState(ConsoleFrame.MAXIMIZED_BOTH);
         setVisible(true);
         toFront();
     }

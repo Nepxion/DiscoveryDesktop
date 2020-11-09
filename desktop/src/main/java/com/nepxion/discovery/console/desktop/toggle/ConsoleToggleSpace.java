@@ -14,7 +14,7 @@ import java.awt.BorderLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import com.nepxion.discovery.console.desktop.workspace.ServiceTopology;
+import com.nepxion.discovery.console.desktop.workspace.BlueGreenTopology;
 import com.nepxion.swing.element.IElementNode;
 
 public class ConsoleToggleSpace extends JPanel {
@@ -34,8 +34,8 @@ public class ConsoleToggleSpace extends JPanel {
         JComponent contentPane = null;
 
         String name = listElementNode.getName();
-        if (name.equals(ConsoleToggleConstants.SERVICE_TOPOLOGY)) {
-            contentPane = new ServiceTopology();
+        if (name.equals(ConsoleToggleConstants.BLUE_GREEN_DEPLOY)) {
+            contentPane = new BlueGreenTopology();
         } else {
             contentPane = blankPane;
         }
