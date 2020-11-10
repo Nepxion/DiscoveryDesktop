@@ -61,6 +61,17 @@ import com.nepxion.swing.textfield.JBasicTextField;
 public class BlueGreenTopology extends AbstractTopology {
     private static final long serialVersionUID = 1L;
 
+    private static final String GATEWAY_NODE = "GATEWAY-NODE";
+    private static final String BLUE_NODE = "BLUE-NODE";
+    private static final String GREEN_NODE = "GREEN-NODE";
+    private static final String BASIC_NODE = "BASIC-NODE";
+
+    private static final String BLUE_LINK = "BLUE-LINK";
+    private static final String GREEN_LINK = "GREEN-LINK";
+    private static final String BASIC_LINK = "BASIC-LINK";
+
+    private static final String VERSION = "version";
+
     private NodeLocation nodeLocation = new NodeLocation(100, 200, 200, 0);
     private NodeUI gatewayBlackNodeUI = new NodeUI(NodeImageType.GATEWAY_BLACK, NodeSizeType.LARGE, true);
     private NodeUI serviceYellowNodeUI = new NodeUI(NodeImageType.SERVICE_YELLOW, NodeSizeType.MIDDLE, true);
@@ -133,7 +144,7 @@ public class BlueGreenTopology extends AbstractTopology {
         servicePanel.add(Box.createHorizontalStrut(10));
         servicePanel.add(new JClassicButton(createAddServiceAction()));
         servicePanel.add(new JClassicButton(createRemoveServiceAction()));
-        servicePanel.add(new JClassicButton("修改", ConsoleIconFactory.getSwingIcon("property.png")));
+        servicePanel.add(new JClassicButton(createModifyServiceAction()));
 
         blueConditionTextField = new JBasicTextField("#H['a'] == '1' && #H['b'] <= '2'");
         blueConditionTextField.setPreferredSize(new Dimension(436, blueConditionTextField.getPreferredSize().height));
@@ -204,7 +215,7 @@ public class BlueGreenTopology extends AbstractTopology {
         Instance gatewayInstance = new Instance();
         gatewayInstance.setServiceId("Discovery Gateway");
         gatewayNode.setUserObject(gatewayInstance);
-        gatewayNode.setBusinessObject("gateway");
+        gatewayNode.setBusinessObject(GATEWAY_NODE);
     }
 
     private void initializeListener() {
@@ -231,48 +242,50 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     private void addNode(String serviceId, String blueMetadata, String greenMetadata, String basicMetadata, String blueCondition, String greenCondition) {
-        TNode newBlueNode = addNode(ButtonManager.getHtmlText(serviceId + "\n[Version=" + blueMetadata + "]"), serviceBlueNodeUI);
+        TNode newBlueNode = addNode(ButtonManager.getHtmlText(serviceId + "\n[" + StringUtils.capitalize(VERSION) + "=" + blueMetadata + "]"), serviceBlueNodeUI);
         Instance newBlueInstance = new Instance();
         newBlueInstance.setServiceId(serviceId);
         Map<String, String> newBlueMetadataMap = new HashMap<String, String>();
-        newBlueMetadataMap.put("Version", blueMetadata);
+        newBlueMetadataMap.put(VERSION, blueMetadata);
         newBlueInstance.setMetadata(newBlueMetadataMap);
         newBlueNode.setUserObject(newBlueInstance);
-        newBlueNode.setBusinessObject("blue-service");
+        newBlueNode.setBusinessObject(BLUE_NODE);
         if (blueNode == null) {
             TLink blueLink = addLink(gatewayNode, newBlueNode, LinkUI.BLUE);
             blueLink.setDisplayName("蓝路由");
             blueLink.setToolTipText(blueCondition);
+            blueLink.setBusinessObject(BLUE_LINK);
         } else {
             addLink(blueNode, newBlueNode, null);
         }
         blueNode = newBlueNode;
 
-        TNode newGreenNode = addNode(ButtonManager.getHtmlText(serviceId + "\n[Version=" + greenMetadata + "]"), serviceGreenNodeUI);
+        TNode newGreenNode = addNode(ButtonManager.getHtmlText(serviceId + "\n[" + StringUtils.capitalize(VERSION) + "=" + greenMetadata + "]"), serviceGreenNodeUI);
         Instance newGreenInstance = new Instance();
         newGreenInstance.setServiceId(serviceId);
         Map<String, String> newGreenMetadataMap = new HashMap<String, String>();
-        newGreenMetadataMap.put("Version", greenMetadata);
+        newGreenMetadataMap.put(VERSION, greenMetadata);
         newGreenInstance.setMetadata(newGreenMetadataMap);
         newGreenNode.setUserObject(newGreenInstance);
-        newGreenNode.setBusinessObject("green-service");
+        newGreenNode.setBusinessObject(GREEN_NODE);
         if (greenNode == null) {
             TLink greenLink = addLink(gatewayNode, newGreenNode, LinkUI.GREEN);
             greenLink.setDisplayName("绿路由");
             greenLink.setToolTipText(greenCondition);
+            greenLink.setBusinessObject(GREEN_LINK);
         } else {
             addLink(greenNode, newGreenNode, null);
         }
         greenNode = newGreenNode;
 
-        TNode newBasicNode = addNode(ButtonManager.getHtmlText(serviceId + "\n[Version=" + basicMetadata + "]"), serviceYellowNodeUI);
+        TNode newBasicNode = addNode(ButtonManager.getHtmlText(serviceId + "\n[" + StringUtils.capitalize(VERSION) + "=" + basicMetadata + "]"), serviceYellowNodeUI);
         Instance newBasicInstance = new Instance();
         newBasicInstance.setServiceId(serviceId);
         Map<String, String> newBasicMetadataMap = new HashMap<String, String>();
-        newBasicMetadataMap.put("Version", basicMetadata);
+        newBasicMetadataMap.put(VERSION, basicMetadata);
         newBasicInstance.setMetadata(newBasicMetadataMap);
         newBasicNode.setUserObject(newBasicInstance);
-        newBasicNode.setBusinessObject("basic-service");
+        newBasicNode.setBusinessObject(BASIC_NODE);
         if (basicNode == null) {
             TLink basicLink = addLink(gatewayNode, newBasicNode, LinkUI.YELLOW);
             basicLink.setDisplayName("兜底路由");
@@ -324,6 +337,26 @@ public class BlueGreenTopology extends AbstractTopology {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    private void modifyNode(String serviceId, String blueMetadata, String greenMetadata, String basicMetadata) {
+        List<TNode> nodes = TElementManager.getNodes(dataBox);
+        for (TNode node : nodes) {
+            Instance instance = (Instance) node.getUserObject();
+            if (StringUtils.equalsIgnoreCase(instance.getServiceId(), serviceId)) {
+                if (StringUtils.equals(node.getBusinessObject().toString(), BLUE_NODE)) {
+                    node.setName(ButtonManager.getHtmlText(serviceId + "\n[" + StringUtils.capitalize(VERSION) + "=" + blueMetadata + "]"));
+                    instance.getMetadata().put(VERSION, blueMetadata);
+                } else if (StringUtils.equals(node.getBusinessObject().toString(), GREEN_NODE)) {
+                    node.setName(ButtonManager.getHtmlText(serviceId + "\n[" + StringUtils.capitalize(VERSION) + "=" + greenMetadata + "]"));
+                    instance.getMetadata().put(VERSION, greenMetadata);
+                } else if (StringUtils.equals(node.getBusinessObject().toString(), BASIC_NODE)) {
+                    node.setName(ButtonManager.getHtmlText(serviceId + "\n[" + StringUtils.capitalize(VERSION) + "=" + basicMetadata + "]"));
+                    instance.getMetadata().put(VERSION, basicMetadata);
+                }
+            }
+        }
+    }
+
     private TNode addNode(String name, NodeUI topologyEntity) {
         TNode node = createNode(name, topologyEntity, nodeLocation, 0);
 
@@ -360,6 +393,12 @@ public class BlueGreenTopology extends AbstractTopology {
 
             public void execute(ActionEvent e) {
                 String serviceId = serviceIdComboBox.getSelectedItem().toString();
+                if (StringUtils.isBlank(serviceId)) {
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "服务名必填", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+                    return;
+                }
+
                 if (hasNode(serviceId)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), serviceId + "已存在", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
@@ -399,13 +438,42 @@ public class BlueGreenTopology extends AbstractTopology {
         return action;
     }
 
+    private JSecurityAction createModifyServiceAction() {
+        JSecurityAction action = new JSecurityAction("修改", ConsoleIconFactory.getSwingIcon("property.png"), "修改") {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+                String serviceId = serviceIdComboBox.getSelectedItem().toString();
+                if (StringUtils.isBlank(serviceId)) {
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "服务名必填", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+                    return;
+                }
+
+                String blueMetadata = blueMetadataTextField.getText().trim();
+                String greenMetadata = greenMetadataTextField.getText().trim();
+                String basicMetadata = basicMetadataTextField.getText().trim();
+
+                if (StringUtils.isBlank(blueMetadata) || StringUtils.isBlank(greenMetadata) || StringUtils.isBlank(basicMetadata)) {
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "版本号必填", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+                    return;
+                }
+
+                modifyNode(serviceId, blueMetadata, greenMetadata, basicMetadata);
+            }
+        };
+
+        return action;
+    }
+
     private JSecurityAction createMetadataSelectorAction(JBasicTextField metadataTextField) {
         JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("direction_south.png"), "版本选取") {
             private static final long serialVersionUID = 1L;
 
             @SuppressWarnings("unchecked")
             public void execute(ActionEvent e) {
-                String[] metadatas = new String[] { "20201111-001", "20201111-002", "20201111-003", "default" };
+                String[] metadatas = new String[] { "20201111-001", "20201111-002", "20201111-003", DiscoveryConstant.DEFAULT };
 
                 List<ElementNode> metadataElementNodes = new ArrayList<ElementNode>();
                 for (String metadata : metadatas) {
