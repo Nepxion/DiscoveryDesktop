@@ -80,9 +80,9 @@ public class BlueGreenTopology extends AbstractTopology {
 
     private TGraphBackground background;
     private JBasicComboBox serviceIdComboBox;
-    private JBasicTextField blueMetadataTextField;
-    private JBasicTextField greenMetadataTextField;
-    private JBasicTextField basicMetadataTextField;
+    private JBasicComboBox blueMetadataComboBox;
+    private JBasicComboBox greenMetadataComboBox;
+    private JBasicComboBox basicMetadataComboBox;
     private JBasicTextField blueConditionTextField;
     private JBasicTextField greenConditionTextField;
 
@@ -101,25 +101,30 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     private void initializeContentBar() {
-        blueMetadataTextField = new JBasicTextField();
-        blueMetadataTextField.setPreferredSize(new Dimension(150, blueMetadataTextField.getPreferredSize().height));
-        JClassicButton blueMetadataButton = new JClassicButton(createMetadataSelectorAction(blueMetadataTextField));
-        blueMetadataButton.setPreferredSize(new Dimension(30, blueMetadataButton.getPreferredSize().height));
-
-        greenMetadataTextField = new JBasicTextField();
-        greenMetadataTextField.setPreferredSize(new Dimension(150, greenMetadataTextField.getPreferredSize().height));
-        JClassicButton greenMetadataButton = new JClassicButton(createMetadataSelectorAction(greenMetadataTextField));
-        greenMetadataButton.setPreferredSize(new Dimension(30, greenMetadataButton.getPreferredSize().height));
-
-        basicMetadataTextField = new JBasicTextField();
-        basicMetadataTextField.setPreferredSize(new Dimension(150, basicMetadataTextField.getPreferredSize().height));
-        JClassicButton basicMetadataButton = new JClassicButton(createMetadataSelectorAction(basicMetadataTextField));
-        basicMetadataButton.setPreferredSize(new Dimension(30, basicMetadataButton.getPreferredSize().height));
+        JBasicTextField layoutTextField = new JBasicTextField();
 
         String[] serviceIds = new String[] { "serivice-a", "serivice-b", "serivice-c", "serivice-d", "serivice-e", "serivice-f" };
         serviceIdComboBox = new JBasicComboBox(serviceIds);
         serviceIdComboBox.setEditable(true);
-        serviceIdComboBox.setPreferredSize(new Dimension(250, basicMetadataTextField.getPreferredSize().height));
+        serviceIdComboBox.setPreferredSize(new Dimension(250, layoutTextField.getPreferredSize().height));
+
+        blueMetadataComboBox = new JBasicComboBox();
+        blueMetadataComboBox.setEditable(true);
+        blueMetadataComboBox.setPreferredSize(new Dimension(150, layoutTextField.getPreferredSize().height));
+        JClassicButton blueMetadataButton = new JClassicButton(createMetadataSelectorAction(blueMetadataComboBox));
+        blueMetadataButton.setPreferredSize(new Dimension(30, blueMetadataButton.getPreferredSize().height));
+
+        greenMetadataComboBox = new JBasicComboBox();
+        greenMetadataComboBox.setEditable(true);
+        greenMetadataComboBox.setPreferredSize(new Dimension(150, layoutTextField.getPreferredSize().height));
+        JClassicButton greenMetadataButton = new JClassicButton(createMetadataSelectorAction(greenMetadataComboBox));
+        greenMetadataButton.setPreferredSize(new Dimension(30, greenMetadataButton.getPreferredSize().height));
+
+        basicMetadataComboBox = new JBasicComboBox();
+        basicMetadataComboBox.setEditable(true);
+        basicMetadataComboBox.setPreferredSize(new Dimension(150, layoutTextField.getPreferredSize().height));
+        JClassicButton basicMetadataButton = new JClassicButton(createMetadataSelectorAction(basicMetadataComboBox));
+        basicMetadataButton.setPreferredSize(new Dimension(30, basicMetadataButton.getPreferredSize().height));
 
         JPanel servicePanel = new JPanel();
         servicePanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
@@ -129,17 +134,17 @@ public class BlueGreenTopology extends AbstractTopology {
         servicePanel.add(Box.createHorizontalStrut(10));
         servicePanel.add(new JBasicLabel("蓝版本"));
         servicePanel.add(Box.createHorizontalStrut(10));
-        servicePanel.add(blueMetadataTextField);
+        servicePanel.add(blueMetadataComboBox);
         servicePanel.add(blueMetadataButton);
         servicePanel.add(Box.createHorizontalStrut(10));
         servicePanel.add(new JBasicLabel("绿版本"));
         servicePanel.add(Box.createHorizontalStrut(10));
-        servicePanel.add(greenMetadataTextField);
+        servicePanel.add(greenMetadataComboBox);
         servicePanel.add(greenMetadataButton);
         servicePanel.add(Box.createHorizontalStrut(10));
         servicePanel.add(new JBasicLabel("兜底版本"));
         servicePanel.add(Box.createHorizontalStrut(10));
-        servicePanel.add(basicMetadataTextField);
+        servicePanel.add(basicMetadataComboBox);
         servicePanel.add(basicMetadataButton);
         servicePanel.add(Box.createHorizontalStrut(10));
         servicePanel.add(new JClassicButton(createAddServiceAction()));
@@ -411,7 +416,7 @@ public class BlueGreenTopology extends AbstractTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                String serviceId = serviceIdComboBox.getSelectedItem().toString();
+                String serviceId = serviceIdComboBox.getSelectedItem().toString().trim();
                 if (StringUtils.isBlank(serviceId)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "服务名必填", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
@@ -424,9 +429,9 @@ public class BlueGreenTopology extends AbstractTopology {
                     return;
                 }
 
-                String blueMetadata = blueMetadataTextField.getText().trim();
-                String greenMetadata = greenMetadataTextField.getText().trim();
-                String basicMetadata = basicMetadataTextField.getText().trim();
+                String blueMetadata = blueMetadataComboBox.getSelectedItem().toString().trim();
+                String greenMetadata = greenMetadataComboBox.getSelectedItem().toString().trim();
+                String basicMetadata = basicMetadataComboBox.getSelectedItem().toString().trim();
                 String blueCondition = blueConditionTextField.getText().trim();
                 String greenCondition = greenConditionTextField.getText().trim();
 
@@ -475,9 +480,9 @@ public class BlueGreenTopology extends AbstractTopology {
                     return;
                 }
 
-                String blueMetadata = blueMetadataTextField.getText().trim();
-                String greenMetadata = greenMetadataTextField.getText().trim();
-                String basicMetadata = basicMetadataTextField.getText().trim();
+                String blueMetadata = blueMetadataComboBox.getSelectedItem().toString().trim();
+                String greenMetadata = greenMetadataComboBox.getSelectedItem().toString().trim();
+                String basicMetadata = basicMetadataComboBox.getSelectedItem().toString().trim();
 
                 if (StringUtils.isBlank(blueMetadata) || StringUtils.isBlank(greenMetadata) || StringUtils.isBlank(basicMetadata)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "版本号必填", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
@@ -513,7 +518,7 @@ public class BlueGreenTopology extends AbstractTopology {
         return action;
     }
 
-    private JSecurityAction createMetadataSelectorAction(JBasicTextField metadataTextField) {
+    private JSecurityAction createMetadataSelectorAction(JBasicComboBox metadataComboBox) {
         JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("direction_south.png"), "版本选取") {
             private static final long serialVersionUID = 1L;
 
@@ -550,7 +555,7 @@ public class BlueGreenTopology extends AbstractTopology {
                     index++;
                 }
 
-                metadataTextField.setText(StringBuilder.toString());
+                metadataComboBox.setSelectedItem(StringBuilder.toString());
             }
         };
 
