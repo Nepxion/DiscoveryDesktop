@@ -12,6 +12,7 @@ package com.nepxion.discovery.console.desktop.workspace;
 import twaver.Generator;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -24,10 +25,17 @@ import javax.swing.JPanel;
 
 import org.apache.commons.collections4.CollectionUtils;
 
+import com.nepxion.cots.twaver.element.TElementManager;
+import com.nepxion.cots.twaver.element.TLink;
+import com.nepxion.cots.twaver.element.TNode;
 import com.nepxion.cots.twaver.graph.TGraphBackground;
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
 import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.workspace.topology.AbstractTopology;
+import com.nepxion.discovery.console.desktop.workspace.topology.LocationEntity;
+import com.nepxion.discovery.console.desktop.workspace.topology.TopologyEntity;
+import com.nepxion.discovery.console.desktop.workspace.topology.TopologyEntityType;
+import com.nepxion.discovery.console.desktop.workspace.topology.TopologyStyleType;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.JClassicButton;
 import com.nepxion.swing.combobox.JBasicComboBox;
@@ -42,14 +50,17 @@ import com.nepxion.swing.textfield.JBasicTextField;
 public class BlueGreenTopology extends AbstractTopology {
     private static final long serialVersionUID = 1L;
 
+    private LocationEntity locationEntity = new LocationEntity(100, 200, 200, 0);
+    private TopologyEntity gatewayBlackNodeEntity = new TopologyEntity(TopologyEntityType.GATEWAY_BLACK, TopologyStyleType.LARGE, true);
+    private TopologyEntity serviceBlackNodeEntity = new TopologyEntity(TopologyEntityType.SERVICE_BLACK, TopologyStyleType.MIDDLE, true);
+    private TopologyEntity serviceBlueNodeEntity = new TopologyEntity(TopologyEntityType.SERVICE_BLUE, TopologyStyleType.MIDDLE, true);
+    private TopologyEntity serviceGreenNodeEntity = new TopologyEntity(TopologyEntityType.SERVICE_GREEN, TopologyStyleType.MIDDLE, true);
+    
     private TGraphBackground background;
-
     private JBasicComboBox serviceComboBox;
-
     private JBasicTextField blueMetadataTextField;
     private JBasicTextField greenMetadataTextField;
     private JBasicTextField defaultMetadataTextField;
-
     private JBasicTextField blueConditionTextField;
     private JBasicTextField greenConditionTextField;
 
@@ -167,6 +178,66 @@ public class BlueGreenTopology extends AbstractTopology {
                 return null;
             }
         });
+
+        TNode portalNode = addNode("Gateway", gatewayBlackNodeEntity);
+
+        TNode a1Node = addNode("A1", serviceBlueNodeEntity);
+        TNode a2Node = addNode("A2", serviceGreenNodeEntity);
+        TNode a3Node = addNode("A3", serviceBlackNodeEntity);
+        TLink blueLink = addLink(portalNode, a1Node);
+        blueLink.setDisplayName("蓝路由");
+        TLink greenLink = addLink(portalNode, a2Node);
+        greenLink.setDisplayName("绿路由");
+        TLink defaultLink = addLink(portalNode, a3Node);
+        defaultLink.setDisplayName("兜底路由");
+
+        TNode b1Node = addNode("B1", serviceBlueNodeEntity);
+        TNode b2Node = addNode("B2", serviceGreenNodeEntity);
+        TNode b3Node = addNode("B3", serviceBlackNodeEntity);
+        addLink(a1Node, b1Node);
+        addLink(a2Node, b2Node);
+        addLink(a3Node, b3Node);
+
+        TNode c1Node = addNode("C1", serviceBlueNodeEntity);
+        TNode c2Node = addNode("C2", serviceGreenNodeEntity);
+        TNode c3Node = addNode("C3", serviceBlackNodeEntity);
+        addLink(b1Node, c1Node);
+        addLink(b2Node, c2Node);
+        addLink(b3Node, c3Node);
+    }
+
+    private TNode addNode(String name, TopologyEntity topologyEntity) {
+        TNode node = createNode(name, topologyEntity, locationEntity, 0);
+        node.setUserObject(name);
+
+        dataBox.addElement(node);
+
+        return node;
+    }
+
+    @SuppressWarnings("unchecked")
+    private TLink addLink(TNode fromNode, TNode toNode) {
+        List<TLink> links = TElementManager.getLinks(dataBox);
+        for (TLink link : links) {
+            if (link.getFrom() == fromNode && link.getTo() == toNode) {
+                return null;
+            }
+        }
+
+        //        int weight = routerEntity.getWeight();
+
+        TLink link = createLink(fromNode, toNode, true);
+        link.putLinkToArrowColor(Color.yellow);
+        //        if (weight > -1) {
+        //            link.setName("weight=" + weight);
+        //            link.putLinkFlowing(true);
+        //            link.putLinkFlowingColor(new Color(255, 155, 85));
+        //            link.putLinkFlowingWidth(3);
+        //        }
+
+        dataBox.addElement(link);
+
+        return link;
     }
 
     private JSecurityAction createMetadataSelectorAction(JBasicTextField metadataTextField) {

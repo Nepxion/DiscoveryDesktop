@@ -9,34 +9,54 @@ package com.nepxion.discovery.console.desktop.workspace.topology;
  * @version 1.0
  */
 
+import java.awt.Color;
 import java.awt.Point;
 
 public class TopologyEntity {
-    public static final String THEME_DIRECTORY = "theme_1/";
+    public static final String THEME_DIRECTORY = "theme_3/";
 
     public static final String SERVICE_GROUP_LARGE_IMAGE = "service_group_80.png";
     public static final String SERVICE_GROUP_MIDDLE_IMAGE = "service_group_64.png";
     public static final String SERVICE_GROUP_SMALL_IMAGE = "service_group_48.png";
 
-    public static final String REFERENCE_GROUP_LARGE_IMAGE = "reference_group_80.png";
-    public static final String REFERENCE_GROUP_MIDDLE_IMAGE = "reference_group_64.png";
-    public static final String REFERENCE_GROUP_SMALL_IMAGE = "reference_group_48.png";
-
     public static final String GATEWAY_GROUP_LARGE_IMAGE = "gateway_group_80.png";
     public static final String GATEWAY_GROUP_MIDDLE_IMAGE = "gateway_group_64.png";
     public static final String GATEWAY_GROUP_SMALL_IMAGE = "gateway_group_48.png";
 
-    public static final String SERVICE_LARGE_IMAGE = THEME_DIRECTORY + "service_64.png";
-    public static final String SERVICE_MIDDLE_IMAGE = THEME_DIRECTORY + "service_48.png";
-    public static final String SERVICE_SMALL_IMAGE = THEME_DIRECTORY + "service_32.png";
+    public static final String SERVICE_BLACK_LARGE_IMAGE = THEME_DIRECTORY + "service_black_64.png";
+    public static final String SERVICE_BLACK_MIDDLE_IMAGE = THEME_DIRECTORY + "service_black_48.png";
+    public static final String SERVICE_BLACK_SMALL_IMAGE = THEME_DIRECTORY + "service_black_32.png";
 
-    public static final String REFERENCE_LARGE_IMAGE = THEME_DIRECTORY + "reference_64.png";
-    public static final String REFERENCE_MIDDLE_IMAGE = THEME_DIRECTORY + "reference_48.png";
-    public static final String REFERENCE_SMALL_IMAGE = THEME_DIRECTORY + "reference_32.png";
+    public static final String SERVICE_GRAY_LARGE_IMAGE = THEME_DIRECTORY + "service_gray_64.png";
+    public static final String SERVICE_GRAY_MIDDLE_IMAGE = THEME_DIRECTORY + "service_gray_48.png";
+    public static final String SERVICE_GRAY_SMALL_IMAGE = THEME_DIRECTORY + "service_gray_32.png";
 
-    public static final String GATEWAY_LARGE_IMAGE = THEME_DIRECTORY + "gateway_64.png";
-    public static final String GATEWAY_MIDDLE_IMAGE = THEME_DIRECTORY + "gateway_48.png";
-    public static final String GATEWAY_SMALL_IMAGE = THEME_DIRECTORY + "gateway_32.png";
+    public static final String SERVICE_BLUE_LARGE_IMAGE = THEME_DIRECTORY + "service_blue_64.png";
+    public static final String SERVICE_BLUE_MIDDLE_IMAGE = THEME_DIRECTORY + "service_blue_48.png";
+    public static final String SERVICE_BLUE_SMALL_IMAGE = THEME_DIRECTORY + "service_blue_32.png";
+
+    public static final String SERVICE_GREEN_LARGE_IMAGE = THEME_DIRECTORY + "service_green_64.png";
+    public static final String SERVICE_GREEN_MIDDLE_IMAGE = THEME_DIRECTORY + "service_green_48.png";
+    public static final String SERVICE_GREEN_SMALL_IMAGE = THEME_DIRECTORY + "service_green_32.png";
+
+    public static final String GATEWAY_BLACK_LARGE_IMAGE = THEME_DIRECTORY + "gateway_black_64.png";
+    public static final String GATEWAY_BLACK_MIDDLE_IMAGE = THEME_DIRECTORY + "gateway_black_48.png";
+    public static final String GATEWAY_BLACK_SMALL_IMAGE = THEME_DIRECTORY + "gateway_black_32.png";
+
+    public static final String GATEWAY_GRAY_LARGE_IMAGE = THEME_DIRECTORY + "gateway_gray_64.png";
+    public static final String GATEWAY_GRAY_MIDDLE_IMAGE = THEME_DIRECTORY + "gateway_gray_48.png";
+    public static final String GATEWAY_GRAY_SMALL_IMAGE = THEME_DIRECTORY + "gateway_gray_32.png";
+
+    public static final String GATEWAY_BLUE_LARGE_IMAGE = THEME_DIRECTORY + "gateway_blue_64.png";
+    public static final String GATEWAY_BLUE_MIDDLE_IMAGE = THEME_DIRECTORY + "gateway_blue_48.png";
+    public static final String GATEWAY_BLUE_SMALL_IMAGE = THEME_DIRECTORY + "gateway_blue_32.png";
+
+    public static final String GATEWAY_GREEN_LARGE_IMAGE = THEME_DIRECTORY + "gateway_green_64.png";
+    public static final String GATEWAY_GREEN_MIDDLE_IMAGE = THEME_DIRECTORY + "gateway_green_48.png";
+    public static final String GATEWAY_GREEN_SMALL_IMAGE = THEME_DIRECTORY + "gateway_green_32.png";
+
+    public static final Color BLUE = new Color(4, 144, 217);
+    public static final Color GREEN = new Color(13, 164, 176);
 
     private TopologyEntityType entityType;
     private TopologyStyleType styleType;
@@ -73,19 +93,6 @@ public class TopologyEntity {
                         break;
                 }
                 break;
-            case REFERENCE_GROUP:
-                switch (styleType) {
-                    case LARGE:
-                        image = REFERENCE_GROUP_LARGE_IMAGE;
-                        break;
-                    case MIDDLE:
-                        image = REFERENCE_GROUP_MIDDLE_IMAGE;
-                        break;
-                    case SMALL:
-                        image = REFERENCE_GROUP_SMALL_IMAGE;
-                        break;
-                }
-                break;
             case GATEWAY_GROUP:
                 switch (styleType) {
                     case LARGE:
@@ -102,39 +109,130 @@ public class TopologyEntity {
             case SERVICE:
                 switch (styleType) {
                     case LARGE:
-                        image = SERVICE_LARGE_IMAGE;
+                        image = SERVICE_GREEN_LARGE_IMAGE;
                         break;
                     case MIDDLE:
-                        image = SERVICE_MIDDLE_IMAGE;
+                        image = SERVICE_GREEN_MIDDLE_IMAGE;
                         break;
                     case SMALL:
-                        image = SERVICE_SMALL_IMAGE;
+                        image = SERVICE_GREEN_SMALL_IMAGE;
                         break;
                 }
                 break;
-            case REFERENCE:
+            case SERVICE_BLACK:
                 switch (styleType) {
                     case LARGE:
-                        image = REFERENCE_LARGE_IMAGE;
+                        image = SERVICE_BLACK_LARGE_IMAGE;
                         break;
                     case MIDDLE:
-                        image = REFERENCE_MIDDLE_IMAGE;
+                        image = SERVICE_BLACK_MIDDLE_IMAGE;
                         break;
                     case SMALL:
-                        image = REFERENCE_SMALL_IMAGE;
+                        image = SERVICE_BLACK_SMALL_IMAGE;
+                        break;
+                }
+                break;
+            case SERVICE_GRAY:
+                switch (styleType) {
+                    case LARGE:
+                        image = SERVICE_GRAY_LARGE_IMAGE;
+                        break;
+                    case MIDDLE:
+                        image = SERVICE_GRAY_MIDDLE_IMAGE;
+                        break;
+                    case SMALL:
+                        image = SERVICE_GRAY_SMALL_IMAGE;
+                        break;
+                }
+                break;
+            case SERVICE_BLUE:
+                switch (styleType) {
+                    case LARGE:
+                        image = SERVICE_BLUE_LARGE_IMAGE;
+                        break;
+                    case MIDDLE:
+                        image = SERVICE_BLUE_MIDDLE_IMAGE;
+                        break;
+                    case SMALL:
+                        image = SERVICE_BLUE_SMALL_IMAGE;
+                        break;
+                }
+                break;
+            case SERVICE_GREEN:
+                switch (styleType) {
+                    case LARGE:
+                        image = SERVICE_GREEN_LARGE_IMAGE;
+                        break;
+                    case MIDDLE:
+                        image = SERVICE_GREEN_MIDDLE_IMAGE;
+                        break;
+                    case SMALL:
+                        image = SERVICE_GREEN_SMALL_IMAGE;
                         break;
                 }
                 break;
             case GATEWAY:
                 switch (styleType) {
                     case LARGE:
-                        image = GATEWAY_LARGE_IMAGE;
+                        image = GATEWAY_GREEN_LARGE_IMAGE;
                         break;
                     case MIDDLE:
-                        image = GATEWAY_MIDDLE_IMAGE;
+                        image = GATEWAY_GREEN_MIDDLE_IMAGE;
                         break;
                     case SMALL:
-                        image = GATEWAY_SMALL_IMAGE;
+                        image = GATEWAY_GREEN_SMALL_IMAGE;
+                        break;
+                }
+                break;
+            case GATEWAY_BLACK:
+                switch (styleType) {
+                    case LARGE:
+                        image = GATEWAY_BLACK_LARGE_IMAGE;
+                        break;
+                    case MIDDLE:
+                        image = GATEWAY_BLACK_MIDDLE_IMAGE;
+                        break;
+                    case SMALL:
+                        image = GATEWAY_BLACK_SMALL_IMAGE;
+                        break;
+                }
+                break;
+            case GATEWAY_GRAY:
+                switch (styleType) {
+                    case LARGE:
+                        image = GATEWAY_GRAY_LARGE_IMAGE;
+                        break;
+                    case MIDDLE:
+                        image = GATEWAY_GRAY_MIDDLE_IMAGE;
+                        break;
+                    case SMALL:
+                        image = GATEWAY_GRAY_SMALL_IMAGE;
+                        break;
+                }
+                break;
+            case GATEWAY_BLUE:
+                switch (styleType) {
+                    case LARGE:
+                        image = GATEWAY_BLUE_LARGE_IMAGE;
+                        break;
+                    case MIDDLE:
+                        image = GATEWAY_BLUE_MIDDLE_IMAGE;
+                        break;
+                    case SMALL:
+                        image = GATEWAY_BLUE_SMALL_IMAGE;
+                        break;
+                }
+                break;
+            case GATEWAY_GREEN:
+                switch (styleType) {
+                    case LARGE:
+                        image = GATEWAY_GREEN_LARGE_IMAGE;
+                        break;
+                    case MIDDLE:
+                        image = GATEWAY_GREEN_MIDDLE_IMAGE;
+                        break;
+                    case SMALL:
+                        image = GATEWAY_GREEN_SMALL_IMAGE;
                         break;
                 }
                 break;
