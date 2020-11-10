@@ -57,6 +57,7 @@ public class TopologyEntity {
 
     public static final Color BLUE = new Color(4, 144, 217);
     public static final Color GREEN = new Color(13, 164, 176);
+    public static final Color BLACK = new Color(52, 53, 54);
 
     private TopologyEntityType entityType;
     private TopologyStyleType styleType;

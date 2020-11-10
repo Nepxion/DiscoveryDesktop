@@ -37,6 +37,7 @@ import com.nepxion.discovery.console.desktop.workspace.topology.TopologyEntity;
 import com.nepxion.discovery.console.desktop.workspace.topology.TopologyEntityType;
 import com.nepxion.discovery.console.desktop.workspace.topology.TopologyStyleType;
 import com.nepxion.swing.action.JSecurityAction;
+import com.nepxion.swing.button.ButtonManager;
 import com.nepxion.swing.button.JClassicButton;
 import com.nepxion.swing.combobox.JBasicComboBox;
 import com.nepxion.swing.element.ElementNode;
@@ -55,7 +56,7 @@ public class BlueGreenTopology extends AbstractTopology {
     private TopologyEntity serviceBlackNodeEntity = new TopologyEntity(TopologyEntityType.SERVICE_BLACK, TopologyStyleType.MIDDLE, true);
     private TopologyEntity serviceBlueNodeEntity = new TopologyEntity(TopologyEntityType.SERVICE_BLUE, TopologyStyleType.MIDDLE, true);
     private TopologyEntity serviceGreenNodeEntity = new TopologyEntity(TopologyEntityType.SERVICE_GREEN, TopologyStyleType.MIDDLE, true);
-    
+
     private TGraphBackground background;
     private JBasicComboBox serviceComboBox;
     private JBasicTextField blueMetadataTextField;
@@ -179,31 +180,33 @@ public class BlueGreenTopology extends AbstractTopology {
             }
         });
 
-        TNode portalNode = addNode("Gateway", gatewayBlackNodeEntity);
+        TNode portalNode = addNode("discovery-guide-gateway", gatewayBlackNodeEntity);
 
-        TNode a1Node = addNode("A1", serviceBlueNodeEntity);
-        TNode a2Node = addNode("A2", serviceGreenNodeEntity);
-        TNode a3Node = addNode("A3", serviceBlackNodeEntity);
-        TLink blueLink = addLink(portalNode, a1Node);
+        TNode a1Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-a\n[Version=3.0]"), serviceBlueNodeEntity);
+        TNode a2Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-a\n[Version=2.0]"), serviceGreenNodeEntity);
+        TNode a3Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-a\n[Version=1.0]"), serviceBlackNodeEntity);
+        TLink blueLink = addLink(portalNode, a1Node, TopologyEntity.BLUE);
         blueLink.setDisplayName("蓝路由");
-        TLink greenLink = addLink(portalNode, a2Node);
+        blueLink.setToolTipText("#H['a'] == '1' && #H['b'] <= '2'");
+        TLink greenLink = addLink(portalNode, a2Node, TopologyEntity.GREEN);
         greenLink.setDisplayName("绿路由");
-        TLink defaultLink = addLink(portalNode, a3Node);
+        greenLink.setToolTipText("#H['a'] == '3'");
+        TLink defaultLink = addLink(portalNode, a3Node, TopologyEntity.BLACK);
         defaultLink.setDisplayName("兜底路由");
 
-        TNode b1Node = addNode("B1", serviceBlueNodeEntity);
-        TNode b2Node = addNode("B2", serviceGreenNodeEntity);
-        TNode b3Node = addNode("B3", serviceBlackNodeEntity);
-        addLink(a1Node, b1Node);
-        addLink(a2Node, b2Node);
-        addLink(a3Node, b3Node);
+        TNode b1Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-b\n[Version=3.0]"), serviceBlueNodeEntity);
+        TNode b2Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-b\n[Version=2.0]"), serviceGreenNodeEntity);
+        TNode b3Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-b\n[Version=1.0]"), serviceBlackNodeEntity);
+        addLink(a1Node, b1Node, null);
+        addLink(a2Node, b2Node, null);
+        addLink(a3Node, b3Node, null);
 
-        TNode c1Node = addNode("C1", serviceBlueNodeEntity);
-        TNode c2Node = addNode("C2", serviceGreenNodeEntity);
-        TNode c3Node = addNode("C3", serviceBlackNodeEntity);
-        addLink(b1Node, c1Node);
-        addLink(b2Node, c2Node);
-        addLink(b3Node, c3Node);
+        TNode c1Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-c\n[Version=3.0]"), serviceBlueNodeEntity);
+        TNode c2Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-c\n[Version=2.0]"), serviceGreenNodeEntity);
+        TNode c3Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-c\n[Version=1.0]"), serviceBlackNodeEntity);
+        addLink(b1Node, c1Node, null);
+        addLink(b2Node, c2Node, null);
+        addLink(b3Node, c3Node, null);
     }
 
     private TNode addNode(String name, TopologyEntity topologyEntity) {
@@ -216,7 +219,7 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     @SuppressWarnings("unchecked")
-    private TLink addLink(TNode fromNode, TNode toNode) {
+    private TLink addLink(TNode fromNode, TNode toNode, Color linkFlowingColor) {
         List<TLink> links = TElementManager.getLinks(dataBox);
         for (TLink link : links) {
             if (link.getFrom() == fromNode && link.getTo() == toNode) {
@@ -224,16 +227,13 @@ public class BlueGreenTopology extends AbstractTopology {
             }
         }
 
-        //        int weight = routerEntity.getWeight();
-
-        TLink link = createLink(fromNode, toNode, true);
-        link.putLinkToArrowColor(Color.yellow);
-        //        if (weight > -1) {
-        //            link.setName("weight=" + weight);
-        //            link.putLinkFlowing(true);
-        //            link.putLinkFlowingColor(new Color(255, 155, 85));
-        //            link.putLinkFlowingWidth(3);
-        //        }
+        TLink link = createLink(fromNode, toNode, linkFlowingColor != null);
+        if (linkFlowingColor != null) {
+            link.putLinkToArrowColor(Color.yellow);
+            link.putLinkFlowing(true);
+            link.putLinkFlowingColor(linkFlowingColor);
+            link.putLinkFlowingWidth(3);
+        }
 
         dataBox.addElement(link);
 
