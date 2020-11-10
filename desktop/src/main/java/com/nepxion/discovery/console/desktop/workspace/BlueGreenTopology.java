@@ -15,6 +15,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.HierarchyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,8 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -29,6 +33,10 @@ import com.nepxion.cots.twaver.element.TElementManager;
 import com.nepxion.cots.twaver.element.TLink;
 import com.nepxion.cots.twaver.element.TNode;
 import com.nepxion.cots.twaver.graph.TGraphBackground;
+import com.nepxion.cots.twaver.graph.TGraphControlBar;
+import com.nepxion.cots.twaver.graph.TGraphManager;
+import com.nepxion.cots.twaver.graph.TLayoutPanel;
+import com.nepxion.cots.twaver.graph.TLayouterBar;
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
 import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.topology.AbstractTopology;
@@ -39,6 +47,8 @@ import com.nepxion.discovery.console.desktop.topology.NodeSizeType;
 import com.nepxion.discovery.console.desktop.topology.NodeUI;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.ButtonManager;
+import com.nepxion.swing.button.JBasicButton;
+import com.nepxion.swing.button.JBasicToggleButton;
 import com.nepxion.swing.button.JClassicButton;
 import com.nepxion.swing.combobox.JBasicComboBox;
 import com.nepxion.swing.element.ElementNode;
@@ -46,6 +56,7 @@ import com.nepxion.swing.handle.HandleManager;
 import com.nepxion.swing.icon.IconFactory;
 import com.nepxion.swing.label.JBasicLabel;
 import com.nepxion.swing.layout.filed.FiledLayout;
+import com.nepxion.swing.listener.DisplayAbilityListener;
 import com.nepxion.swing.selector.checkbox.JCheckBoxSelector;
 import com.nepxion.swing.textfield.JBasicTextField;
 
@@ -66,15 +77,18 @@ public class BlueGreenTopology extends AbstractTopology {
     private JBasicTextField blueConditionTextField;
     private JBasicTextField greenConditionTextField;
 
+    private ActionListener layoutActionListener;
+
     public BlueGreenTopology() {
-        initializeTopToolBar();
-        initializeBottomToolBar();
+        initializeContentBar();
+        initializeToolBar();
         initializeTopology();
+        initializeListener();
 
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
     }
 
-    private void initializeTopToolBar() {
+    private void initializeContentBar() {
         String[] services = new String[] { "discovery-guide-serivice-a" };
         serviceComboBox = new JBasicComboBox(services);
         serviceComboBox.setPreferredSize(new Dimension(250, serviceComboBox.getPreferredSize().height));
@@ -149,7 +163,7 @@ public class BlueGreenTopology extends AbstractTopology {
         add(toolBar, BorderLayout.NORTH);
     }
 
-    private void initializeBottomToolBar() {
+    private void initializeToolBar() {
         JClassicButton previewButton = new JClassicButton("文本预览", ConsoleIconFactory.getSwingIcon("ticket.png"));
 
         JClassicButton controlButton = (JClassicButton) graph.getToolbar().getComponent(0);
@@ -211,6 +225,45 @@ public class BlueGreenTopology extends AbstractTopology {
         addLink(b1Node, c1Node, null);
         addLink(b2Node, c2Node, null);
         addLink(b3Node, c3Node, null);
+    }
+
+    private void initializeListener() {
+        addHierarchyListener(new DisplayAbilityListener() {
+            public void displayAbilityChanged(HierarchyEvent e) {
+                // Ugly code
+                TGraphControlBar graphControlBar = (TGraphControlBar) graph.getControlBarInternalFrame().getContent();
+                JBasicToggleButton toggleButton = (JBasicToggleButton) graphControlBar.getViewToolBar().getViewOutlook().getComponent(10);
+                toggleButton.setSelected(true);
+
+                TGraphManager.layout(graph);
+
+                TLayouterBar layouterBar = (TLayouterBar) graph.getLayoutInternalFrame().getContent();
+                JScrollPane scrollPane = (JScrollPane) layouterBar.getTabAt(layouterBar.getSelectedTitle());
+                JPanel panel = (JPanel) scrollPane.getViewport().getView();
+                TLayoutPanel layoutPanel = (TLayoutPanel) panel.getComponent(0);
+
+                JPanel childPanel1 = (JPanel) layoutPanel.getComponent(0);
+                JBasicComboBox typeComboBox = (JBasicComboBox) childPanel1.getComponent(1);
+                typeComboBox.setSelectedIndex(2);
+
+                JPanel childPanel2 = (JPanel) layoutPanel.getComponent(1);
+                JSlider yOffsetSlider = (JSlider) childPanel2.getComponent(11);
+                yOffsetSlider.setValue(0);
+                JSlider xGapSlider = (JSlider) childPanel2.getComponent(13);
+                xGapSlider.setValue(200);
+                JSlider yGapSlider = (JSlider) childPanel2.getComponent(15);
+                yGapSlider.setValue(150);
+
+                JPanel childPanel3 = (JPanel) layoutPanel.getComponent(2);
+                JBasicButton runButton = (JBasicButton) childPanel3.getComponent(1);
+                layoutActionListener = runButton.getActionListeners()[0];
+
+                graph.getLayoutInternalFrame().setLocation(3000, 3000);
+                // graph.adjustComponentPosition(graph.getLayoutInternalFrame());
+
+                removeHierarchyListener(this);
+            }
+        });
     }
 
     private TNode addNode(String name, NodeUI topologyEntity) {
