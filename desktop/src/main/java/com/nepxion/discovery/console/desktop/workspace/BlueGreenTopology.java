@@ -26,6 +26,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.nepxion.cots.twaver.element.TElementManager;
 import com.nepxion.cots.twaver.element.TLink;
@@ -49,6 +50,8 @@ import com.nepxion.swing.icon.IconFactory;
 import com.nepxion.swing.label.JBasicLabel;
 import com.nepxion.swing.layout.filed.FiledLayout;
 import com.nepxion.swing.listener.DisplayAbilityListener;
+import com.nepxion.swing.locale.SwingLocale;
+import com.nepxion.swing.optionpane.JBasicOptionPane;
 import com.nepxion.swing.selector.checkbox.JCheckBoxSelector;
 import com.nepxion.swing.textfield.JBasicTextField;
 
@@ -84,10 +87,6 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     private void initializeContentBar() {
-        String[] services = new String[] { "serivice-a", "serivice-b", "serivice-c", "serivice-d", "serivice-e", "serivice-f" };
-        serviceComboBox = new JBasicComboBox(services);
-        serviceComboBox.setPreferredSize(new Dimension(250, serviceComboBox.getPreferredSize().height));
-
         blueMetadataTextField = new JBasicTextField();
         blueMetadataTextField.setPreferredSize(new Dimension(150, blueMetadataTextField.getPreferredSize().height));
         JClassicButton blueMetadataButton = new JClassicButton(createMetadataSelectorAction(blueMetadataTextField));
@@ -102,6 +101,11 @@ public class BlueGreenTopology extends AbstractTopology {
         basicMetadataTextField.setPreferredSize(new Dimension(150, basicMetadataTextField.getPreferredSize().height));
         JClassicButton basicMetadataButton = new JClassicButton(createMetadataSelectorAction(basicMetadataTextField));
         basicMetadataButton.setPreferredSize(new Dimension(30, basicMetadataButton.getPreferredSize().height));
+
+        String[] services = new String[] { "serivice-a", "serivice-b", "serivice-c", "serivice-d", "serivice-e", "serivice-f" };
+        serviceComboBox = new JBasicComboBox(services);
+        serviceComboBox.setEditable(true);
+        serviceComboBox.setPreferredSize(new Dimension(250, basicMetadataTextField.getPreferredSize().height));
 
         JPanel servicePanel = new JPanel();
         servicePanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
@@ -195,6 +199,7 @@ public class BlueGreenTopology extends AbstractTopology {
 
         gatewayNode = addNode("Discovery Gateway", gatewayBlackNodeUI);
         gatewayNode.setUserObject("gateway");
+        gatewayNode.setBusinessObject("Discovery Gateway");
     }
 
     private void initializeListener() {
@@ -207,9 +212,22 @@ public class BlueGreenTopology extends AbstractTopology {
         });
     }
 
+    @SuppressWarnings("unchecked")
+    private boolean hasNode(String serviceName) {
+        List<TNode> nodes = TElementManager.getNodes(dataBox);
+        for (TNode node : nodes) {
+            if (StringUtils.equalsIgnoreCase(node.getBusinessObject().toString(), serviceName)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private void addNode(String serviceName, String blueMetadata, String greenMetadata, String basicMetadata, String blueCondition, String greenCondition) {
         TNode newBlueNode = addNode(ButtonManager.getHtmlText(serviceName + "\n[Version=" + blueMetadata + "]"), serviceBlueNodeUI);
         newBlueNode.setUserObject("blue-service");
+        newBlueNode.setBusinessObject(serviceName);
         if (blueNode == null) {
             TLink blueLink = addLink(gatewayNode, newBlueNode, LinkUI.BLUE);
             blueLink.setDisplayName("蓝路由");
@@ -221,6 +239,7 @@ public class BlueGreenTopology extends AbstractTopology {
 
         TNode newGreenNode = addNode(ButtonManager.getHtmlText(serviceName + "\n[Version=" + greenMetadata + "]"), serviceGreenNodeUI);
         newGreenNode.setUserObject("green-service");
+        newGreenNode.setBusinessObject(serviceName);
         if (greenNode == null) {
             TLink greenLink = addLink(gatewayNode, newGreenNode, LinkUI.GREEN);
             greenLink.setDisplayName("绿路由");
@@ -232,6 +251,7 @@ public class BlueGreenTopology extends AbstractTopology {
 
         TNode newBasicNode = addNode(ButtonManager.getHtmlText(serviceName + "\n[Version=" + basicMetadata + "]"), serviceYellowNodeUI);
         newBasicNode.setUserObject("basic-service");
+        newBasicNode.setBusinessObject(serviceName);
         if (basicNode == null) {
             TLink basicLink = addLink(gatewayNode, newBasicNode, LinkUI.YELLOW);
             basicLink.setDisplayName("兜底路由");
@@ -285,7 +305,6 @@ public class BlueGreenTopology extends AbstractTopology {
 
     private TNode addNode(String name, NodeUI topologyEntity) {
         TNode node = createNode(name, topologyEntity, nodeLocation, 0);
-        node.setUserObject(name);
 
         dataBox.addElement(node);
 
@@ -320,11 +339,23 @@ public class BlueGreenTopology extends AbstractTopology {
 
             public void execute(ActionEvent e) {
                 String serviceName = serviceComboBox.getSelectedItem().toString();
+                if (hasNode(serviceName)) {
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), serviceName + "已存在", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+                    return;
+                }
+
                 String blueMetadata = blueMetadataTextField.getText().trim();
                 String greenMetadata = greenMetadataTextField.getText().trim();
                 String basicMetadata = basicMetadataTextField.getText().trim();
                 String blueCondition = blueConditionTextField.getText().trim();
                 String greenCondition = greenConditionTextField.getText().trim();
+
+                if (StringUtils.isBlank(blueMetadata) || StringUtils.isBlank(greenMetadata) || StringUtils.isBlank(basicMetadata)) {
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "版本号必填", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+                    return;
+                }
 
                 addNode(serviceName, blueMetadata, greenMetadata, basicMetadata, blueCondition, greenCondition);
 
