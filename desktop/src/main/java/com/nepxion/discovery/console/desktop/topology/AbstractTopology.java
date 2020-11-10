@@ -20,10 +20,13 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 
 import com.nepxion.cots.twaver.element.TElementManager;
 import com.nepxion.cots.twaver.element.TGroup;
@@ -32,14 +35,21 @@ import com.nepxion.cots.twaver.element.TNode;
 import com.nepxion.cots.twaver.gis.TGisGraph;
 import com.nepxion.cots.twaver.graph.TGraph;
 import com.nepxion.cots.twaver.graph.TGraphBackground;
+import com.nepxion.cots.twaver.graph.TGraphControlBar;
 import com.nepxion.cots.twaver.graph.TGraphController;
+import com.nepxion.cots.twaver.graph.TGraphManager;
 import com.nepxion.cots.twaver.graph.TGraphPointBackground;
 import com.nepxion.cots.twaver.graph.TGraphPopupMenuGenerator;
+import com.nepxion.cots.twaver.graph.TLayoutPanel;
+import com.nepxion.cots.twaver.graph.TLayouterBar;
 import com.nepxion.cots.twaver.locale.TLocale;
 import com.nepxion.discovery.console.desktop.context.UIContext;
 import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
 import com.nepxion.swing.action.JSecurityAction;
+import com.nepxion.swing.button.JBasicButton;
+import com.nepxion.swing.button.JBasicToggleButton;
 import com.nepxion.swing.button.JClassicMenuButton;
+import com.nepxion.swing.combobox.JBasicComboBox;
 import com.nepxion.swing.locale.SwingLocale;
 import com.nepxion.swing.menuitem.JBasicMenuItem;
 import com.nepxion.swing.menuitem.JBasicRadioButtonMenuItem;
@@ -59,6 +69,8 @@ public abstract class AbstractTopology extends JPanel {
 
     protected JBasicRadioButtonMenuItem groupAutoExpandRadioButtonMenuItem;
     protected JBasicRadioButtonMenuItem linkAutoHideRadioButtonMenuItem;
+
+    protected ActionListener layoutActionListener;
 
     public AbstractTopology() {
         setLayout(new BorderLayout());
@@ -300,5 +312,38 @@ public abstract class AbstractTopology extends JPanel {
         link.putLabelFont(new Font(UIContext.getFontName(), Font.PLAIN, UIContext.getSmallFontSize()));
 
         return link;
+    }
+
+    protected void showLayoutBar() {
+        // Ugly code
+        TGraphControlBar graphControlBar = (TGraphControlBar) graph.getControlBarInternalFrame().getContent();
+        JBasicToggleButton toggleButton = (JBasicToggleButton) graphControlBar.getViewToolBar().getViewOutlook().getComponent(10);
+        toggleButton.setSelected(true);
+
+        TGraphManager.layout(graph);
+
+        TLayouterBar layouterBar = (TLayouterBar) graph.getLayoutInternalFrame().getContent();
+        JScrollPane scrollPane = (JScrollPane) layouterBar.getTabAt(layouterBar.getSelectedTitle());
+        JPanel panel = (JPanel) scrollPane.getViewport().getView();
+        TLayoutPanel layoutPanel = (TLayoutPanel) panel.getComponent(0);
+
+        JPanel childPanel1 = (JPanel) layoutPanel.getComponent(0);
+        JBasicComboBox typeComboBox = (JBasicComboBox) childPanel1.getComponent(1);
+        typeComboBox.setSelectedIndex(2);
+
+        JPanel childPanel2 = (JPanel) layoutPanel.getComponent(1);
+        JSlider yOffsetSlider = (JSlider) childPanel2.getComponent(11);
+        yOffsetSlider.setValue(0);
+        JSlider xGapSlider = (JSlider) childPanel2.getComponent(13);
+        xGapSlider.setValue(200);
+        JSlider yGapSlider = (JSlider) childPanel2.getComponent(15);
+        yGapSlider.setValue(150);
+
+        JPanel childPanel3 = (JPanel) layoutPanel.getComponent(2);
+        JBasicButton runButton = (JBasicButton) childPanel3.getComponent(1);
+        layoutActionListener = runButton.getActionListeners()[0];
+
+        graph.getLayoutInternalFrame().setLocation(3000, 3000);
+        // graph.adjustComponentPosition(graph.getLayoutInternalFrame());
     }
 }

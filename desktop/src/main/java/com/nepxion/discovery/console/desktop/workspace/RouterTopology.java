@@ -26,8 +26,6 @@ import javax.swing.Box;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSlider;
 import javax.swing.JToolBar;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -37,10 +35,6 @@ import com.nepxion.cots.twaver.element.TElementManager;
 import com.nepxion.cots.twaver.element.TLink;
 import com.nepxion.cots.twaver.element.TNode;
 import com.nepxion.cots.twaver.graph.TGraphBackground;
-import com.nepxion.cots.twaver.graph.TGraphControlBar;
-import com.nepxion.cots.twaver.graph.TGraphManager;
-import com.nepxion.cots.twaver.graph.TLayoutPanel;
-import com.nepxion.cots.twaver.graph.TLayouterBar;
 import com.nepxion.discovery.common.entity.RouterEntity;
 import com.nepxion.discovery.console.desktop.controller.ServiceController;
 import com.nepxion.discovery.console.desktop.entity.Instance;
@@ -53,8 +47,6 @@ import com.nepxion.discovery.console.desktop.topology.NodeSizeType;
 import com.nepxion.discovery.console.desktop.topology.NodeUI;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.ButtonManager;
-import com.nepxion.swing.button.JBasicButton;
-import com.nepxion.swing.button.JBasicToggleButton;
 import com.nepxion.swing.button.JClassicButton;
 import com.nepxion.swing.combobox.JBasicComboBox;
 import com.nepxion.swing.dialog.JExceptionDialog;
@@ -157,36 +149,7 @@ public class RouterTopology extends AbstractTopology {
     private void initializeListener() {
         addHierarchyListener(new DisplayAbilityListener() {
             public void displayAbilityChanged(HierarchyEvent e) {
-                // Ugly code
-                TGraphControlBar graphControlBar = (TGraphControlBar) graph.getControlBarInternalFrame().getContent();
-                JBasicToggleButton toggleButton = (JBasicToggleButton) graphControlBar.getViewToolBar().getViewOutlook().getComponent(10);
-                toggleButton.setSelected(true);
-
-                TGraphManager.layout(graph);
-
-                TLayouterBar layouterBar = (TLayouterBar) graph.getLayoutInternalFrame().getContent();
-                JScrollPane scrollPane = (JScrollPane) layouterBar.getTabAt(layouterBar.getSelectedTitle());
-                JPanel panel = (JPanel) scrollPane.getViewport().getView();
-                TLayoutPanel layoutPanel = (TLayoutPanel) panel.getComponent(0);
-
-                JPanel childPanel1 = (JPanel) layoutPanel.getComponent(0);
-                JBasicComboBox typeComboBox = (JBasicComboBox) childPanel1.getComponent(1);
-                typeComboBox.setSelectedIndex(2);
-
-                JPanel childPanel2 = (JPanel) layoutPanel.getComponent(1);
-                JSlider yOffsetSlider = (JSlider) childPanel2.getComponent(11);
-                yOffsetSlider.setValue(0);
-                JSlider xGapSlider = (JSlider) childPanel2.getComponent(13);
-                xGapSlider.setValue(200);
-                JSlider yGapSlider = (JSlider) childPanel2.getComponent(15);
-                yGapSlider.setValue(150);
-
-                JPanel childPanel3 = (JPanel) layoutPanel.getComponent(2);
-                JBasicButton runButton = (JBasicButton) childPanel3.getComponent(1);
-                layoutActionListener = runButton.getActionListeners()[0];
-
-                graph.getLayoutInternalFrame().setLocation(3000, 3000);
-                // graph.adjustComponentPosition(graph.getLayoutInternalFrame());
+                showLayoutBar();
 
                 RouterTopology.this.setPreferredSize(new Dimension(RouterTopology.this.getPreferredSize().width - 100, 900));
 
