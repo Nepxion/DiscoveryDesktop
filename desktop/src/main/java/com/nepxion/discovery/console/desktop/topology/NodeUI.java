@@ -9,7 +9,6 @@ package com.nepxion.discovery.console.desktop.topology;
  * @version 1.0
  */
 
-import java.awt.Color;
 import java.awt.Point;
 
 public class NodeUI {
@@ -62,12 +61,6 @@ public class NodeUI {
     public static final String GATEWAY_GREEN_LARGE_IMAGE = THEME_DIRECTORY + "gateway_green_64.png";
     public static final String GATEWAY_GREEN_MIDDLE_IMAGE = THEME_DIRECTORY + "gateway_green_48.png";
     public static final String GATEWAY_GREEN_SMALL_IMAGE = THEME_DIRECTORY + "gateway_green_32.png";
-
-    public static final Color BLACK = new Color(52, 53, 54);
-    public static final Color YELLOW = new Color(185, 175, 29);
-    public static final Color GRAY = new Color(112, 112, 112);
-    public static final Color BLUE = new Color(4, 144, 217);
-    public static final Color GREEN = new Color(13, 164, 176);
 
     private NodeImageType imageType;
     private NodeSizeType sizeType;
