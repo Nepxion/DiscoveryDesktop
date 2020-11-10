@@ -1,4 +1,4 @@
-package com.nepxion.discovery.console.desktop.workspace.topology;
+package com.nepxion.discovery.console.desktop.topology;
 
 /**
  * <p>Title: Nepxion Discovery</p>
@@ -12,7 +12,7 @@ package com.nepxion.discovery.console.desktop.workspace.topology;
 import java.awt.Color;
 import java.awt.Point;
 
-public class TopologyEntity {
+public class NodeUI {
     public static final String THEME_DIRECTORY = "theme_3/";
 
     public static final String SERVICE_GROUP_LARGE_IMAGE = "service_group_80.png";
@@ -69,30 +69,30 @@ public class TopologyEntity {
     public static final Color BLUE = new Color(4, 144, 217);
     public static final Color GREEN = new Color(13, 164, 176);
 
-    private TopologyEntityType entityType;
-    private TopologyStyleType styleType;
+    private NodeImageType imageType;
+    private NodeSizeType sizeType;
     private String image;
     private Point location;
     private boolean horizontalPile;
 
-    public TopologyEntity(TopologyEntityType entityType, TopologyStyleType styleType, Point location) {
-        initialize(entityType, styleType);
+    public NodeUI(NodeImageType imageType, NodeSizeType sizeType, Point location) {
+        initialize(imageType, sizeType);
 
         this.location = location;
     }
 
-    public TopologyEntity(TopologyEntityType entityType, TopologyStyleType styleType, boolean horizontalPile) {
-        initialize(entityType, styleType);
+    public NodeUI(NodeImageType imageType, NodeSizeType sizeType, boolean horizontalPile) {
+        initialize(imageType, sizeType);
 
         this.horizontalPile = horizontalPile;
     }
 
-    private void initialize(TopologyEntityType entityType, TopologyStyleType styleType) {
-        this.entityType = entityType;
-        this.styleType = styleType;
-        switch (entityType) {
+    private void initialize(NodeImageType imageType, NodeSizeType sizeType) {
+        this.imageType = imageType;
+        this.sizeType = sizeType;
+        switch (imageType) {
             case SERVICE_GROUP:
-                switch (styleType) {
+                switch (sizeType) {
                     case LARGE:
                         image = SERVICE_GROUP_LARGE_IMAGE;
                         break;
@@ -105,7 +105,7 @@ public class TopologyEntity {
                 }
                 break;
             case GATEWAY_GROUP:
-                switch (styleType) {
+                switch (sizeType) {
                     case LARGE:
                         image = GATEWAY_GROUP_LARGE_IMAGE;
                         break;
@@ -118,7 +118,7 @@ public class TopologyEntity {
                 }
                 break;
             case SERVICE:
-                switch (styleType) {
+                switch (sizeType) {
                     case LARGE:
                         image = SERVICE_GREEN_LARGE_IMAGE;
                         break;
@@ -131,7 +131,7 @@ public class TopologyEntity {
                 }
                 break;
             case SERVICE_BLACK:
-                switch (styleType) {
+                switch (sizeType) {
                     case LARGE:
                         image = SERVICE_BLACK_LARGE_IMAGE;
                         break;
@@ -144,7 +144,7 @@ public class TopologyEntity {
                 }
                 break;
             case SERVICE_YELLOW:
-                switch (styleType) {
+                switch (sizeType) {
                     case LARGE:
                         image = SERVICE_YELLOW_LARGE_IMAGE;
                         break;
@@ -157,7 +157,7 @@ public class TopologyEntity {
                 }
                 break;
             case SERVICE_GRAY:
-                switch (styleType) {
+                switch (sizeType) {
                     case LARGE:
                         image = SERVICE_GRAY_LARGE_IMAGE;
                         break;
@@ -170,7 +170,7 @@ public class TopologyEntity {
                 }
                 break;
             case SERVICE_BLUE:
-                switch (styleType) {
+                switch (sizeType) {
                     case LARGE:
                         image = SERVICE_BLUE_LARGE_IMAGE;
                         break;
@@ -183,7 +183,7 @@ public class TopologyEntity {
                 }
                 break;
             case SERVICE_GREEN:
-                switch (styleType) {
+                switch (sizeType) {
                     case LARGE:
                         image = SERVICE_GREEN_LARGE_IMAGE;
                         break;
@@ -196,7 +196,7 @@ public class TopologyEntity {
                 }
                 break;
             case GATEWAY:
-                switch (styleType) {
+                switch (sizeType) {
                     case LARGE:
                         image = GATEWAY_GREEN_LARGE_IMAGE;
                         break;
@@ -209,7 +209,7 @@ public class TopologyEntity {
                 }
                 break;
             case GATEWAY_BLACK:
-                switch (styleType) {
+                switch (sizeType) {
                     case LARGE:
                         image = GATEWAY_BLACK_LARGE_IMAGE;
                         break;
@@ -222,7 +222,7 @@ public class TopologyEntity {
                 }
                 break;
             case GATEWAY_YELLOW:
-                switch (styleType) {
+                switch (sizeType) {
                     case LARGE:
                         image = GATEWAY_YELLOW_LARGE_IMAGE;
                         break;
@@ -235,7 +235,7 @@ public class TopologyEntity {
                 }
                 break;
             case GATEWAY_GRAY:
-                switch (styleType) {
+                switch (sizeType) {
                     case LARGE:
                         image = GATEWAY_GRAY_LARGE_IMAGE;
                         break;
@@ -248,7 +248,7 @@ public class TopologyEntity {
                 }
                 break;
             case GATEWAY_BLUE:
-                switch (styleType) {
+                switch (sizeType) {
                     case LARGE:
                         image = GATEWAY_BLUE_LARGE_IMAGE;
                         break;
@@ -261,7 +261,7 @@ public class TopologyEntity {
                 }
                 break;
             case GATEWAY_GREEN:
-                switch (styleType) {
+                switch (sizeType) {
                     case LARGE:
                         image = GATEWAY_GREEN_LARGE_IMAGE;
                         break;
@@ -276,12 +276,12 @@ public class TopologyEntity {
         }
     }
 
-    public TopologyEntityType getEntityType() {
-        return entityType;
+    public NodeImageType getImageType() {
+        return imageType;
     }
 
-    public TopologyStyleType getStyleType() {
-        return styleType;
+    public NodeSizeType getSizeType() {
+        return sizeType;
     }
 
     public String getImage() {

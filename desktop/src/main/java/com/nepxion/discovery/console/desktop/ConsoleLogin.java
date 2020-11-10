@@ -23,7 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.nepxion.discovery.common.entity.UserEntity;
 import com.nepxion.discovery.console.desktop.controller.ServiceController;
-import com.nepxion.discovery.console.desktop.locale.ConsoleLocale;
+import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
 import com.nepxion.swing.combobox.JBasicComboBox;
 import com.nepxion.swing.dialog.JLoginDialog;
 import com.nepxion.swing.font.FontContext;
@@ -104,7 +104,7 @@ public class ConsoleLogin extends JLoginDialog {
     protected void initLocale(Locale locale) {
         super.initLocale(locale);
 
-        urlLabel.setText(ConsoleLocale.getString("url", locale));
+        urlLabel.setText(ConsoleLocaleFactory.getString("url", locale));
     }
 
     @Override

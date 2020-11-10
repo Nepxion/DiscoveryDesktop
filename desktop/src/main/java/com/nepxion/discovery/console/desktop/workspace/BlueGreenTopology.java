@@ -31,11 +31,11 @@ import com.nepxion.cots.twaver.element.TNode;
 import com.nepxion.cots.twaver.graph.TGraphBackground;
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
 import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
-import com.nepxion.discovery.console.desktop.workspace.topology.AbstractTopology;
-import com.nepxion.discovery.console.desktop.workspace.topology.LocationEntity;
-import com.nepxion.discovery.console.desktop.workspace.topology.TopologyEntity;
-import com.nepxion.discovery.console.desktop.workspace.topology.TopologyEntityType;
-import com.nepxion.discovery.console.desktop.workspace.topology.TopologyStyleType;
+import com.nepxion.discovery.console.desktop.topology.AbstractTopology;
+import com.nepxion.discovery.console.desktop.topology.NodeUI;
+import com.nepxion.discovery.console.desktop.topology.NodeImageType;
+import com.nepxion.discovery.console.desktop.topology.NodeLocation;
+import com.nepxion.discovery.console.desktop.topology.NodeSizeType;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.ButtonManager;
 import com.nepxion.swing.button.JClassicButton;
@@ -51,11 +51,11 @@ import com.nepxion.swing.textfield.JBasicTextField;
 public class BlueGreenTopology extends AbstractTopology {
     private static final long serialVersionUID = 1L;
 
-    private LocationEntity locationEntity = new LocationEntity(100, 200, 200, 0);
-    private TopologyEntity gatewayBlackNodeEntity = new TopologyEntity(TopologyEntityType.GATEWAY_BLACK, TopologyStyleType.LARGE, true);
-    private TopologyEntity serviceYellowNodeEntity = new TopologyEntity(TopologyEntityType.SERVICE_YELLOW, TopologyStyleType.MIDDLE, true);
-    private TopologyEntity serviceBlueNodeEntity = new TopologyEntity(TopologyEntityType.SERVICE_BLUE, TopologyStyleType.MIDDLE, true);
-    private TopologyEntity serviceGreenNodeEntity = new TopologyEntity(TopologyEntityType.SERVICE_GREEN, TopologyStyleType.MIDDLE, true);
+    private NodeLocation nodeLocation = new NodeLocation(100, 200, 200, 0);
+    private NodeUI gatewayBlackNodeUI = new NodeUI(NodeImageType.GATEWAY_BLACK, NodeSizeType.LARGE, true);
+    private NodeUI serviceYellowNodeUI = new NodeUI(NodeImageType.SERVICE_YELLOW, NodeSizeType.MIDDLE, true);
+    private NodeUI serviceBlueNodeUI = new NodeUI(NodeImageType.SERVICE_BLUE, NodeSizeType.MIDDLE, true);
+    private NodeUI serviceGreenNodeUI = new NodeUI(NodeImageType.SERVICE_GREEN, NodeSizeType.MIDDLE, true);
 
     private TGraphBackground background;
     private JBasicComboBox serviceComboBox;
@@ -183,37 +183,37 @@ public class BlueGreenTopology extends AbstractTopology {
         });
         graph.getToolbar().setVisible(false);
 
-        TNode portalNode = addNode("discovery-guide-gateway", gatewayBlackNodeEntity);
+        TNode portalNode = addNode("discovery-guide-gateway", gatewayBlackNodeUI);
 
-        TNode a1Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-a\n[Version=3.0]"), serviceBlueNodeEntity);
-        TNode a2Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-a\n[Version=2.0]"), serviceGreenNodeEntity);
-        TNode a3Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-a\n[Version=1.0]"), serviceYellowNodeEntity);
-        TLink blueLink = addLink(portalNode, a1Node, TopologyEntity.BLUE);
+        TNode a1Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-a\n[Version=3.0]"), serviceBlueNodeUI);
+        TNode a2Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-a\n[Version=2.0]"), serviceGreenNodeUI);
+        TNode a3Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-a\n[Version=1.0]"), serviceYellowNodeUI);
+        TLink blueLink = addLink(portalNode, a1Node, NodeUI.BLUE);
         blueLink.setDisplayName("蓝路由");
         blueLink.setToolTipText("#H['a'] == '1' && #H['b'] <= '2'");
-        TLink greenLink = addLink(portalNode, a2Node, TopologyEntity.GREEN);
+        TLink greenLink = addLink(portalNode, a2Node, NodeUI.GREEN);
         greenLink.setDisplayName("绿路由");
         greenLink.setToolTipText("#H['a'] == '3'");
-        TLink defaultLink = addLink(portalNode, a3Node, TopologyEntity.YELLOW);
+        TLink defaultLink = addLink(portalNode, a3Node, NodeUI.YELLOW);
         defaultLink.setDisplayName("兜底路由");
 
-        TNode b1Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-b\n[Version=3.0]"), serviceBlueNodeEntity);
-        TNode b2Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-b\n[Version=2.0]"), serviceGreenNodeEntity);
-        TNode b3Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-b\n[Version=1.0]"), serviceYellowNodeEntity);
+        TNode b1Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-b\n[Version=3.0]"), serviceBlueNodeUI);
+        TNode b2Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-b\n[Version=2.0]"), serviceGreenNodeUI);
+        TNode b3Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-b\n[Version=1.0]"), serviceYellowNodeUI);
         addLink(a1Node, b1Node, null);
         addLink(a2Node, b2Node, null);
         addLink(a3Node, b3Node, null);
 
-        TNode c1Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-c\n[Version=3.0]"), serviceBlueNodeEntity);
-        TNode c2Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-c\n[Version=2.0]"), serviceGreenNodeEntity);
-        TNode c3Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-c\n[Version=1.0]"), serviceYellowNodeEntity);
+        TNode c1Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-c\n[Version=3.0]"), serviceBlueNodeUI);
+        TNode c2Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-c\n[Version=2.0]"), serviceGreenNodeUI);
+        TNode c3Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-c\n[Version=1.0]"), serviceYellowNodeUI);
         addLink(b1Node, c1Node, null);
         addLink(b2Node, c2Node, null);
         addLink(b3Node, c3Node, null);
     }
 
-    private TNode addNode(String name, TopologyEntity topologyEntity) {
-        TNode node = createNode(name, topologyEntity, locationEntity, 0);
+    private TNode addNode(String name, NodeUI topologyEntity) {
+        TNode node = createNode(name, topologyEntity, nodeLocation, 0);
         node.setUserObject(name);
 
         dataBox.addElement(node);

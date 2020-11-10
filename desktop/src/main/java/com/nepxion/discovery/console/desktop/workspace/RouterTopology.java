@@ -45,12 +45,12 @@ import com.nepxion.discovery.common.entity.RouterEntity;
 import com.nepxion.discovery.console.desktop.controller.ServiceController;
 import com.nepxion.discovery.console.desktop.entity.Instance;
 import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
-import com.nepxion.discovery.console.desktop.locale.ConsoleLocale;
-import com.nepxion.discovery.console.desktop.workspace.topology.AbstractTopology;
-import com.nepxion.discovery.console.desktop.workspace.topology.LocationEntity;
-import com.nepxion.discovery.console.desktop.workspace.topology.TopologyEntity;
-import com.nepxion.discovery.console.desktop.workspace.topology.TopologyEntityType;
-import com.nepxion.discovery.console.desktop.workspace.topology.TopologyStyleType;
+import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
+import com.nepxion.discovery.console.desktop.topology.AbstractTopology;
+import com.nepxion.discovery.console.desktop.topology.NodeImageType;
+import com.nepxion.discovery.console.desktop.topology.NodeLocation;
+import com.nepxion.discovery.console.desktop.topology.NodeSizeType;
+import com.nepxion.discovery.console.desktop.topology.NodeUI;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.ButtonManager;
 import com.nepxion.swing.button.JBasicButton;
@@ -72,8 +72,8 @@ import com.nepxion.swing.textfield.JBasicTextField;
 public class RouterTopology extends AbstractTopology {
     private static final long serialVersionUID = 1L;
 
-    private LocationEntity nodeLocationEntity = new LocationEntity(100, 200, 200, 0);
-    private TopologyEntity serviceNodeEntity = new TopologyEntity(TopologyEntityType.SERVICE, TopologyStyleType.MIDDLE, true);
+    private NodeLocation nodeLocation = new NodeLocation(100, 200, 200, 0);
+    private NodeUI nodeUI = new NodeUI(NodeImageType.SERVICE, NodeSizeType.MIDDLE, true);
 
     private TGraphBackground background;
     private JBasicMenuItem showRuleMenuItem;
@@ -131,7 +131,7 @@ public class RouterTopology extends AbstractTopology {
         JToolBar toolBar = getGraph().getToolbar();
         toolBar.addSeparator();
         toolBar.add(Box.createHorizontalStrut(5));
-        toolBar.add(new JLabel(ConsoleLocale.getString("service_list")));
+        toolBar.add(new JLabel(ConsoleLocaleFactory.getString("service_list")));
         toolBar.add(Box.createHorizontalStrut(5));
         toolBar.add(comboBox);
         toolBar.add(new JClassicButton(addServiceAction));
@@ -146,7 +146,7 @@ public class RouterTopology extends AbstractTopology {
 
     private void initializeTopology() {
         background = graph.getGraphBackground();
-        background.setTitle(ConsoleLocale.getString("title_service_gray_router"));
+        background.setTitle(ConsoleLocaleFactory.getString("title_service_gray_router"));
         graph.setElementStateOutlineColorGenerator(new Generator() {
             public Object generate(Object object) {
                 return null;
@@ -229,7 +229,7 @@ public class RouterTopology extends AbstractTopology {
     private String getNodeName(Instance instance) {
         StringBuilder stringBuilder = new StringBuilder();
         if (StringUtils.isNotEmpty(instance.getServiceType())) {
-            stringBuilder.append(ConsoleLocale.getString("type_" + instance.getServiceType())).append(" - ");
+            stringBuilder.append(ConsoleLocaleFactory.getString("type_" + instance.getServiceType())).append(" - ");
         }
         stringBuilder.append(instance.getServiceId()).append("\n");
         stringBuilder.append(instance.getHost()).append(":").append(instance.getPort());
@@ -252,7 +252,7 @@ public class RouterTopology extends AbstractTopology {
     private String getNodeName(RouterEntity routerEntity) {
         StringBuilder stringBuilder = new StringBuilder();
         if (StringUtils.isNotEmpty(routerEntity.getServiceType())) {
-            stringBuilder.append(ConsoleLocale.getString("type_" + routerEntity.getServiceType())).append(" - ");
+            stringBuilder.append(ConsoleLocaleFactory.getString("type_" + routerEntity.getServiceType())).append(" - ");
         }
         stringBuilder.append(routerEntity.getServiceId()).append("\n");
         stringBuilder.append(routerEntity.getHost()).append(":").append(routerEntity.getPort());
@@ -275,7 +275,7 @@ public class RouterTopology extends AbstractTopology {
     private TNode addNode(Instance instance) {
         String nodeName = getNodeName(instance);
 
-        TNode node = createNode(nodeName, serviceNodeEntity, nodeLocationEntity, 0);
+        TNode node = createNode(nodeName, nodeUI, nodeLocation, 0);
         node.setUserObject(instance);
 
         dataBox.addElement(node);
@@ -286,7 +286,7 @@ public class RouterTopology extends AbstractTopology {
     private TNode addNode(RouterEntity routerEntity, int index) {
         String nodeName = getNodeName(routerEntity);
 
-        TNode node = createNode(nodeName, serviceNodeEntity, nodeLocationEntity, index);
+        TNode node = createNode(nodeName, nodeUI, nodeLocation, index);
         node.setUserObject(routerEntity);
 
         dataBox.addElement(node);
@@ -334,7 +334,7 @@ public class RouterTopology extends AbstractTopology {
     }
 
     private JSecurityAction createAddServiceAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("add.png"), ConsoleLocale.getString("add_service")) {
+        JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("add.png"), ConsoleLocaleFactory.getString("add_service")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
@@ -358,7 +358,7 @@ public class RouterTopology extends AbstractTopology {
     }
 
     private JSecurityAction createDeleteServiceAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("delete.png"), ConsoleLocale.getString("delete_service")) {
+        JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("delete.png"), ConsoleLocaleFactory.getString("delete_service")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
@@ -381,13 +381,13 @@ public class RouterTopology extends AbstractTopology {
     }
 
     private JSecurityAction createExecuteRouterAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocale.getString("execute_router"), ConsoleIconFactory.getSwingIcon("netbean/action_16.png"), ConsoleLocale.getString("execute_router")) {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("execute_router"), ConsoleIconFactory.getSwingIcon("netbean/action_16.png"), ConsoleLocaleFactory.getString("execute_router")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
                 String routerPath = textField.getText();
                 if (StringUtils.isEmpty(routerPath)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(RouterTopology.this), ConsoleLocale.getString("router_path_invalid"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(RouterTopology.this), ConsoleLocaleFactory.getString("router_path_invalid"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
                 }
@@ -396,7 +396,7 @@ public class RouterTopology extends AbstractTopology {
                 try {
                     routerEntity = ServiceController.routes(instance, routerPath);
                 } catch (Exception ex) {
-                    JExceptionDialog.traceException(HandleManager.getFrame(RouterTopology.this), ConsoleLocale.getString("query_data_failure"), ex);
+                    JExceptionDialog.traceException(HandleManager.getFrame(RouterTopology.this), ConsoleLocaleFactory.getString("query_data_failure"), ex);
 
                     return;
                 }
@@ -411,7 +411,7 @@ public class RouterTopology extends AbstractTopology {
     }
 
     private JSecurityAction createClearRouterAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocale.getString("clear_router"), ConsoleIconFactory.getSwingIcon("paint.png"), ConsoleLocale.getString("clear_router")) {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("clear_router"), ConsoleIconFactory.getSwingIcon("paint.png"), ConsoleLocaleFactory.getString("clear_router")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
@@ -424,13 +424,13 @@ public class RouterTopology extends AbstractTopology {
     }
 
     private JSecurityAction createShowRuleAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocale.getString("view_rule"), ConsoleIconFactory.getSwingIcon("component/file_chooser_16.png"), ConsoleLocale.getString("view_rule")) {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("view_rule"), ConsoleIconFactory.getSwingIcon("component/file_chooser_16.png"), ConsoleLocaleFactory.getString("view_rule")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
                 TNode node = TElementManager.getSelectedNode(dataBox);
                 if (node == null) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(RouterTopology.this), ConsoleLocale.getString("select_a_node"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(RouterTopology.this), ConsoleLocaleFactory.getString("select_a_node"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
                 }
@@ -457,7 +457,7 @@ public class RouterTopology extends AbstractTopology {
                 rulePanel.setDynamicGlobalRule(dynamicGlobalRule);
                 rulePanel.setLocalRule(localRule);
 
-                JBasicOptionPane.showOptionDialog(HandleManager.getFrame(RouterTopology.this), rulePanel, ConsoleLocale.getString("view_rule"), JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/property.png"), new Object[] { SwingLocale.getString("close") }, null, true);
+                JBasicOptionPane.showOptionDialog(HandleManager.getFrame(RouterTopology.this), rulePanel, ConsoleLocaleFactory.getString("view_rule"), JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/property.png"), new Object[] { SwingLocale.getString("close") }, null, true);
             }
         };
 
@@ -500,9 +500,9 @@ public class RouterTopology extends AbstractTopology {
             localRulePanel.add(new JBasicScrollPane(localRuleTextArea), BorderLayout.CENTER);
 
             ruleTabbedPane = new JBasicTabbedPane();
-            ruleTabbedPane.addTab(ConsoleLocale.getString("label_dynamic_partial_rule"), dynamicPartialRulePanel, ConsoleLocale.getString("label_dynamic_partial_rule"));
-            ruleTabbedPane.addTab(ConsoleLocale.getString("label_dynamic_global_rule"), dynamicGlobalRulePanel, ConsoleLocale.getString("label_dynamic_global_rule"));
-            ruleTabbedPane.addTab(ConsoleLocale.getString("label_local_rule"), localRulePanel, ConsoleLocale.getString("label_local_rule"));
+            ruleTabbedPane.addTab(ConsoleLocaleFactory.getString("label_dynamic_partial_rule"), dynamicPartialRulePanel, ConsoleLocaleFactory.getString("label_dynamic_partial_rule"));
+            ruleTabbedPane.addTab(ConsoleLocaleFactory.getString("label_dynamic_global_rule"), dynamicGlobalRulePanel, ConsoleLocaleFactory.getString("label_dynamic_global_rule"));
+            ruleTabbedPane.addTab(ConsoleLocaleFactory.getString("label_local_rule"), localRulePanel, ConsoleLocaleFactory.getString("label_local_rule"));
 
             return ruleTabbedPane;
         }

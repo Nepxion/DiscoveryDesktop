@@ -11,11 +11,9 @@ package com.nepxion.discovery.console.desktop;
 
 import javax.swing.SwingUtilities;
 
-import com.nepxion.discovery.console.desktop.context.ContextInitializer;
-
 public class ConsoleLauncher {
     public static void main(String[] args) {
-        ContextInitializer.initialize();
+        ConsoleInitializer.initialize();
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {

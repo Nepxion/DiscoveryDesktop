@@ -1,4 +1,4 @@
-package com.nepxion.discovery.console.desktop.workspace.topology;
+package com.nepxion.discovery.console.desktop.topology;
 
 /**
  * <p>Title: Nepxion Discovery</p>
@@ -48,7 +48,7 @@ import com.nepxion.swing.popupmenu.JBasicPopupMenu;
 public abstract class AbstractTopology extends JPanel {
     private static final long serialVersionUID = 1L;
 
-    public static final String IMAGE_FOLDER = "/" + ConsoleIconFactory.ICON_FOLDER;
+    public static final String IMAGE_FOLDER = "/" + ConsoleIconFactory.getIconPath();
 
     protected TGraph graph;
     protected TDataBox dataBox = new TDataBox();
@@ -231,21 +231,21 @@ public abstract class AbstractTopology extends JPanel {
         linkAutoHideRadioButtonMenuItem.setSelected(hide);
     }
 
-    protected TGroup createGroup(String name, TopologyEntity topologyEntity, LocationEntity locationEntity, int index) {
-        String image = topologyEntity.getImage();
+    protected TGroup createGroup(String name, NodeUI nodeUI, NodeLocation nodeLocation, int index) {
+        String image = nodeUI.getImage();
 
-        int startX = locationEntity.getStartX();
-        int startY = locationEntity.getStartY();
-        int horizontalGap = locationEntity.getHorizontalGap();
-        int verticalGap = locationEntity.getVerticalGap();
-        Point location = new Point(topologyEntity.isHorizontalPile() ? startX + index * horizontalGap : startX, topologyEntity.isHorizontalPile() ? startY : startY + index * verticalGap);
+        int startX = nodeLocation.getStartX();
+        int startY = nodeLocation.getStartY();
+        int horizontalGap = nodeLocation.getHorizontalGap();
+        int verticalGap = nodeLocation.getVerticalGap();
+        Point location = new Point(nodeUI.isHorizontalPile() ? startX + index * horizontalGap : startX, nodeUI.isHorizontalPile() ? startY : startY + index * verticalGap);
 
         return createGroup(name, image, location);
     }
 
-    protected TGroup createGroup(String name, TopologyEntity topologyEntity) {
-        String image = topologyEntity.getImage();
-        Point location = topologyEntity.getLocation();
+    protected TGroup createGroup(String name, NodeUI nodeUI) {
+        String image = nodeUI.getImage();
+        Point location = nodeUI.getLocation();
 
         return createGroup(name, image, location);
     }
@@ -260,21 +260,21 @@ public abstract class AbstractTopology extends JPanel {
         return group;
     }
 
-    protected TNode createNode(String name, TopologyEntity topologyEntity, LocationEntity locationEntity, int index) {
-        String image = topologyEntity.getImage();
+    protected TNode createNode(String name, NodeUI nodeUI, NodeLocation nodeLocation, int index) {
+        String image = nodeUI.getImage();
 
-        int startX = locationEntity.getStartX();
-        int startY = locationEntity.getStartY();
-        int horizontalGap = locationEntity.getHorizontalGap();
-        int verticalGap = locationEntity.getVerticalGap();
-        Point location = new Point(topologyEntity.isHorizontalPile() ? startX + index * horizontalGap : startX, topologyEntity.isHorizontalPile() ? startY : startY + index * verticalGap);
+        int startX = nodeLocation.getStartX();
+        int startY = nodeLocation.getStartY();
+        int horizontalGap = nodeLocation.getHorizontalGap();
+        int verticalGap = nodeLocation.getVerticalGap();
+        Point location = new Point(nodeUI.isHorizontalPile() ? startX + index * horizontalGap : startX, nodeUI.isHorizontalPile() ? startY : startY + index * verticalGap);
 
         return createNode(name, image, location);
     }
 
-    protected TNode createNode(String name, TopologyEntity topologyEntity) {
-        String image = topologyEntity.getImage();
-        Point location = topologyEntity.getLocation();
+    protected TNode createNode(String name, NodeUI nodeUI) {
+        String image = nodeUI.getImage();
+        Point location = nodeUI.getLocation();
 
         return createNode(name, image, location);
     }

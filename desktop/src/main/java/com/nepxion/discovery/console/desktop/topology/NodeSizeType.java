@@ -1,4 +1,4 @@
-package com.nepxion.discovery.console.desktop.constant;
+package com.nepxion.discovery.console.desktop.topology;
 
 /**
  * <p>Title: Nepxion Discovery</p>
@@ -9,7 +9,8 @@ package com.nepxion.discovery.console.desktop.constant;
  * @version 1.0
  */
 
-public class ConsoleConstant {
-    public static final String FILTER = "filter";
-    public static final String PLUGIN = "plugin";
+public enum NodeSizeType {
+    LARGE,
+    MIDDLE,
+    SMALL
 }

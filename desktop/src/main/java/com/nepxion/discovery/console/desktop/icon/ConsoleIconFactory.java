@@ -14,9 +14,17 @@ import javax.swing.ImageIcon;
 import com.nepxion.swing.icon.IconFactory;
 
 public class ConsoleIconFactory extends IconFactory {
-    public static final String ICON_FOLDER = "com/nepxion/discovery/console/desktop/icon/";
+    private static String iconPath;
+
+    public static void initialize(String iconPath) {
+        ConsoleIconFactory.iconPath = iconPath;
+    }
 
     public static ImageIcon getContextIcon(String iconName) {
-        return getIcon(ICON_FOLDER + iconName);
+        return getIcon(iconPath + iconName);
+    }
+
+    public static String getIconPath() {
+        return iconPath;
     }
 }

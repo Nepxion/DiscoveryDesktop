@@ -9,7 +9,7 @@ package com.nepxion.discovery.console.desktop.toggle;
  * @version 1.0
  */
 
-public class ConsoleToggleConstants {
+public class ConsoleToggleConstant {
     public static final String BLUE_GREEN_LIST = "blue_green_list";
     public static final String BLUE_GREEN_DEPLOY = "blue_green_deploy";
     public static final String GRAY_LIST = "gray_list";

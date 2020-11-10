@@ -1,4 +1,4 @@
-package com.nepxion.discovery.console.desktop.workspace.topology;
+package com.nepxion.discovery.console.desktop.topology;
 
 /**
  * <p>Title: Nepxion Discovery</p>
@@ -9,13 +9,13 @@ package com.nepxion.discovery.console.desktop.workspace.topology;
  * @version 1.0
  */
 
-public class LocationEntity {
+public class NodeLocation {
     private int startX;
     private int startY;
     private int horizontalGap;
     private int verticalGap;
 
-    public LocationEntity(int startX, int startY, int horizontalGap, int verticalGap) {
+    public NodeLocation(int startX, int startY, int horizontalGap, int verticalGap) {
         this.startX = startX;
         this.startY = startY;
         this.horizontalGap = horizontalGap;

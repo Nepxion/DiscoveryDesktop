@@ -16,12 +16,11 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
 public class PropertiesContext extends PropertiesConfiguration {
-    private static final String PATH = "config/console.properties";
     private static PropertiesContext propertiesContext;
 
-    public static void initialize() {
+    public static void initialize(String propertiesPath) {
         try {
-            propertiesContext = new PropertiesContext(PATH);
+            propertiesContext = new PropertiesContext(propertiesPath);
         } catch (ConfigurationException e) {
             e.printStackTrace();
         }

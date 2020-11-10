@@ -13,7 +13,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 
 import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
-import com.nepxion.discovery.console.desktop.locale.ConsoleLocale;
+import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
 import com.nepxion.swing.element.IElementNode;
 import com.nepxion.swing.locale.SwingLocale;
 import com.nepxion.swing.toggle.JThreadTogglePanel;
@@ -31,9 +31,9 @@ public class ConsoleTogglePanel extends JThreadTogglePanel {
         this.listElementNode = listElementNode;
 
         setToggleBannerIcon(ConsoleIconFactory.getSwingIcon("banner/edit.png"));
-        setInformationText(ConsoleLocale.getString("initialize_component"));
+        setInformationText(ConsoleLocaleFactory.getString("initialize_component"));
         setInformationIcon(ConsoleIconFactory.getSwingIcon("banner/query_128.png"));
-        setErrorText(ConsoleLocale.getString("initialize_component_failure"));
+        setErrorText(ConsoleLocaleFactory.getString("initialize_component_failure"));
         setErrorIcon(ConsoleIconFactory.getSwingIcon("banner/error_128.png"));
         setThreadPanelWidth(300);
 
