@@ -15,7 +15,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -71,7 +70,6 @@ public class RouterTopology extends AbstractTopology {
     private JBasicMenuItem showRuleMenuItem;
     private JBasicComboBox comboBox;
     private JBasicTextField textField;
-    private ActionListener layoutActionListener;
     private RulePanel rulePanel;
 
     private Instance instance;

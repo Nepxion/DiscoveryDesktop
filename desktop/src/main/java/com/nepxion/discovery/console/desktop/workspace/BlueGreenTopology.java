@@ -214,6 +214,8 @@ public class BlueGreenTopology extends AbstractTopology {
         addLink(b1Node, c1Node, null);
         addLink(b2Node, c2Node, null);
         addLink(b3Node, c3Node, null);
+        
+        // layoutActionListener.actionPerformed(null);
     }
 
     private void initializeListener() {
