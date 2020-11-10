@@ -64,9 +64,14 @@ public class BlueGreenTopology extends AbstractTopology {
     private JBasicComboBox serviceComboBox;
     private JBasicTextField blueMetadataTextField;
     private JBasicTextField greenMetadataTextField;
-    private JBasicTextField defaultMetadataTextField;
+    private JBasicTextField basicMetadataTextField;
     private JBasicTextField blueConditionTextField;
     private JBasicTextField greenConditionTextField;
+
+    private TNode gatewayNode;
+    private TNode blueNode;
+    private TNode greenNode;
+    private TNode basicNode;
 
     public BlueGreenTopology() {
         initializeContentBar();
@@ -78,7 +83,7 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     private void initializeContentBar() {
-        String[] services = new String[] { "discovery-guide-serivice-a" };
+        String[] services = new String[] { "serivice-a", "serivice-b", "serivice-c", "serivice-d", "serivice-e", "serivice-f", "serivice-g" };
         serviceComboBox = new JBasicComboBox(services);
         serviceComboBox.setPreferredSize(new Dimension(250, serviceComboBox.getPreferredSize().height));
 
@@ -92,10 +97,10 @@ public class BlueGreenTopology extends AbstractTopology {
         JClassicButton greenMetadataButton = new JClassicButton(createMetadataSelectorAction(greenMetadataTextField));
         greenMetadataButton.setPreferredSize(new Dimension(30, greenMetadataButton.getPreferredSize().height));
 
-        defaultMetadataTextField = new JBasicTextField();
-        defaultMetadataTextField.setPreferredSize(new Dimension(150, defaultMetadataTextField.getPreferredSize().height));
-        JClassicButton defaultMetadataButton = new JClassicButton(createMetadataSelectorAction(defaultMetadataTextField));
-        defaultMetadataButton.setPreferredSize(new Dimension(30, defaultMetadataButton.getPreferredSize().height));
+        basicMetadataTextField = new JBasicTextField();
+        basicMetadataTextField.setPreferredSize(new Dimension(150, basicMetadataTextField.getPreferredSize().height));
+        JClassicButton basicMetadataButton = new JClassicButton(createMetadataSelectorAction(basicMetadataTextField));
+        basicMetadataButton.setPreferredSize(new Dimension(30, basicMetadataButton.getPreferredSize().height));
 
         JPanel servicePanel = new JPanel();
         servicePanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
@@ -115,10 +120,10 @@ public class BlueGreenTopology extends AbstractTopology {
         servicePanel.add(Box.createHorizontalStrut(10));
         servicePanel.add(new JBasicLabel("兜底版本"));
         servicePanel.add(Box.createHorizontalStrut(10));
-        servicePanel.add(defaultMetadataTextField);
-        servicePanel.add(defaultMetadataButton);
+        servicePanel.add(basicMetadataTextField);
+        servicePanel.add(basicMetadataButton);
         servicePanel.add(Box.createHorizontalStrut(10));
-        servicePanel.add(new JClassicButton("添加", ConsoleIconFactory.getSwingIcon("add.png")));
+        servicePanel.add(new JClassicButton(createAddServiceAction()));
         servicePanel.add(new JClassicButton("删除", ConsoleIconFactory.getSwingIcon("delete.png")));
         servicePanel.add(new JClassicButton("修改", ConsoleIconFactory.getSwingIcon("property.png")));
 
@@ -187,45 +192,52 @@ public class BlueGreenTopology extends AbstractTopology {
         });
         graph.getToolbar().setVisible(false);
 
-        TNode portalNode = addNode("discovery-guide-gateway", gatewayBlackNodeUI);
-
-        TNode a1Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-a\n[Version=3.0]"), serviceBlueNodeUI);
-        TNode a2Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-a\n[Version=2.0]"), serviceGreenNodeUI);
-        TNode a3Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-a\n[Version=1.0]"), serviceYellowNodeUI);
-        TLink blueLink = addLink(portalNode, a1Node, LinkUI.BLUE);
-        blueLink.setDisplayName("蓝路由");
-        blueLink.setToolTipText("#H['a'] == '1' && #H['b'] <= '2'");
-        TLink greenLink = addLink(portalNode, a2Node, LinkUI.GREEN);
-        greenLink.setDisplayName("绿路由");
-        greenLink.setToolTipText("#H['a'] == '3'");
-        TLink defaultLink = addLink(portalNode, a3Node, LinkUI.YELLOW);
-        defaultLink.setDisplayName("兜底路由");
-
-        TNode b1Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-b\n[Version=3.0]"), serviceBlueNodeUI);
-        TNode b2Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-b\n[Version=2.0]"), serviceGreenNodeUI);
-        TNode b3Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-b\n[Version=1.0]"), serviceYellowNodeUI);
-        addLink(a1Node, b1Node, null);
-        addLink(a2Node, b2Node, null);
-        addLink(a3Node, b3Node, null);
-
-        TNode c1Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-c\n[Version=3.0]"), serviceBlueNodeUI);
-        TNode c2Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-c\n[Version=2.0]"), serviceGreenNodeUI);
-        TNode c3Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-c\n[Version=1.0]"), serviceYellowNodeUI);
-        addLink(b1Node, c1Node, null);
-        addLink(b2Node, c2Node, null);
-        addLink(b3Node, c3Node, null);
-        
-        // layoutActionListener.actionPerformed(null);
+        gatewayNode = addNode("Discovery Gateway", gatewayBlackNodeUI);
+        gatewayNode.setUserObject("gateway");
     }
 
     private void initializeListener() {
         addHierarchyListener(new DisplayAbilityListener() {
             public void displayAbilityChanged(HierarchyEvent e) {
-                showLayoutBar(150, 50, 200, 70);
+                showLayoutBar(150, 50, 200, 50);
 
                 removeHierarchyListener(this);
             }
         });
+    }
+
+    private void addNode(String serviceName, String blueMetadata, String greenMetadata, String basicMetadata, String blueCondition, String greenCondition) {
+        TNode newBlueNode = addNode(ButtonManager.getHtmlText(serviceName + "\n[Version=" + blueMetadata + "]"), serviceBlueNodeUI);
+        newBlueNode.setUserObject("blue-service");
+        if (blueNode == null) {
+            TLink blueLink = addLink(gatewayNode, newBlueNode, LinkUI.BLUE);
+            blueLink.setDisplayName("蓝路由");
+            blueLink.setToolTipText(blueCondition);
+        } else {
+            addLink(blueNode, newBlueNode, null);
+        }
+        blueNode = newBlueNode;
+
+        TNode newGreenNode = addNode(ButtonManager.getHtmlText(serviceName + "\n[Version=" + greenMetadata + "]"), serviceGreenNodeUI);
+        newGreenNode.setUserObject("green-service");
+        if (greenNode == null) {
+            TLink greenLink = addLink(gatewayNode, newGreenNode, LinkUI.GREEN);
+            greenLink.setDisplayName("绿路由");
+            greenLink.setToolTipText(greenCondition);
+        } else {
+            addLink(greenNode, newGreenNode, null);
+        }
+        greenNode = newGreenNode;
+
+        TNode newBasicNode = addNode(ButtonManager.getHtmlText(serviceName + "\n[Version=" + basicMetadata + "]"), serviceYellowNodeUI);
+        newBasicNode.setUserObject("basic-service");
+        if (basicNode == null) {
+            TLink basicLink = addLink(gatewayNode, newBasicNode, LinkUI.YELLOW);
+            basicLink.setDisplayName("兜底路由");
+        } else {
+            addLink(basicNode, newBasicNode, null);
+        }
+        basicNode = newBasicNode;
     }
 
     private TNode addNode(String name, NodeUI topologyEntity) {
@@ -259,13 +271,34 @@ public class BlueGreenTopology extends AbstractTopology {
         return link;
     }
 
+    private JSecurityAction createAddServiceAction() {
+        JSecurityAction action = new JSecurityAction("添加", ConsoleIconFactory.getSwingIcon("add.png"), "添加") {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+                String serviceName = serviceComboBox.getSelectedItem().toString();
+                String blueMetadata = blueMetadataTextField.getText().trim();
+                String greenMetadata = greenMetadataTextField.getText().trim();
+                String basicMetadata = basicMetadataTextField.getText().trim();
+                String blueCondition = blueConditionTextField.getText().trim();
+                String greenCondition = greenConditionTextField.getText().trim();
+
+                addNode(serviceName, blueMetadata, greenMetadata, basicMetadata, blueCondition, greenCondition);
+
+                layoutActionListener.actionPerformed(null);
+            }
+        };
+
+        return action;
+    }
+
     private JSecurityAction createMetadataSelectorAction(JBasicTextField metadataTextField) {
         JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("direction_south.png"), "版本选取") {
             private static final long serialVersionUID = 1L;
 
             @SuppressWarnings("unchecked")
             public void execute(ActionEvent e) {
-                String[] metadatas = new String[] { "20201110-001", "20201110-002", "20201110-003", "default" };
+                String[] metadatas = new String[] { "20201111-001", "20201111-002", "20201111-003", "default" };
 
                 List<ElementNode> metadataElementNodes = new ArrayList<ElementNode>();
                 for (String metadata : metadatas) {
