@@ -195,16 +195,16 @@ public class RouterTopology extends AbstractTopology {
         stringBuilder.append(instance.getServiceId()).append("\n");
         stringBuilder.append(instance.getHost()).append(":").append(instance.getPort());
         if (StringUtils.isNotEmpty(instance.getVersion())) {
-            stringBuilder.append("\n [V").append(instance.getVersion()).append("]");
+            stringBuilder.append("\n[Version=").append(instance.getVersion()).append("]");
         }
         if (StringUtils.isNotEmpty(instance.getRegion())) {
-            stringBuilder.append("\n [Region=").append(instance.getRegion()).append("]");
+            stringBuilder.append("\n[Region=").append(instance.getRegion()).append("]");
         }
         if (StringUtils.isNotEmpty(instance.getEnvironment())) {
-            stringBuilder.append("\n [Env=").append(instance.getEnvironment()).append("]");
+            stringBuilder.append("\n[Env=").append(instance.getEnvironment()).append("]");
         }
         if (StringUtils.isNotEmpty(instance.getZone())) {
-            stringBuilder.append("\n [Zone=").append(instance.getZone()).append("]");
+            stringBuilder.append("\n[Zone=").append(instance.getZone()).append("]");
         }
 
         return ButtonManager.getHtmlText(stringBuilder.toString());
@@ -218,16 +218,16 @@ public class RouterTopology extends AbstractTopology {
         stringBuilder.append(routerEntity.getServiceId()).append("\n");
         stringBuilder.append(routerEntity.getHost()).append(":").append(routerEntity.getPort());
         if (StringUtils.isNotEmpty(routerEntity.getVersion())) {
-            stringBuilder.append("\n [V").append(routerEntity.getVersion()).append("]");
+            stringBuilder.append("\n[Version=").append(routerEntity.getVersion()).append("]");
         }
         if (StringUtils.isNotEmpty(routerEntity.getRegion())) {
-            stringBuilder.append("\n [Region=").append(routerEntity.getRegion()).append("]");
+            stringBuilder.append("\n[Region=").append(routerEntity.getRegion()).append("]");
         }
         if (StringUtils.isNotEmpty(routerEntity.getEnvironment())) {
-            stringBuilder.append("\n [Env=").append(routerEntity.getEnvironment()).append("]");
+            stringBuilder.append("\n[Env=").append(routerEntity.getEnvironment()).append("]");
         }
         if (StringUtils.isNotEmpty(routerEntity.getZone())) {
-            stringBuilder.append("\n [Zone=").append(routerEntity.getZone()).append("]");
+            stringBuilder.append("\n[Zone=").append(routerEntity.getZone()).append("]");
         }
 
         return ButtonManager.getHtmlText(stringBuilder.toString());
