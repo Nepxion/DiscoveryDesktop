@@ -45,7 +45,7 @@ import com.nepxion.swing.menuitem.JBasicMenuItem;
 import com.nepxion.swing.menuitem.JBasicRadioButtonMenuItem;
 import com.nepxion.swing.popupmenu.JBasicPopupMenu;
 
-public class AbstractTopology extends JPanel {
+public abstract class AbstractTopology extends JPanel {
     private static final long serialVersionUID = 1L;
 
     public static final String IMAGE_FOLDER = "/" + ConsoleIconFactory.ICON_FOLDER;
@@ -74,7 +74,6 @@ public class AbstractTopology extends JPanel {
             graph.setDataBox(dataBox);
             graph.setGraphBackground(createBackground());
             graph.getControlBarInternalFrame().setVisible(false);
-            graph.getToolbar().setVisible(false);
         }
 
         return graph;
@@ -86,7 +85,7 @@ public class AbstractTopology extends JPanel {
             graph.setDataBox(dataBox);
             graph.getControlBarInternalFrame().setVisible(false);
 
-            final TGisGraph gisGraph = (TGisGraph) graph;
+            TGisGraph gisGraph = (TGisGraph) graph;
             GeographyMap map = gisGraph.getMap();
             map.setZoom(16);
             map.setCenterPoint(new GeoCoordinate(118.795896, 32.088683));

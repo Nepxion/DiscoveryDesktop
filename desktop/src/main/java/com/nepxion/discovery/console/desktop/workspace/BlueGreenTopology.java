@@ -181,6 +181,7 @@ public class BlueGreenTopology extends AbstractTopology {
                 return null;
             }
         });
+        graph.getToolbar().setVisible(false);
 
         TNode portalNode = addNode("discovery-guide-gateway", gatewayBlackNodeEntity);
 
