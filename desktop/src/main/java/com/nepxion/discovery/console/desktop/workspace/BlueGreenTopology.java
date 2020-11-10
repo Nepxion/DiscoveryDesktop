@@ -96,8 +96,6 @@ public class BlueGreenTopology extends AbstractTopology {
         JPanel servicePanel = new JPanel();
         servicePanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
         servicePanel.add(new JBasicLabel("蓝绿服务"));
-        servicePanel.add(Box.createHorizontalStrut(5));
-        servicePanel.add(new JBasicLabel(ConsoleIconFactory.getSwingIcon("information_message.png")));
         servicePanel.add(Box.createHorizontalStrut(10));
         servicePanel.add(serviceComboBox);
         servicePanel.add(Box.createHorizontalStrut(10));
@@ -129,8 +127,6 @@ public class BlueGreenTopology extends AbstractTopology {
         JPanel conditionPanel = new JPanel();
         conditionPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
         conditionPanel.add(new JBasicLabel("蓝绿条件"));
-        conditionPanel.add(Box.createHorizontalStrut(5));
-        conditionPanel.add(new JBasicLabel(ConsoleIconFactory.getSwingIcon("information_message.png")));
         conditionPanel.add(Box.createHorizontalStrut(10));
         conditionPanel.add(new JBasicLabel("蓝条件"));
         conditionPanel.add(Box.createHorizontalStrut(10));
@@ -153,9 +149,15 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     private void initializeBottomToolBar() {
+        JClassicButton previewButton = new JClassicButton("文本预览", ConsoleIconFactory.getSwingIcon("ticket.png"));
+
+        JClassicButton controlButton = (JClassicButton) graph.getToolbar().getComponent(0);
+        controlButton.setPreferredSize(new Dimension(controlButton.getPreferredSize().width + 5, previewButton.getPreferredSize().height));
+
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
-        buttonPanel.add(new JClassicButton("文本预览", ConsoleIconFactory.getSwingIcon("ticket.png")));
+        buttonPanel.add(controlButton);
+        buttonPanel.add(previewButton);
         buttonPanel.add(new JClassicButton("链路侦测", ConsoleIconFactory.getSwingIcon("relation.png")));
         buttonPanel.add(new JClassicButton("路由拓扑", ConsoleIconFactory.getSwingIcon("rotate.png")));
         buttonPanel.add(Box.createHorizontalGlue());
