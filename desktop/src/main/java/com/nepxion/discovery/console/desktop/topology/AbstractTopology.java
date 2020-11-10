@@ -314,7 +314,7 @@ public abstract class AbstractTopology extends JPanel {
         return link;
     }
 
-    protected void showLayoutBar() {
+    protected void showLayoutBar(int xOffset, int yOffset, int xGap, int yGap) {
         // Ugly code
         TGraphControlBar graphControlBar = (TGraphControlBar) graph.getControlBarInternalFrame().getContent();
         JBasicToggleButton toggleButton = (JBasicToggleButton) graphControlBar.getViewToolBar().getViewOutlook().getComponent(10);
@@ -332,12 +332,14 @@ public abstract class AbstractTopology extends JPanel {
         typeComboBox.setSelectedIndex(2);
 
         JPanel childPanel2 = (JPanel) layoutPanel.getComponent(1);
+        JSlider xOffsetSlider = (JSlider) childPanel2.getComponent(9);
+        xOffsetSlider.setValue(xOffset);
         JSlider yOffsetSlider = (JSlider) childPanel2.getComponent(11);
-        yOffsetSlider.setValue(0);
+        yOffsetSlider.setValue(yOffset);
         JSlider xGapSlider = (JSlider) childPanel2.getComponent(13);
-        xGapSlider.setValue(200);
+        xGapSlider.setValue(xGap);
         JSlider yGapSlider = (JSlider) childPanel2.getComponent(15);
-        yGapSlider.setValue(150);
+        yGapSlider.setValue(yGap);
 
         JPanel childPanel3 = (JPanel) layoutPanel.getComponent(2);
         JBasicButton runButton = (JBasicButton) childPanel3.getComponent(1);

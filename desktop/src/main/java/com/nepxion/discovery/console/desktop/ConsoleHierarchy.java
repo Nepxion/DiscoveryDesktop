@@ -75,7 +75,7 @@ public class ConsoleHierarchy extends JPanel {
         elementNodes.add(new ElementNode(ConsoleToggleConstant.BLUE_GREEN_DEPLOY, ConsoleLocaleFactory.getString(ConsoleToggleConstant.BLUE_GREEN_DEPLOY), ConsoleIconFactory.getSwingIcon("component/ui_16.png"), ConsoleLocaleFactory.getString(ConsoleToggleConstant.BLUE_GREEN_DEPLOY)));
 
         JToggleList list = createList(elementNodes);
-        list.setSelectedIndex(0);
+        list.setSelectedIndex(1);
 
         JShrinkOutlook shrinkOutlook = shrinkOutlookBar.addShrinkOutlook(ConsoleLocaleFactory.getString("blue_green_manage"), ConsoleIconFactory.getSwingIcon("stereo/favorite_16.png"), ConsoleIconFactory.getSwingIcon("stereo/favorite_add_16.png"), ConsoleLocaleFactory.getString("blue_green_manage"), new Font(UIContext.getFontName(), Font.BOLD, UIContext.getMiddleFontSize()));
         shrinkOutlook.setContentPane(list);

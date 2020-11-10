@@ -149,7 +149,7 @@ public class RouterTopology extends AbstractTopology {
     private void initializeListener() {
         addHierarchyListener(new DisplayAbilityListener() {
             public void displayAbilityChanged(HierarchyEvent e) {
-                showLayoutBar();
+                showLayoutBar(150, 20, 200, 150);
 
                 RouterTopology.this.setPreferredSize(new Dimension(RouterTopology.this.getPreferredSize().width - 100, 900));
 
