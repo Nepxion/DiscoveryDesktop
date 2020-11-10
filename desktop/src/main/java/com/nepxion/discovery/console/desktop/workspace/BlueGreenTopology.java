@@ -116,7 +116,7 @@ public class BlueGreenTopology extends AbstractTopology {
         servicePanel.add(Box.createHorizontalStrut(10));
         servicePanel.add(new JClassicButton("添加", ConsoleIconFactory.getSwingIcon("add.png")));
         servicePanel.add(new JClassicButton("删除", ConsoleIconFactory.getSwingIcon("delete.png")));
-        servicePanel.add(new JClassicButton("修改", ConsoleIconFactory.getSwingIcon("paste.png")));
+        servicePanel.add(new JClassicButton("修改", ConsoleIconFactory.getSwingIcon("property.png")));
 
         blueConditionTextField = new JBasicTextField("#H['a'] == '1' && #H['b'] <= '2'");
         blueConditionTextField.setPreferredSize(new Dimension(436, blueConditionTextField.getPreferredSize().height));
@@ -137,7 +137,7 @@ public class BlueGreenTopology extends AbstractTopology {
         conditionPanel.add(greenConditionTextField);
         conditionPanel.add(Box.createHorizontalStrut(10));
         conditionPanel.add(new JClassicButton("校验", ConsoleIconFactory.getSwingIcon("config.png")));
-        conditionPanel.add(new JClassicButton("保存", ConsoleIconFactory.getSwingIcon("save.png")));
+        conditionPanel.add(new JClassicButton("使用", ConsoleIconFactory.getSwingIcon("paste.png")));
 
         JPanel toolBar = new JPanel();
         toolBar.setLayout(new FiledLayout(FiledLayout.COLUMN, FiledLayout.FULL, 5));
