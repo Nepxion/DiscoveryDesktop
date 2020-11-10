@@ -10,6 +10,7 @@ package com.nepxion.discovery.console.desktop.workspace;
  */
 
 import twaver.Generator;
+import twaver.Link;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -83,7 +84,7 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     private void initializeContentBar() {
-        String[] services = new String[] { "serivice-a", "serivice-b", "serivice-c", "serivice-d", "serivice-e", "serivice-f", "serivice-g" };
+        String[] services = new String[] { "serivice-a", "serivice-b", "serivice-c", "serivice-d", "serivice-e", "serivice-f" };
         serviceComboBox = new JBasicComboBox(services);
         serviceComboBox.setPreferredSize(new Dimension(250, serviceComboBox.getPreferredSize().height));
 
@@ -124,7 +125,7 @@ public class BlueGreenTopology extends AbstractTopology {
         servicePanel.add(basicMetadataButton);
         servicePanel.add(Box.createHorizontalStrut(10));
         servicePanel.add(new JClassicButton(createAddServiceAction()));
-        servicePanel.add(new JClassicButton("删除", ConsoleIconFactory.getSwingIcon("delete.png")));
+        servicePanel.add(new JClassicButton(createRemoveServiceAction()));
         servicePanel.add(new JClassicButton("修改", ConsoleIconFactory.getSwingIcon("property.png")));
 
         blueConditionTextField = new JBasicTextField("#H['a'] == '1' && #H['b'] <= '2'");
@@ -184,7 +185,7 @@ public class BlueGreenTopology extends AbstractTopology {
 
     private void initializeTopology() {
         background = graph.getGraphBackground();
-        background.setTitle("My Blue Green | 蓝绿部署 | 版本策略 | 局部订阅模式");
+        background.setTitle("My Blue Green | My Group | 蓝绿部署 | 版本策略 | 局部订阅模式 ");
         graph.setElementStateOutlineColorGenerator(new Generator() {
             public Object generate(Object object) {
                 return null;
@@ -199,7 +200,7 @@ public class BlueGreenTopology extends AbstractTopology {
     private void initializeListener() {
         addHierarchyListener(new DisplayAbilityListener() {
             public void displayAbilityChanged(HierarchyEvent e) {
-                showLayoutBar(150, 50, 200, 50);
+                showLayoutBar(150, 50, 200, 60);
 
                 removeHierarchyListener(this);
             }
@@ -238,6 +239,48 @@ public class BlueGreenTopology extends AbstractTopology {
             addLink(basicNode, newBasicNode, null);
         }
         basicNode = newBasicNode;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void removeNode() {
+        if (blueNode != null) {
+            List<Link> blueLinks = blueNode.getAllLinks();
+            if (CollectionUtils.isNotEmpty(blueLinks)) {
+                TNode currentBlueNode = (TNode) blueLinks.get(0).getFrom();
+                dataBox.removeElement(blueNode);
+                if (currentBlueNode != gatewayNode) {
+                    blueNode = currentBlueNode;
+                } else {
+                    blueNode = null;
+                }
+            }
+        }
+
+        if (greenNode != null) {
+            List<Link> greenLinks = greenNode.getAllLinks();
+            if (CollectionUtils.isNotEmpty(greenLinks)) {
+                TNode currentGreenNode = (TNode) greenLinks.get(0).getFrom();
+                dataBox.removeElement(greenNode);
+                if (currentGreenNode != gatewayNode) {
+                    greenNode = currentGreenNode;
+                } else {
+                    greenNode = null;
+                }
+            }
+        }
+
+        if (basicNode != null) {
+            List<Link> basicLinks = basicNode.getAllLinks();
+            if (CollectionUtils.isNotEmpty(basicLinks)) {
+                TNode currentBasicNode = (TNode) basicLinks.get(0).getFrom();
+                dataBox.removeElement(basicNode);
+                if (currentBasicNode != gatewayNode) {
+                    basicNode = currentBasicNode;
+                } else {
+                    basicNode = null;
+                }
+            }
+        }
     }
 
     private TNode addNode(String name, NodeUI topologyEntity) {
@@ -286,6 +329,18 @@ public class BlueGreenTopology extends AbstractTopology {
                 addNode(serviceName, blueMetadata, greenMetadata, basicMetadata, blueCondition, greenCondition);
 
                 layoutActionListener.actionPerformed(null);
+            }
+        };
+
+        return action;
+    }
+
+    private JSecurityAction createRemoveServiceAction() {
+        JSecurityAction action = new JSecurityAction("删除", ConsoleIconFactory.getSwingIcon("delete.png"), "删除") {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+                removeNode();
             }
         };
 
