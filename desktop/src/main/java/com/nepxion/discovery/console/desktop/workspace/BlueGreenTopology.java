@@ -165,7 +165,7 @@ public class BlueGreenTopology extends AbstractTopology {
         conditionPanel.add(greenConditionTextField);
         conditionPanel.add(Box.createHorizontalStrut(10));
         conditionPanel.add(new JClassicButton("校验", ConsoleIconFactory.getSwingIcon("config.png")));
-        conditionPanel.add(new JClassicButton("使用", ConsoleIconFactory.getSwingIcon("paste.png")));
+        conditionPanel.add(new JClassicButton(createModifyConditionAction()));
 
         JPanel toolBar = new JPanel();
         toolBar.setLayout(new FiledLayout(FiledLayout.COLUMN, FiledLayout.FULL, 5));
@@ -254,6 +254,7 @@ public class BlueGreenTopology extends AbstractTopology {
             TLink blueLink = addLink(gatewayNode, newBlueNode, LinkUI.BLUE);
             blueLink.setDisplayName("蓝路由");
             blueLink.setToolTipText(blueCondition);
+            blueLink.setUserObject(blueCondition);
             blueLink.setBusinessObject(BLUE_LINK);
         } else {
             addLink(blueNode, newBlueNode, null);
@@ -272,6 +273,7 @@ public class BlueGreenTopology extends AbstractTopology {
             TLink greenLink = addLink(gatewayNode, newGreenNode, LinkUI.GREEN);
             greenLink.setDisplayName("绿路由");
             greenLink.setToolTipText(greenCondition);
+            greenLink.setUserObject(greenCondition);
             greenLink.setBusinessObject(GREEN_LINK);
         } else {
             addLink(greenNode, newGreenNode, null);
@@ -289,6 +291,7 @@ public class BlueGreenTopology extends AbstractTopology {
         if (basicNode == null) {
             TLink basicLink = addLink(gatewayNode, newBasicNode, LinkUI.YELLOW);
             basicLink.setDisplayName("兜底路由");
+            basicLink.setBusinessObject(BASIC_LINK);
         } else {
             addLink(basicNode, newBasicNode, null);
         }
@@ -343,16 +346,32 @@ public class BlueGreenTopology extends AbstractTopology {
         for (TNode node : nodes) {
             Instance instance = (Instance) node.getUserObject();
             if (StringUtils.equalsIgnoreCase(instance.getServiceId(), serviceId)) {
-                if (StringUtils.equals(node.getBusinessObject().toString(), BLUE_NODE)) {
+                String type = node.getBusinessObject() != null ? node.getBusinessObject().toString() : null;
+                if (StringUtils.equals(type, BLUE_NODE)) {
                     node.setName(ButtonManager.getHtmlText(serviceId + "\n[" + StringUtils.capitalize(VERSION) + "=" + blueMetadata + "]"));
                     instance.getMetadata().put(VERSION, blueMetadata);
-                } else if (StringUtils.equals(node.getBusinessObject().toString(), GREEN_NODE)) {
+                } else if (StringUtils.equals(type, GREEN_NODE)) {
                     node.setName(ButtonManager.getHtmlText(serviceId + "\n[" + StringUtils.capitalize(VERSION) + "=" + greenMetadata + "]"));
                     instance.getMetadata().put(VERSION, greenMetadata);
-                } else if (StringUtils.equals(node.getBusinessObject().toString(), BASIC_NODE)) {
+                } else if (StringUtils.equals(type, BASIC_NODE)) {
                     node.setName(ButtonManager.getHtmlText(serviceId + "\n[" + StringUtils.capitalize(VERSION) + "=" + basicMetadata + "]"));
                     instance.getMetadata().put(VERSION, basicMetadata);
                 }
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void modifyLink(String blueCondition, String greenCondition) {
+        List<TLink> links = TElementManager.getLinks(dataBox);
+        for (TLink link : links) {
+            String type = link.getBusinessObject() != null ? link.getBusinessObject().toString() : null;
+            if (StringUtils.equals(type, BLUE_LINK)) {
+                link.setToolTipText(blueCondition);
+                link.setUserObject(blueCondition);
+            } else if (StringUtils.equals(type, GREEN_LINK)) {
+                link.setToolTipText(greenCondition);
+                link.setUserObject(greenCondition);
             }
         }
     }
@@ -417,6 +436,12 @@ public class BlueGreenTopology extends AbstractTopology {
                     return;
                 }
 
+                if (StringUtils.isBlank(blueCondition) || StringUtils.isBlank(greenCondition)) {
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "条件必填", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+                    return;
+                }
+
                 addNode(serviceId, blueMetadata, greenMetadata, basicMetadata, blueCondition, greenCondition);
 
                 layoutActionListener.actionPerformed(null);
@@ -439,7 +464,7 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     private JSecurityAction createModifyServiceAction() {
-        JSecurityAction action = new JSecurityAction("修改", ConsoleIconFactory.getSwingIcon("property.png"), "修改") {
+        JSecurityAction action = new JSecurityAction("修改", ConsoleIconFactory.getSwingIcon("paste.png"), "修改") {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
@@ -461,6 +486,27 @@ public class BlueGreenTopology extends AbstractTopology {
                 }
 
                 modifyNode(serviceId, blueMetadata, greenMetadata, basicMetadata);
+            }
+        };
+
+        return action;
+    }
+
+    private JSecurityAction createModifyConditionAction() {
+        JSecurityAction action = new JSecurityAction("修改", ConsoleIconFactory.getSwingIcon("paste.png"), "修改") {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+                String blueCondition = blueConditionTextField.getText().trim();
+                String greenCondition = greenConditionTextField.getText().trim();
+
+                if (StringUtils.isBlank(blueCondition) || StringUtils.isBlank(greenCondition)) {
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "条件必填", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+                    return;
+                }
+
+                modifyLink(blueCondition, greenCondition);
             }
         };
 
