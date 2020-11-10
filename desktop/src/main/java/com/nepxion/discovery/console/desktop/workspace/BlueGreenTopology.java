@@ -108,19 +108,20 @@ public class BlueGreenTopology extends AbstractTopology {
         serviceIdComboBox.setEditable(true);
         serviceIdComboBox.setPreferredSize(new Dimension(250, layoutTextField.getPreferredSize().height));
 
-        blueMetadataComboBox = new JBasicComboBox();
+        String[] metadatas = new String[] { "20201111-001", "20201111-002", "20201111-003", DiscoveryConstant.DEFAULT };
+        blueMetadataComboBox = new JBasicComboBox(metadatas);
         blueMetadataComboBox.setEditable(true);
         blueMetadataComboBox.setPreferredSize(new Dimension(150, layoutTextField.getPreferredSize().height));
         JClassicButton blueMetadataButton = new JClassicButton(createMetadataSelectorAction(blueMetadataComboBox));
         blueMetadataButton.setPreferredSize(new Dimension(30, blueMetadataButton.getPreferredSize().height));
 
-        greenMetadataComboBox = new JBasicComboBox();
+        greenMetadataComboBox = new JBasicComboBox(metadatas);
         greenMetadataComboBox.setEditable(true);
         greenMetadataComboBox.setPreferredSize(new Dimension(150, layoutTextField.getPreferredSize().height));
         JClassicButton greenMetadataButton = new JClassicButton(createMetadataSelectorAction(greenMetadataComboBox));
         greenMetadataButton.setPreferredSize(new Dimension(30, greenMetadataButton.getPreferredSize().height));
 
-        basicMetadataComboBox = new JBasicComboBox();
+        basicMetadataComboBox = new JBasicComboBox(metadatas);
         basicMetadataComboBox.setEditable(true);
         basicMetadataComboBox.setPreferredSize(new Dimension(150, layoutTextField.getPreferredSize().height));
         JClassicButton basicMetadataButton = new JClassicButton(createMetadataSelectorAction(basicMetadataComboBox));
