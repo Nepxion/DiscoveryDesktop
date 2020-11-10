@@ -53,7 +53,7 @@ public class BlueGreenTopology extends AbstractTopology {
 
     private LocationEntity locationEntity = new LocationEntity(100, 200, 200, 0);
     private TopologyEntity gatewayBlackNodeEntity = new TopologyEntity(TopologyEntityType.GATEWAY_BLACK, TopologyStyleType.LARGE, true);
-    private TopologyEntity serviceBlackNodeEntity = new TopologyEntity(TopologyEntityType.SERVICE_BLACK, TopologyStyleType.MIDDLE, true);
+    private TopologyEntity serviceYellowNodeEntity = new TopologyEntity(TopologyEntityType.SERVICE_YELLOW, TopologyStyleType.MIDDLE, true);
     private TopologyEntity serviceBlueNodeEntity = new TopologyEntity(TopologyEntityType.SERVICE_BLUE, TopologyStyleType.MIDDLE, true);
     private TopologyEntity serviceGreenNodeEntity = new TopologyEntity(TopologyEntityType.SERVICE_GREEN, TopologyStyleType.MIDDLE, true);
 
@@ -184,26 +184,26 @@ public class BlueGreenTopology extends AbstractTopology {
 
         TNode a1Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-a\n[Version=3.0]"), serviceBlueNodeEntity);
         TNode a2Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-a\n[Version=2.0]"), serviceGreenNodeEntity);
-        TNode a3Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-a\n[Version=1.0]"), serviceBlackNodeEntity);
+        TNode a3Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-a\n[Version=1.0]"), serviceYellowNodeEntity);
         TLink blueLink = addLink(portalNode, a1Node, TopologyEntity.BLUE);
         blueLink.setDisplayName("蓝路由");
         blueLink.setToolTipText("#H['a'] == '1' && #H['b'] <= '2'");
         TLink greenLink = addLink(portalNode, a2Node, TopologyEntity.GREEN);
         greenLink.setDisplayName("绿路由");
         greenLink.setToolTipText("#H['a'] == '3'");
-        TLink defaultLink = addLink(portalNode, a3Node, TopologyEntity.BLACK);
+        TLink defaultLink = addLink(portalNode, a3Node, TopologyEntity.YELLOW);
         defaultLink.setDisplayName("兜底路由");
 
         TNode b1Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-b\n[Version=3.0]"), serviceBlueNodeEntity);
         TNode b2Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-b\n[Version=2.0]"), serviceGreenNodeEntity);
-        TNode b3Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-b\n[Version=1.0]"), serviceBlackNodeEntity);
+        TNode b3Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-b\n[Version=1.0]"), serviceYellowNodeEntity);
         addLink(a1Node, b1Node, null);
         addLink(a2Node, b2Node, null);
         addLink(a3Node, b3Node, null);
 
         TNode c1Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-c\n[Version=3.0]"), serviceBlueNodeEntity);
         TNode c2Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-c\n[Version=2.0]"), serviceGreenNodeEntity);
-        TNode c3Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-c\n[Version=1.0]"), serviceBlackNodeEntity);
+        TNode c3Node = addNode(ButtonManager.getHtmlText("discovery-guide-serivice-c\n[Version=1.0]"), serviceYellowNodeEntity);
         addLink(b1Node, c1Node, null);
         addLink(b2Node, c2Node, null);
         addLink(b3Node, c3Node, null);

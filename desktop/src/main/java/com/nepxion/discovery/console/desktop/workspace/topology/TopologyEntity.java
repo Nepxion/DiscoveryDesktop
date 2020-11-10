@@ -27,6 +27,10 @@ public class TopologyEntity {
     public static final String SERVICE_BLACK_MIDDLE_IMAGE = THEME_DIRECTORY + "service_black_48.png";
     public static final String SERVICE_BLACK_SMALL_IMAGE = THEME_DIRECTORY + "service_black_32.png";
 
+    public static final String SERVICE_YELLOW_LARGE_IMAGE = THEME_DIRECTORY + "service_yellow_64.png";
+    public static final String SERVICE_YELLOW_MIDDLE_IMAGE = THEME_DIRECTORY + "service_yellow_48.png";
+    public static final String SERVICE_YELLOW_SMALL_IMAGE = THEME_DIRECTORY + "service_yellow_32.png";
+
     public static final String SERVICE_GRAY_LARGE_IMAGE = THEME_DIRECTORY + "service_gray_64.png";
     public static final String SERVICE_GRAY_MIDDLE_IMAGE = THEME_DIRECTORY + "service_gray_48.png";
     public static final String SERVICE_GRAY_SMALL_IMAGE = THEME_DIRECTORY + "service_gray_32.png";
@@ -43,6 +47,10 @@ public class TopologyEntity {
     public static final String GATEWAY_BLACK_MIDDLE_IMAGE = THEME_DIRECTORY + "gateway_black_48.png";
     public static final String GATEWAY_BLACK_SMALL_IMAGE = THEME_DIRECTORY + "gateway_black_32.png";
 
+    public static final String GATEWAY_YELLOW_LARGE_IMAGE = THEME_DIRECTORY + "gateway_yellow_64.png";
+    public static final String GATEWAY_YELLOW_MIDDLE_IMAGE = THEME_DIRECTORY + "gateway_yellow_48.png";
+    public static final String GATEWAY_YELLOW_SMALL_IMAGE = THEME_DIRECTORY + "gateway_yellow_32.png";
+
     public static final String GATEWAY_GRAY_LARGE_IMAGE = THEME_DIRECTORY + "gateway_gray_64.png";
     public static final String GATEWAY_GRAY_MIDDLE_IMAGE = THEME_DIRECTORY + "gateway_gray_48.png";
     public static final String GATEWAY_GRAY_SMALL_IMAGE = THEME_DIRECTORY + "gateway_gray_32.png";
@@ -55,9 +63,11 @@ public class TopologyEntity {
     public static final String GATEWAY_GREEN_MIDDLE_IMAGE = THEME_DIRECTORY + "gateway_green_48.png";
     public static final String GATEWAY_GREEN_SMALL_IMAGE = THEME_DIRECTORY + "gateway_green_32.png";
 
+    public static final Color BLACK = new Color(52, 53, 54);
+    public static final Color YELLOW = new Color(185, 175, 29);
+    public static final Color GRAY = new Color(112, 112, 112);
     public static final Color BLUE = new Color(4, 144, 217);
     public static final Color GREEN = new Color(13, 164, 176);
-    public static final Color BLACK = new Color(52, 53, 54);
 
     private TopologyEntityType entityType;
     private TopologyStyleType styleType;
@@ -133,6 +143,19 @@ public class TopologyEntity {
                         break;
                 }
                 break;
+            case SERVICE_YELLOW:
+                switch (styleType) {
+                    case LARGE:
+                        image = SERVICE_YELLOW_LARGE_IMAGE;
+                        break;
+                    case MIDDLE:
+                        image = SERVICE_YELLOW_MIDDLE_IMAGE;
+                        break;
+                    case SMALL:
+                        image = SERVICE_YELLOW_SMALL_IMAGE;
+                        break;
+                }
+                break;
             case SERVICE_GRAY:
                 switch (styleType) {
                     case LARGE:
@@ -195,6 +218,19 @@ public class TopologyEntity {
                         break;
                     case SMALL:
                         image = GATEWAY_BLACK_SMALL_IMAGE;
+                        break;
+                }
+                break;
+            case GATEWAY_YELLOW:
+                switch (styleType) {
+                    case LARGE:
+                        image = GATEWAY_YELLOW_LARGE_IMAGE;
+                        break;
+                    case MIDDLE:
+                        image = GATEWAY_YELLOW_MIDDLE_IMAGE;
+                        break;
+                    case SMALL:
+                        image = GATEWAY_YELLOW_SMALL_IMAGE;
                         break;
                 }
                 break;
