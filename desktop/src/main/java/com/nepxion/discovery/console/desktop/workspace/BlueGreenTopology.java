@@ -133,75 +133,80 @@ public class BlueGreenTopology extends AbstractTopology {
 
         blueMetadataComboBox = new JBasicComboBox();
         blueMetadataComboBox.setEditable(true);
-        blueMetadataComboBox.setPreferredSize(new Dimension(150, layoutTextField.getPreferredSize().height));
         JClassicButton blueMetadataButton = new JClassicButton(createMetadataSelectorAction(blueMetadataComboBox));
         blueMetadataButton.setPreferredSize(new Dimension(30, blueMetadataButton.getPreferredSize().height));
 
         greenMetadataComboBox = new JBasicComboBox();
         greenMetadataComboBox.setEditable(true);
-        greenMetadataComboBox.setPreferredSize(new Dimension(150, layoutTextField.getPreferredSize().height));
         JClassicButton greenMetadataButton = new JClassicButton(createMetadataSelectorAction(greenMetadataComboBox));
         greenMetadataButton.setPreferredSize(new Dimension(30, greenMetadataButton.getPreferredSize().height));
 
         basicMetadataComboBox = new JBasicComboBox();
         basicMetadataComboBox.setEditable(true);
-        basicMetadataComboBox.setPreferredSize(new Dimension(150, layoutTextField.getPreferredSize().height));
         JClassicButton basicMetadataButton = new JClassicButton(createMetadataSelectorAction(basicMetadataComboBox));
         basicMetadataButton.setPreferredSize(new Dimension(30, basicMetadataButton.getPreferredSize().height));
 
+        double[][] serviceSize = {
+                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },
+                { TableLayout.PREFERRED }
+        };
+
+        TableLayout serviceTableLayout = new TableLayout(serviceSize);
+        serviceTableLayout.setHGap(5);
+        serviceTableLayout.setVGap(5);
+
         JPanel servicePanel = new JPanel();
-        servicePanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
-        servicePanel.add(Box.createHorizontalStrut(10));
-        servicePanel.add(serviceIdComboBox);
-        servicePanel.add(refreshServicesButton);
-        servicePanel.add(Box.createHorizontalStrut(10));
-        servicePanel.add(new JBasicLabel("蓝版本"));
-        servicePanel.add(Box.createHorizontalStrut(10));
-        servicePanel.add(blueMetadataComboBox);
-        servicePanel.add(blueMetadataButton);
-        servicePanel.add(Box.createHorizontalStrut(10));
-        servicePanel.add(new JBasicLabel("绿版本"));
-        servicePanel.add(Box.createHorizontalStrut(10));
-        servicePanel.add(greenMetadataComboBox);
-        servicePanel.add(greenMetadataButton);
-        servicePanel.add(Box.createHorizontalStrut(10));
-        servicePanel.add(new JBasicLabel("兜底版本"));
-        servicePanel.add(Box.createHorizontalStrut(10));
-        servicePanel.add(basicMetadataComboBox);
-        servicePanel.add(basicMetadataButton);
-        servicePanel.add(Box.createHorizontalStrut(10));
-        servicePanel.add(new JClassicButton(createAddNodesAction()));
-        servicePanel.add(new JClassicButton(createRemoveNodesAction()));
-        servicePanel.add(new JClassicButton(createModifyNodesAction()));
-        servicePanel.add(new JClassicButton(createClearNodesAction()));
+        servicePanel.setLayout(serviceTableLayout);
+        servicePanel.add(serviceIdComboBox, "0, 0");
+        servicePanel.add(refreshServicesButton, "1, 0");
+        servicePanel.add(new JBasicLabel("蓝版本"), "2, 0");
+        servicePanel.add(blueMetadataComboBox, "3, 0");
+        servicePanel.add(blueMetadataButton, "4, 0");
+        servicePanel.add(new JBasicLabel("绿版本"), "5, 0");
+        servicePanel.add(greenMetadataComboBox, "6, 0");
+        servicePanel.add(greenMetadataButton, "7, 0");
+        servicePanel.add(new JBasicLabel("兜底版本"), "8, 0");
+        servicePanel.add(basicMetadataComboBox, "9, 0");
+        servicePanel.add(basicMetadataButton, "10, 0");
+
+        JPanel serviceToolBar = new JPanel();
+        serviceToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
+        serviceToolBar.add(new JClassicButton(createAddNodesAction()));
+        serviceToolBar.add(new JClassicButton(createRemoveNodesAction()));
+        serviceToolBar.add(new JClassicButton(createModifyNodesAction()));
+        serviceToolBar.add(new JClassicButton(createClearNodesAction()));
 
         blueConditionTextField = new JBasicTextField("#H['a'] == '1' && #H['b'] <= '2'");
-        blueConditionTextField.setPreferredSize(new Dimension(451, blueConditionTextField.getPreferredSize().height));
-
         greenConditionTextField = new JBasicTextField("#H['a'] == '3'");
-        greenConditionTextField.setPreferredSize(new Dimension(451, greenConditionTextField.getPreferredSize().height));
+
+        double[][] conditionSize = {
+                { TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, TableLayout.FILL },
+                { TableLayout.PREFERRED }
+        };
+
+        TableLayout conditionTableLayout = new TableLayout(conditionSize);
+        conditionTableLayout.setHGap(5);
+        conditionTableLayout.setVGap(5);
 
         JPanel conditionPanel = new JPanel();
-        conditionPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
-        conditionPanel.add(Box.createHorizontalStrut(10));
-        conditionPanel.add(new JBasicLabel("蓝条件"));
-        conditionPanel.add(Box.createHorizontalStrut(10));
-        conditionPanel.add(blueConditionTextField);
-        conditionPanel.add(Box.createHorizontalStrut(10));
-        conditionPanel.add(new JBasicLabel("绿条件"));
-        conditionPanel.add(Box.createHorizontalStrut(10));
-        conditionPanel.add(greenConditionTextField);
-        conditionPanel.add(Box.createHorizontalStrut(10));
-        conditionPanel.add(new JClassicButton(createValidateAction()));
-        conditionPanel.add(new JClassicButton(createModifyLinksAction()));
+        conditionPanel.setLayout(conditionTableLayout);
+        conditionPanel.add(new JBasicLabel("蓝条件"), "0, 0");
+        conditionPanel.add(blueConditionTextField, "1, 0");
+        conditionPanel.add(new JBasicLabel("绿条件"), "2, 0");
+        conditionPanel.add(greenConditionTextField, "3, 0");
+
+        JPanel conditionToolBar = new JPanel();
+        conditionToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
+        conditionToolBar.add(new JClassicButton(createValidateAction()));
+        conditionToolBar.add(new JClassicButton(createModifyLinksAction()));
 
         double[][] size = {
-                { TableLayout.PREFERRED, TableLayout.FILL },
+                { TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },
                 { TableLayout.PREFERRED, TableLayout.PREFERRED }
         };
 
         TableLayout tableLayout = new TableLayout(size);
-        tableLayout.setHGap(5);
+        tableLayout.setHGap(10);
         tableLayout.setVGap(5);
 
         JPanel toolBar = new JPanel();
@@ -209,8 +214,10 @@ public class BlueGreenTopology extends AbstractTopology {
         toolBar.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
         toolBar.add(new JBasicLabel("蓝绿服务"), "0, 0");
         toolBar.add(servicePanel, "1, 0");
+        toolBar.add(serviceToolBar, "2, 0");
         toolBar.add(new JBasicLabel("蓝绿条件"), "0, 1");
         toolBar.add(conditionPanel, "1, 1");
+        toolBar.add(conditionToolBar, "2, 1");
 
         add(toolBar, BorderLayout.NORTH);
     }
