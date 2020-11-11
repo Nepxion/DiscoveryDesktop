@@ -873,23 +873,23 @@ public class BlueGreenTopology extends AbstractTopology {
                     return;
                 }
 
-                String gateway = operationPanel.getGateway();
-                if (StringUtils.isBlank(gateway)) {
+                String gatewayId = operationPanel.getGatewayId();
+                if (StringUtils.isBlank(gatewayId)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "服务名不能为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
                 }
 
-                Instance instance = new Instance();
-                instance.setServiceId(gateway);
+                Instance gateway = new Instance();
+                gateway.setServiceId(gatewayId);
                 Map<String, String> metadataMap = new HashMap<String, String>();
-                instance.setMetadata(metadataMap);
+                gateway.setMetadata(metadataMap);
 
                 OperationType operationType = operationPanel.getOperationType();
                 StrategyType strategyType = operationPanel.getStrategyType();
                 ConfigType configType = operationPanel.getConfigType();
 
-                initializeData(operationName, group, instance, operationType, strategyType, configType);
+                initializeData(operationName, group, gateway, operationType, strategyType, configType);
                 initializeUI();
             }
         };
@@ -933,7 +933,7 @@ public class BlueGreenTopology extends AbstractTopology {
         private JBasicTextField operationNameTextField;
 
         private JBasicComboBox groupComboBox;
-        private JBasicComboBox gatewayComboBox;
+        private JBasicComboBox gatewayIdComboBox;
         private JBasicCheckBox showOnlyGatewayCheckBox;
 
         private ButtonGroup strategyButtonGroup;
@@ -952,14 +952,14 @@ public class BlueGreenTopology extends AbstractTopology {
             groupComboBox.addItemListener(new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
                     if (groupComboBox.getSelectedItem() != e.getItem()) {
-                        setGateways();
+                        setGatewayIds();
                     }
                 }
             });
 
-            gatewayComboBox = new JBasicComboBox();
-            gatewayComboBox.setEditable(true);
-            gatewayComboBox.setPreferredSize(new Dimension(250, layoutTextField.getPreferredSize().height));
+            gatewayIdComboBox = new JBasicComboBox();
+            gatewayIdComboBox.setEditable(true);
+            gatewayIdComboBox.setPreferredSize(new Dimension(250, layoutTextField.getPreferredSize().height));
 
             showOnlyGatewayCheckBox = new JBasicCheckBox("只显示网关", true);
 
@@ -974,7 +974,7 @@ public class BlueGreenTopology extends AbstractTopology {
 
             JPanel gatewayPanel = new JPanel();
             gatewayPanel.setLayout(gatewayTableLayout);
-            gatewayPanel.add(gatewayComboBox, "0, 0");
+            gatewayPanel.add(gatewayIdComboBox, "0, 0");
             gatewayPanel.add(showOnlyGatewayCheckBox, "1, 0");
 
             JPanel strategyPanel = new JPanel();
@@ -1034,7 +1034,7 @@ public class BlueGreenTopology extends AbstractTopology {
             add(configPanel, "1, 4");
 
             setGroups();
-            setGateways();
+            setGatewayIds();
         }
 
         @SuppressWarnings("unchecked")
@@ -1046,15 +1046,15 @@ public class BlueGreenTopology extends AbstractTopology {
         }
 
         @SuppressWarnings("unchecked")
-        private void setGateways() {
+        private void setGatewayIds() {
             Object selectedItem = groupComboBox.getSelectedItem();
             if (selectedItem == null) {
                 return;
             }
 
-            Object[] gateways = getGateways(selectedItem.toString());
-            if (gateways != null) {
-                gatewayComboBox.setModel(new DefaultComboBoxModel<>(gateways));
+            Object[] gatewayIds = getGatewayIds(selectedItem.toString());
+            if (gatewayIds != null) {
+                gatewayIdComboBox.setModel(new DefaultComboBoxModel<>(gatewayIds));
             }
         }
 
@@ -1068,7 +1068,7 @@ public class BlueGreenTopology extends AbstractTopology {
             return null;
         }
 
-        public Object[] getGateways(String group) {
+        public Object[] getGatewayIds(String group) {
             try {
                 return ServiceController.getInstanceMap(Arrays.asList(group)).keySet().toArray();
             } catch (Exception e) {
@@ -1097,8 +1097,8 @@ public class BlueGreenTopology extends AbstractTopology {
             return groupComboBox.getSelectedItem() != null ? groupComboBox.getSelectedItem().toString() : null;
         }
 
-        public String getGateway() {
-            return gatewayComboBox.getSelectedItem() != null ? gatewayComboBox.getSelectedItem().toString() : null;
+        public String getGatewayId() {
+            return gatewayIdComboBox.getSelectedItem() != null ? gatewayIdComboBox.getSelectedItem().toString() : null;
         }
 
         public OperationType getOperationType() {
