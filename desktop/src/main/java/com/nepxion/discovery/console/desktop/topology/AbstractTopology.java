@@ -348,4 +348,11 @@ public abstract class AbstractTopology extends JPanel {
         graph.getLayoutInternalFrame().setLocation(3000, 3000);
         // graph.adjustComponentPosition(graph.getLayoutInternalFrame());
     }
+
+    protected void toggleLayoutBar() {
+        // Ugly code
+        TGraphControlBar graphControlBar = (TGraphControlBar) graph.getControlBarInternalFrame().getContent();
+        JBasicToggleButton toggleButton = (JBasicToggleButton) graphControlBar.getViewToolBar().getViewOutlook().getComponent(10);
+        toggleButton.doClick();
+    }
 }

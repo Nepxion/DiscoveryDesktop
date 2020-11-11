@@ -195,7 +195,7 @@ public class BlueGreenTopology extends AbstractTopology {
         buttonPanel.add(new JClassicButton("链路侦测", ConsoleIconFactory.getSwingIcon("relation.png")));
         buttonPanel.add(new JClassicButton("路由拓扑", ConsoleIconFactory.getSwingIcon("rotate.png")));
         buttonPanel.add(Box.createHorizontalGlue());
-        buttonPanel.add(new JClassicButton("布局", ConsoleIconFactory.getSwingIcon("layout.png")));
+        buttonPanel.add(new JClassicButton(createLayoutAction()));
         buttonPanel.add(new JClassicButton("保存", ConsoleIconFactory.getSwingIcon("save.png")));
         buttonPanel.add(new JClassicButton("清空", ConsoleIconFactory.getSwingIcon("paint.png")));
 
@@ -228,6 +228,7 @@ public class BlueGreenTopology extends AbstractTopology {
         addHierarchyListener(new DisplayAbilityListener() {
             public void displayAbilityChanged(HierarchyEvent e) {
                 showLayoutBar(150, 50, 200, 60);
+                toggleLayoutBar();
 
                 removeHierarchyListener(this);
             }
@@ -513,6 +514,18 @@ public class BlueGreenTopology extends AbstractTopology {
                 }
 
                 modifyLink(blueCondition, greenCondition);
+            }
+        };
+
+        return action;
+    }
+
+    private JSecurityAction createLayoutAction() {
+        JSecurityAction action = new JSecurityAction("布局", ConsoleIconFactory.getSwingIcon("layout.png"), "布局") {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+                toggleLayoutBar();
             }
         };
 
