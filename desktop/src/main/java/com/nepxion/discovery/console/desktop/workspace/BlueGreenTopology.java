@@ -21,10 +21,12 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -94,7 +96,7 @@ public class BlueGreenTopology extends AbstractTopology {
     private TNode greenNode;
     private TNode basicNode;
 
-    private String name;
+    private String operationName;
     private String group;
     private Instance gateway;
     private OperationType operationType;
@@ -104,6 +106,7 @@ public class BlueGreenTopology extends AbstractTopology {
 
     private JBasicTextArea strategyTextArea;
     private JBasicScrollPane strategyScrollPane;
+    private JBasicTextField layoutTextField = new JBasicTextField();
 
     public BlueGreenTopology() {
         initializeContentBar();
@@ -112,26 +115,9 @@ public class BlueGreenTopology extends AbstractTopology {
         initializeListener();
 
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-
-        String name = "discovery green-blue";
-        String group = "discovery-guide-group";
-
-        Instance gateway = new Instance();
-        gateway.setServiceId("discovery-guide-gateway");
-        Map<String, String> metadataMap = new HashMap<String, String>();
-        gateway.setMetadata(metadataMap);
-
-        operationType = OperationType.BLUE_GREEN;
-        strategyType = StrategyType.VERSION;
-        configType = ConfigType.PARTIAL;
-
-        initializeData(name, group, gateway, operationType, strategyType, configType);
-        initializeUI();
     }
 
     private void initializeContentBar() {
-        JBasicTextField layoutTextField = new JBasicTextField();
-
         serviceIdComboBox = new JBasicComboBox();
         serviceIdComboBox.setEditable(true);
         serviceIdComboBox.setPreferredSize(new Dimension(250, layoutTextField.getPreferredSize().height));
@@ -265,8 +251,8 @@ public class BlueGreenTopology extends AbstractTopology {
         });
     }
 
-    public void initializeData(String name, String group, Instance gateway, OperationType operationType, StrategyType strategyType, ConfigType configType) {
-        this.name = name;
+    public void initializeData(String operationName, String group, Instance gateway, OperationType operationType, StrategyType strategyType, ConfigType configType) {
+        this.operationName = operationName;
         this.group = group;
         this.gateway = gateway;
         this.operationType = operationType;
@@ -296,8 +282,8 @@ public class BlueGreenTopology extends AbstractTopology {
         setMetadataUI();
     }
 
-    public String getName() {
-        return name;
+    public String getOperationName() {
+        return operationName;
     }
 
     public String getGroup() {
@@ -321,7 +307,7 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     private void setTitle() {
-        background.setTitle(name + " | " + group + " | " + operationType.getDescription() + " | " + strategyType.getDescription() + " | " + configType.getDescription());
+        background.setTitle(operationName + " | " + group + " | " + operationType.getDescription() + " | " + strategyType.getDescription() + " | " + configType.getDescription());
     }
 
     private void setGatewayNode() {
@@ -863,7 +849,28 @@ public class BlueGreenTopology extends AbstractTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                JBasicOptionPane.showOptionDialog(HandleManager.getFrame(BlueGreenTopology.this), new OperationPanel(), "策略文本预览", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/property.png"), new Object[] { SwingLocale.getString("close") }, null, true);
+                OperationPanel operationPanel = new OperationPanel(OperationType.BLUE_GREEN);
+                operationPanel.setPreferredSize(new Dimension(470, 170));
+
+                int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(BlueGreenTopology.this), operationPanel, "新增蓝绿部署", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
+                if (selectedOption != 0) {
+                    return;
+                }
+
+                String operationName = operationPanel.getOperationName();
+                String group = operationPanel.getGroup();
+
+                Instance gateway = new Instance();
+                gateway.setServiceId(operationPanel.getGateway());
+                Map<String, String> metadataMap = new HashMap<String, String>();
+                gateway.setMetadata(metadataMap);
+
+                OperationType operationType = operationPanel.getOperationType();
+                StrategyType strategyType = operationPanel.getStrategyType();
+                ConfigType configType = operationPanel.getConfigType();
+
+                initializeData(operationName, group, gateway, operationType, strategyType, configType);
+                initializeUI();
             }
         };
 
@@ -903,54 +910,37 @@ public class BlueGreenTopology extends AbstractTopology {
     private class OperationPanel extends JPanel {
         private static final long serialVersionUID = 1L;
 
-        private JBasicTextField nameTextField;
+        private JBasicTextField operationNameTextField;
 
         private JBasicComboBox groupComboBox;
         private JBasicComboBox gatewayComboBox;
         private JBasicCheckBox showOnlyGatewayCheckBox;
 
-        public OperationPanel() {
-            nameTextField = new JBasicTextField();
+        private ButtonGroup strategyButtonGroup;
+        private ButtonGroup configButtonGroup;
 
-            JPanel strategyPanel = new JPanel();
-            strategyPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
-            ButtonGroup strategyButtonGroup = new ButtonGroup();
-            StrategyType[] strategyTypes = StrategyType.values();
-            for (int i = 0; i < strategyTypes.length; i++) {
-                StrategyType strategyType = strategyTypes[i];
+        private OperationType operationType;
 
-                JBasicRadioButton strategyRadioButton = new JBasicRadioButton(strategyType.getDescription(), strategyType.getDescription());
-                strategyRadioButton.setName(strategyType.getValue());
-                strategyPanel.add(strategyRadioButton);
-                strategyButtonGroup.add(strategyRadioButton);
+        public OperationPanel(OperationType operationType) {
+            this.operationType = operationType;
 
-                if (i == 0) {
-                    strategyRadioButton.setSelected(true);
-                }
-            }
-
-            JPanel configPanel = new JPanel();
-            configPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
-            ButtonGroup configButtonGroup = new ButtonGroup();
-            ConfigType[] configTypes = ConfigType.values();
-            for (int i = 0; i < configTypes.length; i++) {
-                ConfigType configType = configTypes[i];
-
-                JBasicRadioButton configRadioButton = new JBasicRadioButton(configType.getDescription(), configType.getDescription());
-                configRadioButton.setName(configType.getValue());
-                configPanel.add(configRadioButton);
-                configButtonGroup.add(configRadioButton);
-
-                if (i == 0) {
-                    configRadioButton.setSelected(true);
-                }
-            }
+            operationNameTextField = new JBasicTextField();
 
             groupComboBox = new JBasicComboBox();
-            groupComboBox.setPreferredSize(new Dimension(250, groupComboBox.getPreferredSize().height));
+            groupComboBox.setEditable(true);
+            groupComboBox.setPreferredSize(new Dimension(250, layoutTextField.getPreferredSize().height));
+            groupComboBox.addItemListener(new ItemListener() {
+                public void itemStateChanged(ItemEvent e) {
+                    if (groupComboBox.getSelectedItem() != e.getItem()) {
+                        setGateways();
+                    }
+                }
+            });
 
             gatewayComboBox = new JBasicComboBox();
-            gatewayComboBox.setPreferredSize(new Dimension(250, gatewayComboBox.getPreferredSize().height));
+            gatewayComboBox.setEditable(true);
+            gatewayComboBox.setPreferredSize(new Dimension(250, layoutTextField.getPreferredSize().height));
+
             showOnlyGatewayCheckBox = new JBasicCheckBox("只显示网关", true);
 
             double[][] gatewaySize = {
@@ -967,6 +957,40 @@ public class BlueGreenTopology extends AbstractTopology {
             gatewayPanel.add(gatewayComboBox, "0, 0");
             gatewayPanel.add(showOnlyGatewayCheckBox, "1, 0");
 
+            JPanel strategyPanel = new JPanel();
+            strategyPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
+            strategyButtonGroup = new ButtonGroup();
+            StrategyType[] strategyTypes = StrategyType.values();
+            for (int i = 0; i < strategyTypes.length; i++) {
+                StrategyType strategyType = strategyTypes[i];
+
+                JBasicRadioButton strategyRadioButton = new JBasicRadioButton(strategyType.getDescription(), strategyType.getDescription());
+                strategyRadioButton.setName(strategyType.getValue());
+                strategyPanel.add(strategyRadioButton);
+                strategyButtonGroup.add(strategyRadioButton);
+
+                if (i == 0) {
+                    strategyRadioButton.setSelected(true);
+                }
+            }
+
+            JPanel configPanel = new JPanel();
+            configPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
+            configButtonGroup = new ButtonGroup();
+            ConfigType[] configTypes = ConfigType.values();
+            for (int i = 0; i < configTypes.length; i++) {
+                ConfigType configType = configTypes[i];
+
+                JBasicRadioButton configRadioButton = new JBasicRadioButton(configType.getDescription(), configType.getDescription());
+                configRadioButton.setName(configType.getValue());
+                configPanel.add(configRadioButton);
+                configButtonGroup.add(configRadioButton);
+
+                if (i == 0) {
+                    configRadioButton.setSelected(true);
+                }
+            }
+
             double[][] size = {
                     { 80, TableLayout.FILL },
                     { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
@@ -979,15 +1003,98 @@ public class BlueGreenTopology extends AbstractTopology {
             setLayout(tableLayout);
             setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
             add(new JBasicLabel("名称"), "0, 0");
-            add(nameTextField, "1, 0");
-            add(new JBasicLabel("策略"), "0, 1");
-            add(strategyPanel, "1, 1");
-            add(new JBasicLabel("模式"), "0, 2");
-            add(configPanel, "1, 2");
-            add(new JBasicLabel("所属组"), "0, 3");
-            add(groupComboBox, "1, 3");
-            add(new JBasicLabel("所属服务"), "0, 4");
-            add(gatewayPanel, "1, 4");
+            add(operationNameTextField, "1, 0");
+            add(new JBasicLabel("所属组"), "0, 1");
+            add(groupComboBox, "1, 1");
+            add(new JBasicLabel("所属服务"), "0, 2");
+            add(gatewayPanel, "1, 2");
+            add(new JBasicLabel("策略"), "0, 3");
+            add(strategyPanel, "1, 3");
+            add(new JBasicLabel("模式"), "0, 4");
+            add(configPanel, "1, 4");
+
+            setGroups();
+            setGateways();
+        }
+
+        @SuppressWarnings("unchecked")
+        private void setGroups() {
+            Object[] groups = getGroups();
+            if (groups != null) {
+                groupComboBox.setModel(new DefaultComboBoxModel<>(groups));
+            }
+        }
+
+        @SuppressWarnings("unchecked")
+        private void setGateways() {
+            Object selectedItem = groupComboBox.getSelectedItem();
+            if (selectedItem == null) {
+                return;
+            }
+
+            Object[] gateways = getGateways(selectedItem.toString());
+            if (gateways != null) {
+                gatewayComboBox.setModel(new DefaultComboBoxModel<>(gateways));
+            }
+        }
+
+        private Object[] getGroups() {
+            try {
+                return ServiceController.getGroups().toArray();
+            } catch (Exception e) {
+                JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("query_data_failure"), e);
+            }
+
+            return null;
+        }
+
+        public Object[] getGateways(String group) {
+            try {
+                return ServiceController.getInstanceMap(Arrays.asList(group)).keySet().toArray();
+            } catch (Exception e) {
+                JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("query_data_failure"), e);
+            }
+
+            return null;
+        }
+
+        private String getRationButtonName(ButtonGroup buttonGroup) {
+            for (Enumeration<AbstractButton> enumeration = buttonGroup.getElements(); enumeration.hasMoreElements();) {
+                AbstractButton button = enumeration.nextElement();
+                if (button.isSelected()) {
+                    return button.getName();
+                }
+            }
+
+            return null;
+        }
+
+        public String getOperationName() {
+            return operationNameTextField.getText().trim();
+        }
+
+        public String getGroup() {
+            return groupComboBox.getSelectedItem() != null ? groupComboBox.getSelectedItem().toString() : null;
+        }
+
+        public String getGateway() {
+            return gatewayComboBox.getSelectedItem() != null ? gatewayComboBox.getSelectedItem().toString() : null;
+        }
+
+        public OperationType getOperationType() {
+            return operationType;
+        }
+
+        public StrategyType getStrategyType() {
+            String rationButtonName = getRationButtonName(strategyButtonGroup);
+
+            return StrategyType.fromString(rationButtonName);
+        }
+
+        public ConfigType getConfigType() {
+            String rationButtonName = getRationButtonName(configButtonGroup);
+
+            return ConfigType.fromString(rationButtonName);
         }
     }
 }
