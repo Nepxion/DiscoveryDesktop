@@ -109,6 +109,8 @@ public class BlueGreenTopology extends AbstractTopology {
 
         Instance gateway = new Instance();
         gateway.setServiceId("discovery-guide-gateway");
+        Map<String, String> metadataMap = new HashMap<String, String>();
+        gateway.setMetadata(metadataMap);
 
         workType = WorkType.BLUE_GREEN;
         strategyType = StrategyType.VERSION;
@@ -523,8 +525,16 @@ public class BlueGreenTopology extends AbstractTopology {
 
     @SuppressWarnings({ "unchecked", "incomplete-switch" })
     private void save() {
+        String strategyValue = strategyType.getValue();
+        StringBuilder ruleStringBuilder = new StringBuilder();
+        ruleStringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+        ruleStringBuilder.append("<rule>\n");
+        ruleStringBuilder.append("    <strategy>\n");
+        ruleStringBuilder.append("        <" + strategyValue + ">{");
+
         String blueCondition = null;
         String greenCondition = null;
+
         List<TLink> links = TElementManager.getLinks(dataBox);
         for (TLink link : links) {
             LinkType linkType = (LinkType) link.getBusinessObject();
@@ -536,19 +546,46 @@ public class BlueGreenTopology extends AbstractTopology {
                     greenCondition = link.getUserObject().toString();
                     break;
             }
-            System.out.println(linkType);
         }
 
-        System.out.println("蓝条件 = " + blueCondition);
-        System.out.println("绿条件 = " + greenCondition);
-
-        String strategy = null;
+        StringBuilder basicStrategyStringBuilder = new StringBuilder();
+        StringBuilder customizationStrategyStringBuilder = new StringBuilder();
         List<TNode> nodes = TElementManager.getNodes(dataBox);
         for (TNode node : nodes) {
             Instance instance = (Instance) node.getUserObject();
             NodeType nodeType = (NodeType) node.getBusinessObject();
-            System.out.println(nodeType);
+            String serviceId = instance.getServiceId();
+            String metadata = instance.getMetadata().get(strategyValue);
+            switch (nodeType) {
+                case BLUE:
+
+                    break;
+                case GREEN:
+
+                    break;
+                case BASIC:
+                    basicStrategyStringBuilder.append("\"" + serviceId + "\":\"" + metadata + "\", ");
+                    break;
+            }
         }
+
+        String basicStrategy = basicStrategyStringBuilder.toString();
+        basicStrategy = basicStrategy.substring(0, basicStrategy.length() - 2) + "}</" + strategyValue + ">\n";
+
+        ruleStringBuilder.append(basicStrategy);
+        ruleStringBuilder.append("    </strategy>\n");
+        ruleStringBuilder.append("    <strategy-customization>\n");
+        ruleStringBuilder.append("        <conditions type=\"" + WorkType.BLUE_GREEN + "\">\n");
+        ruleStringBuilder.append("            <condition id=\"blue-condition\" header=\"" + blueCondition + "\" " + strategyValue + "-id=\"blue-" + strategyValue + "-route\"/>\n");
+        ruleStringBuilder.append("            <condition id=\"green-condition\" header=\"" + greenCondition + "\" " + strategyValue + "-id=\"green-" + strategyValue + "-route\"/>\n");
+        ruleStringBuilder.append("        </conditions>\n");
+        ruleStringBuilder.append("        <routes>\n");
+
+        ruleStringBuilder.append("        </routes>\n");
+        ruleStringBuilder.append("    </strategy-customization>\n");
+        ruleStringBuilder.append("</rule>");
+
+        System.out.println(ruleStringBuilder.toString());
     }
 
     private JSecurityAction createAddNodesAction() {
