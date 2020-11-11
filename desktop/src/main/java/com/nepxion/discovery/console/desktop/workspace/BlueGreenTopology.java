@@ -267,6 +267,11 @@ public class BlueGreenTopology extends AbstractTopology {
         this.workType = workType;
         this.strategyType = strategyType;
         this.configType = configType;
+
+        refreshData();
+    }
+
+    public void refreshData() {
         try {
             this.instanceMap = ServiceController.getInstanceMap(Arrays.asList(group));
         } catch (Exception e) {
@@ -276,9 +281,14 @@ public class BlueGreenTopology extends AbstractTopology {
 
     public void initializeUI() {
         setTitle();
+        setGatewayNode();
+
+        refreshUI();
+    }
+
+    public void refreshUI() {
         setServiceUI();
         setMetadataUI();
-        setGatewayNode();
     }
 
     public String getName() {
@@ -303,6 +313,12 @@ public class BlueGreenTopology extends AbstractTopology {
 
     private void setTitle() {
         background.setTitle(name + " | " + group + " | " + workType.getDescription() + " | " + strategyType.getDescription() + " | " + configType.getDescription());
+    }
+
+    private void setGatewayNode() {
+        gatewayNode = addNode(gateway.getServiceId(), gatewayBlackNodeUI);
+        gatewayNode.setUserObject(gateway);
+        gatewayNode.setBusinessObject(NodeType.GATEWAY);
     }
 
     @SuppressWarnings("unchecked")
@@ -330,12 +346,6 @@ public class BlueGreenTopology extends AbstractTopology {
         blueMetadataComboBox.setModel(new DefaultComboBoxModel<>(metadatas.toArray()));
         greenMetadataComboBox.setModel(new DefaultComboBoxModel<>(metadatas.toArray()));
         basicMetadataComboBox.setModel(new DefaultComboBoxModel<>(metadatas.toArray()));
-    }
-
-    private void setGatewayNode() {
-        gatewayNode = addNode(gateway.getServiceId(), gatewayBlackNodeUI);
-        gatewayNode.setUserObject(gateway);
-        gatewayNode.setBusinessObject(NodeType.GATEWAY);
     }
 
     private void addNodes(String serviceId, String blueMetadata, String greenMetadata, String basicMetadata, String blueCondition, String greenCondition) {
@@ -616,8 +626,8 @@ public class BlueGreenTopology extends AbstractTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                initializeData(name, group, gateway, workType, strategyType, configType);
-                initializeUI();
+                refreshData();
+                refreshUI();
             }
         };
 
