@@ -98,7 +98,8 @@ public class BlueGreenTopology extends AbstractTopology {
     private ConfigType configType;
     private Map<String, List<Instance>> instanceMap;
 
-    private JBasicTextArea ruleTextArea;
+    private JBasicTextArea strategyTextArea;
+    private JBasicScrollPane strategyScrollPane;
 
     public BlueGreenTopology() {
         initializeContentBar();
@@ -597,25 +598,25 @@ public class BlueGreenTopology extends AbstractTopology {
             }
         }
 
-        StringBuilder ruleStringBuilder = new StringBuilder();
-        ruleStringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-        ruleStringBuilder.append("<rule>\n");
-        ruleStringBuilder.append("    <strategy>\n");
-        ruleStringBuilder.append("        <" + strategyValue + ">{" + basicStrategy + "}</" + strategyValue + ">\n");
-        ruleStringBuilder.append("    </strategy>\n\n");
-        ruleStringBuilder.append("    <strategy-customization>\n");
-        ruleStringBuilder.append("        <conditions type=\"" + WorkType.BLUE_GREEN + "\">\n");
-        ruleStringBuilder.append("            <condition id=\"blue-condition\" header=\"" + EscapeType.escape(blueCondition) + "\" " + strategyValue + "-id=\"blue-" + strategyValue + "-route\"/>\n");
-        ruleStringBuilder.append("            <condition id=\"green-condition\" header=\"" + EscapeType.escape(greenCondition) + "\" " + strategyValue + "-id=\"green-" + strategyValue + "-route\"/>\n");
-        ruleStringBuilder.append("        </conditions>\n\n");
-        ruleStringBuilder.append("        <routes>\n");
-        ruleStringBuilder.append("            <route id=\"blue-" + strategyValue + "-route\" type=\"" + strategyValue + "\">{" + blueStrategy + "}</route>\n");
-        ruleStringBuilder.append("            <route id=\"green-" + strategyValue + "-route\" type=\"" + strategyValue + "\">{" + greenStrategy + "}</route>\n");
-        ruleStringBuilder.append("        </routes>\n");
-        ruleStringBuilder.append("    </strategy-customization>\n");
-        ruleStringBuilder.append("</rule>");
+        StringBuilder strategyStringBuilder = new StringBuilder();
+        strategyStringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+        strategyStringBuilder.append("<rule>\n");
+        strategyStringBuilder.append("    <strategy>\n");
+        strategyStringBuilder.append("        <" + strategyValue + ">{" + basicStrategy + "}</" + strategyValue + ">\n");
+        strategyStringBuilder.append("    </strategy>\n\n");
+        strategyStringBuilder.append("    <strategy-customization>\n");
+        strategyStringBuilder.append("        <conditions type=\"" + WorkType.BLUE_GREEN + "\">\n");
+        strategyStringBuilder.append("            <condition id=\"blue-condition\" header=\"" + EscapeType.escape(blueCondition) + "\" " + strategyValue + "-id=\"blue-" + strategyValue + "-route\"/>\n");
+        strategyStringBuilder.append("            <condition id=\"green-condition\" header=\"" + EscapeType.escape(greenCondition) + "\" " + strategyValue + "-id=\"green-" + strategyValue + "-route\"/>\n");
+        strategyStringBuilder.append("        </conditions>\n\n");
+        strategyStringBuilder.append("        <routes>\n");
+        strategyStringBuilder.append("            <route id=\"blue-" + strategyValue + "-route\" type=\"" + strategyValue + "\">{" + blueStrategy + "}</route>\n");
+        strategyStringBuilder.append("            <route id=\"green-" + strategyValue + "-route\" type=\"" + strategyValue + "\">{" + greenStrategy + "}</route>\n");
+        strategyStringBuilder.append("        </routes>\n");
+        strategyStringBuilder.append("    </strategy-customization>\n");
+        strategyStringBuilder.append("</rule>");
 
-        return ruleStringBuilder.toString();
+        return strategyStringBuilder.toString();
     }
 
     private void save() {
@@ -809,15 +810,16 @@ public class BlueGreenTopology extends AbstractTopology {
                     return;
                 }
 
-                if (ruleTextArea == null) {
-                    ruleTextArea = new JBasicTextArea();
-                    ruleTextArea.setPreferredSize(new Dimension(900, 400));
+                if (strategyTextArea == null) {
+                    strategyTextArea = new JBasicTextArea();
+                    strategyScrollPane = new JBasicScrollPane(strategyTextArea);
+                    strategyScrollPane.setPreferredSize(new Dimension(900, 400));
                 }
 
                 String xml = toXml();
-                ruleTextArea.setText(xml);
+                strategyTextArea.setText(xml);
 
-                JBasicOptionPane.showOptionDialog(HandleManager.getFrame(BlueGreenTopology.this), new JBasicScrollPane(ruleTextArea), "策略文本预览", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/property.png"), new Object[] { SwingLocale.getString("close") }, null, true);
+                JBasicOptionPane.showOptionDialog(HandleManager.getFrame(BlueGreenTopology.this), strategyScrollPane, "策略文本预览", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/property.png"), new Object[] { SwingLocale.getString("close") }, null, true);
             }
         };
 
