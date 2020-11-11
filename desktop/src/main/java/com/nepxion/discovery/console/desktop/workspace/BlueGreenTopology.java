@@ -98,6 +98,8 @@ public class BlueGreenTopology extends AbstractTopology {
         initializeListener();
 
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        addGatewayNode();
     }
 
     private void initializeContentBar() {
@@ -151,7 +153,7 @@ public class BlueGreenTopology extends AbstractTopology {
         servicePanel.add(new JClassicButton(createAddNodesAction()));
         servicePanel.add(new JClassicButton(createRemoveNodesAction()));
         servicePanel.add(new JClassicButton(createModifyNodesAction()));
-        servicePanel.add(new JClassicButton("清空", ConsoleIconFactory.getSwingIcon("paint.png")));
+        servicePanel.add(new JClassicButton(createClearNodesAction()));
 
         blueConditionTextField = new JBasicTextField("#H['a'] == '1' && #H['b'] <= '2'");
         blueConditionTextField.setPreferredSize(new Dimension(436, blueConditionTextField.getPreferredSize().height));
@@ -216,12 +218,6 @@ public class BlueGreenTopology extends AbstractTopology {
             }
         });
         graph.getToolbar().setVisible(false);
-
-        gatewayNode = addNode("Discovery Gateway", gatewayBlackNodeUI);
-        Instance gatewayInstance = new Instance();
-        gatewayInstance.setServiceId("Discovery Gateway");
-        gatewayNode.setUserObject(gatewayInstance);
-        gatewayNode.setBusinessObject(GATEWAY_NODE);
     }
 
     private void initializeListener() {
@@ -246,6 +242,14 @@ public class BlueGreenTopology extends AbstractTopology {
         }
 
         return false;
+    }
+
+    private void addGatewayNode() {
+        gatewayNode = addNode("Discovery Gateway", gatewayBlackNodeUI);
+        Instance gatewayInstance = new Instance();
+        gatewayInstance.setServiceId("Discovery Gateway");
+        gatewayNode.setUserObject(gatewayInstance);
+        gatewayNode.setBusinessObject(GATEWAY_NODE);
     }
 
     private void addNodes(String serviceId, String blueMetadata, String greenMetadata, String basicMetadata, String blueCondition, String greenCondition) {
@@ -370,6 +374,11 @@ public class BlueGreenTopology extends AbstractTopology {
 
     private void clearNodes() {
         dataBox.clear();
+        dataBox.addElement(gatewayNode);
+
+        blueNode = null;
+        greenNode = null;
+        basicNode = null;
     }
 
     @SuppressWarnings("unchecked")
@@ -497,6 +506,18 @@ public class BlueGreenTopology extends AbstractTopology {
                 }
 
                 modifyNodes(serviceId, blueMetadata, greenMetadata, basicMetadata);
+            }
+        };
+
+        return action;
+    }
+
+    private JSecurityAction createClearNodesAction() {
+        JSecurityAction action = new JSecurityAction("清空", ConsoleIconFactory.getSwingIcon("paint.png"), "清空") {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+                clearNodes();
             }
         };
 
