@@ -311,6 +311,8 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     private void setGatewayNode() {
+        dataBox.clear();
+
         gatewayNode = addNode(gateway.getServiceId(), gatewayBlackNodeUI);
         gatewayNode.setUserObject(gateway);
         gatewayNode.setBusinessObject(NodeType.GATEWAY);
@@ -858,18 +860,36 @@ public class BlueGreenTopology extends AbstractTopology {
                 }
 
                 String operationName = operationPanel.getOperationName();
-                String group = operationPanel.getGroup();
+                if (StringUtils.isBlank(operationName)) {
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "名称不能为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
-                Instance gateway = new Instance();
-                gateway.setServiceId(operationPanel.getGateway());
+                    return;
+                }
+
+                String group = operationPanel.getGroup();
+                if (StringUtils.isBlank(group)) {
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "组不能为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+                    return;
+                }
+
+                String gateway = operationPanel.getGateway();
+                if (StringUtils.isBlank(gateway)) {
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "服务名不能为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+                    return;
+                }
+
+                Instance instance = new Instance();
+                instance.setServiceId(gateway);
                 Map<String, String> metadataMap = new HashMap<String, String>();
-                gateway.setMetadata(metadataMap);
+                instance.setMetadata(metadataMap);
 
                 OperationType operationType = operationPanel.getOperationType();
                 StrategyType strategyType = operationPanel.getStrategyType();
                 ConfigType configType = operationPanel.getConfigType();
 
-                initializeData(operationName, group, gateway, operationType, strategyType, configType);
+                initializeData(operationName, group, instance, operationType, strategyType, configType);
                 initializeUI();
             }
         };
