@@ -549,7 +549,7 @@ public class BlueGreenTopology extends AbstractTopology {
 
     @SuppressWarnings({ "unchecked", "incomplete-switch" })
     private String toXml() {
-        if (TElementManager.getNodes(dataBox).size() == 0) {
+        if (TElementManager.getNodes(dataBox).size() <= 1) {
             return StringUtils.EMPTY;
         }
 
@@ -620,12 +620,7 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     private void save() {
-        String xml = toXml();
-        if (StringUtils.isEmpty(xml)) {
-            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "策略为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
-            return;
-        }
     }
 
     private JSecurityAction createRefreshServicesAction() {
@@ -827,8 +822,9 @@ public class BlueGreenTopology extends AbstractTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                if (TElementManager.getNodes(dataBox).size() == 1) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "必须至少配置一个服务", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                String xml = toXml();
+                if (StringUtils.isEmpty(xml)) {
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "策略为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
                 }
@@ -838,8 +834,6 @@ public class BlueGreenTopology extends AbstractTopology {
                     strategyScrollPane = new JBasicScrollPane(strategyTextArea);
                     strategyScrollPane.setPreferredSize(new Dimension(900, 400));
                 }
-
-                String xml = toXml();
                 strategyTextArea.setText(xml);
 
                 JBasicOptionPane.showOptionDialog(HandleManager.getFrame(BlueGreenTopology.this), strategyScrollPane, "策略文本预览", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/property.png"), new Object[] { SwingLocale.getString("close") }, null, true);
@@ -929,8 +923,9 @@ public class BlueGreenTopology extends AbstractTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                if (TElementManager.getNodes(dataBox).size() == 1) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "必须至少配置一个服务", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                String xml = toXml();
+                if (StringUtils.isEmpty(xml)) {
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "策略为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
                 }
