@@ -63,7 +63,7 @@ import com.nepxion.swing.textfield.JBasicTextField;
 public class RouterTopology extends AbstractTopology {
     private static final long serialVersionUID = 1L;
 
-    private NodeLocation nodeLocation = new NodeLocation(100, 200, 200, 0);
+    private NodeLocation nodeLocation = new NodeLocation(440, 50, 200, 0);
     private NodeUI nodeUI = new NodeUI(NodeImageType.SERVICE, NodeSizeType.MIDDLE, true);
 
     private TGraphBackground background;

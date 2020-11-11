@@ -72,7 +72,7 @@ public class BlueGreenTopology extends AbstractTopology {
 
     private static final String VERSION = "version";
 
-    private NodeLocation nodeLocation = new NodeLocation(100, 200, 200, 0);
+    private NodeLocation nodeLocation = new NodeLocation(440, 50, 200, 0);
     private NodeUI gatewayBlackNodeUI = new NodeUI(NodeImageType.GATEWAY_BLACK, NodeSizeType.LARGE, true);
     private NodeUI serviceYellowNodeUI = new NodeUI(NodeImageType.SERVICE_YELLOW, NodeSizeType.MIDDLE, true);
     private NodeUI serviceBlueNodeUI = new NodeUI(NodeImageType.SERVICE_BLUE, NodeSizeType.MIDDLE, true);
