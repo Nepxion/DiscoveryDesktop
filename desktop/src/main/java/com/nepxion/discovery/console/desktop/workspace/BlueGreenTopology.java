@@ -313,6 +313,10 @@ public class BlueGreenTopology extends AbstractTopology {
     private void setGatewayNode() {
         dataBox.clear();
 
+        blueNode = null;
+        greenNode = null;
+        basicNode = null;
+
         gatewayNode = addNode(gateway.getServiceId(), gatewayBlackNodeUI);
         gatewayNode.setUserObject(gateway);
         gatewayNode.setBusinessObject(NodeType.GATEWAY);
@@ -325,18 +329,16 @@ public class BlueGreenTopology extends AbstractTopology {
 
     @SuppressWarnings("unchecked")
     private void setMetadataUI() {
-        Object selectedItem = serviceIdComboBox.getSelectedItem();
-        if (selectedItem == null) {
-            return;
-        }
-
-        String serviceId = selectedItem.toString().trim();
         List<String> metadatas = new ArrayList<String>();
-        List<Instance> instances = instanceMap.get(serviceId);
-        if (CollectionUtils.isNotEmpty(instances)) {
-            for (Instance instance : instances) {
-                String metadata = instance.getMetadata().get(strategyType.getValue());
-                metadatas.add(metadata);
+        Object selectedItem = serviceIdComboBox.getSelectedItem();
+        if (selectedItem != null) {
+            String serviceId = selectedItem.toString().trim();
+            List<Instance> instances = instanceMap.get(serviceId);
+            if (CollectionUtils.isNotEmpty(instances)) {
+                for (Instance instance : instances) {
+                    String metadata = instance.getMetadata().get(strategyType.getValue());
+                    metadatas.add(metadata);
+                }
             }
         }
         metadatas.add(DiscoveryConstant.DEFAULT);
@@ -1058,13 +1060,11 @@ public class BlueGreenTopology extends AbstractTopology {
         @SuppressWarnings("unchecked")
         private void setGatewayIds() {
             Object selectedItem = groupComboBox.getSelectedItem();
-            if (selectedItem == null) {
-                return;
-            }
-
-            Object[] gatewayIds = getGatewayIds(selectedItem.toString().trim());
-            if (gatewayIds != null) {
-                gatewayIdComboBox.setModel(new DefaultComboBoxModel<>(gatewayIds));
+            if (selectedItem != null) {
+                Object[] gatewayIds = getGatewayIds(selectedItem.toString().trim());
+                if (gatewayIds != null) {
+                    gatewayIdComboBox.setModel(new DefaultComboBoxModel<>(gatewayIds));
+                }
             }
         }
 
