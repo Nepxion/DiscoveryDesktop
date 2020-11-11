@@ -333,7 +333,7 @@ public class BlueGreenTopology extends AbstractTopology {
             return;
         }
 
-        String serviceId = serviceIdComboBox.getSelectedItem().toString();
+        String serviceId = selectedItem.toString();
         List<String> metadatas = new ArrayList<String>();
         List<Instance> instances = instanceMap.get(serviceId);
         if (CollectionUtils.isNotEmpty(instances)) {
@@ -341,8 +341,9 @@ public class BlueGreenTopology extends AbstractTopology {
                 String metadata = instance.getMetadata().get(strategyType.getValue());
                 metadatas.add(metadata);
             }
-            metadatas.add(DiscoveryConstant.DEFAULT);
         }
+        metadatas.add(DiscoveryConstant.DEFAULT);
+
         blueMetadataComboBox.setModel(new DefaultComboBoxModel<>(metadatas.toArray()));
         greenMetadataComboBox.setModel(new DefaultComboBoxModel<>(metadatas.toArray()));
         basicMetadataComboBox.setModel(new DefaultComboBoxModel<>(metadatas.toArray()));
