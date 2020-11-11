@@ -63,7 +63,9 @@ import com.nepxion.swing.layout.filed.FiledLayout;
 import com.nepxion.swing.listener.DisplayAbilityListener;
 import com.nepxion.swing.locale.SwingLocale;
 import com.nepxion.swing.optionpane.JBasicOptionPane;
+import com.nepxion.swing.scrollpane.JBasicScrollPane;
 import com.nepxion.swing.selector.checkbox.JCheckBoxSelector;
+import com.nepxion.swing.textarea.JBasicTextArea;
 import com.nepxion.swing.textfield.JBasicTextField;
 
 public class BlueGreenTopology extends AbstractTopology {
@@ -95,6 +97,8 @@ public class BlueGreenTopology extends AbstractTopology {
     private StrategyType strategyType;
     private ConfigType configType;
     private Map<String, List<Instance>> instanceMap;
+
+    private JBasicTextArea ruleTextArea;
 
     public BlueGreenTopology() {
         initializeContentBar();
@@ -209,7 +213,7 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     private void initializeToolBar() {
-        JClassicButton previewButton = new JClassicButton("文本预览", ConsoleIconFactory.getSwingIcon("ticket.png"));
+        JClassicButton previewButton = new JClassicButton(createPreviewAction());
 
         JClassicButton controlButton = (JClassicButton) graph.getToolbar().getComponent(0);
         controlButton.setPreferredSize(new Dimension(controlButton.getPreferredSize().width + 5, previewButton.getPreferredSize().height));
@@ -523,8 +527,12 @@ public class BlueGreenTopology extends AbstractTopology {
         return link;
     }
 
+    private void fromXml() {
+
+    }
+
     @SuppressWarnings({ "unchecked", "incomplete-switch" })
-    private void save() {
+    private String toXml() {
         String strategyValue = strategyType.getValue();
 
         StringBuilder basicStrategyStringBuilder = new StringBuilder();
@@ -575,12 +583,12 @@ public class BlueGreenTopology extends AbstractTopology {
         ruleStringBuilder.append("<rule>\n");
         ruleStringBuilder.append("    <strategy>\n");
         ruleStringBuilder.append("        <" + strategyValue + ">{" + basicStrategy + "}</" + strategyValue + ">\n");
-        ruleStringBuilder.append("    </strategy>\n");
+        ruleStringBuilder.append("    </strategy>\n\n");
         ruleStringBuilder.append("    <strategy-customization>\n");
         ruleStringBuilder.append("        <conditions type=\"" + WorkType.BLUE_GREEN + "\">\n");
         ruleStringBuilder.append("            <condition id=\"blue-condition\" header=\"" + EscapeType.escape(blueCondition) + "\" " + strategyValue + "-id=\"blue-" + strategyValue + "-route\"/>\n");
         ruleStringBuilder.append("            <condition id=\"green-condition\" header=\"" + EscapeType.escape(greenCondition) + "\" " + strategyValue + "-id=\"green-" + strategyValue + "-route\"/>\n");
-        ruleStringBuilder.append("        </conditions>\n");
+        ruleStringBuilder.append("        </conditions>\n\n");
         ruleStringBuilder.append("        <routes>\n");
         ruleStringBuilder.append("            <route id=\"blue-" + strategyValue + "-route\" type=\"" + strategyValue + "\">{" + blueStrategy + "}</route>\n");
         ruleStringBuilder.append("            <route id=\"green-" + strategyValue + "-route\" type=\"" + strategyValue + "\">{" + greenStrategy + "}</route>\n");
@@ -588,7 +596,55 @@ public class BlueGreenTopology extends AbstractTopology {
         ruleStringBuilder.append("    </strategy-customization>\n");
         ruleStringBuilder.append("</rule>");
 
-        System.out.println(ruleStringBuilder.toString());
+        return ruleStringBuilder.toString();
+    }
+
+    private void save() {
+        String xml = toXml();
+    }
+
+    private JSecurityAction createMetadataSelectorAction(JBasicComboBox metadataComboBox) {
+        JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("direction_south.png"), "版本选取") {
+            private static final long serialVersionUID = 1L;
+
+            @SuppressWarnings({ "unchecked", "rawtypes" })
+            public void execute(ActionEvent e) {
+                ComboBoxModel metadataComboBoxModel = metadataComboBox.getModel();
+                List<ElementNode> metadataElementNodes = new ArrayList<ElementNode>();
+                for (int i = 0; i < metadataComboBoxModel.getSize(); i++) {
+                    String metadata = metadataComboBoxModel.getElementAt(i).toString();
+                    metadataElementNodes.add(new ElementNode(metadata, IconFactory.getSwingIcon("component/file_chooser_16.png"), metadata, metadata));
+                }
+
+                JCheckBoxSelector checkBoxSelector = new JCheckBoxSelector(HandleManager.getFrame(BlueGreenTopology.this), "版本选取", new Dimension(400, 350), metadataElementNodes);
+                checkBoxSelector.setVisible(true);
+                checkBoxSelector.dispose();
+
+                if (!checkBoxSelector.isConfirmed()) {
+                    return;
+                }
+
+                List<String> selectedMetadatas = checkBoxSelector.getSelectedUserObjects();
+                if (CollectionUtils.isEmpty(selectedMetadatas)) {
+                    return;
+                }
+
+                StringBuilder StringBuilder = new StringBuilder();
+                int index = 0;
+                for (String selectedMetadata : selectedMetadatas) {
+                    StringBuilder.append(selectedMetadata);
+                    if (index < selectedMetadatas.size() - 1) {
+                        StringBuilder.append(DiscoveryConstant.SEPARATE);
+                    }
+
+                    index++;
+                }
+
+                metadataComboBox.setSelectedItem(StringBuilder.toString());
+            }
+        };
+
+        return action;
     }
 
     private JSecurityAction createAddNodesAction() {
@@ -710,56 +766,38 @@ public class BlueGreenTopology extends AbstractTopology {
         return action;
     }
 
-    private JSecurityAction createLayoutAction() {
-        JSecurityAction action = new JSecurityAction("布局", ConsoleIconFactory.getSwingIcon("layout.png"), "布局") {
+    private JSecurityAction createPreviewAction() {
+        JSecurityAction action = new JSecurityAction("文本预览", ConsoleIconFactory.getSwingIcon("ticket.png"), "文本预览") {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                toggleLayoutBar();
+                if (TElementManager.getNodes(dataBox).size() == 1) {
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "必须至少配置一个服务", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+                    return;
+                }
+
+                if (ruleTextArea == null) {
+                    ruleTextArea = new JBasicTextArea();
+                    ruleTextArea.setPreferredSize(new Dimension(900, 400));
+                }
+
+                String xml = toXml();
+                ruleTextArea.setText(xml);
+
+                JBasicOptionPane.showOptionDialog(HandleManager.getFrame(BlueGreenTopology.this), new JBasicScrollPane(ruleTextArea), "策略文本预览", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/property.png"), new Object[] { SwingLocale.getString("close") }, null, true);
             }
         };
 
         return action;
     }
 
-    private JSecurityAction createMetadataSelectorAction(JBasicComboBox metadataComboBox) {
-        JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("direction_south.png"), "版本选取") {
+    private JSecurityAction createLayoutAction() {
+        JSecurityAction action = new JSecurityAction("布局", ConsoleIconFactory.getSwingIcon("layout.png"), "布局") {
             private static final long serialVersionUID = 1L;
 
-            @SuppressWarnings({ "unchecked", "rawtypes" })
             public void execute(ActionEvent e) {
-                ComboBoxModel metadataComboBoxModel = metadataComboBox.getModel();
-                List<ElementNode> metadataElementNodes = new ArrayList<ElementNode>();
-                for (int i = 0; i < metadataComboBoxModel.getSize(); i++) {
-                    String metadata = metadataComboBoxModel.getElementAt(i).toString();
-                    metadataElementNodes.add(new ElementNode(metadata, IconFactory.getSwingIcon("component/file_chooser_16.png"), metadata, metadata));
-                }
-
-                JCheckBoxSelector checkBoxSelector = new JCheckBoxSelector(HandleManager.getFrame(BlueGreenTopology.this), "版本选取", new Dimension(400, 350), metadataElementNodes);
-                checkBoxSelector.setVisible(true);
-                checkBoxSelector.dispose();
-
-                if (!checkBoxSelector.isConfirmed()) {
-                    return;
-                }
-
-                List<String> selectedMetadatas = checkBoxSelector.getSelectedUserObjects();
-                if (CollectionUtils.isEmpty(selectedMetadatas)) {
-                    return;
-                }
-
-                StringBuilder StringBuilder = new StringBuilder();
-                int index = 0;
-                for (String selectedMetadata : selectedMetadatas) {
-                    StringBuilder.append(selectedMetadata);
-                    if (index < selectedMetadatas.size() - 1) {
-                        StringBuilder.append(DiscoveryConstant.SEPARATE);
-                    }
-
-                    index++;
-                }
-
-                metadataComboBox.setSelectedItem(StringBuilder.toString());
+                toggleLayoutBar();
             }
         };
 
