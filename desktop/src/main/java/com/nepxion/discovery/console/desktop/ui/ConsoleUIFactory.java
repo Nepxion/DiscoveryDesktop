@@ -19,7 +19,7 @@ import javax.swing.border.TitledBorder;
 import com.nepxion.discovery.console.desktop.context.UIContext;
 import com.nepxion.swing.separator.JBasicSeparator;
 
-public class UIFactory {
+public class ConsoleUIFactory {
     public static JBasicSeparator createSeparator() {
         JBasicSeparator separator = new JBasicSeparator(JBasicSeparator.HORIZONTAL, JBasicSeparator.LOWERED_STYLE, -1);
         separator.setBrightColor(new Color(197, 196, 198));

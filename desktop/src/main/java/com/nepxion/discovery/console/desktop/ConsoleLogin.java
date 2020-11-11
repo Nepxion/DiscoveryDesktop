@@ -22,7 +22,7 @@ import javax.swing.JPanel;
 import org.apache.commons.lang3.StringUtils;
 
 import com.nepxion.discovery.common.entity.UserEntity;
-import com.nepxion.discovery.console.desktop.controller.ServiceController;
+import com.nepxion.discovery.console.controller.ServiceController;
 import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
 import com.nepxion.swing.combobox.JBasicComboBox;
 import com.nepxion.swing.dialog.JLoginDialog;
