@@ -69,15 +69,6 @@ import com.nepxion.swing.textfield.JBasicTextField;
 public class BlueGreenTopology extends AbstractTopology {
     private static final long serialVersionUID = 1L;
 
-    private static final String GATEWAY_NODE = "GATEWAY-NODE";
-    private static final String BLUE_NODE = "BLUE-NODE";
-    private static final String GREEN_NODE = "GREEN-NODE";
-    private static final String BASIC_NODE = "BASIC-NODE";
-
-    private static final String BLUE_LINK = "BLUE-LINK";
-    private static final String GREEN_LINK = "GREEN-LINK";
-    private static final String BASIC_LINK = "BASIC-LINK";
-
     private static final String VERSION = "version";
 
     private NodeLocation nodeLocation = new NodeLocation(440, 50, 200, 0);
@@ -224,7 +215,7 @@ public class BlueGreenTopology extends AbstractTopology {
         buttonPanel.add(new JClassicButton("路由拓扑", ConsoleIconFactory.getSwingIcon("rotate.png")));
         buttonPanel.add(Box.createHorizontalGlue());
         buttonPanel.add(new JClassicButton(createLayoutAction()));
-        buttonPanel.add(new JClassicButton("保存", ConsoleIconFactory.getSwingIcon("save.png")));
+        buttonPanel.add(new JClassicButton(createSaveAction()));
 
         JPanel toolBar = new JPanel();
         toolBar.setLayout(new FiledLayout(FiledLayout.COLUMN, FiledLayout.FULL, 5));
@@ -314,7 +305,7 @@ public class BlueGreenTopology extends AbstractTopology {
     private void setGatewayNode() {
         gatewayNode = addNode(gateway.getServiceId(), gatewayBlackNodeUI);
         gatewayNode.setUserObject(gateway);
-        gatewayNode.setBusinessObject(GATEWAY_NODE);
+        gatewayNode.setBusinessObject(NodeType.GATEWAY);
     }
 
     private void addNodes(String serviceId, String blueMetadata, String greenMetadata, String basicMetadata, String blueCondition, String greenCondition) {
@@ -325,15 +316,16 @@ public class BlueGreenTopology extends AbstractTopology {
         newBlueMetadataMap.put(VERSION, blueMetadata);
         newBlueInstance.setMetadata(newBlueMetadataMap);
         newBlueNode.setUserObject(newBlueInstance);
-        newBlueNode.setBusinessObject(BLUE_NODE);
+        newBlueNode.setBusinessObject(NodeType.BLUE);
         if (blueNode == null) {
             TLink blueLink = addLink(gatewayNode, newBlueNode, LinkUI.BLUE);
             blueLink.setDisplayName("蓝路由");
             blueLink.setToolTipText(blueCondition);
             blueLink.setUserObject(blueCondition);
-            blueLink.setBusinessObject(BLUE_LINK);
+            blueLink.setBusinessObject(LinkType.BLUE);
         } else {
-            addLink(blueNode, newBlueNode, null);
+            TLink link = addLink(blueNode, newBlueNode, null);
+            link.setBusinessObject(LinkType.UNDEFINED);
         }
         blueNode = newBlueNode;
 
@@ -344,15 +336,16 @@ public class BlueGreenTopology extends AbstractTopology {
         newGreenMetadataMap.put(VERSION, greenMetadata);
         newGreenInstance.setMetadata(newGreenMetadataMap);
         newGreenNode.setUserObject(newGreenInstance);
-        newGreenNode.setBusinessObject(GREEN_NODE);
+        newGreenNode.setBusinessObject(NodeType.GREEN);
         if (greenNode == null) {
             TLink greenLink = addLink(gatewayNode, newGreenNode, LinkUI.GREEN);
             greenLink.setDisplayName("绿路由");
             greenLink.setToolTipText(greenCondition);
             greenLink.setUserObject(greenCondition);
-            greenLink.setBusinessObject(GREEN_LINK);
+            greenLink.setBusinessObject(LinkType.GREEN);
         } else {
-            addLink(greenNode, newGreenNode, null);
+            TLink link = addLink(greenNode, newGreenNode, null);
+            link.setBusinessObject(LinkType.UNDEFINED);
         }
         greenNode = newGreenNode;
 
@@ -363,13 +356,14 @@ public class BlueGreenTopology extends AbstractTopology {
         newBasicMetadataMap.put(VERSION, basicMetadata);
         newBasicInstance.setMetadata(newBasicMetadataMap);
         newBasicNode.setUserObject(newBasicInstance);
-        newBasicNode.setBusinessObject(BASIC_NODE);
+        newBasicNode.setBusinessObject(NodeType.BASIC);
         if (basicNode == null) {
             TLink basicLink = addLink(gatewayNode, newBasicNode, LinkUI.YELLOW);
             basicLink.setDisplayName("兜底路由");
-            basicLink.setBusinessObject(BASIC_LINK);
+            basicLink.setBusinessObject(LinkType.BASIC);
         } else {
-            addLink(basicNode, newBasicNode, null);
+            TLink link = addLink(basicNode, newBasicNode, null);
+            link.setBusinessObject(LinkType.UNDEFINED);
         }
         basicNode = newBasicNode;
     }
@@ -416,22 +410,26 @@ public class BlueGreenTopology extends AbstractTopology {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "incomplete-switch" })
     private void modifyNodes(String serviceId, String blueMetadata, String greenMetadata, String basicMetadata) {
         List<TNode> nodes = TElementManager.getNodes(dataBox);
         for (TNode node : nodes) {
             Instance instance = (Instance) node.getUserObject();
             if (StringUtils.equalsIgnoreCase(instance.getServiceId(), serviceId)) {
-                String type = node.getBusinessObject() != null ? node.getBusinessObject().toString() : null;
-                if (StringUtils.equals(type, BLUE_NODE)) {
-                    node.setName(ButtonManager.getHtmlText(serviceId + "\n[" + StringUtils.capitalize(VERSION) + "=" + blueMetadata + "]"));
-                    instance.getMetadata().put(VERSION, blueMetadata);
-                } else if (StringUtils.equals(type, GREEN_NODE)) {
-                    node.setName(ButtonManager.getHtmlText(serviceId + "\n[" + StringUtils.capitalize(VERSION) + "=" + greenMetadata + "]"));
-                    instance.getMetadata().put(VERSION, greenMetadata);
-                } else if (StringUtils.equals(type, BASIC_NODE)) {
-                    node.setName(ButtonManager.getHtmlText(serviceId + "\n[" + StringUtils.capitalize(VERSION) + "=" + basicMetadata + "]"));
-                    instance.getMetadata().put(VERSION, basicMetadata);
+                NodeType nodeType = (NodeType) node.getBusinessObject();
+                switch (nodeType) {
+                    case BLUE:
+                        node.setName(ButtonManager.getHtmlText(serviceId + "\n[" + StringUtils.capitalize(VERSION) + "=" + blueMetadata + "]"));
+                        instance.getMetadata().put(VERSION, blueMetadata);
+                        break;
+                    case GREEN:
+                        node.setName(ButtonManager.getHtmlText(serviceId + "\n[" + StringUtils.capitalize(VERSION) + "=" + greenMetadata + "]"));
+                        instance.getMetadata().put(VERSION, greenMetadata);
+                        break;
+                    case BASIC:
+                        node.setName(ButtonManager.getHtmlText(serviceId + "\n[" + StringUtils.capitalize(VERSION) + "=" + basicMetadata + "]"));
+                        instance.getMetadata().put(VERSION, basicMetadata);
+                        break;
                 }
             }
         }
@@ -459,17 +457,20 @@ public class BlueGreenTopology extends AbstractTopology {
         return false;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "incomplete-switch" })
     private void modifyLinks(String blueCondition, String greenCondition) {
         List<TLink> links = TElementManager.getLinks(dataBox);
         for (TLink link : links) {
-            String type = link.getBusinessObject() != null ? link.getBusinessObject().toString() : null;
-            if (StringUtils.equals(type, BLUE_LINK)) {
-                link.setToolTipText(blueCondition);
-                link.setUserObject(blueCondition);
-            } else if (StringUtils.equals(type, GREEN_LINK)) {
-                link.setToolTipText(greenCondition);
-                link.setUserObject(greenCondition);
+            LinkType linkType = (LinkType) link.getBusinessObject();
+            switch (linkType) {
+                case BLUE:
+                    link.setToolTipText(blueCondition);
+                    link.setUserObject(blueCondition);
+                    break;
+                case GREEN:
+                    link.setToolTipText(greenCondition);
+                    link.setUserObject(greenCondition);
+                    break;
             }
         }
     }
@@ -502,6 +503,36 @@ public class BlueGreenTopology extends AbstractTopology {
         dataBox.addElement(link);
 
         return link;
+    }
+
+    @SuppressWarnings({ "unchecked", "incomplete-switch" })
+    private void save() {
+        String blueCondition = null;
+        String greenCondition = null;
+        List<TLink> links = TElementManager.getLinks(dataBox);
+        for (TLink link : links) {
+            LinkType linkType = (LinkType) link.getBusinessObject();
+            switch (linkType) {
+                case BLUE:
+                    blueCondition = link.getUserObject().toString();
+                    break;
+                case GREEN:
+                    greenCondition = link.getUserObject().toString();
+                    break;
+            }
+            System.out.println(linkType);
+        }
+
+        System.out.println("蓝条件 = " + blueCondition);
+        System.out.println("绿条件 = " + greenCondition);
+
+        String strategy = null;
+        List<TNode> nodes = TElementManager.getNodes(dataBox);
+        for (TNode node : nodes) {
+            Instance instance = (Instance) node.getUserObject();
+            NodeType nodeType = (NodeType) node.getBusinessObject();
+            System.out.println(nodeType);
+        }
     }
 
     private JSecurityAction createAddNodesAction() {
@@ -673,6 +704,18 @@ public class BlueGreenTopology extends AbstractTopology {
                 }
 
                 metadataComboBox.setSelectedItem(StringBuilder.toString());
+            }
+        };
+
+        return action;
+    }
+
+    private JSecurityAction createSaveAction() {
+        JSecurityAction action = new JSecurityAction("保存", ConsoleIconFactory.getSwingIcon("save.png"), "保存") {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+                save();
             }
         };
 
