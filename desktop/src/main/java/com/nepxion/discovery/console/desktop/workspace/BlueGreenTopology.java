@@ -578,8 +578,8 @@ public class BlueGreenTopology extends AbstractTopology {
         ruleStringBuilder.append("    </strategy>\n");
         ruleStringBuilder.append("    <strategy-customization>\n");
         ruleStringBuilder.append("        <conditions type=\"" + WorkType.BLUE_GREEN + "\">\n");
-        ruleStringBuilder.append("            <condition id=\"blue-condition\" header=\"" + blueCondition + "\" " + strategyValue + "-id=\"blue-" + strategyValue + "-route\"/>\n");
-        ruleStringBuilder.append("            <condition id=\"green-condition\" header=\"" + greenCondition + "\" " + strategyValue + "-id=\"green-" + strategyValue + "-route\"/>\n");
+        ruleStringBuilder.append("            <condition id=\"blue-condition\" header=\"" + EscapeType.escape(blueCondition) + "\" " + strategyValue + "-id=\"blue-" + strategyValue + "-route\"/>\n");
+        ruleStringBuilder.append("            <condition id=\"green-condition\" header=\"" + EscapeType.escape(greenCondition) + "\" " + strategyValue + "-id=\"green-" + strategyValue + "-route\"/>\n");
         ruleStringBuilder.append("        </conditions>\n");
         ruleStringBuilder.append("        <routes>\n");
         ruleStringBuilder.append("            <route id=\"blue-" + strategyValue + "-route\" type=\"" + strategyValue + "\">{" + blueStrategy + "}</route>\n");
@@ -771,6 +771,12 @@ public class BlueGreenTopology extends AbstractTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
+                if (TElementManager.getNodes(dataBox).size() == 1) {
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "必须至少配置一个服务", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+                    return;
+                }
+
                 save();
             }
         };
