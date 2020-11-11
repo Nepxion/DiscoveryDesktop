@@ -137,6 +137,8 @@ public class BlueGreenTopology extends AbstractTopology {
                 }
             }
         });
+        JClassicButton refreshServicesButton = new JClassicButton(createRefreshServicesAction());
+        refreshServicesButton.setPreferredSize(new Dimension(30, refreshServicesButton.getPreferredSize().height));
 
         blueMetadataComboBox = new JBasicComboBox();
         blueMetadataComboBox.setEditable(true);
@@ -161,6 +163,7 @@ public class BlueGreenTopology extends AbstractTopology {
         servicePanel.add(new JBasicLabel("蓝绿服务"));
         servicePanel.add(Box.createHorizontalStrut(10));
         servicePanel.add(serviceIdComboBox);
+        servicePanel.add(refreshServicesButton);
         servicePanel.add(Box.createHorizontalStrut(10));
         servicePanel.add(new JBasicLabel("蓝版本"));
         servicePanel.add(Box.createHorizontalStrut(10));
@@ -183,10 +186,10 @@ public class BlueGreenTopology extends AbstractTopology {
         servicePanel.add(new JClassicButton(createClearNodesAction()));
 
         blueConditionTextField = new JBasicTextField("#H['a'] == '1' && #H['b'] <= '2'");
-        blueConditionTextField.setPreferredSize(new Dimension(436, blueConditionTextField.getPreferredSize().height));
+        blueConditionTextField.setPreferredSize(new Dimension(451, blueConditionTextField.getPreferredSize().height));
 
         greenConditionTextField = new JBasicTextField("#H['a'] == '3'");
-        greenConditionTextField.setPreferredSize(new Dimension(436, greenConditionTextField.getPreferredSize().height));
+        greenConditionTextField.setPreferredSize(new Dimension(451, greenConditionTextField.getPreferredSize().height));
 
         JPanel conditionPanel = new JPanel();
         conditionPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
@@ -309,6 +312,11 @@ public class BlueGreenTopology extends AbstractTopology {
 
     @SuppressWarnings("unchecked")
     private void setMetadataUI() {
+        Object selectedItem = serviceIdComboBox.getSelectedItem();
+        if (selectedItem == null) {
+            return;
+        }
+
         String serviceId = serviceIdComboBox.getSelectedItem().toString();
         List<String> metadatas = new ArrayList<String>();
         List<Instance> instances = instanceMap.get(serviceId);
@@ -601,6 +609,18 @@ public class BlueGreenTopology extends AbstractTopology {
 
     private void save() {
         String xml = toXml();
+    }
+
+    private JSecurityAction createRefreshServicesAction() {
+        JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("refresh.png"), "刷新服务列表") {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+
+            }
+        };
+
+        return action;
     }
 
     private JSecurityAction createMetadataSelectorAction(JBasicComboBox metadataComboBox) {
