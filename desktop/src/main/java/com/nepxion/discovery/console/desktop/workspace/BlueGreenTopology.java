@@ -196,7 +196,7 @@ public class BlueGreenTopology extends AbstractTopology {
         conditionPanel.add(new JClassicButton(createModifyLinksAction()));
 
         double[][] size = {
-                { 70, TableLayout.FILL },
+                { TableLayout.PREFERRED, TableLayout.FILL },
                 { TableLayout.PREFERRED, TableLayout.PREFERRED }
         };
 
@@ -1033,12 +1033,12 @@ public class BlueGreenTopology extends AbstractTopology {
             }
 
             double[][] size = {
-                    { 70, TableLayout.FILL },
+                    { TableLayout.PREFERRED, TableLayout.FILL },
                     { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
             };
 
             TableLayout tableLayout = new TableLayout(size);
-            tableLayout.setHGap(5);
+            tableLayout.setHGap(10);
             tableLayout.setVGap(5);
 
             setLayout(tableLayout);
