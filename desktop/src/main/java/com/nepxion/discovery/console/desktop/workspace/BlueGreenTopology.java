@@ -151,7 +151,6 @@ public class BlueGreenTopology extends AbstractTopology {
 
         JPanel servicePanel = new JPanel();
         servicePanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
-        servicePanel.add(new JBasicLabel("蓝绿服务"));
         servicePanel.add(Box.createHorizontalStrut(10));
         servicePanel.add(serviceIdComboBox);
         servicePanel.add(refreshServicesButton);
@@ -184,7 +183,6 @@ public class BlueGreenTopology extends AbstractTopology {
 
         JPanel conditionPanel = new JPanel();
         conditionPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
-        conditionPanel.add(new JBasicLabel("蓝绿条件"));
         conditionPanel.add(Box.createHorizontalStrut(10));
         conditionPanel.add(new JBasicLabel("蓝条件"));
         conditionPanel.add(Box.createHorizontalStrut(10));
@@ -197,11 +195,22 @@ public class BlueGreenTopology extends AbstractTopology {
         conditionPanel.add(new JClassicButton(createValidateAction()));
         conditionPanel.add(new JClassicButton(createModifyLinksAction()));
 
+        double[][] size = {
+                { 70, TableLayout.FILL },
+                { TableLayout.PREFERRED, TableLayout.PREFERRED }
+        };
+
+        TableLayout tableLayout = new TableLayout(size);
+        tableLayout.setHGap(5);
+        tableLayout.setVGap(5);
+
         JPanel toolBar = new JPanel();
-        toolBar.setLayout(new FiledLayout(FiledLayout.COLUMN, FiledLayout.FULL, 5));
+        toolBar.setLayout(tableLayout);
         toolBar.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
-        toolBar.add(servicePanel);
-        toolBar.add(conditionPanel);
+        toolBar.add(new JBasicLabel("蓝绿服务"), "0, 0");
+        toolBar.add(servicePanel, "1, 0");
+        toolBar.add(new JBasicLabel("蓝绿条件"), "0, 1");
+        toolBar.add(conditionPanel, "1, 1");
 
         add(toolBar, BorderLayout.NORTH);
     }
@@ -1024,7 +1033,7 @@ public class BlueGreenTopology extends AbstractTopology {
             }
 
             double[][] size = {
-                    { 80, TableLayout.FILL },
+                    { 70, TableLayout.FILL },
                     { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
             };
 
