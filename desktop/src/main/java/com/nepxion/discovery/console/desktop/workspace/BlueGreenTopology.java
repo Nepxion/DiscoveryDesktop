@@ -17,7 +17,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.HierarchyEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +28,8 @@ import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -35,7 +40,9 @@ import com.nepxion.cots.twaver.element.TLink;
 import com.nepxion.cots.twaver.element.TNode;
 import com.nepxion.cots.twaver.graph.TGraphBackground;
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
+import com.nepxion.discovery.console.controller.ServiceController;
 import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
+import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.topology.AbstractTopology;
 import com.nepxion.discovery.console.desktop.topology.LinkUI;
 import com.nepxion.discovery.console.desktop.topology.NodeImageType;
@@ -47,6 +54,7 @@ import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.ButtonManager;
 import com.nepxion.swing.button.JClassicButton;
 import com.nepxion.swing.combobox.JBasicComboBox;
+import com.nepxion.swing.dialog.JExceptionDialog;
 import com.nepxion.swing.element.ElementNode;
 import com.nepxion.swing.handle.HandleManager;
 import com.nepxion.swing.icon.IconFactory;
@@ -91,6 +99,11 @@ public class BlueGreenTopology extends AbstractTopology {
     private TNode greenNode;
     private TNode basicNode;
 
+    private String name;
+    private String group;
+    private Instance gateway;
+    private Map<String, List<Instance>> instanceMap;
+
     public BlueGreenTopology() {
         initializeContentBar();
         initializeToolBar();
@@ -99,31 +112,43 @@ public class BlueGreenTopology extends AbstractTopology {
 
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        addGatewayNode();
+        String name = "discovery green-blue";
+        String group = "discovery-guide-group";
+
+        Instance gateway = new Instance();
+        gateway.setServiceId("discovery-guide-gateway");
+
+        initializeData(name, group, gateway);
+        initializeUI();
     }
 
     private void initializeContentBar() {
         JBasicTextField layoutTextField = new JBasicTextField();
 
-        String[] serviceIds = new String[] { "serivice-a", "serivice-b", "serivice-c", "serivice-d", "serivice-e", "serivice-f" };
-        serviceIdComboBox = new JBasicComboBox(serviceIds);
+        serviceIdComboBox = new JBasicComboBox();
         serviceIdComboBox.setEditable(true);
         serviceIdComboBox.setPreferredSize(new Dimension(250, layoutTextField.getPreferredSize().height));
+        serviceIdComboBox.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (serviceIdComboBox.getSelectedItem() != e.getItem()) {
+                    setMetadataUI();
+                }
+            }
+        });
 
-        String[] metadatas = new String[] { "20201111-001", "20201111-002", "20201111-003", DiscoveryConstant.DEFAULT };
-        blueMetadataComboBox = new JBasicComboBox(metadatas);
+        blueMetadataComboBox = new JBasicComboBox();
         blueMetadataComboBox.setEditable(true);
         blueMetadataComboBox.setPreferredSize(new Dimension(150, layoutTextField.getPreferredSize().height));
         JClassicButton blueMetadataButton = new JClassicButton(createMetadataSelectorAction(blueMetadataComboBox));
         blueMetadataButton.setPreferredSize(new Dimension(30, blueMetadataButton.getPreferredSize().height));
 
-        greenMetadataComboBox = new JBasicComboBox(metadatas);
+        greenMetadataComboBox = new JBasicComboBox();
         greenMetadataComboBox.setEditable(true);
         greenMetadataComboBox.setPreferredSize(new Dimension(150, layoutTextField.getPreferredSize().height));
         JClassicButton greenMetadataButton = new JClassicButton(createMetadataSelectorAction(greenMetadataComboBox));
         greenMetadataButton.setPreferredSize(new Dimension(30, greenMetadataButton.getPreferredSize().height));
 
-        basicMetadataComboBox = new JBasicComboBox(metadatas);
+        basicMetadataComboBox = new JBasicComboBox();
         basicMetadataComboBox.setEditable(true);
         basicMetadataComboBox.setPreferredSize(new Dimension(150, layoutTextField.getPreferredSize().height));
         JClassicButton basicMetadataButton = new JClassicButton(createMetadataSelectorAction(basicMetadataComboBox));
@@ -211,7 +236,6 @@ public class BlueGreenTopology extends AbstractTopology {
 
     private void initializeTopology() {
         background = graph.getGraphBackground();
-        background.setTitle("My Blue Green | My Group | 蓝绿部署 | 版本策略 | 局部订阅模式 ");
         graph.setElementStateOutlineColorGenerator(new Generator() {
             public Object generate(Object object) {
                 return null;
@@ -231,24 +255,65 @@ public class BlueGreenTopology extends AbstractTopology {
         });
     }
 
-    @SuppressWarnings("unchecked")
-    private boolean hasNodes(String serviceId) {
-        List<TNode> nodes = TElementManager.getNodes(dataBox);
-        for (TNode node : nodes) {
-            Instance instance = (Instance) node.getUserObject();
-            if (StringUtils.equalsIgnoreCase(instance.getServiceId(), serviceId)) {
-                return true;
-            }
+    public void initializeData(String name, String group, Instance gateway) {
+        this.name = name;
+        this.group = group;
+        this.gateway = gateway;
+        try {
+            this.instanceMap = ServiceController.getInstanceMap(Arrays.asList(group));
+        } catch (Exception e) {
+            JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("query_data_failure"), e);
         }
-
-        return false;
     }
 
-    private void addGatewayNode() {
-        gatewayNode = addNode("Discovery Gateway", gatewayBlackNodeUI);
-        Instance gatewayInstance = new Instance();
-        gatewayInstance.setServiceId("Discovery Gateway");
-        gatewayNode.setUserObject(gatewayInstance);
+    public void initializeUI() {
+        setTitle(name, group);
+        setServiceUI(group);
+        setMetadataUI();
+        setGatewayNode();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public Instance getGateway() {
+        return gateway;
+    }
+
+    private void setTitle(String name, String group) {
+        background.setTitle(name + " | " + group + " | 蓝绿部署 | 版本策略 | 局部订阅模式 ");
+    }
+
+    @SuppressWarnings("unchecked")
+    private void setServiceUI(String group) {
+        serviceIdComboBox.setModel(new DefaultComboBoxModel<>(instanceMap.keySet().toArray()));
+    }
+
+    @SuppressWarnings("unchecked")
+    private void setMetadataUI() {
+        String serviceId = serviceIdComboBox.getSelectedItem().toString();
+        List<String> metadatas = new ArrayList<String>();
+        List<Instance> instances = instanceMap.get(serviceId);
+        if (CollectionUtils.isNotEmpty(instances)) {
+            for (Instance instance : instances) {
+                String metadata = instance.getMetadata().get(VERSION);
+                metadatas.add(metadata);
+            }
+            metadatas.add(DiscoveryConstant.DEFAULT);
+        }
+        blueMetadataComboBox.setModel(new DefaultComboBoxModel<>(metadatas.toArray()));
+        greenMetadataComboBox.setModel(new DefaultComboBoxModel<>(metadatas.toArray()));
+        basicMetadataComboBox.setModel(new DefaultComboBoxModel<>(metadatas.toArray()));
+    }
+
+    private void setGatewayNode() {
+        gatewayNode = addNode(gateway.getServiceId(), gatewayBlackNodeUI);
+        gatewayNode.setUserObject(gateway);
         gatewayNode.setBusinessObject(GATEWAY_NODE);
     }
 
@@ -379,6 +444,19 @@ public class BlueGreenTopology extends AbstractTopology {
         blueNode = null;
         greenNode = null;
         basicNode = null;
+    }
+
+    @SuppressWarnings("unchecked")
+    private boolean hasNodes(String serviceId) {
+        List<TNode> nodes = TElementManager.getNodes(dataBox);
+        for (TNode node : nodes) {
+            Instance instance = (Instance) node.getUserObject();
+            if (StringUtils.equalsIgnoreCase(instance.getServiceId(), serviceId)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @SuppressWarnings("unchecked")
@@ -561,12 +639,12 @@ public class BlueGreenTopology extends AbstractTopology {
         JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("direction_south.png"), "版本选取") {
             private static final long serialVersionUID = 1L;
 
-            @SuppressWarnings("unchecked")
+            @SuppressWarnings({ "unchecked", "rawtypes" })
             public void execute(ActionEvent e) {
-                String[] metadatas = new String[] { "20201111-001", "20201111-002", "20201111-003", DiscoveryConstant.DEFAULT };
-
+                ComboBoxModel metadataComboBoxModel = metadataComboBox.getModel();
                 List<ElementNode> metadataElementNodes = new ArrayList<ElementNode>();
-                for (String metadata : metadatas) {
+                for (int i = 0; i < metadataComboBoxModel.getSize(); i++) {
+                    String metadata = metadataComboBoxModel.getElementAt(i).toString();
                     metadataElementNodes.add(new ElementNode(metadata, IconFactory.getSwingIcon("component/file_chooser_16.png"), metadata, metadata));
                 }
 
