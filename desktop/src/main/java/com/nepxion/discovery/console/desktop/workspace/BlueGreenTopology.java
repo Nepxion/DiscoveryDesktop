@@ -93,7 +93,7 @@ public class BlueGreenTopology extends AbstractTopology {
     private String name;
     private String group;
     private Instance gateway;
-    private WorkType workType;
+    private OperationType operationType;
     private StrategyType strategyType;
     private ConfigType configType;
     private Map<String, List<Instance>> instanceMap;
@@ -117,11 +117,11 @@ public class BlueGreenTopology extends AbstractTopology {
         Map<String, String> metadataMap = new HashMap<String, String>();
         gateway.setMetadata(metadataMap);
 
-        workType = WorkType.BLUE_GREEN;
+        operationType = OperationType.BLUE_GREEN;
         strategyType = StrategyType.VERSION;
         configType = ConfigType.PARTIAL;
 
-        initializeData(name, group, gateway, workType, strategyType, configType);
+        initializeData(name, group, gateway, operationType, strategyType, configType);
         initializeUI();
     }
 
@@ -261,11 +261,11 @@ public class BlueGreenTopology extends AbstractTopology {
         });
     }
 
-    public void initializeData(String name, String group, Instance gateway, WorkType workType, StrategyType strategyType, ConfigType configType) {
+    public void initializeData(String name, String group, Instance gateway, OperationType operationType, StrategyType strategyType, ConfigType configType) {
         this.name = name;
         this.group = group;
         this.gateway = gateway;
-        this.workType = workType;
+        this.operationType = operationType;
         this.strategyType = strategyType;
         this.configType = configType;
 
@@ -304,6 +304,10 @@ public class BlueGreenTopology extends AbstractTopology {
         return gateway;
     }
 
+    public OperationType getOperationType() {
+        return operationType;
+    }
+
     public StrategyType getStrategyType() {
         return strategyType;
     }
@@ -313,7 +317,7 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     private void setTitle() {
-        background.setTitle(name + " | " + group + " | " + workType.getDescription() + " | " + strategyType.getDescription() + " | " + configType.getDescription());
+        background.setTitle(name + " | " + group + " | " + operationType.getDescription() + " | " + strategyType.getDescription() + " | " + configType.getDescription());
     }
 
     private void setGatewayNode() {
@@ -605,7 +609,7 @@ public class BlueGreenTopology extends AbstractTopology {
         strategyStringBuilder.append("        <" + strategyValue + ">{" + basicStrategy + "}</" + strategyValue + ">\n");
         strategyStringBuilder.append("    </strategy>\n\n");
         strategyStringBuilder.append("    <strategy-customization>\n");
-        strategyStringBuilder.append("        <conditions type=\"" + WorkType.BLUE_GREEN + "\">\n");
+        strategyStringBuilder.append("        <conditions type=\"" + OperationType.BLUE_GREEN + "\">\n");
         strategyStringBuilder.append("            <condition id=\"blue-condition\" header=\"" + EscapeType.escape(blueCondition) + "\" " + strategyValue + "-id=\"blue-" + strategyValue + "-route\"/>\n");
         strategyStringBuilder.append("            <condition id=\"green-condition\" header=\"" + EscapeType.escape(greenCondition) + "\" " + strategyValue + "-id=\"green-" + strategyValue + "-route\"/>\n");
         strategyStringBuilder.append("        </conditions>\n\n");
@@ -854,5 +858,9 @@ public class BlueGreenTopology extends AbstractTopology {
         };
 
         return action;
+    }
+
+    private class OperationPanel extends JPanel {
+
     }
 }

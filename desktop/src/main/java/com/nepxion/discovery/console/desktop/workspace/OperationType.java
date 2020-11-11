@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
 
-public enum WorkType {
+public enum OperationType {
     BLUE_GREEN(DiscoveryConstant.BLUE_GREEN, "蓝绿部署"),
     GRAY(DiscoveryConstant.GRAY, "灰度发布"),
     BLACKLIST(DiscoveryConstant.BLACKLIST, "实例摘除");
@@ -21,7 +21,7 @@ public enum WorkType {
     private String value;
     private String description;
 
-    private WorkType(String value, String description) {
+    private OperationType(String value, String description) {
         this.value = value;
         this.description = description;
     }
@@ -38,8 +38,8 @@ public enum WorkType {
         return StringUtils.capitalize(value);
     }
 
-    public static WorkType fromString(String value) {
-        for (WorkType type : WorkType.values()) {
+    public static OperationType fromString(String value) {
+        for (OperationType type : OperationType.values()) {
             if (type.getValue().equalsIgnoreCase(value)) {
                 return type;
             }
