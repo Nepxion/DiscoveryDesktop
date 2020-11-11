@@ -526,15 +526,37 @@ public class BlueGreenTopology extends AbstractTopology {
     @SuppressWarnings({ "unchecked", "incomplete-switch" })
     private void save() {
         String strategyValue = strategyType.getValue();
-        StringBuilder ruleStringBuilder = new StringBuilder();
-        ruleStringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-        ruleStringBuilder.append("<rule>\n");
-        ruleStringBuilder.append("    <strategy>\n");
-        ruleStringBuilder.append("        <" + strategyValue + ">{");
+
+        StringBuilder basicStrategyStringBuilder = new StringBuilder();
+        StringBuilder blueStrategyStringBuilder = new StringBuilder();
+        StringBuilder greenStrategyStringBuilder = new StringBuilder();
+        List<TNode> nodes = TElementManager.getNodes(dataBox);
+        for (TNode node : nodes) {
+            Instance instance = (Instance) node.getUserObject();
+            NodeType nodeType = (NodeType) node.getBusinessObject();
+            String serviceId = instance.getServiceId();
+            String metadata = instance.getMetadata().get(strategyValue);
+            switch (nodeType) {
+                case BLUE:
+                    blueStrategyStringBuilder.append("\"" + serviceId + "\":\"" + metadata + "\", ");
+                    break;
+                case GREEN:
+                    greenStrategyStringBuilder.append("\"" + serviceId + "\":\"" + metadata + "\", ");
+                    break;
+                case BASIC:
+                    basicStrategyStringBuilder.append("\"" + serviceId + "\":\"" + metadata + "\", ");
+                    break;
+            }
+        }
+        String basicStrategy = basicStrategyStringBuilder.toString();
+        basicStrategy = basicStrategy.substring(0, basicStrategy.length() - 2);
+        String blueStrategy = blueStrategyStringBuilder.toString();
+        blueStrategy = blueStrategy.substring(0, blueStrategy.length() - 2);
+        String greenStrategy = greenStrategyStringBuilder.toString();
+        greenStrategy = greenStrategy.substring(0, greenStrategy.length() - 2);
 
         String blueCondition = null;
         String greenCondition = null;
-
         List<TLink> links = TElementManager.getLinks(dataBox);
         for (TLink link : links) {
             LinkType linkType = (LinkType) link.getBusinessObject();
@@ -548,31 +570,11 @@ public class BlueGreenTopology extends AbstractTopology {
             }
         }
 
-        StringBuilder basicStrategyStringBuilder = new StringBuilder();
-        StringBuilder customizationStrategyStringBuilder = new StringBuilder();
-        List<TNode> nodes = TElementManager.getNodes(dataBox);
-        for (TNode node : nodes) {
-            Instance instance = (Instance) node.getUserObject();
-            NodeType nodeType = (NodeType) node.getBusinessObject();
-            String serviceId = instance.getServiceId();
-            String metadata = instance.getMetadata().get(strategyValue);
-            switch (nodeType) {
-                case BLUE:
-
-                    break;
-                case GREEN:
-
-                    break;
-                case BASIC:
-                    basicStrategyStringBuilder.append("\"" + serviceId + "\":\"" + metadata + "\", ");
-                    break;
-            }
-        }
-
-        String basicStrategy = basicStrategyStringBuilder.toString();
-        basicStrategy = basicStrategy.substring(0, basicStrategy.length() - 2) + "}</" + strategyValue + ">\n";
-
-        ruleStringBuilder.append(basicStrategy);
+        StringBuilder ruleStringBuilder = new StringBuilder();
+        ruleStringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+        ruleStringBuilder.append("<rule>\n");
+        ruleStringBuilder.append("    <strategy>\n");
+        ruleStringBuilder.append("        <" + strategyValue + ">{" + basicStrategy + "}</" + strategyValue + ">\n");
         ruleStringBuilder.append("    </strategy>\n");
         ruleStringBuilder.append("    <strategy-customization>\n");
         ruleStringBuilder.append("        <conditions type=\"" + WorkType.BLUE_GREEN + "\">\n");
@@ -580,7 +582,8 @@ public class BlueGreenTopology extends AbstractTopology {
         ruleStringBuilder.append("            <condition id=\"green-condition\" header=\"" + greenCondition + "\" " + strategyValue + "-id=\"green-" + strategyValue + "-route\"/>\n");
         ruleStringBuilder.append("        </conditions>\n");
         ruleStringBuilder.append("        <routes>\n");
-
+        ruleStringBuilder.append("            <route id=\"blue-" + strategyValue + "-route\" type=\"" + strategyValue + "\">{" + blueStrategy + "}</route>\n");
+        ruleStringBuilder.append("            <route id=\"green-" + strategyValue + "-route\" type=\"" + strategyValue + "\">{" + greenStrategy + "}</route>\n");
         ruleStringBuilder.append("        </routes>\n");
         ruleStringBuilder.append("    </strategy-customization>\n");
         ruleStringBuilder.append("</rule>");
