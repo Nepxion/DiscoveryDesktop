@@ -14,7 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
 
 public enum ConfigType {
-    PARTIAL(DiscoveryConstant.GLOBAL, "局部订阅模式"),
+    PARTIAL(DiscoveryConstant.PARTIAL, "局部订阅模式"),
     GLOBAL(DiscoveryConstant.GLOBAL, "全局订阅模式");
 
     private String value;

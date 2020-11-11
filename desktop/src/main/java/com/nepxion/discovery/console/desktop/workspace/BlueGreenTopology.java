@@ -28,6 +28,7 @@ import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
@@ -53,6 +54,7 @@ import com.nepxion.discovery.console.entity.Instance;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.ButtonManager;
 import com.nepxion.swing.button.JClassicButton;
+import com.nepxion.swing.checkbox.JBasicCheckBox;
 import com.nepxion.swing.combobox.JBasicComboBox;
 import com.nepxion.swing.dialog.JExceptionDialog;
 import com.nepxion.swing.element.ElementNode;
@@ -60,9 +62,11 @@ import com.nepxion.swing.handle.HandleManager;
 import com.nepxion.swing.icon.IconFactory;
 import com.nepxion.swing.label.JBasicLabel;
 import com.nepxion.swing.layout.filed.FiledLayout;
+import com.nepxion.swing.layout.table.TableLayout;
 import com.nepxion.swing.listener.DisplayAbilityListener;
 import com.nepxion.swing.locale.SwingLocale;
 import com.nepxion.swing.optionpane.JBasicOptionPane;
+import com.nepxion.swing.radiobutton.JBasicRadioButton;
 import com.nepxion.swing.scrollpane.JBasicScrollPane;
 import com.nepxion.swing.selector.checkbox.JCheckBoxSelector;
 import com.nepxion.swing.textarea.JBasicTextArea;
@@ -204,7 +208,7 @@ public class BlueGreenTopology extends AbstractTopology {
         conditionPanel.add(Box.createHorizontalStrut(10));
         conditionPanel.add(greenConditionTextField);
         conditionPanel.add(Box.createHorizontalStrut(10));
-        conditionPanel.add(new JClassicButton("校验", ConsoleIconFactory.getSwingIcon("config.png")));
+        conditionPanel.add(new JClassicButton(createValidateAction()));
         conditionPanel.add(new JClassicButton(createModifyLinksAction()));
 
         JPanel toolBar = new JPanel();
@@ -226,8 +230,8 @@ public class BlueGreenTopology extends AbstractTopology {
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
         buttonPanel.add(controlButton);
         buttonPanel.add(previewButton);
-        buttonPanel.add(new JClassicButton("链路侦测", ConsoleIconFactory.getSwingIcon("relation.png")));
-        buttonPanel.add(new JClassicButton("路由拓扑", ConsoleIconFactory.getSwingIcon("rotate.png")));
+        buttonPanel.add(new JClassicButton(createInspectorAction()));
+        buttonPanel.add(new JClassicButton(createRouterAction()));
         buttonPanel.add(Box.createHorizontalGlue());
         buttonPanel.add(new JClassicButton(createLayoutAction()));
         buttonPanel.add(new JClassicButton(createSaveAction()));
@@ -782,6 +786,18 @@ public class BlueGreenTopology extends AbstractTopology {
         return action;
     }
 
+    private JSecurityAction createValidateAction() {
+        JSecurityAction action = new JSecurityAction("校验", ConsoleIconFactory.getSwingIcon("config.png"), "校验") {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+
+            }
+        };
+
+        return action;
+    }
+
     private JSecurityAction createModifyLinksAction() {
         JSecurityAction action = new JSecurityAction("修改", ConsoleIconFactory.getSwingIcon("paste.png"), "修改") {
             private static final long serialVersionUID = 1L;
@@ -830,6 +846,30 @@ public class BlueGreenTopology extends AbstractTopology {
         return action;
     }
 
+    private JSecurityAction createInspectorAction() {
+        JSecurityAction action = new JSecurityAction("链路侦测", ConsoleIconFactory.getSwingIcon("relation.png"), "链路侦测") {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+
+            }
+        };
+
+        return action;
+    }
+
+    private JSecurityAction createRouterAction() {
+        JSecurityAction action = new JSecurityAction("路由拓扑", ConsoleIconFactory.getSwingIcon("rotate.png"), "路由拓扑") {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+                JBasicOptionPane.showOptionDialog(HandleManager.getFrame(BlueGreenTopology.this), new OperationPanel(), "策略文本预览", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/property.png"), new Object[] { SwingLocale.getString("close") }, null, true);
+            }
+        };
+
+        return action;
+    }
+
     private JSecurityAction createLayoutAction() {
         JSecurityAction action = new JSecurityAction("布局", ConsoleIconFactory.getSwingIcon("layout.png"), "布局") {
             private static final long serialVersionUID = 1L;
@@ -861,6 +901,93 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     private class OperationPanel extends JPanel {
+        private static final long serialVersionUID = 1L;
 
+        private JBasicTextField nameTextField;
+
+        private JBasicComboBox groupComboBox;
+        private JBasicComboBox gatewayComboBox;
+        private JBasicCheckBox showOnlyGatewayCheckBox;
+
+        public OperationPanel() {
+            nameTextField = new JBasicTextField();
+
+            JPanel strategyPanel = new JPanel();
+            strategyPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
+            ButtonGroup strategyButtonGroup = new ButtonGroup();
+            StrategyType[] strategyTypes = StrategyType.values();
+            for (int i = 0; i < strategyTypes.length; i++) {
+                StrategyType strategyType = strategyTypes[i];
+
+                JBasicRadioButton strategyRadioButton = new JBasicRadioButton(strategyType.getDescription(), strategyType.getDescription());
+                strategyRadioButton.setName(strategyType.getValue());
+                strategyPanel.add(strategyRadioButton);
+                strategyButtonGroup.add(strategyRadioButton);
+
+                if (i == 0) {
+                    strategyRadioButton.setSelected(true);
+                }
+            }
+
+            JPanel configPanel = new JPanel();
+            configPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
+            ButtonGroup configButtonGroup = new ButtonGroup();
+            ConfigType[] configTypes = ConfigType.values();
+            for (int i = 0; i < configTypes.length; i++) {
+                ConfigType configType = configTypes[i];
+
+                JBasicRadioButton configRadioButton = new JBasicRadioButton(configType.getDescription(), configType.getDescription());
+                configRadioButton.setName(configType.getValue());
+                configPanel.add(configRadioButton);
+                configButtonGroup.add(configRadioButton);
+
+                if (i == 0) {
+                    configRadioButton.setSelected(true);
+                }
+            }
+
+            groupComboBox = new JBasicComboBox();
+            groupComboBox.setPreferredSize(new Dimension(250, groupComboBox.getPreferredSize().height));
+
+            gatewayComboBox = new JBasicComboBox();
+            gatewayComboBox.setPreferredSize(new Dimension(250, gatewayComboBox.getPreferredSize().height));
+            showOnlyGatewayCheckBox = new JBasicCheckBox("只显示网关", true);
+
+            double[][] gatewaySize = {
+                    { TableLayout.FILL, TableLayout.PREFERRED },
+                    { TableLayout.PREFERRED }
+            };
+
+            TableLayout gatewayTableLayout = new TableLayout(gatewaySize);
+            gatewayTableLayout.setHGap(5);
+            gatewayTableLayout.setVGap(5);
+
+            JPanel gatewayPanel = new JPanel();
+            gatewayPanel.setLayout(gatewayTableLayout);
+            gatewayPanel.add(gatewayComboBox, "0, 0");
+            gatewayPanel.add(showOnlyGatewayCheckBox, "1, 0");
+
+            double[][] size = {
+                    { 80, TableLayout.FILL },
+                    { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
+            };
+
+            TableLayout tableLayout = new TableLayout(size);
+            tableLayout.setHGap(5);
+            tableLayout.setVGap(5);
+
+            setLayout(tableLayout);
+            setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+            add(new JBasicLabel("名称"), "0, 0");
+            add(nameTextField, "1, 0");
+            add(new JBasicLabel("策略"), "0, 1");
+            add(strategyPanel, "1, 1");
+            add(new JBasicLabel("模式"), "0, 2");
+            add(configPanel, "1, 2");
+            add(new JBasicLabel("所属组"), "0, 3");
+            add(groupComboBox, "1, 3");
+            add(new JBasicLabel("所属服务"), "0, 4");
+            add(gatewayPanel, "1, 4");
+        }
     }
 }
