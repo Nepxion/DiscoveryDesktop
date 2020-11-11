@@ -120,7 +120,7 @@ public class BlueGreenTopology extends AbstractTopology {
     private void initializeContentBar() {
         serviceIdComboBox = new JBasicComboBox();
         serviceIdComboBox.setEditable(true);
-        serviceIdComboBox.setPreferredSize(new Dimension(250, layoutTextField.getPreferredSize().height));
+        serviceIdComboBox.setPreferredSize(new Dimension(300, layoutTextField.getPreferredSize().height));
         serviceIdComboBox.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (serviceIdComboBox.getSelectedItem() != e.getItem()) {
@@ -976,7 +976,7 @@ public class BlueGreenTopology extends AbstractTopology {
 
             groupComboBox = new JBasicComboBox();
             groupComboBox.setEditable(true);
-            groupComboBox.setPreferredSize(new Dimension(250, layoutTextField.getPreferredSize().height));
+            groupComboBox.setPreferredSize(new Dimension(300, layoutTextField.getPreferredSize().height));
             groupComboBox.addItemListener(new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
                     if (groupComboBox.getSelectedItem() != e.getItem()) {
@@ -987,7 +987,7 @@ public class BlueGreenTopology extends AbstractTopology {
 
             gatewayIdComboBox = new JBasicComboBox();
             gatewayIdComboBox.setEditable(true);
-            gatewayIdComboBox.setPreferredSize(new Dimension(250, layoutTextField.getPreferredSize().height));
+            gatewayIdComboBox.setPreferredSize(new Dimension(300, layoutTextField.getPreferredSize().height));
 
             showOnlyGatewayCheckBox = new JBasicCheckBox("只显示网关", true);
 
