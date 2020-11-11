@@ -148,9 +148,9 @@ public class BlueGreenTopology extends AbstractTopology {
         servicePanel.add(basicMetadataComboBox);
         servicePanel.add(basicMetadataButton);
         servicePanel.add(Box.createHorizontalStrut(10));
-        servicePanel.add(new JClassicButton(createAddServiceAction()));
-        servicePanel.add(new JClassicButton(createRemoveServiceAction()));
-        servicePanel.add(new JClassicButton(createModifyServiceAction()));
+        servicePanel.add(new JClassicButton(createAddNodesAction()));
+        servicePanel.add(new JClassicButton(createRemoveNodesAction()));
+        servicePanel.add(new JClassicButton(createModifyNodesAction()));
         servicePanel.add(new JClassicButton("清空", ConsoleIconFactory.getSwingIcon("paint.png")));
 
         blueConditionTextField = new JBasicTextField("#H['a'] == '1' && #H['b'] <= '2'");
@@ -172,7 +172,7 @@ public class BlueGreenTopology extends AbstractTopology {
         conditionPanel.add(greenConditionTextField);
         conditionPanel.add(Box.createHorizontalStrut(10));
         conditionPanel.add(new JClassicButton("校验", ConsoleIconFactory.getSwingIcon("config.png")));
-        conditionPanel.add(new JClassicButton(createModifyConditionAction()));
+        conditionPanel.add(new JClassicButton(createModifyLinksAction()));
 
         JPanel toolBar = new JPanel();
         toolBar.setLayout(new FiledLayout(FiledLayout.COLUMN, FiledLayout.FULL, 5));
@@ -236,7 +236,7 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     @SuppressWarnings("unchecked")
-    private boolean hasNode(String serviceId) {
+    private boolean hasNodes(String serviceId) {
         List<TNode> nodes = TElementManager.getNodes(dataBox);
         for (TNode node : nodes) {
             Instance instance = (Instance) node.getUserObject();
@@ -248,7 +248,7 @@ public class BlueGreenTopology extends AbstractTopology {
         return false;
     }
 
-    private void addNode(String serviceId, String blueMetadata, String greenMetadata, String basicMetadata, String blueCondition, String greenCondition) {
+    private void addNodes(String serviceId, String blueMetadata, String greenMetadata, String basicMetadata, String blueCondition, String greenCondition) {
         TNode newBlueNode = addNode(ButtonManager.getHtmlText(serviceId + "\n[" + StringUtils.capitalize(VERSION) + "=" + blueMetadata + "]"), serviceBlueNodeUI);
         Instance newBlueInstance = new Instance();
         newBlueInstance.setServiceId(serviceId);
@@ -306,7 +306,7 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     @SuppressWarnings("unchecked")
-    private void removeNode() {
+    private void removeNodes() {
         if (blueNode != null) {
             List<Link> blueLinks = blueNode.getAllLinks();
             if (CollectionUtils.isNotEmpty(blueLinks)) {
@@ -348,7 +348,7 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     @SuppressWarnings("unchecked")
-    private void modifyNode(String serviceId, String blueMetadata, String greenMetadata, String basicMetadata) {
+    private void modifyNodes(String serviceId, String blueMetadata, String greenMetadata, String basicMetadata) {
         List<TNode> nodes = TElementManager.getNodes(dataBox);
         for (TNode node : nodes) {
             Instance instance = (Instance) node.getUserObject();
@@ -368,8 +368,12 @@ public class BlueGreenTopology extends AbstractTopology {
         }
     }
 
+    private void clearNodes() {
+        dataBox.clear();
+    }
+
     @SuppressWarnings("unchecked")
-    private void modifyLink(String blueCondition, String greenCondition) {
+    private void modifyLinks(String blueCondition, String greenCondition) {
         List<TLink> links = TElementManager.getLinks(dataBox);
         for (TLink link : links) {
             String type = link.getBusinessObject() != null ? link.getBusinessObject().toString() : null;
@@ -413,7 +417,7 @@ public class BlueGreenTopology extends AbstractTopology {
         return link;
     }
 
-    private JSecurityAction createAddServiceAction() {
+    private JSecurityAction createAddNodesAction() {
         JSecurityAction action = new JSecurityAction("添加", ConsoleIconFactory.getSwingIcon("add.png"), "添加") {
             private static final long serialVersionUID = 1L;
 
@@ -425,7 +429,7 @@ public class BlueGreenTopology extends AbstractTopology {
                     return;
                 }
 
-                if (hasNode(serviceId)) {
+                if (hasNodes(serviceId)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), serviceId + "已存在", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
@@ -449,7 +453,7 @@ public class BlueGreenTopology extends AbstractTopology {
                     return;
                 }
 
-                addNode(serviceId, blueMetadata, greenMetadata, basicMetadata, blueCondition, greenCondition);
+                addNodes(serviceId, blueMetadata, greenMetadata, basicMetadata, blueCondition, greenCondition);
 
                 layoutActionListener.actionPerformed(null);
             }
@@ -458,19 +462,19 @@ public class BlueGreenTopology extends AbstractTopology {
         return action;
     }
 
-    private JSecurityAction createRemoveServiceAction() {
+    private JSecurityAction createRemoveNodesAction() {
         JSecurityAction action = new JSecurityAction("删除", ConsoleIconFactory.getSwingIcon("delete.png"), "删除") {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                removeNode();
+                removeNodes();
             }
         };
 
         return action;
     }
 
-    private JSecurityAction createModifyServiceAction() {
+    private JSecurityAction createModifyNodesAction() {
         JSecurityAction action = new JSecurityAction("修改", ConsoleIconFactory.getSwingIcon("paste.png"), "修改") {
             private static final long serialVersionUID = 1L;
 
@@ -492,14 +496,14 @@ public class BlueGreenTopology extends AbstractTopology {
                     return;
                 }
 
-                modifyNode(serviceId, blueMetadata, greenMetadata, basicMetadata);
+                modifyNodes(serviceId, blueMetadata, greenMetadata, basicMetadata);
             }
         };
 
         return action;
     }
 
-    private JSecurityAction createModifyConditionAction() {
+    private JSecurityAction createModifyLinksAction() {
         JSecurityAction action = new JSecurityAction("修改", ConsoleIconFactory.getSwingIcon("paste.png"), "修改") {
             private static final long serialVersionUID = 1L;
 
@@ -513,7 +517,7 @@ public class BlueGreenTopology extends AbstractTopology {
                     return;
                 }
 
-                modifyLink(blueCondition, greenCondition);
+                modifyLinks(blueCondition, greenCondition);
             }
         };
 
