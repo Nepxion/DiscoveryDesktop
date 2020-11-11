@@ -330,7 +330,7 @@ public class BlueGreenTopology extends AbstractTopology {
             return;
         }
 
-        String serviceId = selectedItem.toString();
+        String serviceId = selectedItem.toString().trim();
         List<String> metadatas = new ArrayList<String>();
         List<Instance> instances = instanceMap.get(serviceId);
         if (CollectionUtils.isNotEmpty(instances)) {
@@ -549,6 +549,10 @@ public class BlueGreenTopology extends AbstractTopology {
 
     @SuppressWarnings({ "unchecked", "incomplete-switch" })
     private String toXml() {
+        if (TElementManager.getNodes(dataBox).size() == 0) {
+            return StringUtils.EMPTY;
+        }
+
         String strategyValue = strategyType.getValue();
 
         StringBuilder basicStrategyStringBuilder = new StringBuilder();
@@ -617,6 +621,11 @@ public class BlueGreenTopology extends AbstractTopology {
 
     private void save() {
         String xml = toXml();
+        if (StringUtils.isEmpty(xml)) {
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "策略为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+            return;
+        }
     }
 
     private JSecurityAction createRefreshServicesAction() {
@@ -681,7 +690,13 @@ public class BlueGreenTopology extends AbstractTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                String serviceId = serviceIdComboBox.getSelectedItem().toString().trim();
+                if (TElementManager.getNodes(dataBox).size() == 0) {
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "无入口网关或者服务", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+                    return;
+                }
+
+                String serviceId = serviceIdComboBox.getSelectedItem() != null ? serviceIdComboBox.getSelectedItem().toString().trim() : null;
                 if (StringUtils.isBlank(serviceId)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "服务名必填", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
@@ -694,9 +709,9 @@ public class BlueGreenTopology extends AbstractTopology {
                     return;
                 }
 
-                String blueMetadata = blueMetadataComboBox.getSelectedItem().toString().trim();
-                String greenMetadata = greenMetadataComboBox.getSelectedItem().toString().trim();
-                String basicMetadata = basicMetadataComboBox.getSelectedItem().toString().trim();
+                String blueMetadata = blueMetadataComboBox.getSelectedItem() != null ? blueMetadataComboBox.getSelectedItem().toString().trim() : null;
+                String greenMetadata = greenMetadataComboBox.getSelectedItem() != null ? greenMetadataComboBox.getSelectedItem().toString().trim() : null;
+                String basicMetadata = basicMetadataComboBox.getSelectedItem() != null ? basicMetadataComboBox.getSelectedItem().toString().trim() : null;
                 String blueCondition = blueConditionTextField.getText().trim();
                 String greenCondition = greenConditionTextField.getText().trim();
 
@@ -1052,7 +1067,7 @@ public class BlueGreenTopology extends AbstractTopology {
                 return;
             }
 
-            Object[] gatewayIds = getGatewayIds(selectedItem.toString());
+            Object[] gatewayIds = getGatewayIds(selectedItem.toString().trim());
             if (gatewayIds != null) {
                 gatewayIdComboBox.setModel(new DefaultComboBoxModel<>(gatewayIds));
             }
@@ -1094,11 +1109,11 @@ public class BlueGreenTopology extends AbstractTopology {
         }
 
         public String getGroup() {
-            return groupComboBox.getSelectedItem() != null ? groupComboBox.getSelectedItem().toString() : null;
+            return groupComboBox.getSelectedItem() != null ? groupComboBox.getSelectedItem().toString().trim() : null;
         }
 
         public String getGatewayId() {
-            return gatewayIdComboBox.getSelectedItem() != null ? gatewayIdComboBox.getSelectedItem().toString() : null;
+            return gatewayIdComboBox.getSelectedItem() != null ? gatewayIdComboBox.getSelectedItem().toString().trim() : null;
         }
 
         public OperationType getOperationType() {
