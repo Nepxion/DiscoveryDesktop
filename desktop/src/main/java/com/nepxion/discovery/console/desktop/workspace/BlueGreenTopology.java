@@ -616,7 +616,8 @@ public class BlueGreenTopology extends AbstractTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-
+                initializeData(name, group, gateway, workType, strategyType, configType);
+                initializeUI();
             }
         };
 
