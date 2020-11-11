@@ -38,7 +38,7 @@ public class ConsoleFrame extends JBasicFrame {
 
         getContentPane().add(reflectionHierarchy);
 
-        // setExtendedState(ConsoleFrame.MAXIMIZED_BOTH);
+        setExtendedState(ConsoleFrame.MAXIMIZED_BOTH);
         setVisible(true);
         toFront();
     }
