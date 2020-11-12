@@ -286,7 +286,9 @@ public class BlueGreenTopology extends AbstractTopology {
             if (CollectionUtils.isNotEmpty(instances)) {
                 for (Instance instance : instances) {
                     String metadata = instance.getMetadata().get(strategyType.toString());
-                    metadatas.add(metadata);
+                    if (StringUtils.isNotBlank(metadata)) {
+                        metadatas.add(metadata);
+                    }
                 }
             }
         }
@@ -679,6 +681,11 @@ public class BlueGreenTopology extends AbstractTopology {
             return;
         }
 
+        ReleaseType releaseType = releasePanel.getReleaseType();
+        StrategyType strategyType = releasePanel.getStrategyType();
+        ConfigType configType = releasePanel.getConfigType();
+        DeployType deployType = releasePanel.getDeployType();
+
         String group = releasePanel.getGroup();
         if (StringUtils.isBlank(group)) {
             JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "组不能为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
@@ -686,20 +693,18 @@ public class BlueGreenTopology extends AbstractTopology {
             return;
         }
 
-        String gatewayId = releasePanel.getGatewayId();
-        if (StringUtils.isBlank(gatewayId)) {
-            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "服务名不能为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+        String gatewayId = null;
+        if (configType == ConfigType.PARTIAL) {
+            gatewayId = releasePanel.getGatewayId();
+            if (StringUtils.isBlank(gatewayId)) {
+                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "服务名不能为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
-            return;
+                return;
+            }
         }
 
-        ReleaseType releaseType = releasePanel.getReleaseType();
-        StrategyType strategyType = releasePanel.getStrategyType();
-        ConfigType configType = releasePanel.getConfigType();
-        DeployType deployType = releasePanel.getDeployType();
-
         Instance gateway = new Instance();
-        gateway.setServiceId(gatewayId);
+        gateway.setServiceId(gatewayId != null ? gatewayId : "起点服务");
         Map<String, String> metadataMap = new HashMap<String, String>();
         gateway.setMetadata(metadataMap);
 
