@@ -96,7 +96,6 @@ public class BlueGreenTopology extends AbstractTopology {
     private TNode greenNode;
     private TNode basicNode;
 
-    private String operationName;
     private String group;
     private Instance gateway;
     private OperationType operationType;
@@ -267,8 +266,7 @@ public class BlueGreenTopology extends AbstractTopology {
         });
     }
 
-    public void initializeData(String operationName, String group, Instance gateway, OperationType operationType, StrategyType strategyType, ConfigType configType) {
-        this.operationName = operationName;
+    public void initializeData(String group, Instance gateway, OperationType operationType, StrategyType strategyType, ConfigType configType) {
         this.group = group;
         this.gateway = gateway;
         this.operationType = operationType;
@@ -298,10 +296,6 @@ public class BlueGreenTopology extends AbstractTopology {
         setMetadataUI();
     }
 
-    public String getOperationName() {
-        return operationName;
-    }
-
     public String getGroup() {
         return group;
     }
@@ -323,7 +317,7 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     private void setTitle() {
-        background.setTitle(operationName + " | " + group + " | " + operationType.getDescription() + " | " + strategyType.getDescription() + " | " + configType.getDescription());
+        background.setTitle(group + " | " + operationType.getDescription() + " | " + strategyType.getDescription() + " | " + configType.getDescription());
     }
 
     private void setGatewayNode() {
@@ -879,17 +873,10 @@ public class BlueGreenTopology extends AbstractTopology {
 
             public void execute(ActionEvent e) {
                 OperationPanel operationPanel = new OperationPanel(OperationType.BLUE_GREEN);
-                operationPanel.setPreferredSize(new Dimension(470, 170));
+                operationPanel.setPreferredSize(new Dimension(480, 160));
 
                 int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(BlueGreenTopology.this), operationPanel, "新增蓝绿部署", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
                 if (selectedOption != 0) {
-                    return;
-                }
-
-                String operationName = operationPanel.getOperationName();
-                if (StringUtils.isBlank(operationName)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "名称不能为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
-
                     return;
                 }
 
@@ -916,7 +903,7 @@ public class BlueGreenTopology extends AbstractTopology {
                 StrategyType strategyType = operationPanel.getStrategyType();
                 ConfigType configType = operationPanel.getConfigType();
 
-                initializeData(operationName, group, gateway, operationType, strategyType, configType);
+                initializeData(group, gateway, operationType, strategyType, configType);
                 initializeUI();
             }
         };
@@ -958,8 +945,6 @@ public class BlueGreenTopology extends AbstractTopology {
     private class OperationPanel extends JPanel {
         private static final long serialVersionUID = 1L;
 
-        private JBasicTextField operationNameTextField;
-
         private JBasicComboBox groupComboBox;
         private JBasicComboBox gatewayIdComboBox;
         private JBasicCheckBox showOnlyGatewayCheckBox;
@@ -971,8 +956,6 @@ public class BlueGreenTopology extends AbstractTopology {
 
         public OperationPanel(OperationType operationType) {
             this.operationType = operationType;
-
-            operationNameTextField = new JBasicTextField();
 
             groupComboBox = new JBasicComboBox();
             groupComboBox.setEditable(true);
@@ -1046,20 +1029,18 @@ public class BlueGreenTopology extends AbstractTopology {
 
             TableLayout tableLayout = new TableLayout(size);
             tableLayout.setHGap(10);
-            tableLayout.setVGap(5);
+            tableLayout.setVGap(10);
 
             setLayout(tableLayout);
             setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-            add(new JBasicLabel("名称"), "0, 0");
-            add(operationNameTextField, "1, 0");
-            add(new JBasicLabel("所属组"), "0, 1");
-            add(groupComboBox, "1, 1");
-            add(new JBasicLabel("所属服务"), "0, 2");
-            add(gatewayPanel, "1, 2");
-            add(new JBasicLabel("策略"), "0, 3");
-            add(strategyPanel, "1, 3");
-            add(new JBasicLabel("模式"), "0, 4");
-            add(configPanel, "1, 4");
+            add(new JBasicLabel("所属组"), "0, 0");
+            add(groupComboBox, "1, 0");
+            add(new JBasicLabel("起点服务"), "0, 1");
+            add(gatewayPanel, "1, 1");
+            add(new JBasicLabel("策略"), "0, 2");
+            add(strategyPanel, "1, 2");
+            add(new JBasicLabel("模式"), "0, 3");
+            add(configPanel, "1, 3");
 
             setGroups();
             setGatewayIds();
@@ -1113,10 +1094,6 @@ public class BlueGreenTopology extends AbstractTopology {
             }
 
             return null;
-        }
-
-        public String getOperationName() {
-            return operationNameTextField.getText().trim();
         }
 
         public String getGroup() {
