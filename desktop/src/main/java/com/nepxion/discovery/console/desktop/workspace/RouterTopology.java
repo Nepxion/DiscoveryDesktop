@@ -35,6 +35,7 @@ import com.nepxion.cots.twaver.element.TLink;
 import com.nepxion.cots.twaver.element.TNode;
 import com.nepxion.cots.twaver.graph.TGraphBackground;
 import com.nepxion.discovery.common.entity.RouterEntity;
+import com.nepxion.discovery.common.entity.ServiceType;
 import com.nepxion.discovery.console.controller.ServiceController;
 import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
@@ -64,7 +65,8 @@ public class RouterTopology extends AbstractTopology {
     private static final long serialVersionUID = 1L;
 
     private NodeLocation nodeLocation = new NodeLocation(440, 50, 200, 0);
-    private NodeUI nodeUI = new NodeUI(NodeImageType.SERVICE, NodeSizeType.MIDDLE, true);
+    private NodeUI serviceNodeUI = new NodeUI(NodeImageType.SERVICE, NodeSizeType.MIDDLE, true);
+    private NodeUI gatewayNodeUI = new NodeUI(NodeImageType.GATEWAY, NodeSizeType.MIDDLE, true);
 
     private TGraphBackground background;
     private JBasicMenuItem showRuleMenuItem;
@@ -188,9 +190,6 @@ public class RouterTopology extends AbstractTopology {
 
     private String getNodeName(Instance instance) {
         StringBuilder stringBuilder = new StringBuilder();
-        if (StringUtils.isNotEmpty(instance.getServiceType())) {
-            stringBuilder.append(ConsoleLocaleFactory.getString("type_" + instance.getServiceType())).append(" - ");
-        }
         stringBuilder.append(instance.getServiceId()).append("\n");
         stringBuilder.append(instance.getHost()).append(":").append(instance.getPort());
         if (StringUtils.isNotEmpty(instance.getVersion())) {
@@ -211,9 +210,6 @@ public class RouterTopology extends AbstractTopology {
 
     private String getNodeName(RouterEntity routerEntity) {
         StringBuilder stringBuilder = new StringBuilder();
-        if (StringUtils.isNotEmpty(routerEntity.getServiceType())) {
-            stringBuilder.append(ConsoleLocaleFactory.getString("type_" + routerEntity.getServiceType())).append(" - ");
-        }
         stringBuilder.append(routerEntity.getServiceId()).append("\n");
         stringBuilder.append(routerEntity.getHost()).append(":").append(routerEntity.getPort());
         if (StringUtils.isNotEmpty(routerEntity.getVersion())) {
@@ -235,7 +231,7 @@ public class RouterTopology extends AbstractTopology {
     private TNode addNode(Instance instance) {
         String nodeName = getNodeName(instance);
 
-        TNode node = createNode(nodeName, nodeUI, nodeLocation, 0);
+        TNode node = createNode(nodeName, StringUtils.equals(instance.getServiceType(), ServiceType.SERVICE.toString()) ? serviceNodeUI : gatewayNodeUI, nodeLocation, 0);
         node.setUserObject(instance);
 
         dataBox.addElement(node);
@@ -246,7 +242,7 @@ public class RouterTopology extends AbstractTopology {
     private TNode addNode(RouterEntity routerEntity, int index) {
         String nodeName = getNodeName(routerEntity);
 
-        TNode node = createNode(nodeName, nodeUI, nodeLocation, index);
+        TNode node = createNode(nodeName, StringUtils.equals(instance.getServiceType(), ServiceType.SERVICE.toString()) ? serviceNodeUI : gatewayNodeUI, nodeLocation, index);
         node.setUserObject(routerEntity);
 
         dataBox.addElement(node);

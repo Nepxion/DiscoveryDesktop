@@ -13,6 +13,7 @@ import twaver.GeoCoordinate;
 import twaver.Node;
 import twaver.TDataBox;
 import twaver.TView;
+import twaver.TWaverConst;
 import twaver.gis.GeographyMap;
 
 import java.awt.BorderLayout;
@@ -298,7 +299,19 @@ public abstract class AbstractTopology extends JPanel {
         node.putLabelFont(new Font(UIContext.getFontName(), Font.PLAIN, UIContext.getSmallFontSize()));
         node.setLocation(location);
 
+        setNodeTopBottom(node, true);
+
         return node;
+    }
+
+    protected void setNodeTopBottom(TNode node, boolean bottom) {
+        if (bottom) {
+            node.putLabelPosition(TWaverConst.POSITION_BOTTOM);
+            node.putLabelYOffset(6);
+        } else {
+            node.putLabelPosition(TWaverConst.POSITION_TOP);
+            node.putLabelYOffset(-5);
+        }
     }
 
     protected TLink createLink(Node fromNode, Node toNode) {
