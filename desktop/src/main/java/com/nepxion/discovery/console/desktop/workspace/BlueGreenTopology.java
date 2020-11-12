@@ -872,7 +872,11 @@ public class BlueGreenTopology extends AbstractTopology {
                 ReleasePanel releasePanel = new ReleasePanel(ReleaseType.BLUE_GREEN);
                 releasePanel.setPreferredSize(new Dimension(480, 160));
 
-                int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(BlueGreenTopology.this), releasePanel, "打开或者新增 [ " + releasePanel.getReleaseType().getDescription() + " ]", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
+                ReleaseType releaseType = releasePanel.getReleaseType();
+                StrategyType strategyType = releasePanel.getStrategyType();
+                ConfigType configType = releasePanel.getConfigType();
+
+                int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(BlueGreenTopology.this), releasePanel, "打开或者新增 [ " + releaseType.getDescription() + " ]", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
                 if (selectedOption != 0) {
                     return;
                 }
@@ -895,10 +899,6 @@ public class BlueGreenTopology extends AbstractTopology {
                 gateway.setServiceId(gatewayId);
                 Map<String, String> metadataMap = new HashMap<String, String>();
                 gateway.setMetadata(metadataMap);
-
-                ReleaseType releaseType = releasePanel.getReleaseType();
-                StrategyType strategyType = releasePanel.getStrategyType();
-                ConfigType configType = releasePanel.getConfigType();
 
                 initializeData(group, gateway, releaseType, strategyType, configType);
                 initializeUI();
@@ -980,17 +980,69 @@ public class BlueGreenTopology extends AbstractTopology {
     private class ReleasePanel extends JPanel {
         private static final long serialVersionUID = 1L;
 
+        private ButtonGroup strategyButtonGroup;
+        private ButtonGroup configButtonGroup;
+        private ButtonGroup deployButtonGroup;
+
         private JBasicComboBox groupComboBox;
         private JBasicComboBox gatewayIdComboBox;
         private JBasicCheckBox showOnlyGatewayCheckBox;
-
-        private ButtonGroup strategyButtonGroup;
-        private ButtonGroup configButtonGroup;
 
         private ReleaseType releaseType;
 
         public ReleasePanel(ReleaseType releaseType) {
             this.releaseType = releaseType;
+
+            JPanel strategyPanel = new JPanel();
+            strategyPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
+            strategyButtonGroup = new ButtonGroup();
+            StrategyType[] strategyTypes = StrategyType.values();
+            for (int i = 0; i < strategyTypes.length; i++) {
+                StrategyType strategyType = strategyTypes[i];
+
+                JBasicRadioButton strategyRadioButton = new JBasicRadioButton(strategyType.getDescription(), strategyType.getDescription());
+                strategyRadioButton.setName(strategyType.toString());
+                strategyPanel.add(strategyRadioButton);
+                strategyButtonGroup.add(strategyRadioButton);
+
+                if (i == 0) {
+                    strategyRadioButton.setSelected(true);
+                }
+            }
+
+            JPanel configPanel = new JPanel();
+            configPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
+            configButtonGroup = new ButtonGroup();
+            ConfigType[] configTypes = ConfigType.values();
+            for (int i = 0; i < configTypes.length; i++) {
+                ConfigType configType = configTypes[i];
+
+                JBasicRadioButton configRadioButton = new JBasicRadioButton(configType.getDescription(), configType.getDescription());
+                configRadioButton.setName(configType.toString());
+                configPanel.add(configRadioButton);
+                configButtonGroup.add(configRadioButton);
+
+                if (i == 0) {
+                    configRadioButton.setSelected(true);
+                }
+            }
+
+            JPanel deployPanel = new JPanel();
+            deployPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
+            deployButtonGroup = new ButtonGroup();
+            DeployType[] deployTypes = DeployType.values();
+            for (int i = 0; i < deployTypes.length; i++) {
+                DeployType deployType = deployTypes[i];
+
+                JBasicRadioButton deployRadioButton = new JBasicRadioButton(deployType.getDescription(), deployType.getDescription());
+                deployRadioButton.setName(deployType.toString());
+                deployPanel.add(deployRadioButton);
+                deployButtonGroup.add(deployRadioButton);
+
+                if (i == 0) {
+                    deployRadioButton.setSelected(true);
+                }
+            }
 
             groupComboBox = new JBasicComboBox();
             groupComboBox.setEditable(true);
@@ -1028,59 +1080,27 @@ public class BlueGreenTopology extends AbstractTopology {
             gatewayPanel.add(gatewayIdComboBox, "0, 0");
             gatewayPanel.add(showOnlyGatewayCheckBox, "1, 0");
 
-            JPanel strategyPanel = new JPanel();
-            strategyPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
-            strategyButtonGroup = new ButtonGroup();
-            StrategyType[] strategyTypes = StrategyType.values();
-            for (int i = 0; i < strategyTypes.length; i++) {
-                StrategyType strategyType = strategyTypes[i];
-
-                JBasicRadioButton strategyRadioButton = new JBasicRadioButton(strategyType.getDescription(), strategyType.getDescription());
-                strategyRadioButton.setName(strategyType.toString());
-                strategyPanel.add(strategyRadioButton);
-                strategyButtonGroup.add(strategyRadioButton);
-
-                if (i == 0) {
-                    strategyRadioButton.setSelected(true);
-                }
-            }
-
-            JPanel configPanel = new JPanel();
-            configPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
-            configButtonGroup = new ButtonGroup();
-            ConfigType[] configTypes = ConfigType.values();
-            for (int i = 0; i < configTypes.length; i++) {
-                ConfigType configType = configTypes[i];
-
-                JBasicRadioButton configRadioButton = new JBasicRadioButton(configType.getDescription(), configType.getDescription());
-                configRadioButton.setName(configType.toString());
-                configPanel.add(configRadioButton);
-                configButtonGroup.add(configRadioButton);
-
-                if (i == 0) {
-                    configRadioButton.setSelected(true);
-                }
-            }
-
             double[][] size = {
                     { TableLayout.PREFERRED, TableLayout.FILL },
                     { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
             };
 
             TableLayout tableLayout = new TableLayout(size);
-            tableLayout.setHGap(10);
+            tableLayout.setHGap(20);
             tableLayout.setVGap(10);
 
             setLayout(tableLayout);
             setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-            add(new JBasicLabel("所属组"), "0, 0");
-            add(groupComboBox, "1, 0");
-            add(new JBasicLabel("起点服务"), "0, 1");
-            add(gatewayPanel, "1, 1");
-            add(new JBasicLabel("发布策略"), "0, 2");
-            add(strategyPanel, "1, 2");
-            add(new JBasicLabel("配置模式"), "0, 3");
-            add(configPanel, "1, 3");
+            add(new JBasicLabel("发布策略"), "0, 0");
+            add(strategyPanel, "1, 0");
+            add(new JBasicLabel("配置方式"), "0, 1");
+            add(configPanel, "1, 1");
+            add(new JBasicLabel("部署模式"), "0, 2");
+            add(deployPanel, "1, 2");
+            add(new JBasicLabel("所属组"), "0, 3");
+            add(groupComboBox, "1, 3");
+            add(new JBasicLabel("起点服务"), "0, 4");
+            add(gatewayPanel, "1, 4");
 
             setGroups();
             setGatewayIds();
@@ -1116,14 +1136,6 @@ public class BlueGreenTopology extends AbstractTopology {
             return null;
         }
 
-        public String getGroup() {
-            return groupComboBox.getSelectedItem() != null ? groupComboBox.getSelectedItem().toString().trim() : null;
-        }
-
-        public String getGatewayId() {
-            return gatewayIdComboBox.getSelectedItem() != null ? gatewayIdComboBox.getSelectedItem().toString().trim() : null;
-        }
-
         public ReleaseType getReleaseType() {
             return releaseType;
         }
@@ -1138,6 +1150,14 @@ public class BlueGreenTopology extends AbstractTopology {
             String rationButtonName = getRationButtonName(configButtonGroup);
 
             return ConfigType.fromString(rationButtonName);
+        }
+
+        public String getGroup() {
+            return groupComboBox.getSelectedItem() != null ? groupComboBox.getSelectedItem().toString().trim() : null;
+        }
+
+        public String getGatewayId() {
+            return gatewayIdComboBox.getSelectedItem() != null ? gatewayIdComboBox.getSelectedItem().toString().trim() : null;
         }
     }
 }

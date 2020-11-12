@@ -9,8 +9,6 @@ package com.nepxion.discovery.console.desktop.workspace;
  * @version 1.0
  */
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
 import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
 
@@ -31,10 +29,6 @@ public enum ReleaseType {
 
     public String getDescription() {
         return ConsoleLocaleFactory.getString(value + "_release");
-    }
-
-    public String getLabel() {
-        return StringUtils.capitalize(value);
     }
 
     public static ReleaseType fromString(String value) {

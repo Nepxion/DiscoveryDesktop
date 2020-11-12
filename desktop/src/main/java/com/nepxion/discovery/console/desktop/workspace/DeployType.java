@@ -9,16 +9,15 @@ package com.nepxion.discovery.console.desktop.workspace;
  * @version 1.0
  */
 
-import com.nepxion.discovery.common.constant.DiscoveryConstant;
 import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
 
-public enum ConfigType {
-    PARTIAL(DiscoveryConstant.PARTIAL),
-    GLOBAL(DiscoveryConstant.GLOBAL);
+public enum DeployType {
+    DOMAIN_GATEWAY("domain-gateway"),
+    NON_DOMAIN_GATEWAY("non-domain-gateway");
 
     private String value;
 
-    private ConfigType(String value) {
+    private DeployType(String value) {
         this.value = value;
     }
 
@@ -27,11 +26,11 @@ public enum ConfigType {
     }
 
     public String getDescription() {
-        return ConsoleLocaleFactory.getString(value + "_config");
+        return ConsoleLocaleFactory.getString(value + "_deploy");
     }
 
-    public static ConfigType fromString(String value) {
-        for (ConfigType type : ConfigType.values()) {
+    public static DeployType fromString(String value) {
+        for (DeployType type : DeployType.values()) {
             if (type.getValue().equalsIgnoreCase(value)) {
                 return type;
             }
