@@ -8,15 +8,12 @@ package com.nepxion.discovery.console.desktop.workspace;
  * @author Haojun Ren
  * @version 1.0
  */
-
-import twaver.Generator;
 import twaver.Link;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.HierarchyEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
@@ -29,7 +26,6 @@ import javax.swing.BorderFactory;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
-import javax.swing.JToolBar;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -37,12 +33,10 @@ import org.apache.commons.lang3.StringUtils;
 import com.nepxion.cots.twaver.element.TElementManager;
 import com.nepxion.cots.twaver.element.TLink;
 import com.nepxion.cots.twaver.element.TNode;
-import com.nepxion.cots.twaver.graph.TGraphBackground;
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
 import com.nepxion.discovery.console.controller.ServiceController;
 import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
-import com.nepxion.discovery.console.desktop.topology.BasicTopology;
 import com.nepxion.discovery.console.desktop.topology.LinkUI;
 import com.nepxion.discovery.console.desktop.topology.NodeImageType;
 import com.nepxion.discovery.console.desktop.topology.NodeLocation;
@@ -69,15 +63,12 @@ import com.nepxion.swing.icon.IconFactory;
 import com.nepxion.swing.label.JBasicLabel;
 import com.nepxion.swing.layout.filed.FiledLayout;
 import com.nepxion.swing.layout.table.TableLayout;
-import com.nepxion.swing.listener.DisplayAbilityListener;
 import com.nepxion.swing.locale.SwingLocale;
 import com.nepxion.swing.optionpane.JBasicOptionPane;
-import com.nepxion.swing.scrollpane.JBasicScrollPane;
 import com.nepxion.swing.selector.checkbox.JCheckBoxSelector;
-import com.nepxion.swing.textarea.JBasicTextArea;
 import com.nepxion.swing.textfield.JBasicTextField;
 
-public class BlueGreenTopology extends BasicTopology {
+public class BlueGreenTopology extends AbstractTopology {
     private static final long serialVersionUID = 1L;
 
     private NodeLocation nodeLocation = new NodeLocation(440, 100, 200, 0);
@@ -86,7 +77,6 @@ public class BlueGreenTopology extends BasicTopology {
     private NodeUI serviceGreenNodeUI = new NodeUI(NodeImageType.SERVICE_GREEN, NodeSizeType.MIDDLE, true);
     private NodeUI gatewayBlackNodeUI = new NodeUI(NodeImageType.GATEWAY_BLACK, NodeSizeType.LARGE, true);
 
-    private TGraphBackground background;
     private JBasicComboBox serviceIdComboBox;
     private JBasicComboBox blueMetadataComboBox;
     private JBasicComboBox greenMetadataComboBox;
@@ -101,26 +91,15 @@ public class BlueGreenTopology extends BasicTopology {
 
     private String group;
     private Instance gateway;
-    private ReleaseType releaseType;
-    private StrategyType strategyType;
-    private ConfigType configType;
     private DeployType deployType;
     private Map<String, List<Instance>> instanceMap;
 
     private StrategyProcessor strategyProcessor = new BlueGreenStrategyProcessor();
 
-    private JBasicTextArea strategyTextArea;
-    private JBasicScrollPane strategyScrollPane;
-
-    private JBasicTextField layoutTextField = new JBasicTextField();
-
     public BlueGreenTopology() {
-        initializeContentBar();
-        initializeToolBar();
-        initializeTopology();
-        initializeListener();
+        super();
 
-        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        initializeContentBar();
     }
 
     private void initializeContentBar() {
@@ -134,7 +113,7 @@ public class BlueGreenTopology extends BasicTopology {
                 }
             }
         });
-        JClassicButton refreshServicesButton = new JClassicButton(createRefreshServicesAction());
+        JClassicButton refreshServicesButton = new JClassicButton(createRefreshServiceListAction());
         refreshServicesButton.setPreferredSize(new Dimension(30, refreshServicesButton.getPreferredSize().height));
 
         blueMetadataComboBox = new JBasicComboBox();
@@ -177,9 +156,9 @@ public class BlueGreenTopology extends BasicTopology {
 
         JPanel serviceToolBar = new JPanel();
         serviceToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
-        serviceToolBar.add(new JClassicButton(createAddNodesAction()));
-        serviceToolBar.add(new JClassicButton(createRemoveNodesAction()));
-        serviceToolBar.add(new JClassicButton(createModifyNodesAction()));
+        serviceToolBar.add(new JClassicButton(createAddServiceStrategyAction()));
+        serviceToolBar.add(new JClassicButton(createRemoveServiceStrategyAction()));
+        serviceToolBar.add(new JClassicButton(createModifyServiceStrategyAction()));
 
         blueConditionTextField = new JBasicTextField("#H['a'] == '1' && #H['b'] <= '2'");
         greenConditionTextField = new JBasicTextField("#H['a'] == '3'");
@@ -202,8 +181,8 @@ public class BlueGreenTopology extends BasicTopology {
 
         JPanel conditionToolBar = new JPanel();
         conditionToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
-        conditionToolBar.add(new JClassicButton(createValidateAction()));
-        conditionToolBar.add(new JClassicButton(createModifyLinksAction()));
+        conditionToolBar.add(new JClassicButton(createValidateConditionAction()));
+        conditionToolBar.add(new JClassicButton(createModifyConditionAction()));
 
         double[][] size = {
                 { TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },
@@ -225,41 +204,6 @@ public class BlueGreenTopology extends BasicTopology {
         toolBar.add(conditionToolBar, "2, 1");
 
         add(toolBar, BorderLayout.NORTH);
-    }
-
-    private void initializeToolBar() {
-        JToolBar toolBar = getGraph().getToolbar();
-        toolBar.addSeparator();
-        toolBar.add(new JClassicButton(createOpenAction()));
-        toolBar.add(new JClassicButton(createSaveAction()));
-        toolBar.add(new JClassicButton(createClearNodesAction()));
-        toolBar.addSeparator();
-        toolBar.add(new JClassicButton(createPreviewAction()));
-        toolBar.add(new JClassicButton(createInspectorAction()));
-        toolBar.addSeparator();
-        toolBar.add(new JClassicButton(createLayoutAction()));
-
-        ButtonManager.updateUI(toolBar);
-    }
-
-    private void initializeTopology() {
-        background = graph.getGraphBackground();
-        graph.setElementStateOutlineColorGenerator(new Generator() {
-            public Object generate(Object object) {
-                return null;
-            }
-        });
-    }
-
-    private void initializeListener() {
-        addHierarchyListener(new DisplayAbilityListener() {
-            public void displayAbilityChanged(HierarchyEvent e) {
-                showLayoutBar(150, 100, 200, 60);
-                toggleLayoutBar();
-
-                removeHierarchyListener(this);
-            }
-        });
     }
 
     public void initializeData(String group, Instance gateway, ReleaseType releaseType, StrategyType strategyType, ConfigType configType, DeployType deployType) {
@@ -291,26 +235,6 @@ public class BlueGreenTopology extends BasicTopology {
     public void refreshUI() {
         setServiceUI();
         setMetadataUI();
-    }
-
-    public String getGroup() {
-        return group;
-    }
-
-    public Instance getGateway() {
-        return gateway;
-    }
-
-    public ReleaseType getReleaseType() {
-        return releaseType;
-    }
-
-    public StrategyType getStrategyType() {
-        return strategyType;
-    }
-
-    public ConfigType getConfigType() {
-        return configType;
     }
 
     private void setTitle() {
@@ -484,15 +408,6 @@ public class BlueGreenTopology extends BasicTopology {
         }
     }
 
-    private void clearNodes() {
-        dataBox.clear();
-        dataBox.addElement(gatewayNode);
-
-        blueNode = null;
-        greenNode = null;
-        basicNode = null;
-    }
-
     @SuppressWarnings("unchecked")
     private boolean hasNodes(String serviceId) {
         List<TNode> nodes = TElementManager.getNodes(dataBox);
@@ -554,11 +469,7 @@ public class BlueGreenTopology extends BasicTopology {
         return link;
     }
 
-    private void save() {
-
-    }
-
-    private JSecurityAction createRefreshServicesAction() {
+    private JSecurityAction createRefreshServiceListAction() {
         JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("refresh.png"), "刷新服务列表") {
             private static final long serialVersionUID = 1L;
 
@@ -615,8 +526,8 @@ public class BlueGreenTopology extends BasicTopology {
         return action;
     }
 
-    private JSecurityAction createAddNodesAction() {
-        JSecurityAction action = new JSecurityAction("添加", ConsoleIconFactory.getSwingIcon("add.png"), "添加") {
+    private JSecurityAction createAddServiceStrategyAction() {
+        JSecurityAction action = new JSecurityAction("添加", ConsoleIconFactory.getSwingIcon("add.png"), "添加一层服务策略") {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
@@ -666,8 +577,8 @@ public class BlueGreenTopology extends BasicTopology {
         return action;
     }
 
-    private JSecurityAction createRemoveNodesAction() {
-        JSecurityAction action = new JSecurityAction("删除", ConsoleIconFactory.getSwingIcon("delete.png"), "删除") {
+    private JSecurityAction createRemoveServiceStrategyAction() {
+        JSecurityAction action = new JSecurityAction("删除", ConsoleIconFactory.getSwingIcon("delete.png"), "删除一层服务策略") {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
@@ -678,8 +589,8 @@ public class BlueGreenTopology extends BasicTopology {
         return action;
     }
 
-    private JSecurityAction createModifyNodesAction() {
-        JSecurityAction action = new JSecurityAction("修改", ConsoleIconFactory.getSwingIcon("paste.png"), "修改") {
+    private JSecurityAction createModifyServiceStrategyAction() {
+        JSecurityAction action = new JSecurityAction("修改", ConsoleIconFactory.getSwingIcon("paste.png"), "修改一层服务策略") {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
@@ -707,20 +618,8 @@ public class BlueGreenTopology extends BasicTopology {
         return action;
     }
 
-    private JSecurityAction createClearNodesAction() {
-        JSecurityAction action = new JSecurityAction("清空", ConsoleIconFactory.getSwingIcon("paint.png"), "清空") {
-            private static final long serialVersionUID = 1L;
-
-            public void execute(ActionEvent e) {
-                clearNodes();
-            }
-        };
-
-        return action;
-    }
-
-    private JSecurityAction createValidateAction() {
-        JSecurityAction action = new JSecurityAction("校验", ConsoleIconFactory.getSwingIcon("config.png"), "校验") {
+    private JSecurityAction createValidateConditionAction() {
+        JSecurityAction action = new JSecurityAction("校验", ConsoleIconFactory.getSwingIcon("config.png"), "校验条件表达式") {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
@@ -731,8 +630,8 @@ public class BlueGreenTopology extends BasicTopology {
         return action;
     }
 
-    private JSecurityAction createModifyLinksAction() {
-        JSecurityAction action = new JSecurityAction("修改", ConsoleIconFactory.getSwingIcon("paste.png"), "修改") {
+    private JSecurityAction createModifyConditionAction() {
+        JSecurityAction action = new JSecurityAction("修改", ConsoleIconFactory.getSwingIcon("paste.png"), "修改条件表达式") {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
@@ -752,117 +651,61 @@ public class BlueGreenTopology extends BasicTopology {
         return action;
     }
 
-    private JSecurityAction createOpenAction() {
-        JSecurityAction action = new JSecurityAction("打开", ConsoleIconFactory.getSwingIcon("theme/tree/plastic/tree_open.png"), "打开") {
-            private static final long serialVersionUID = 1L;
+    @Override
+    public void open() {
+        ReleasePanel releasePanel = new ReleasePanel(ReleaseType.BLUE_GREEN);
+        releasePanel.setPreferredSize(new Dimension(480, 180));
 
-            public void execute(ActionEvent e) {
-                ReleasePanel releasePanel = new ReleasePanel(ReleaseType.BLUE_GREEN);
-                releasePanel.setPreferredSize(new Dimension(480, 180));
+        ReleaseType releaseType = releasePanel.getReleaseType();
+        StrategyType strategyType = releasePanel.getStrategyType();
+        ConfigType configType = releasePanel.getConfigType();
+        DeployType deployType = releasePanel.getDeployType();
 
-                ReleaseType releaseType = releasePanel.getReleaseType();
-                StrategyType strategyType = releasePanel.getStrategyType();
-                ConfigType configType = releasePanel.getConfigType();
-                DeployType deployType = releasePanel.getDeployType();
+        int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(BlueGreenTopology.this), releasePanel, "打开或者新增 [ " + releaseType.getDescription() + " ]", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
+        if (selectedOption != 0) {
+            return;
+        }
 
-                int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(BlueGreenTopology.this), releasePanel, "打开或者新增 [ " + releaseType.getDescription() + " ]", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
-                if (selectedOption != 0) {
-                    return;
-                }
+        String group = releasePanel.getGroup();
+        if (StringUtils.isBlank(group)) {
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "组不能为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
-                String group = releasePanel.getGroup();
-                if (StringUtils.isBlank(group)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "组不能为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-                    return;
-                }
+        String gatewayId = releasePanel.getGatewayId();
+        if (StringUtils.isBlank(gatewayId)) {
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "服务名不能为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
-                String gatewayId = releasePanel.getGatewayId();
-                if (StringUtils.isBlank(gatewayId)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "服务名不能为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-                    return;
-                }
+        Instance gateway = new Instance();
+        gateway.setServiceId(gatewayId);
+        Map<String, String> metadataMap = new HashMap<String, String>();
+        gateway.setMetadata(metadataMap);
 
-                Instance gateway = new Instance();
-                gateway.setServiceId(gatewayId);
-                Map<String, String> metadataMap = new HashMap<String, String>();
-                gateway.setMetadata(metadataMap);
-
-                initializeData(group, gateway, releaseType, strategyType, configType, deployType);
-                initializeUI();
-            }
-        };
-
-        return action;
+        initializeData(group, gateway, releaseType, strategyType, configType, deployType);
+        initializeUI();
     }
 
-    private JSecurityAction createSaveAction() {
-        JSecurityAction action = new JSecurityAction("保存", ConsoleIconFactory.getSwingIcon("save.png"), "保存") {
-            private static final long serialVersionUID = 1L;
+    @Override
+    public void save() {
 
-            public void execute(ActionEvent e) {
-                String xml = strategyProcessor.toXml(strategyType, dataBox);
-                if (StringUtils.isEmpty(xml)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "策略为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
-
-                    return;
-                }
-
-                save();
-            }
-        };
-
-        return action;
     }
 
-    private JSecurityAction createPreviewAction() {
-        JSecurityAction action = new JSecurityAction("预览", ConsoleIconFactory.getSwingIcon("ticket.png"), "预览") {
-            private static final long serialVersionUID = 1L;
+    @Override
+    public void clear() {
+        dataBox.clear();
+        dataBox.addElement(gatewayNode);
 
-            public void execute(ActionEvent e) {
-                String xml = strategyProcessor.toXml(strategyType, dataBox);
-                if (StringUtils.isEmpty(xml)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "策略为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
-
-                    return;
-                }
-
-                if (strategyTextArea == null) {
-                    strategyTextArea = new JBasicTextArea();
-                    strategyScrollPane = new JBasicScrollPane(strategyTextArea);
-                    strategyScrollPane.setPreferredSize(new Dimension(900, 400));
-                }
-                strategyTextArea.setText(xml);
-
-                JBasicOptionPane.showOptionDialog(HandleManager.getFrame(BlueGreenTopology.this), strategyScrollPane, "策略预览", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/property.png"), new Object[] { SwingLocale.getString("close") }, null, true);
-            }
-        };
-
-        return action;
+        blueNode = null;
+        greenNode = null;
+        basicNode = null;
     }
 
-    private JSecurityAction createInspectorAction() {
-        JSecurityAction action = new JSecurityAction("侦测", ConsoleIconFactory.getSwingIcon("relation.png"), "侦测") {
-            private static final long serialVersionUID = 1L;
-
-            public void execute(ActionEvent e) {
-
-            }
-        };
-
-        return action;
-    }
-
-    private JSecurityAction createLayoutAction() {
-        JSecurityAction action = new JSecurityAction("布局", ConsoleIconFactory.getSwingIcon("layout.png"), "布局") {
-            private static final long serialVersionUID = 1L;
-
-            public void execute(ActionEvent e) {
-                toggleLayoutBar();
-            }
-        };
-
-        return action;
+    @Override
+    public StrategyProcessor getStrategyProcessor() {
+        return strategyProcessor;
     }
 }
