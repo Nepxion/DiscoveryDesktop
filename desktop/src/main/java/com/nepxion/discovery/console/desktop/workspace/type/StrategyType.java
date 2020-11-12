@@ -15,18 +15,26 @@ import com.nepxion.discovery.common.constant.DiscoveryConstant;
 import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
 
 public enum StrategyType {
-    VERSION(DiscoveryConstant.VERSION),
-    REGION(DiscoveryConstant.REGION),
-    ADDRESS(DiscoveryConstant.ADDRESS);
+    VERSION(DiscoveryConstant.VERSION, 0),
+    REGION(DiscoveryConstant.REGION, 0),
+    ADDRESS(DiscoveryConstant.ADDRESS, 0),
+    ID_BLACKLIST(DiscoveryConstant.ID_BLACKLIST, 1),
+    ADDRESS_BLACKLIST(DiscoveryConstant.ADDRESS_BLACKLIST, 1);
 
     private String value;
+    private int category;
 
-    private StrategyType(String value) {
+    private StrategyType(String value, int category) {
         this.value = value;
+        this.category = category;
     }
 
     public String getValue() {
         return value;
+    }
+
+    public int getCategory() {
+        return category;
     }
 
     public String getDescription() {
