@@ -1008,6 +1008,11 @@ public class BlueGreenTopology extends AbstractTopology {
             gatewayIdComboBox.setPreferredSize(new Dimension(300, layoutTextField.getPreferredSize().height));
 
             showOnlyGatewayCheckBox = new JBasicCheckBox("只显示网关", true);
+            showOnlyGatewayCheckBox.addItemListener(new ItemListener() {
+                public void itemStateChanged(ItemEvent e) {
+                    setGatewayIds();
+                }
+            });
 
             double[][] gatewaySize = {
                     { TableLayout.FILL, TableLayout.PREFERRED },
