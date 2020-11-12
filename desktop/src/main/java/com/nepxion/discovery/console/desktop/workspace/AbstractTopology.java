@@ -127,8 +127,8 @@ public abstract class AbstractTopology extends BasicTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                String xml = getStrategyProcessor().toXml(strategyType, dataBox);
-                if (StringUtils.isEmpty(xml)) {
+                String config = getStrategyProcessor().toConfig(strategyType, dataBox);
+                if (StringUtils.isEmpty(config)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractTopology.this), "策略为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
@@ -158,8 +158,8 @@ public abstract class AbstractTopology extends BasicTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                String xml = getStrategyProcessor().toXml(strategyType, dataBox);
-                if (StringUtils.isEmpty(xml)) {
+                String config = getStrategyProcessor().toConfig(strategyType, dataBox);
+                if (StringUtils.isEmpty(config)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractTopology.this), "策略为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
@@ -177,7 +177,7 @@ public abstract class AbstractTopology extends BasicTopology {
                     key = "Data ID=" + getDataId() + " | Group=" + group;
                 }
                 previewPanel.setKey(key);
-                previewPanel.setConfig(xml);
+                previewPanel.setConfig(config);
 
                 JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractTopology.this), previewPanel, "策略预览", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/property.png"), new Object[] { SwingLocale.getString("close") }, null, true);
             }

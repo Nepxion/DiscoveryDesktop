@@ -27,13 +27,13 @@ import com.nepxion.discovery.console.entity.Instance;
 
 public class BlueGreenStrategyProcessor implements StrategyProcessor {
     @Override
-    public TDataBox fromXml() {
+    public TDataBox fromConfig() {
         return null;
     }
 
     @SuppressWarnings({ "unchecked", "incomplete-switch" })
     @Override
-    public String toXml(StrategyType strategyType, TDataBox dataBox) {
+    public String toConfig(StrategyType strategyType, TDataBox dataBox) {
         if (TElementManager.getNodes(dataBox).size() <= 1) {
             return StringUtils.EMPTY;
         }

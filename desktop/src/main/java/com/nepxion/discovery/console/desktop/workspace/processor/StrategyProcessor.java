@@ -14,7 +14,7 @@ import twaver.TDataBox;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
 
 public interface StrategyProcessor {
-    TDataBox fromXml();
+    TDataBox fromConfig();
 
-    String toXml(StrategyType strategyType, TDataBox dataBox);
+    String toConfig(StrategyType strategyType, TDataBox dataBox);
 }
