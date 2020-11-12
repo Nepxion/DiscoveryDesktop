@@ -13,15 +13,15 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
 
-public enum OperationType {
-    BLUE_GREEN(DiscoveryConstant.BLUE_GREEN, "蓝绿部署"),
-    GRAY(DiscoveryConstant.GRAY, "灰度发布"),
-    BLACKLIST(DiscoveryConstant.BLACKLIST, "实例摘除");
+public enum ReleaseType {
+    BLUE_GREEN(DiscoveryConstant.BLUE_GREEN, "全链路蓝绿发布"),
+    GRAY(DiscoveryConstant.GRAY, "全链路灰度发布"),
+    BLACKLIST(DiscoveryConstant.BLACKLIST, "全链路实例摘除");
 
     private String value;
     private String description;
 
-    private OperationType(String value, String description) {
+    private ReleaseType(String value, String description) {
         this.value = value;
         this.description = description;
     }
@@ -38,8 +38,8 @@ public enum OperationType {
         return StringUtils.capitalize(value);
     }
 
-    public static OperationType fromString(String value) {
-        for (OperationType type : OperationType.values()) {
+    public static ReleaseType fromString(String value) {
+        for (ReleaseType type : ReleaseType.values()) {
             if (type.getValue().equalsIgnoreCase(value)) {
                 return type;
             }

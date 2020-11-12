@@ -97,7 +97,7 @@ public class BlueGreenTopology extends AbstractTopology {
 
     private String group;
     private Instance gateway;
-    private OperationType operationType;
+    private ReleaseType releaseType;
     private StrategyType strategyType;
     private ConfigType configType;
     private Map<String, List<Instance>> instanceMap;
@@ -255,10 +255,10 @@ public class BlueGreenTopology extends AbstractTopology {
         });
     }
 
-    public void initializeData(String group, Instance gateway, OperationType operationType, StrategyType strategyType, ConfigType configType) {
+    public void initializeData(String group, Instance gateway, ReleaseType releaseType, StrategyType strategyType, ConfigType configType) {
         this.group = group;
         this.gateway = gateway;
-        this.operationType = operationType;
+        this.releaseType = releaseType;
         this.strategyType = strategyType;
         this.configType = configType;
 
@@ -293,8 +293,8 @@ public class BlueGreenTopology extends AbstractTopology {
         return gateway;
     }
 
-    public OperationType getOperationType() {
-        return operationType;
+    public ReleaseType getReleaseType() {
+        return releaseType;
     }
 
     public StrategyType getStrategyType() {
@@ -306,7 +306,7 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     private void setTitle() {
-        background.setTitle(operationType.getDescription() + " | " + strategyType.getDescription() + " | " + configType.getDescription());
+        background.setTitle(releaseType.getDescription() + " | " + strategyType.getDescription() + " | " + configType.getDescription());
     }
 
     private void setGatewayNode() {
@@ -608,7 +608,7 @@ public class BlueGreenTopology extends AbstractTopology {
         strategyStringBuilder.append("        <" + strategyValue + ">{" + basicStrategy + "}</" + strategyValue + ">\n");
         strategyStringBuilder.append("    </strategy>\n\n");
         strategyStringBuilder.append("    <strategy-customization>\n");
-        strategyStringBuilder.append("        <conditions type=\"" + OperationType.BLUE_GREEN + "\">\n");
+        strategyStringBuilder.append("        <conditions type=\"" + ReleaseType.BLUE_GREEN + "\">\n");
         strategyStringBuilder.append("            <condition id=\"blue-condition\" header=\"" + EscapeType.escape(blueCondition) + "\" " + strategyValue + "-id=\"blue-" + strategyValue + "-route\"/>\n");
         strategyStringBuilder.append("            <condition id=\"green-condition\" header=\"" + EscapeType.escape(greenCondition) + "\" " + strategyValue + "-id=\"green-" + strategyValue + "-route\"/>\n");
         strategyStringBuilder.append("        </conditions>\n\n");
@@ -825,22 +825,22 @@ public class BlueGreenTopology extends AbstractTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                OperationPanel operationPanel = new OperationPanel(OperationType.BLUE_GREEN);
-                operationPanel.setPreferredSize(new Dimension(480, 160));
+                ReleasePanel releasePanel = new ReleasePanel(ReleaseType.BLUE_GREEN);
+                releasePanel.setPreferredSize(new Dimension(480, 160));
 
-                int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(BlueGreenTopology.this), operationPanel, "打开或者新增蓝绿部署", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
+                int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(BlueGreenTopology.this), releasePanel, "打开或者新增蓝绿发布", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
                 if (selectedOption != 0) {
                     return;
                 }
 
-                String group = operationPanel.getGroup();
+                String group = releasePanel.getGroup();
                 if (StringUtils.isBlank(group)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "组不能为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
                 }
 
-                String gatewayId = operationPanel.getGatewayId();
+                String gatewayId = releasePanel.getGatewayId();
                 if (StringUtils.isBlank(gatewayId)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "服务名不能为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
@@ -852,11 +852,11 @@ public class BlueGreenTopology extends AbstractTopology {
                 Map<String, String> metadataMap = new HashMap<String, String>();
                 gateway.setMetadata(metadataMap);
 
-                OperationType operationType = operationPanel.getOperationType();
-                StrategyType strategyType = operationPanel.getStrategyType();
-                ConfigType configType = operationPanel.getConfigType();
+                ReleaseType releaseType = releasePanel.getReleaseType();
+                StrategyType strategyType = releasePanel.getStrategyType();
+                ConfigType configType = releasePanel.getConfigType();
 
-                initializeData(group, gateway, operationType, strategyType, configType);
+                initializeData(group, gateway, releaseType, strategyType, configType);
                 initializeUI();
             }
         };
@@ -945,7 +945,7 @@ public class BlueGreenTopology extends AbstractTopology {
         return action;
     }
 
-    private class OperationPanel extends JPanel {
+    private class ReleasePanel extends JPanel {
         private static final long serialVersionUID = 1L;
 
         private JBasicComboBox groupComboBox;
@@ -955,10 +955,10 @@ public class BlueGreenTopology extends AbstractTopology {
         private ButtonGroup strategyButtonGroup;
         private ButtonGroup configButtonGroup;
 
-        private OperationType operationType;
+        private ReleaseType releaseType;
 
-        public OperationPanel(OperationType operationType) {
-            this.operationType = operationType;
+        public ReleasePanel(ReleaseType releaseType) {
+            this.releaseType = releaseType;
 
             groupComboBox = new JBasicComboBox();
             groupComboBox.setEditable(true);
@@ -1107,8 +1107,8 @@ public class BlueGreenTopology extends AbstractTopology {
             return gatewayIdComboBox.getSelectedItem() != null ? gatewayIdComboBox.getSelectedItem().toString().trim() : null;
         }
 
-        public OperationType getOperationType() {
-            return operationType;
+        public ReleaseType getReleaseType() {
+            return releaseType;
         }
 
         public StrategyType getStrategyType() {
