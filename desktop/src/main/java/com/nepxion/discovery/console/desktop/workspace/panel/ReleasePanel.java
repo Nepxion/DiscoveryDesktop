@@ -92,13 +92,18 @@ public class ReleasePanel extends JPanel {
             configRadioButton.addItemListener(new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
                     JBasicRadioButton radioButton = (JBasicRadioButton) e.getItem();
-                    if (deployButtonGroup != null && StringUtils.equals(radioButton.getName(), ConfigType.PARTIAL.toString())) {
+                    if (deployButtonGroup != null && StringUtils.equals(radioButton.getName(), ConfigType.GLOBAL.toString())) {
                         for (Enumeration<AbstractButton> enumeration = deployButtonGroup.getElements(); enumeration.hasMoreElements();) {
                             AbstractButton button = enumeration.nextElement();
-                            button.setEnabled(radioButton.isSelected());
+                            button.setEnabled(!radioButton.isSelected());
+
+                            // 全局配置下，处理为非域网关模式
+                            if (StringUtils.equals(button.getName(), DeployType.NON_DOMAIN_GATEWAY.toString())) {
+                                button.setSelected(true);
+                            }
                         }
-                        gatewayIdComboBox.setEnabled(radioButton.isSelected());
-                        showOnlyGatewayCheckBox.setEnabled(radioButton.isSelected());
+                        gatewayIdComboBox.setEnabled(!radioButton.isSelected());
+                        showOnlyGatewayCheckBox.setEnabled(!radioButton.isSelected());
                     }
                 }
             });
