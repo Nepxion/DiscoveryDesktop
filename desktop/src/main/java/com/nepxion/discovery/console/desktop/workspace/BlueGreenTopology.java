@@ -12,19 +12,15 @@ package com.nepxion.discovery.console.desktop.workspace;
 import twaver.Link;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 
@@ -34,68 +30,46 @@ import org.apache.commons.lang3.StringUtils;
 import com.nepxion.cots.twaver.element.TElementManager;
 import com.nepxion.cots.twaver.element.TLink;
 import com.nepxion.cots.twaver.element.TNode;
-import com.nepxion.discovery.common.constant.DiscoveryConstant;
-import com.nepxion.discovery.console.controller.ServiceController;
 import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
-import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.topology.LinkUI;
 import com.nepxion.discovery.console.desktop.topology.NodeImageType;
-import com.nepxion.discovery.console.desktop.topology.NodeLocation;
 import com.nepxion.discovery.console.desktop.topology.NodeSizeType;
 import com.nepxion.discovery.console.desktop.topology.NodeUI;
-import com.nepxion.discovery.console.desktop.workspace.panel.ReleasePanel;
 import com.nepxion.discovery.console.desktop.workspace.processor.BlueGreenStrategyProcessor;
 import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessor;
-import com.nepxion.discovery.console.desktop.workspace.type.ConfigType;
-import com.nepxion.discovery.console.desktop.workspace.type.DeployType;
 import com.nepxion.discovery.console.desktop.workspace.type.LinkType;
 import com.nepxion.discovery.console.desktop.workspace.type.NodeType;
-import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
-import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
 import com.nepxion.discovery.console.entity.Instance;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.ButtonManager;
 import com.nepxion.swing.button.JClassicButton;
 import com.nepxion.swing.combobox.JBasicComboBox;
-import com.nepxion.swing.dialog.JExceptionDialog;
-import com.nepxion.swing.element.ElementNode;
 import com.nepxion.swing.handle.HandleManager;
-import com.nepxion.swing.icon.IconFactory;
 import com.nepxion.swing.label.JBasicLabel;
 import com.nepxion.swing.layout.filed.FiledLayout;
 import com.nepxion.swing.layout.table.TableLayout;
 import com.nepxion.swing.locale.SwingLocale;
 import com.nepxion.swing.optionpane.JBasicOptionPane;
-import com.nepxion.swing.selector.checkbox.JCheckBoxSelector;
 import com.nepxion.swing.textfield.JBasicTextField;
 
-public class BlueGreenTopology extends AbstractTopology {
+public class BlueGreenTopology extends AbstractReleaseTopology {
     private static final long serialVersionUID = 1L;
 
-    private NodeLocation nodeLocation = new NodeLocation(440, 100, 200, 0);
-    private NodeUI serviceYellowNodeUI = new NodeUI(NodeImageType.SERVICE_YELLOW, NodeSizeType.MIDDLE, true);
-    private NodeUI serviceBlueNodeUI = new NodeUI(NodeImageType.SERVICE_BLUE, NodeSizeType.MIDDLE, true);
-    private NodeUI serviceGreenNodeUI = new NodeUI(NodeImageType.SERVICE_GREEN, NodeSizeType.MIDDLE, true);
-    private NodeUI gatewayBlackNodeUI = new NodeUI(NodeImageType.GATEWAY_BLACK, NodeSizeType.LARGE, true);
+    protected NodeUI serviceYellowNodeUI = new NodeUI(NodeImageType.SERVICE_YELLOW, NodeSizeType.MIDDLE, true);
+    protected NodeUI serviceBlueNodeUI = new NodeUI(NodeImageType.SERVICE_BLUE, NodeSizeType.MIDDLE, true);
+    protected NodeUI serviceGreenNodeUI = new NodeUI(NodeImageType.SERVICE_GREEN, NodeSizeType.MIDDLE, true);
 
-    private JBasicComboBox serviceIdComboBox;
-    private JBasicComboBox blueMetadataComboBox;
-    private JBasicComboBox greenMetadataComboBox;
-    private JBasicComboBox basicMetadataComboBox;
-    private JBasicTextField blueConditionTextField;
-    private JBasicTextField greenConditionTextField;
+    protected JBasicComboBox blueMetadataComboBox;
+    protected JBasicComboBox greenMetadataComboBox;
+    protected JBasicComboBox basicMetadataComboBox;
+    protected JBasicTextField blueConditionTextField;
+    protected JBasicTextField greenConditionTextField;
 
-    private TNode gatewayNode;
-    private TNode blueNode;
-    private TNode greenNode;
-    private TNode basicNode;
+    protected TNode blueNode;
+    protected TNode greenNode;
+    protected TNode basicNode;
 
-    private Instance gateway;
-    private DeployType deployType;
-
-    private Object[] serviceIds;
-
-    private StrategyProcessor strategyProcessor = new BlueGreenStrategyProcessor();
+    protected StrategyProcessor strategyProcessor = new BlueGreenStrategyProcessor();
 
     public BlueGreenTopology() {
         super();
@@ -207,98 +181,7 @@ public class BlueGreenTopology extends AbstractTopology {
         add(toolBar, BorderLayout.NORTH);
     }
 
-    public void initializeData(String group, Instance gateway, ReleaseType releaseType, StrategyType strategyType, ConfigType configType, DeployType deployType) {
-        this.group = group;
-        this.gateway = gateway;
-        this.releaseType = releaseType;
-        this.strategyType = strategyType;
-        this.configType = configType;
-        this.deployType = deployType;
-
-        refreshData();
-    }
-
-    public void refreshData() {
-        try {
-            if (deployType == DeployType.DOMAIN_GATEWAY) {
-                this.serviceIds = ServiceController.getInstanceMap(Arrays.asList(group)).keySet().toArray();
-            } else {
-                this.serviceIds = ServiceController.getServices().toArray();
-            }
-        } catch (Exception e) {
-            JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("query_data_failure"), e);
-        }
-    }
-
-    public List<Instance> getInstances(String serviceId) {
-        try {
-            return ServiceController.getInstanceList(serviceId);
-        } catch (Exception e) {
-            JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("query_data_failure"), e);
-        }
-
-        return null;
-    }
-
-    public void initializeUI() {
-        setTitle();
-        setGatewayNode();
-
-        refreshUI();
-    }
-
-    public void refreshUI() {
-        setServiceUI();
-        setMetadataUI();
-    }
-
-    private void setTitle() {
-        background.setTitle(releaseType.getDescription() + " | " + strategyType.getDescription() + " | " + configType.getDescription() + " | " + deployType.getDescription());
-    }
-
-    private void setGatewayNode() {
-        dataBox.clear();
-
-        blueNode = null;
-        greenNode = null;
-        basicNode = null;
-
-        gatewayNode = addNode(ButtonManager.getHtmlText(gateway.getServiceId() + "\n" + group), gatewayBlackNodeUI);
-        gatewayNode.setUserObject(gateway);
-        gatewayNode.setBusinessObject(NodeType.GATEWAY);
-
-        setNodeTopBottom(gatewayNode, false);
-    }
-
-    @SuppressWarnings("unchecked")
-    private void setServiceUI() {
-        serviceIdComboBox.setModel(new DefaultComboBoxModel<>(serviceIds));
-    }
-
-    @SuppressWarnings("unchecked")
-    private void setMetadataUI() {
-        List<String> metadatas = new ArrayList<String>();
-        Object selectedItem = serviceIdComboBox.getSelectedItem();
-        if (selectedItem != null) {
-            String serviceId = selectedItem.toString().trim();
-            List<Instance> instances = getInstances(serviceId);
-            if (CollectionUtils.isNotEmpty(instances)) {
-                for (Instance instance : instances) {
-                    String metadata = instance.getMetadata().get(strategyType.toString());
-                    if (StringUtils.isNotBlank(metadata)) {
-                        metadatas.add(metadata);
-                    }
-                }
-            }
-        }
-        metadatas.add(DiscoveryConstant.DEFAULT);
-
-        blueMetadataComboBox.setModel(new DefaultComboBoxModel<>(metadatas.toArray()));
-        greenMetadataComboBox.setModel(new DefaultComboBoxModel<>(metadatas.toArray()));
-        basicMetadataComboBox.setModel(new DefaultComboBoxModel<>(metadatas.toArray()));
-    }
-
-    private void addNodes(String serviceId, String blueMetadata, String greenMetadata, String basicMetadata, String blueCondition, String greenCondition) {
+    public void addNodes(String serviceId, String blueMetadata, String greenMetadata, String basicMetadata, String blueCondition, String greenCondition) {
         TNode newBlueNode = addNode(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.toString() + "=" + blueMetadata), serviceBlueNodeUI);
         Instance newBlueInstance = new Instance();
         newBlueInstance.setServiceId(serviceId);
@@ -359,7 +242,7 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     @SuppressWarnings("unchecked")
-    private void removeNodes() {
+    public void removeNodes() {
         if (blueNode != null) {
             List<Link> blueLinks = blueNode.getAllLinks();
             if (CollectionUtils.isNotEmpty(blueLinks)) {
@@ -401,7 +284,7 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     @SuppressWarnings({ "unchecked", "incomplete-switch" })
-    private void modifyNodes(String serviceId, String blueMetadata, String greenMetadata, String basicMetadata) {
+    public void modifyNodes(String serviceId, String blueMetadata, String greenMetadata, String basicMetadata) {
         List<TNode> nodes = TElementManager.getNodes(dataBox);
         for (TNode node : nodes) {
             Instance instance = (Instance) node.getUserObject();
@@ -425,21 +308,8 @@ public class BlueGreenTopology extends AbstractTopology {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private boolean hasNodes(String serviceId) {
-        List<TNode> nodes = TElementManager.getNodes(dataBox);
-        for (TNode node : nodes) {
-            Instance instance = (Instance) node.getUserObject();
-            if (StringUtils.equalsIgnoreCase(instance.getServiceId(), serviceId)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     @SuppressWarnings({ "unchecked", "incomplete-switch" })
-    private void modifyLinks(String blueCondition, String greenCondition) {
+    public void modifyLinks(String blueCondition, String greenCondition) {
         List<TLink> links = TElementManager.getLinks(dataBox);
         for (TLink link : links) {
             LinkType linkType = (LinkType) link.getBusinessObject();
@@ -456,186 +326,7 @@ public class BlueGreenTopology extends AbstractTopology {
         }
     }
 
-    private TNode addNode(String name, NodeUI topologyEntity) {
-        TNode node = createNode(name, topologyEntity, nodeLocation, 0);
-
-        dataBox.addElement(node);
-
-        return node;
-    }
-
-    @SuppressWarnings("unchecked")
-    private TLink addLink(TNode fromNode, TNode toNode, Color linkFlowingColor) {
-        List<TLink> links = TElementManager.getLinks(dataBox);
-        for (TLink link : links) {
-            if (link.getFrom() == fromNode && link.getTo() == toNode) {
-                return null;
-            }
-        }
-
-        TLink link = createLink(fromNode, toNode, linkFlowingColor != null);
-        if (linkFlowingColor != null) {
-            link.putLinkToArrowColor(Color.yellow);
-            link.putLinkFlowing(true);
-            link.putLinkFlowingColor(linkFlowingColor);
-            link.putLinkFlowingWidth(3);
-        }
-
-        dataBox.addElement(link);
-
-        return link;
-    }
-
-    private JSecurityAction createRefreshServiceListAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("refresh.png"), "刷新服务列表") {
-            private static final long serialVersionUID = 1L;
-
-            public void execute(ActionEvent e) {
-                refreshData();
-                refreshUI();
-            }
-        };
-
-        return action;
-    }
-
-    private JSecurityAction createMetadataSelectorAction(JBasicComboBox metadataComboBox) {
-        JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("direction_south.png"), "版本选取") {
-            private static final long serialVersionUID = 1L;
-
-            @SuppressWarnings({ "unchecked", "rawtypes" })
-            public void execute(ActionEvent e) {
-                ComboBoxModel metadataComboBoxModel = metadataComboBox.getModel();
-                List<ElementNode> metadataElementNodes = new ArrayList<ElementNode>();
-                for (int i = 0; i < metadataComboBoxModel.getSize(); i++) {
-                    String metadata = metadataComboBoxModel.getElementAt(i).toString();
-                    metadataElementNodes.add(new ElementNode(metadata, IconFactory.getSwingIcon("component/file_chooser_16.png"), metadata, metadata));
-                }
-
-                JCheckBoxSelector checkBoxSelector = new JCheckBoxSelector(HandleManager.getFrame(BlueGreenTopology.this), "版本选取", new Dimension(400, 350), metadataElementNodes);
-                checkBoxSelector.setVisible(true);
-                checkBoxSelector.dispose();
-
-                if (!checkBoxSelector.isConfirmed()) {
-                    return;
-                }
-
-                List<String> selectedMetadatas = checkBoxSelector.getSelectedUserObjects();
-                if (CollectionUtils.isEmpty(selectedMetadatas)) {
-                    return;
-                }
-
-                StringBuilder StringBuilder = new StringBuilder();
-                int index = 0;
-                for (String selectedMetadata : selectedMetadatas) {
-                    StringBuilder.append(selectedMetadata);
-                    if (index < selectedMetadatas.size() - 1) {
-                        StringBuilder.append(DiscoveryConstant.SEPARATE);
-                    }
-
-                    index++;
-                }
-
-                metadataComboBox.setSelectedItem(StringBuilder.toString());
-            }
-        };
-
-        return action;
-    }
-
-    private JSecurityAction createAddServiceStrategyAction() {
-        JSecurityAction action = new JSecurityAction("添加", ConsoleIconFactory.getSwingIcon("add.png"), "添加一层服务策略") {
-            private static final long serialVersionUID = 1L;
-
-            public void execute(ActionEvent e) {
-                if (TElementManager.getNodes(dataBox).size() == 0) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "无入口网关或者服务", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
-
-                    return;
-                }
-
-                String serviceId = serviceIdComboBox.getSelectedItem() != null ? serviceIdComboBox.getSelectedItem().toString().trim() : null;
-                if (StringUtils.isBlank(serviceId)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "服务名必填", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
-
-                    return;
-                }
-
-                if (hasNodes(serviceId)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), serviceId + "已存在", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
-
-                    return;
-                }
-
-                String blueMetadata = blueMetadataComboBox.getSelectedItem() != null ? blueMetadataComboBox.getSelectedItem().toString().trim() : null;
-                String greenMetadata = greenMetadataComboBox.getSelectedItem() != null ? greenMetadataComboBox.getSelectedItem().toString().trim() : null;
-                String basicMetadata = basicMetadataComboBox.getSelectedItem() != null ? basicMetadataComboBox.getSelectedItem().toString().trim() : null;
-                String blueCondition = blueConditionTextField.getText().trim();
-                String greenCondition = greenConditionTextField.getText().trim();
-
-                if (StringUtils.isBlank(blueMetadata) || StringUtils.isBlank(greenMetadata) || StringUtils.isBlank(basicMetadata)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "版本号必填", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
-
-                    return;
-                }
-
-                if (StringUtils.isBlank(blueCondition) || StringUtils.isBlank(greenCondition)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "条件必填", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
-
-                    return;
-                }
-
-                addNodes(serviceId, blueMetadata, greenMetadata, basicMetadata, blueCondition, greenCondition);
-
-                layoutActionListener.actionPerformed(null);
-            }
-        };
-
-        return action;
-    }
-
-    private JSecurityAction createRemoveServiceStrategyAction() {
-        JSecurityAction action = new JSecurityAction("删除", ConsoleIconFactory.getSwingIcon("delete.png"), "删除一层服务策略") {
-            private static final long serialVersionUID = 1L;
-
-            public void execute(ActionEvent e) {
-                removeNodes();
-            }
-        };
-
-        return action;
-    }
-
-    private JSecurityAction createModifyServiceStrategyAction() {
-        JSecurityAction action = new JSecurityAction("修改", ConsoleIconFactory.getSwingIcon("paste.png"), "修改一层服务策略") {
-            private static final long serialVersionUID = 1L;
-
-            public void execute(ActionEvent e) {
-                String serviceId = serviceIdComboBox.getSelectedItem().toString();
-                if (StringUtils.isBlank(serviceId)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "服务名必填", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
-
-                    return;
-                }
-
-                String blueMetadata = blueMetadataComboBox.getSelectedItem().toString().trim();
-                String greenMetadata = greenMetadataComboBox.getSelectedItem().toString().trim();
-                String basicMetadata = basicMetadataComboBox.getSelectedItem().toString().trim();
-
-                if (StringUtils.isBlank(blueMetadata) || StringUtils.isBlank(greenMetadata) || StringUtils.isBlank(basicMetadata)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "版本号必填", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
-
-                    return;
-                }
-
-                modifyNodes(serviceId, blueMetadata, greenMetadata, basicMetadata);
-            }
-        };
-
-        return action;
-    }
-
-    private JSecurityAction createValidateConditionAction() {
+    public JSecurityAction createValidateConditionAction() {
         JSecurityAction action = new JSecurityAction("校验", ConsoleIconFactory.getSwingIcon("config.png"), "校验条件表达式") {
             private static final long serialVersionUID = 1L;
 
@@ -647,7 +338,7 @@ public class BlueGreenTopology extends AbstractTopology {
         return action;
     }
 
-    private JSecurityAction createModifyConditionAction() {
+    public JSecurityAction createModifyConditionAction() {
         JSecurityAction action = new JSecurityAction("修改", ConsoleIconFactory.getSwingIcon("paste.png"), "修改条件表达式") {
             private static final long serialVersionUID = 1L;
 
@@ -669,70 +360,63 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     @Override
-    public String getDataId() {
-        if (configType == ConfigType.PARTIAL) {
-            return gateway.getServiceId();
-        } else {
-            return group;
-        }
-    }
-
-    @Override
-    public void open() {
-        ReleaseType openReleaseType = ReleaseType.BLUE_GREEN;
-
-        ReleasePanel releasePanel = new ReleasePanel(openReleaseType);
-        releasePanel.setPreferredSize(new Dimension(480, 180));
-
-        int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(BlueGreenTopology.this), releasePanel, "打开或者新增 [ " + openReleaseType.getDescription() + " ]", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
-        if (selectedOption != 0) {
-            return;
-        }
-
-        ReleaseType releaseType = releasePanel.getReleaseType();
-        StrategyType strategyType = releasePanel.getStrategyType();
-        ConfigType configType = releasePanel.getConfigType();
-        DeployType deployType = releasePanel.getDeployType();
-
-        String group = releasePanel.getGroup();
-        if (StringUtils.isBlank(group)) {
-            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "组不能为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
-
-            return;
-        }
-
-        String gatewayId = null;
-        if (configType == ConfigType.PARTIAL) {
-            gatewayId = releasePanel.getGatewayId();
-            if (StringUtils.isBlank(gatewayId)) {
-                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "服务名不能为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
-
-                return;
-            }
-        }
-
-        Instance gateway = new Instance();
-        gateway.setServiceId(gatewayId != null ? gatewayId : "起点服务");
-        Map<String, String> metadataMap = new HashMap<String, String>();
-        gateway.setMetadata(metadataMap);
-
-        initializeData(group, gateway, releaseType, strategyType, configType, deployType);
-        initializeUI();
-    }
-
-    @Override
-    public void save() {
-
-    }
-
-    @Override
-    public void clear() {
-        dataBox.clear();
-        dataBox.addElement(gatewayNode);
-
+    public void reset() {
         blueNode = null;
         greenNode = null;
         basicNode = null;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void setMetadataUI(Object[] metadatas) {
+        blueMetadataComboBox.setModel(new DefaultComboBoxModel<>(metadatas));
+        greenMetadataComboBox.setModel(new DefaultComboBoxModel<>(metadatas));
+        basicMetadataComboBox.setModel(new DefaultComboBoxModel<>(metadatas));
+    }
+
+    @Override
+    public void addServiceStrategy(String serviceId) {
+        String blueMetadata = blueMetadataComboBox.getSelectedItem() != null ? blueMetadataComboBox.getSelectedItem().toString().trim() : null;
+        String greenMetadata = greenMetadataComboBox.getSelectedItem() != null ? greenMetadataComboBox.getSelectedItem().toString().trim() : null;
+        String basicMetadata = basicMetadataComboBox.getSelectedItem() != null ? basicMetadataComboBox.getSelectedItem().toString().trim() : null;
+        String blueCondition = blueConditionTextField.getText().trim();
+        String greenCondition = greenConditionTextField.getText().trim();
+
+        if (StringUtils.isBlank(blueMetadata) || StringUtils.isBlank(greenMetadata) || StringUtils.isBlank(basicMetadata)) {
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "版本号必填", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+            return;
+        }
+
+        if (StringUtils.isBlank(blueCondition) || StringUtils.isBlank(greenCondition)) {
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "条件必填", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+            return;
+        }
+
+        addNodes(serviceId, blueMetadata, greenMetadata, basicMetadata, blueCondition, greenCondition);
+
+        layoutActionListener.actionPerformed(null);
+    }
+
+    @Override
+    public void removeServiceStrategy() {
+        removeNodes();
+    }
+
+    @Override
+    public void modifyServiceStrategy(String serviceId) {
+        String blueMetadata = blueMetadataComboBox.getSelectedItem().toString().trim();
+        String greenMetadata = greenMetadataComboBox.getSelectedItem().toString().trim();
+        String basicMetadata = basicMetadataComboBox.getSelectedItem().toString().trim();
+
+        if (StringUtils.isBlank(blueMetadata) || StringUtils.isBlank(greenMetadata) || StringUtils.isBlank(basicMetadata)) {
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "版本号必填", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+            return;
+        }
+
+        modifyNodes(serviceId, blueMetadata, greenMetadata, basicMetadata);
     }
 
     @Override
