@@ -90,7 +90,6 @@ public class BlueGreenTopology extends AbstractTopology {
     private TNode greenNode;
     private TNode basicNode;
 
-    private String group;
     private Instance gateway;
     private DeployType deployType;
 
@@ -667,6 +666,15 @@ public class BlueGreenTopology extends AbstractTopology {
         };
 
         return action;
+    }
+
+    @Override
+    public String getDataId() {
+        if (configType == ConfigType.PARTIAL) {
+            return gateway.getServiceId();
+        } else {
+            return group;
+        }
     }
 
     @Override

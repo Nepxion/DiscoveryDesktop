@@ -21,7 +21,9 @@ import javax.swing.JToolBar;
 import org.apache.commons.lang3.StringUtils;
 
 import com.nepxion.cots.twaver.graph.TGraphBackground;
+import com.nepxion.discovery.console.controller.ServiceController;
 import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
+import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.topology.BasicTopology;
 import com.nepxion.discovery.console.desktop.workspace.panel.PreviewPanel;
 import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessor;
@@ -31,16 +33,17 @@ import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.ButtonManager;
 import com.nepxion.swing.button.JClassicButton;
+import com.nepxion.swing.dialog.JExceptionDialog;
 import com.nepxion.swing.handle.HandleManager;
 import com.nepxion.swing.listener.DisplayAbilityListener;
 import com.nepxion.swing.locale.SwingLocale;
 import com.nepxion.swing.optionpane.JBasicOptionPane;
-import com.nepxion.swing.scrollpane.JBasicScrollPane;
-import com.nepxion.swing.textarea.JBasicTextArea;
 import com.nepxion.swing.textfield.JBasicTextField;
 
 public abstract class AbstractTopology extends BasicTopology {
     private static final long serialVersionUID = 1L;
+
+    public static final String APOLLO = "Apollo";
 
     protected TGraphBackground background;
 
@@ -48,14 +51,18 @@ public abstract class AbstractTopology extends BasicTopology {
 
     protected JBasicTextField layoutTextField = new JBasicTextField();
 
+    protected String group;
     protected ReleaseType releaseType;
     protected StrategyType strategyType;
     protected ConfigType configType;
+
+    protected String configCenterType;
 
     public AbstractTopology() {
         initializeToolBar();
         initializeTopology();
         initializeListener();
+        initializeData();
 
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
     }
@@ -82,6 +89,14 @@ public abstract class AbstractTopology extends BasicTopology {
                 return null;
             }
         });
+    }
+
+    private void initializeData() {
+        try {
+            configCenterType = ServiceController.getConfigType();
+        } catch (Exception ex) {
+            JExceptionDialog.traceException(HandleManager.getFrame(AbstractTopology.this), ConsoleLocaleFactory.getString("query_data_failure"), ex);
+        }
     }
 
     private void initializeListener() {
@@ -154,7 +169,14 @@ public abstract class AbstractTopology extends BasicTopology {
                     previewPanel = new PreviewPanel();
                     previewPanel.setPreferredSize(new Dimension(900, 400));
                 }
-                previewPanel.setKey("xxxxxxxxxxxx");
+
+                String key = null;
+                if (StringUtils.equals(configCenterType, APOLLO)) {
+                    key = group + "-" + getDataId();
+                } else {
+                    key = "Data ID=" + getDataId() + " | Group=" + group;
+                }
+                previewPanel.setKey(key);
                 previewPanel.setConfig(xml);
 
                 JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractTopology.this), previewPanel, "策略预览", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/property.png"), new Object[] { SwingLocale.getString("close") }, null, true);
@@ -187,6 +209,8 @@ public abstract class AbstractTopology extends BasicTopology {
 
         return action;
     }
+
+    public abstract String getDataId();
 
     public abstract void clear();
 
