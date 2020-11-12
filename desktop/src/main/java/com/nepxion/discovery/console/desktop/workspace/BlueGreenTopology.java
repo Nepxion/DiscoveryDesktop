@@ -870,7 +870,7 @@ public class BlueGreenTopology extends AbstractTopology {
 
             public void execute(ActionEvent e) {
                 ReleasePanel releasePanel = new ReleasePanel(ReleaseType.BLUE_GREEN);
-                releasePanel.setPreferredSize(new Dimension(480, 160));
+                releasePanel.setPreferredSize(new Dimension(480, 180));
 
                 ReleaseType releaseType = releasePanel.getReleaseType();
                 StrategyType strategyType = releasePanel.getStrategyType();
