@@ -49,9 +49,10 @@ import com.nepxion.discovery.console.desktop.topology.NodeLocation;
 import com.nepxion.discovery.console.desktop.topology.NodeSizeType;
 import com.nepxion.discovery.console.desktop.topology.NodeUI;
 import com.nepxion.discovery.console.desktop.workspace.panel.ReleasePanel;
+import com.nepxion.discovery.console.desktop.workspace.processor.BlueGreenStrategyProcessor;
+import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessor;
 import com.nepxion.discovery.console.desktop.workspace.type.ConfigType;
 import com.nepxion.discovery.console.desktop.workspace.type.DeployType;
-import com.nepxion.discovery.console.desktop.workspace.type.EscapeType;
 import com.nepxion.discovery.console.desktop.workspace.type.LinkType;
 import com.nepxion.discovery.console.desktop.workspace.type.NodeType;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
@@ -105,6 +106,8 @@ public class BlueGreenTopology extends BasicTopology {
     private ConfigType configType;
     private DeployType deployType;
     private Map<String, List<Instance>> instanceMap;
+
+    private StrategyProcessor strategyProcessor = new BlueGreenStrategyProcessor();
 
     private JBasicTextArea strategyTextArea;
     private JBasicScrollPane strategyScrollPane;
@@ -551,82 +554,6 @@ public class BlueGreenTopology extends BasicTopology {
         return link;
     }
 
-    private void fromXml() {
-
-    }
-
-    @SuppressWarnings({ "unchecked", "incomplete-switch" })
-    private String toXml() {
-        if (TElementManager.getNodes(dataBox).size() <= 1) {
-            return StringUtils.EMPTY;
-        }
-
-        String strategyValue = strategyType.toString();
-
-        StringBuilder basicStrategyStringBuilder = new StringBuilder();
-        StringBuilder blueStrategyStringBuilder = new StringBuilder();
-        StringBuilder greenStrategyStringBuilder = new StringBuilder();
-        List<TNode> nodes = TElementManager.getNodes(dataBox);
-        for (TNode node : nodes) {
-            Instance instance = (Instance) node.getUserObject();
-            NodeType nodeType = (NodeType) node.getBusinessObject();
-            String serviceId = instance.getServiceId();
-            String metadata = instance.getMetadata().get(strategyValue);
-            switch (nodeType) {
-                case BLUE:
-                    blueStrategyStringBuilder.append("\"" + serviceId + "\":\"" + metadata + "\", ");
-                    break;
-                case GREEN:
-                    greenStrategyStringBuilder.append("\"" + serviceId + "\":\"" + metadata + "\", ");
-                    break;
-                case BASIC:
-                    basicStrategyStringBuilder.append("\"" + serviceId + "\":\"" + metadata + "\", ");
-                    break;
-            }
-        }
-        String basicStrategy = basicStrategyStringBuilder.toString();
-        basicStrategy = basicStrategy.substring(0, basicStrategy.length() - 2);
-        String blueStrategy = blueStrategyStringBuilder.toString();
-        blueStrategy = blueStrategy.substring(0, blueStrategy.length() - 2);
-        String greenStrategy = greenStrategyStringBuilder.toString();
-        greenStrategy = greenStrategy.substring(0, greenStrategy.length() - 2);
-
-        String blueCondition = null;
-        String greenCondition = null;
-        List<TLink> links = TElementManager.getLinks(dataBox);
-        for (TLink link : links) {
-            LinkType linkType = (LinkType) link.getBusinessObject();
-            switch (linkType) {
-                case BLUE:
-                    blueCondition = link.getUserObject().toString();
-                    break;
-                case GREEN:
-                    greenCondition = link.getUserObject().toString();
-                    break;
-            }
-        }
-
-        StringBuilder strategyStringBuilder = new StringBuilder();
-        strategyStringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-        strategyStringBuilder.append("<rule>\n");
-        strategyStringBuilder.append("    <strategy>\n");
-        strategyStringBuilder.append("        <" + strategyValue + ">{" + basicStrategy + "}</" + strategyValue + ">\n");
-        strategyStringBuilder.append("    </strategy>\n\n");
-        strategyStringBuilder.append("    <strategy-customization>\n");
-        strategyStringBuilder.append("        <conditions type=\"" + ReleaseType.BLUE_GREEN + "\">\n");
-        strategyStringBuilder.append("            <condition id=\"blue-condition\" header=\"" + EscapeType.escape(blueCondition) + "\" " + strategyValue + "-id=\"blue-" + strategyValue + "-route\"/>\n");
-        strategyStringBuilder.append("            <condition id=\"green-condition\" header=\"" + EscapeType.escape(greenCondition) + "\" " + strategyValue + "-id=\"green-" + strategyValue + "-route\"/>\n");
-        strategyStringBuilder.append("        </conditions>\n\n");
-        strategyStringBuilder.append("        <routes>\n");
-        strategyStringBuilder.append("            <route id=\"blue-" + strategyValue + "-route\" type=\"" + strategyValue + "\">{" + blueStrategy + "}</route>\n");
-        strategyStringBuilder.append("            <route id=\"green-" + strategyValue + "-route\" type=\"" + strategyValue + "\">{" + greenStrategy + "}</route>\n");
-        strategyStringBuilder.append("        </routes>\n");
-        strategyStringBuilder.append("    </strategy-customization>\n");
-        strategyStringBuilder.append("</rule>");
-
-        return strategyStringBuilder.toString();
-    }
-
     private void save() {
 
     }
@@ -875,7 +802,7 @@ public class BlueGreenTopology extends BasicTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                String xml = toXml();
+                String xml = strategyProcessor.toXml(strategyType, dataBox);
                 if (StringUtils.isEmpty(xml)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "策略为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
@@ -894,7 +821,7 @@ public class BlueGreenTopology extends BasicTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                String xml = toXml();
+                String xml = strategyProcessor.toXml(strategyType, dataBox);
                 if (StringUtils.isEmpty(xml)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "策略为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
