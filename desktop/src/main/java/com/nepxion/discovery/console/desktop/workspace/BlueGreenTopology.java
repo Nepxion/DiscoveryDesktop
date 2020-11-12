@@ -28,12 +28,11 @@ import java.util.Map;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
+import javax.swing.JToolBar;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -173,7 +172,6 @@ public class BlueGreenTopology extends AbstractTopology {
         serviceToolBar.add(new JClassicButton(createAddNodesAction()));
         serviceToolBar.add(new JClassicButton(createRemoveNodesAction()));
         serviceToolBar.add(new JClassicButton(createModifyNodesAction()));
-        serviceToolBar.add(new JClassicButton(createClearNodesAction()));
 
         blueConditionTextField = new JBasicTextField("#H['a'] == '1' && #H['b'] <= '2'");
         greenConditionTextField = new JBasicTextField("#H['a'] == '3'");
@@ -222,27 +220,19 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     private void initializeToolBar() {
-        JClassicButton previewButton = new JClassicButton(createPreviewAction());
+        JToolBar toolBar = getGraph().getToolbar();
+        toolBar.addSeparator();
+        toolBar.add(new JClassicButton(createOpenAction()));
+        toolBar.add(new JClassicButton(createSaveAction()));
+        toolBar.add(new JClassicButton(createClearNodesAction()));
+        toolBar.addSeparator();
+        toolBar.add(new JClassicButton(createPreviewAction()));
+        toolBar.add(new JClassicButton(createInspectorAction()));
+        toolBar.add(new JClassicButton(createRouterAction()));
+        toolBar.addSeparator();
+        toolBar.add(new JClassicButton(createLayoutAction()));
 
-        JClassicButton controlButton = (JClassicButton) graph.getToolbar().getComponent(0);
-        controlButton.setPreferredSize(new Dimension(controlButton.getPreferredSize().width + 5, previewButton.getPreferredSize().height));
-
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
-        buttonPanel.add(controlButton);
-        buttonPanel.add(previewButton);
-        buttonPanel.add(new JClassicButton(createInspectorAction()));
-        buttonPanel.add(new JClassicButton(createRouterAction()));
-        buttonPanel.add(Box.createHorizontalGlue());
-        buttonPanel.add(new JClassicButton(createLayoutAction()));
-        buttonPanel.add(new JClassicButton(createSaveAction()));
-
-        JPanel toolBar = new JPanel();
-        toolBar.setLayout(new FiledLayout(FiledLayout.COLUMN, FiledLayout.FULL, 5));
-        toolBar.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
-        toolBar.add(buttonPanel);
-
-        add(toolBar, BorderLayout.SOUTH);
+        ButtonManager.updateUI(toolBar);
     }
 
     private void initializeTopology() {
@@ -252,7 +242,6 @@ public class BlueGreenTopology extends AbstractTopology {
                 return null;
             }
         });
-        graph.getToolbar().setVisible(false);
     }
 
     private void initializeListener() {
@@ -829,6 +818,69 @@ public class BlueGreenTopology extends AbstractTopology {
         return action;
     }
 
+    private JSecurityAction createOpenAction() {
+        JSecurityAction action = new JSecurityAction("打开", ConsoleIconFactory.getSwingIcon("theme/tree/plastic/tree_open.png"), "打开") {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+                OperationPanel operationPanel = new OperationPanel(OperationType.BLUE_GREEN);
+                operationPanel.setPreferredSize(new Dimension(480, 160));
+
+                int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(BlueGreenTopology.this), operationPanel, "打开或者新增蓝绿部署", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
+                if (selectedOption != 0) {
+                    return;
+                }
+
+                String group = operationPanel.getGroup();
+                if (StringUtils.isBlank(group)) {
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "组不能为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+                    return;
+                }
+
+                String gatewayId = operationPanel.getGatewayId();
+                if (StringUtils.isBlank(gatewayId)) {
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "服务名不能为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+                    return;
+                }
+
+                Instance gateway = new Instance();
+                gateway.setServiceId(gatewayId);
+                Map<String, String> metadataMap = new HashMap<String, String>();
+                gateway.setMetadata(metadataMap);
+
+                OperationType operationType = operationPanel.getOperationType();
+                StrategyType strategyType = operationPanel.getStrategyType();
+                ConfigType configType = operationPanel.getConfigType();
+
+                initializeData(group, gateway, operationType, strategyType, configType);
+                initializeUI();
+            }
+        };
+
+        return action;
+    }
+
+    private JSecurityAction createSaveAction() {
+        JSecurityAction action = new JSecurityAction("保存", ConsoleIconFactory.getSwingIcon("save.png"), "保存") {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+                String xml = toXml();
+                if (StringUtils.isEmpty(xml)) {
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "策略为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+                    return;
+                }
+
+                save();
+            }
+        };
+
+        return action;
+    }
+
     private JSecurityAction createPreviewAction() {
         JSecurityAction action = new JSecurityAction("文本预览", ConsoleIconFactory.getSwingIcon("ticket.png"), "文本预览") {
             private static final long serialVersionUID = 1L;
@@ -872,39 +924,7 @@ public class BlueGreenTopology extends AbstractTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                OperationPanel operationPanel = new OperationPanel(OperationType.BLUE_GREEN);
-                operationPanel.setPreferredSize(new Dimension(480, 160));
 
-                int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(BlueGreenTopology.this), operationPanel, "新增蓝绿部署", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
-                if (selectedOption != 0) {
-                    return;
-                }
-
-                String group = operationPanel.getGroup();
-                if (StringUtils.isBlank(group)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "组不能为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
-
-                    return;
-                }
-
-                String gatewayId = operationPanel.getGatewayId();
-                if (StringUtils.isBlank(gatewayId)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "服务名不能为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
-
-                    return;
-                }
-
-                Instance gateway = new Instance();
-                gateway.setServiceId(gatewayId);
-                Map<String, String> metadataMap = new HashMap<String, String>();
-                gateway.setMetadata(metadataMap);
-
-                OperationType operationType = operationPanel.getOperationType();
-                StrategyType strategyType = operationPanel.getStrategyType();
-                ConfigType configType = operationPanel.getConfigType();
-
-                initializeData(group, gateway, operationType, strategyType, configType);
-                initializeUI();
             }
         };
 
@@ -917,25 +937,6 @@ public class BlueGreenTopology extends AbstractTopology {
 
             public void execute(ActionEvent e) {
                 toggleLayoutBar();
-            }
-        };
-
-        return action;
-    }
-
-    private JSecurityAction createSaveAction() {
-        JSecurityAction action = new JSecurityAction("保存", ConsoleIconFactory.getSwingIcon("save.png"), "保存") {
-            private static final long serialVersionUID = 1L;
-
-            public void execute(ActionEvent e) {
-                String xml = toXml();
-                if (StringUtils.isEmpty(xml)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "策略为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
-
-                    return;
-                }
-
-                save();
             }
         };
 

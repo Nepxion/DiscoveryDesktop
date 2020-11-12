@@ -120,7 +120,6 @@ public class RouterTopology extends AbstractTopology {
 
         JToolBar toolBar = getGraph().getToolbar();
         toolBar.addSeparator();
-        toolBar.add(Box.createHorizontalStrut(5));
         toolBar.add(new JLabel(ConsoleLocaleFactory.getString("service_list")));
         toolBar.add(Box.createHorizontalStrut(5));
         toolBar.add(comboBox);
