@@ -42,6 +42,7 @@ import com.nepxion.cots.twaver.element.TLink;
 import com.nepxion.cots.twaver.element.TNode;
 import com.nepxion.cots.twaver.graph.TGraphBackground;
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
+import com.nepxion.discovery.common.entity.ServiceType;
 import com.nepxion.discovery.console.controller.ServiceController;
 import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
@@ -270,6 +271,50 @@ public class BlueGreenTopology extends AbstractTopology {
         } catch (Exception e) {
             JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("query_data_failure"), e);
         }
+    }
+
+    private Object[] getGroups() {
+        try {
+            return ServiceController.getGroups().toArray();
+        } catch (Exception e) {
+            JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("query_data_failure"), e);
+        }
+
+        return null;
+    }
+
+    public Object[] geServiceIds(String group, boolean onlyGateway) {
+        try {
+            Map<String, List<Instance>> instanceMap = ServiceController.getInstanceMap(Arrays.asList(group));
+            if (onlyGateway) {
+                List<String> gatewayIds = new ArrayList<String>();
+                for (Map.Entry<String, List<Instance>> entry : instanceMap.entrySet()) {
+                    String gatewayId = entry.getKey();
+                    List<Instance> gateways = entry.getValue();
+                    if (hasGateway(gateways)) {
+                        gatewayIds.add(gatewayId);
+                    }
+                }
+
+                return gatewayIds.toArray();
+            } else {
+                return instanceMap.keySet().toArray();
+            }
+        } catch (Exception e) {
+            JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("query_data_failure"), e);
+        }
+
+        return null;
+    }
+
+    public boolean hasGateway(List<Instance> gateways) {
+        for (Instance gateway : gateways) {
+            if (StringUtils.equals(gateway.getServiceType(), ServiceType.GATEWAY.toString())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void initializeUI() {
@@ -1048,31 +1093,11 @@ public class BlueGreenTopology extends AbstractTopology {
         private void setGatewayIds() {
             Object selectedItem = groupComboBox.getSelectedItem();
             if (selectedItem != null) {
-                Object[] gatewayIds = getGatewayIds(selectedItem.toString().trim());
+                Object[] gatewayIds = geServiceIds(selectedItem.toString().trim(), showOnlyGatewayCheckBox.isSelected());
                 if (gatewayIds != null) {
                     gatewayIdComboBox.setModel(new DefaultComboBoxModel<>(gatewayIds));
                 }
             }
-        }
-
-        private Object[] getGroups() {
-            try {
-                return ServiceController.getGroups().toArray();
-            } catch (Exception e) {
-                JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("query_data_failure"), e);
-            }
-
-            return null;
-        }
-
-        public Object[] getGatewayIds(String group) {
-            try {
-                return ServiceController.getInstanceMap(Arrays.asList(group)).keySet().toArray();
-            } catch (Exception e) {
-                JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("query_data_failure"), e);
-            }
-
-            return null;
         }
 
         private String getRationButtonName(ButtonGroup buttonGroup) {
