@@ -8,6 +8,7 @@ package com.nepxion.discovery.console.desktop.workspace;
  * @author Haojun Ren
  * @version 1.0
  */
+
 import twaver.Link;
 
 import java.awt.BorderLayout;
@@ -92,7 +93,8 @@ public class BlueGreenTopology extends AbstractTopology {
     private String group;
     private Instance gateway;
     private DeployType deployType;
-    private Map<String, List<Instance>> instanceMap;
+
+    private Object[] serviceIds;
 
     private StrategyProcessor strategyProcessor = new BlueGreenStrategyProcessor();
 
@@ -219,10 +221,24 @@ public class BlueGreenTopology extends AbstractTopology {
 
     public void refreshData() {
         try {
-            this.instanceMap = ServiceController.getInstanceMap(Arrays.asList(group));
+            if (deployType == DeployType.DOMAIN_GATEWAY) {
+                this.serviceIds = ServiceController.getInstanceMap(Arrays.asList(group)).keySet().toArray();
+            } else {
+                this.serviceIds = ServiceController.getServices().toArray();
+            }
         } catch (Exception e) {
             JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("query_data_failure"), e);
         }
+    }
+
+    public List<Instance> getInstances(String serviceId) {
+        try {
+            return ServiceController.getInstanceList(serviceId);
+        } catch (Exception e) {
+            JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("query_data_failure"), e);
+        }
+
+        return null;
     }
 
     public void initializeUI() {
@@ -238,7 +254,7 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     private void setTitle() {
-        background.setTitle(releaseType.getDescription() + " | " + strategyType.getDescription() + " | " + configType.getDescription());
+        background.setTitle(releaseType.getDescription() + " | " + strategyType.getDescription() + " | " + configType.getDescription() + " | " + deployType.getDescription());
     }
 
     private void setGatewayNode() {
@@ -257,7 +273,7 @@ public class BlueGreenTopology extends AbstractTopology {
 
     @SuppressWarnings("unchecked")
     private void setServiceUI() {
-        serviceIdComboBox.setModel(new DefaultComboBoxModel<>(instanceMap.keySet().toArray()));
+        serviceIdComboBox.setModel(new DefaultComboBoxModel<>(serviceIds));
     }
 
     @SuppressWarnings("unchecked")
@@ -266,7 +282,7 @@ public class BlueGreenTopology extends AbstractTopology {
         Object selectedItem = serviceIdComboBox.getSelectedItem();
         if (selectedItem != null) {
             String serviceId = selectedItem.toString().trim();
-            List<Instance> instances = instanceMap.get(serviceId);
+            List<Instance> instances = getInstances(serviceId);
             if (CollectionUtils.isNotEmpty(instances)) {
                 for (Instance instance : instances) {
                     String metadata = instance.getMetadata().get(strategyType.toString());
@@ -653,15 +669,12 @@ public class BlueGreenTopology extends AbstractTopology {
 
     @Override
     public void open() {
-        ReleasePanel releasePanel = new ReleasePanel(ReleaseType.BLUE_GREEN);
+        ReleaseType openReleaseType = ReleaseType.BLUE_GREEN;
+
+        ReleasePanel releasePanel = new ReleasePanel(openReleaseType);
         releasePanel.setPreferredSize(new Dimension(480, 180));
 
-        ReleaseType releaseType = releasePanel.getReleaseType();
-        StrategyType strategyType = releasePanel.getStrategyType();
-        ConfigType configType = releasePanel.getConfigType();
-        DeployType deployType = releasePanel.getDeployType();
-
-        int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(BlueGreenTopology.this), releasePanel, "打开或者新增 [ " + releaseType.getDescription() + " ]", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
+        int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(BlueGreenTopology.this), releasePanel, "打开或者新增 [ " + openReleaseType.getDescription() + " ]", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
         if (selectedOption != 0) {
             return;
         }
@@ -679,6 +692,11 @@ public class BlueGreenTopology extends AbstractTopology {
 
             return;
         }
+
+        ReleaseType releaseType = releasePanel.getReleaseType();
+        StrategyType strategyType = releasePanel.getStrategyType();
+        ConfigType configType = releasePanel.getConfigType();
+        DeployType deployType = releasePanel.getDeployType();
 
         Instance gateway = new Instance();
         gateway.setServiceId(gatewayId);

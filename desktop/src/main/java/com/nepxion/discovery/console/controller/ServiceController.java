@@ -73,6 +73,33 @@ public class ServiceController {
         });
     }
 
+    public static List<String> getServices() {
+        String url = getUrl() + "console/services";
+
+        String result = restTemplate.getForEntity(url, String.class).getBody();
+
+        return RestUtil.fromJson(restTemplate, result, new TypeReference<List<String>>() {
+        });
+    }
+
+    public static List<String> getGateways() {
+        String url = getUrl() + "console/gateways";
+
+        String result = restTemplate.getForEntity(url, String.class).getBody();
+
+        return RestUtil.fromJson(restTemplate, result, new TypeReference<List<String>>() {
+        });
+    }
+
+    public static List<Instance> getInstanceList(String serviceId) {
+        String url = getUrl() + "console/instance-list/" + serviceId;
+
+        String result = restTemplate.getForEntity(url, String.class).getBody();
+
+        return RestUtil.fromJson(restTemplate, result, new TypeReference<List<Instance>>() {
+        });
+    }
+
     public static Map<String, List<Instance>> getInstanceMap(List<String> groups) {
         String url = getUrl() + "console/instance-map";
 
