@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.nepxion.cots.twaver.graph.TGraphBackground;
 import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.topology.BasicTopology;
+import com.nepxion.discovery.console.desktop.workspace.panel.PreviewPanel;
 import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessor;
 import com.nepxion.discovery.console.desktop.workspace.type.ConfigType;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
@@ -43,8 +44,7 @@ public abstract class AbstractTopology extends BasicTopology {
 
     protected TGraphBackground background;
 
-    protected JBasicTextArea strategyTextArea;
-    protected JBasicScrollPane strategyScrollPane;
+    protected PreviewPanel previewPanel;
 
     protected JBasicTextField layoutTextField = new JBasicTextField();
 
@@ -150,14 +150,14 @@ public abstract class AbstractTopology extends BasicTopology {
                     return;
                 }
 
-                if (strategyTextArea == null) {
-                    strategyTextArea = new JBasicTextArea();
-                    strategyScrollPane = new JBasicScrollPane(strategyTextArea);
-                    strategyScrollPane.setPreferredSize(new Dimension(900, 400));
+                if (previewPanel == null) {
+                    previewPanel = new PreviewPanel();
+                    previewPanel.setPreferredSize(new Dimension(900, 400));
                 }
-                strategyTextArea.setText(xml);
+                previewPanel.setKey("xxxxxxxxxxxx");
+                previewPanel.setConfig(xml);
 
-                JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractTopology.this), strategyScrollPane, "策略预览", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/property.png"), new Object[] { SwingLocale.getString("close") }, null, true);
+                JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractTopology.this), previewPanel, "策略预览", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/property.png"), new Object[] { SwingLocale.getString("close") }, null, true);
             }
         };
 
