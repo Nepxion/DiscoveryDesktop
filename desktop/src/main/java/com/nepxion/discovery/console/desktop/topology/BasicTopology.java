@@ -56,7 +56,7 @@ import com.nepxion.swing.menuitem.JBasicMenuItem;
 import com.nepxion.swing.menuitem.JBasicRadioButtonMenuItem;
 import com.nepxion.swing.popupmenu.JBasicPopupMenu;
 
-public class CommonTopology extends JPanel {
+public class BasicTopology extends JPanel {
     private static final long serialVersionUID = 1L;
 
     public static final String IMAGE_FOLDER = "/" + ConsoleIconFactory.getIconPath();
@@ -73,7 +73,7 @@ public class CommonTopology extends JPanel {
 
     protected ActionListener layoutActionListener;
 
-    public CommonTopology() {
+    public BasicTopology() {
         setLayout(new BorderLayout());
         add(createGraph(), BorderLayout.CENTER);
         // add(createGisGraph(), BorderLayout.CENTER);
