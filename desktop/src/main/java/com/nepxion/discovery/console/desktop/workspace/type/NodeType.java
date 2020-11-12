@@ -1,4 +1,4 @@
-package com.nepxion.discovery.console.desktop.workspace;
+package com.nepxion.discovery.console.desktop.workspace.type;
 
 /**
  * <p>Title: Nepxion Discovery</p>
@@ -9,7 +9,8 @@ package com.nepxion.discovery.console.desktop.workspace;
  * @version 1.0
  */
 
-public enum LinkType {
+public enum NodeType {
+    GATEWAY,
     BLUE,
     GREEN,
     BASIC,

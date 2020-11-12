@@ -1,4 +1,4 @@
-package com.nepxion.discovery.console.desktop.workspace;
+package com.nepxion.discovery.console.desktop.workspace.type;
 
 /**
  * <p>Title: Nepxion Discovery</p>

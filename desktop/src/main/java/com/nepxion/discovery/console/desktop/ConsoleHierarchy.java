@@ -24,7 +24,7 @@ import com.nepxion.discovery.console.desktop.context.UIContext;
 import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.toggle.ConsoleToggleListener;
-import com.nepxion.discovery.console.desktop.workspace.ReleaseType;
+import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.swing.element.ElementNode;
 import com.nepxion.swing.list.toggle.JToggleList;
 import com.nepxion.swing.shrinkbar.JShrinkBar;

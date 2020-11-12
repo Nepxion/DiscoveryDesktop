@@ -1,4 +1,4 @@
-package com.nepxion.discovery.console.desktop.workspace;
+package com.nepxion.discovery.console.desktop.workspace.type;
 
 /**
  * <p>Title: Nepxion Discovery</p>
@@ -9,16 +9,19 @@ package com.nepxion.discovery.console.desktop.workspace;
  * @version 1.0
  */
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
 import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
 
-public enum ConfigType {
-    PARTIAL(DiscoveryConstant.PARTIAL),
-    GLOBAL(DiscoveryConstant.GLOBAL);
+public enum StrategyType {
+    VERSION(DiscoveryConstant.VERSION),
+    REGION(DiscoveryConstant.REGION),
+    ADDRESS(DiscoveryConstant.ADDRESS);
 
     private String value;
 
-    private ConfigType(String value) {
+    private StrategyType(String value) {
         this.value = value;
     }
 
@@ -27,11 +30,15 @@ public enum ConfigType {
     }
 
     public String getDescription() {
-        return ConsoleLocaleFactory.getString(value + "_config");
+        return ConsoleLocaleFactory.getString(value + "_strategy");
     }
 
-    public static ConfigType fromString(String value) {
-        for (ConfigType type : ConfigType.values()) {
+    public String getLabel() {
+        return StringUtils.capitalize(value);
+    }
+
+    public static StrategyType fromString(String value) {
+        for (StrategyType type : StrategyType.values()) {
             if (type.getValue().equalsIgnoreCase(value)) {
                 return type;
             }
