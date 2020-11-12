@@ -306,7 +306,7 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     private void setTitle() {
-        background.setTitle(group + " | " + operationType.getDescription() + " | " + strategyType.getDescription() + " | " + configType.getDescription());
+        background.setTitle(operationType.getDescription() + " | " + strategyType.getDescription() + " | " + configType.getDescription());
     }
 
     private void setGatewayNode() {
@@ -316,7 +316,7 @@ public class BlueGreenTopology extends AbstractTopology {
         greenNode = null;
         basicNode = null;
 
-        gatewayNode = addNode(gateway.getServiceId(), gatewayBlackNodeUI);
+        gatewayNode = addNode(ButtonManager.getHtmlText(gateway.getServiceId() + "\n" + group), gatewayBlackNodeUI);
         gatewayNode.setUserObject(gateway);
         gatewayNode.setBusinessObject(NodeType.GATEWAY);
     }
@@ -348,7 +348,7 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     private void addNodes(String serviceId, String blueMetadata, String greenMetadata, String basicMetadata, String blueCondition, String greenCondition) {
-        TNode newBlueNode = addNode(ButtonManager.getHtmlText(serviceId + "\n[" + strategyType.getLabel() + "=" + blueMetadata + "]"), serviceBlueNodeUI);
+        TNode newBlueNode = addNode(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.getValue() + "=" + blueMetadata), serviceBlueNodeUI);
         Instance newBlueInstance = new Instance();
         newBlueInstance.setServiceId(serviceId);
         Map<String, String> newBlueMetadataMap = new HashMap<String, String>();
@@ -368,7 +368,7 @@ public class BlueGreenTopology extends AbstractTopology {
         }
         blueNode = newBlueNode;
 
-        TNode newGreenNode = addNode(ButtonManager.getHtmlText(serviceId + "\n[" + strategyType.getLabel() + "=" + greenMetadata + "]"), serviceGreenNodeUI);
+        TNode newGreenNode = addNode(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.getValue() + "=" + greenMetadata), serviceGreenNodeUI);
         Instance newGreenInstance = new Instance();
         newGreenInstance.setServiceId(serviceId);
         Map<String, String> newGreenMetadataMap = new HashMap<String, String>();
@@ -388,7 +388,7 @@ public class BlueGreenTopology extends AbstractTopology {
         }
         greenNode = newGreenNode;
 
-        TNode newBasicNode = addNode(ButtonManager.getHtmlText(serviceId + "\n[" + strategyType.getLabel() + "=" + basicMetadata + "]"), serviceYellowNodeUI);
+        TNode newBasicNode = addNode(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.getValue() + "=" + basicMetadata), serviceYellowNodeUI);
         Instance newBasicInstance = new Instance();
         newBasicInstance.setServiceId(serviceId);
         Map<String, String> newBasicMetadataMap = new HashMap<String, String>();
@@ -458,15 +458,15 @@ public class BlueGreenTopology extends AbstractTopology {
                 NodeType nodeType = (NodeType) node.getBusinessObject();
                 switch (nodeType) {
                     case BLUE:
-                        node.setName(ButtonManager.getHtmlText(serviceId + "\n[" + strategyType.getLabel() + "=" + blueMetadata + "]"));
+                        node.setName(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.getValue() + "=" + blueMetadata));
                         instance.getMetadata().put(strategyType.getValue(), blueMetadata);
                         break;
                     case GREEN:
-                        node.setName(ButtonManager.getHtmlText(serviceId + "\n[" + strategyType.getLabel() + "=" + greenMetadata + "]"));
+                        node.setName(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.getValue() + "=" + greenMetadata));
                         instance.getMetadata().put(strategyType.getValue(), greenMetadata);
                         break;
                     case BASIC:
-                        node.setName(ButtonManager.getHtmlText(serviceId + "\n[" + strategyType.getLabel() + "=" + basicMetadata + "]"));
+                        node.setName(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.getValue() + "=" + basicMetadata));
                         instance.getMetadata().put(strategyType.getValue(), basicMetadata);
                         break;
                 }
