@@ -228,7 +228,6 @@ public class BlueGreenTopology extends AbstractTopology {
         toolBar.addSeparator();
         toolBar.add(new JClassicButton(createPreviewAction()));
         toolBar.add(new JClassicButton(createInspectorAction()));
-        toolBar.add(new JClassicButton(createRouterAction()));
         toolBar.addSeparator();
         toolBar.add(new JClassicButton(createLayoutAction()));
 
@@ -884,7 +883,7 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     private JSecurityAction createPreviewAction() {
-        JSecurityAction action = new JSecurityAction("文本预览", ConsoleIconFactory.getSwingIcon("ticket.png"), "文本预览") {
+        JSecurityAction action = new JSecurityAction("预览", ConsoleIconFactory.getSwingIcon("ticket.png"), "预览") {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
@@ -902,7 +901,7 @@ public class BlueGreenTopology extends AbstractTopology {
                 }
                 strategyTextArea.setText(xml);
 
-                JBasicOptionPane.showOptionDialog(HandleManager.getFrame(BlueGreenTopology.this), strategyScrollPane, "策略文本预览", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/property.png"), new Object[] { SwingLocale.getString("close") }, null, true);
+                JBasicOptionPane.showOptionDialog(HandleManager.getFrame(BlueGreenTopology.this), strategyScrollPane, "策略预览", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/property.png"), new Object[] { SwingLocale.getString("close") }, null, true);
             }
         };
 
@@ -910,19 +909,7 @@ public class BlueGreenTopology extends AbstractTopology {
     }
 
     private JSecurityAction createInspectorAction() {
-        JSecurityAction action = new JSecurityAction("链路侦测", ConsoleIconFactory.getSwingIcon("relation.png"), "链路侦测") {
-            private static final long serialVersionUID = 1L;
-
-            public void execute(ActionEvent e) {
-
-            }
-        };
-
-        return action;
-    }
-
-    private JSecurityAction createRouterAction() {
-        JSecurityAction action = new JSecurityAction("路由拓扑", ConsoleIconFactory.getSwingIcon("rotate.png"), "路由拓扑") {
+        JSecurityAction action = new JSecurityAction("侦测", ConsoleIconFactory.getSwingIcon("relation.png"), "侦测") {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
