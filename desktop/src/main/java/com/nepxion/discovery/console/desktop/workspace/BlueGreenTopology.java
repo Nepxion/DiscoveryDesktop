@@ -42,7 +42,7 @@ import com.nepxion.discovery.common.constant.DiscoveryConstant;
 import com.nepxion.discovery.console.controller.ServiceController;
 import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
-import com.nepxion.discovery.console.desktop.topology.AbstractTopology;
+import com.nepxion.discovery.console.desktop.topology.CommonTopology;
 import com.nepxion.discovery.console.desktop.topology.LinkUI;
 import com.nepxion.discovery.console.desktop.topology.NodeImageType;
 import com.nepxion.discovery.console.desktop.topology.NodeLocation;
@@ -76,7 +76,7 @@ import com.nepxion.swing.selector.checkbox.JCheckBoxSelector;
 import com.nepxion.swing.textarea.JBasicTextArea;
 import com.nepxion.swing.textfield.JBasicTextField;
 
-public class BlueGreenTopology extends AbstractTopology {
+public class BlueGreenTopology extends CommonTopology {
     private static final long serialVersionUID = 1L;
 
     private NodeLocation nodeLocation = new NodeLocation(440, 100, 200, 0);
