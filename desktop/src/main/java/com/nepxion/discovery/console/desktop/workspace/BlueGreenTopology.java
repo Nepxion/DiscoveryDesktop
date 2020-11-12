@@ -828,7 +828,7 @@ public class BlueGreenTopology extends AbstractTopology {
                 ReleasePanel releasePanel = new ReleasePanel(ReleaseType.BLUE_GREEN);
                 releasePanel.setPreferredSize(new Dimension(480, 160));
 
-                int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(BlueGreenTopology.this), releasePanel, "打开或者新增蓝绿发布", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
+                int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(BlueGreenTopology.this), releasePanel, "打开或者新增 [ " + releasePanel.getReleaseType().getDescription() + " ]", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
                 if (selectedOption != 0) {
                     return;
                 }
@@ -1016,7 +1016,7 @@ public class BlueGreenTopology extends AbstractTopology {
                 ConfigType configType = configTypes[i];
 
                 JBasicRadioButton configRadioButton = new JBasicRadioButton(configType.getDescription(), configType.getDescription());
-                configRadioButton.setName(configType.getValue());
+                configRadioButton.setName(configType.toString());
                 configPanel.add(configRadioButton);
                 configButtonGroup.add(configRadioButton);
 
@@ -1040,9 +1040,9 @@ public class BlueGreenTopology extends AbstractTopology {
             add(groupComboBox, "1, 0");
             add(new JBasicLabel("起点服务"), "0, 1");
             add(gatewayPanel, "1, 1");
-            add(new JBasicLabel("策略"), "0, 2");
+            add(new JBasicLabel("发布策略"), "0, 2");
             add(strategyPanel, "1, 2");
-            add(new JBasicLabel("模式"), "0, 3");
+            add(new JBasicLabel("配置模式"), "0, 3");
             add(configPanel, "1, 3");
 
             setGroups();

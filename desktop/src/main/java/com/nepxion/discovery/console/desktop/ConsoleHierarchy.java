@@ -23,8 +23,8 @@ import javax.swing.JPanel;
 import com.nepxion.discovery.console.desktop.context.UIContext;
 import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
-import com.nepxion.discovery.console.desktop.toggle.ConsoleToggleConstant;
 import com.nepxion.discovery.console.desktop.toggle.ConsoleToggleListener;
+import com.nepxion.discovery.console.desktop.workspace.ReleaseType;
 import com.nepxion.swing.element.ElementNode;
 import com.nepxion.swing.list.toggle.JToggleList;
 import com.nepxion.swing.shrinkbar.JShrinkBar;
@@ -70,8 +70,8 @@ public class ConsoleHierarchy extends JPanel {
 
     private JShrinkOutlook createReleaseManageShrinkOutlook(JShrinkOutlookBar shrinkOutlookBar) {
         List<ElementNode> elementNodes = new ArrayList<ElementNode>();
-        elementNodes.add(new ElementNode(ConsoleToggleConstant.BLUE_GREEN_RELEASE, ConsoleLocaleFactory.getString(ConsoleToggleConstant.BLUE_GREEN_RELEASE), ConsoleIconFactory.getSwingIcon("component/ui_16.png"), ConsoleLocaleFactory.getString(ConsoleToggleConstant.BLUE_GREEN_RELEASE)));
-        elementNodes.add(new ElementNode(ConsoleToggleConstant.GRAY_RELEASE, ConsoleLocaleFactory.getString(ConsoleToggleConstant.GRAY_RELEASE), ConsoleIconFactory.getSwingIcon("component/ui_16.png"), ConsoleLocaleFactory.getString(ConsoleToggleConstant.GRAY_RELEASE)));
+        elementNodes.add(new ElementNode(ReleaseType.BLUE_GREEN.toString(), ReleaseType.BLUE_GREEN.getDescription(), ConsoleIconFactory.getSwingIcon("component/ui_16.png"), ReleaseType.BLUE_GREEN.getDescription()));
+        elementNodes.add(new ElementNode(ReleaseType.GRAY.toString(), ReleaseType.GRAY.getDescription(), ConsoleIconFactory.getSwingIcon("component/ui_16.png"), ReleaseType.GRAY.getDescription()));
 
         JToggleList list = createList(elementNodes);
         list.setSelectedIndex(0);
@@ -85,8 +85,7 @@ public class ConsoleHierarchy extends JPanel {
 
     private JShrinkOutlook createBlacklistManageShrinkOutlook(JShrinkOutlookBar shrinkOutlookBar) {
         List<ElementNode> elementNodes = new ArrayList<ElementNode>();
-        elementNodes.add(new ElementNode(ConsoleToggleConstant.BLACKLIST_ID, ConsoleLocaleFactory.getString(ConsoleToggleConstant.BLACKLIST_ID), ConsoleIconFactory.getSwingIcon("component/ui_16.png"), ConsoleLocaleFactory.getString(ConsoleToggleConstant.BLACKLIST_ID)));
-        elementNodes.add(new ElementNode(ConsoleToggleConstant.BLACKLIST_ADDRESS, ConsoleLocaleFactory.getString(ConsoleToggleConstant.BLACKLIST_ADDRESS), ConsoleIconFactory.getSwingIcon("component/ui_16.png"), ConsoleLocaleFactory.getString(ConsoleToggleConstant.BLACKLIST_ADDRESS)));
+        elementNodes.add(new ElementNode(ReleaseType.BLACKLIST.toString(), ReleaseType.BLACKLIST.getDescription(), ConsoleIconFactory.getSwingIcon("component/ui_16.png"), ReleaseType.BLACKLIST.getDescription()));
 
         JToggleList list = createList(elementNodes);
 

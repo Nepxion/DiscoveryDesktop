@@ -15,6 +15,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import com.nepxion.discovery.console.desktop.workspace.BlueGreenTopology;
+import com.nepxion.discovery.console.desktop.workspace.ReleaseType;
 import com.nepxion.swing.element.IElementNode;
 
 public class ConsoleToggleSpace extends JPanel {
@@ -34,7 +35,7 @@ public class ConsoleToggleSpace extends JPanel {
         JComponent contentPane = null;
 
         String name = listElementNode.getName();
-        if (name.equals(ConsoleToggleConstant.BLUE_GREEN_RELEASE)) {
+        if (name.equals(ReleaseType.BLUE_GREEN.toString())) {
             contentPane = new BlueGreenTopology();
         } else {
             contentPane = blankPane;

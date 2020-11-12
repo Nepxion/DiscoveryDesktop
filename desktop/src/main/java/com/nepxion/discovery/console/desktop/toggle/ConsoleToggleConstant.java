@@ -10,8 +10,5 @@ package com.nepxion.discovery.console.desktop.toggle;
  */
 
 public class ConsoleToggleConstant {
-    public static final String BLUE_GREEN_RELEASE = "blue_green_release";
-    public static final String GRAY_RELEASE = "gray_release";
-    public static final String BLACKLIST_ID = "blacklist_id";
-    public static final String BLACKLIST_ADDRESS = "blacklist_address";
+    public static final String ROUTER = "router";
 }
