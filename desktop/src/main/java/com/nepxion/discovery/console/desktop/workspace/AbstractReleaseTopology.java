@@ -284,7 +284,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     }
 
     public JSecurityAction createMetadataSelectorAction(JBasicComboBox metadataComboBox) {
-        JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("direction_south.png"), "版本选取") {
+        JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("direction_south.png"), "拾选器") {
             private static final long serialVersionUID = 1L;
 
             @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -296,7 +296,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
                     metadataElementNodes.add(new ElementNode(metadata, IconFactory.getSwingIcon("component/file_chooser_16.png"), metadata, metadata));
                 }
 
-                JCheckBoxSelector checkBoxSelector = new JCheckBoxSelector(HandleManager.getFrame(AbstractReleaseTopology.this), "版本选取", new Dimension(400, 350), metadataElementNodes);
+                JCheckBoxSelector checkBoxSelector = new JCheckBoxSelector(HandleManager.getFrame(AbstractReleaseTopology.this), "拾选器", new Dimension(400, 350), metadataElementNodes);
                 checkBoxSelector.setVisible(true);
                 checkBoxSelector.dispose();
 
