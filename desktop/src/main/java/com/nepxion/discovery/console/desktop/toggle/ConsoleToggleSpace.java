@@ -35,10 +35,17 @@ public class ConsoleToggleSpace extends JPanel {
         JComponent contentPane = null;
 
         String name = listElementNode.getName();
-        if (name.equals(ReleaseType.BLUE_GREEN.toString())) {
-            contentPane = new BlueGreenTopology();
-        } else {
-            contentPane = blankPane;
+        ReleaseType releaseType = ReleaseType.fromString(name);
+        switch (releaseType) {
+            case BLUE_GREEN:
+                contentPane = new BlueGreenTopology();
+                break;
+            case GRAY:
+                contentPane = blankPane;
+                break;
+            case BLACKLIST:
+                contentPane = blankPane;
+                break;
         }
 
         return contentPane;
