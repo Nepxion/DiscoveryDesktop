@@ -12,17 +12,16 @@ package com.nepxion.discovery.console.desktop.workspace;
 import org.apache.commons.lang3.StringUtils;
 
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
+import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
 
 public enum ConfigType {
-    PARTIAL(DiscoveryConstant.PARTIAL, "局部订阅模式"),
-    GLOBAL(DiscoveryConstant.GLOBAL, "全局订阅模式");
+    PARTIAL(DiscoveryConstant.PARTIAL),
+    GLOBAL(DiscoveryConstant.GLOBAL);
 
     private String value;
-    private String description;
 
-    private ConfigType(String value, String description) {
+    private ConfigType(String value) {
         this.value = value;
-        this.description = description;
     }
 
     public String getValue() {
@@ -30,7 +29,7 @@ public enum ConfigType {
     }
 
     public String getDescription() {
-        return description;
+        return ConsoleLocaleFactory.getString(value + "_config");
     }
 
     public String getLabel() {

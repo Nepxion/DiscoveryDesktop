@@ -12,18 +12,17 @@ package com.nepxion.discovery.console.desktop.workspace;
 import org.apache.commons.lang3.StringUtils;
 
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
+import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
 
 public enum ReleaseType {
-    BLUE_GREEN(DiscoveryConstant.BLUE_GREEN, "全链路蓝绿发布"),
-    GRAY(DiscoveryConstant.GRAY, "全链路灰度发布"),
-    BLACKLIST(DiscoveryConstant.BLACKLIST, "全链路实例摘除");
+    BLUE_GREEN(DiscoveryConstant.BLUE_GREEN),
+    GRAY(DiscoveryConstant.GRAY),
+    BLACKLIST(DiscoveryConstant.BLACKLIST);
 
     private String value;
-    private String description;
 
-    private ReleaseType(String value, String description) {
+    private ReleaseType(String value) {
         this.value = value;
-        this.description = description;
     }
 
     public String getValue() {
@@ -31,7 +30,7 @@ public enum ReleaseType {
     }
 
     public String getDescription() {
-        return description;
+        return ConsoleLocaleFactory.getString(value + "_release");
     }
 
     public String getLabel() {

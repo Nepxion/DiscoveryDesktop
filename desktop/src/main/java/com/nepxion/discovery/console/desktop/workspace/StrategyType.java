@@ -12,18 +12,17 @@ package com.nepxion.discovery.console.desktop.workspace;
 import org.apache.commons.lang3.StringUtils;
 
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
+import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
 
 public enum StrategyType {
-    VERSION(DiscoveryConstant.VERSION, "版本策略"),
-    REGION(DiscoveryConstant.REGION, "区域策略"),
-    ADDRESS(DiscoveryConstant.ADDRESS, "IP地址和端口策略");
+    VERSION(DiscoveryConstant.VERSION),
+    REGION(DiscoveryConstant.REGION),
+    ADDRESS(DiscoveryConstant.ADDRESS);
 
     private String value;
-    private String description;
 
-    private StrategyType(String value, String description) {
+    private StrategyType(String value) {
         this.value = value;
-        this.description = description;
     }
 
     public String getValue() {
@@ -31,7 +30,7 @@ public enum StrategyType {
     }
 
     public String getDescription() {
-        return description;
+        return ConsoleLocaleFactory.getString(value + "_strategy");
     }
 
     public String getLabel() {
