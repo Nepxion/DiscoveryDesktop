@@ -161,7 +161,9 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
                 }
             }
         }
-        metadatas.add(DiscoveryConstant.DEFAULT);
+        if (!metadatas.contains(DiscoveryConstant.DEFAULT)) {
+            metadatas.add(DiscoveryConstant.DEFAULT);
+        }
 
         setMetadataUI(metadatas.toArray());
     }

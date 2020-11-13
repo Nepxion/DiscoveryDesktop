@@ -17,7 +17,6 @@ import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 public enum StrategyType {
     VERSION(DiscoveryConstant.VERSION, 0),
     REGION(DiscoveryConstant.REGION, 0),
-    ADDRESS(DiscoveryConstant.ADDRESS, 0),
     ID_BLACKLIST(DiscoveryConstant.ID_BLACKLIST, 1),
     ADDRESS_BLACKLIST(DiscoveryConstant.ADDRESS_BLACKLIST, 1);
 
