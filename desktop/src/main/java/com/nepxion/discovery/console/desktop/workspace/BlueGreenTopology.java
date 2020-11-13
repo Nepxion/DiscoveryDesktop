@@ -120,13 +120,13 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         servicePanel.setLayout(serviceTableLayout);
         servicePanel.add(serviceIdComboBox, "0, 0");
         servicePanel.add(refreshServicesButton, "1, 0");
-        servicePanel.add(new JBasicLabel("蓝版本"), "2, 0");
+        servicePanel.add(new JBasicLabel(NodeType.BLUE.getDescription()), "2, 0");
         servicePanel.add(blueMetadataComboBox, "3, 0");
         servicePanel.add(blueMetadataButton, "4, 0");
-        servicePanel.add(new JBasicLabel("绿版本"), "5, 0");
+        servicePanel.add(new JBasicLabel(NodeType.GREEN.getDescription()), "5, 0");
         servicePanel.add(greenMetadataComboBox, "6, 0");
         servicePanel.add(greenMetadataButton, "7, 0");
-        servicePanel.add(new JBasicLabel("兜底版本"), "8, 0");
+        servicePanel.add(new JBasicLabel(NodeType.BASIC.getDescription()), "8, 0");
         servicePanel.add(basicMetadataComboBox, "9, 0");
         servicePanel.add(basicMetadataButton, "10, 0");
 
@@ -150,9 +150,9 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
 
         JPanel conditionPanel = new JPanel();
         conditionPanel.setLayout(conditionTableLayout);
-        conditionPanel.add(new JBasicLabel("蓝条件"), "0, 0");
+        conditionPanel.add(new JBasicLabel(NodeType.BLUE.getDescription()), "0, 0");
         conditionPanel.add(blueConditionTextField, "1, 0");
-        conditionPanel.add(new JBasicLabel("绿条件"), "2, 0");
+        conditionPanel.add(new JBasicLabel(NodeType.GREEN.getDescription()), "2, 0");
         conditionPanel.add(greenConditionTextField, "3, 0");
 
         JPanel conditionToolBar = new JPanel();
@@ -172,10 +172,10 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         JPanel toolBar = new JPanel();
         toolBar.setLayout(tableLayout);
         toolBar.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
-        toolBar.add(new JBasicLabel("蓝绿服务"), "0, 0");
+        toolBar.add(new JBasicLabel(ConsoleLocaleFactory.getString("blue-green_service")), "0, 0");
         toolBar.add(servicePanel, "1, 0");
         toolBar.add(serviceToolBar, "2, 0");
-        toolBar.add(new JBasicLabel("蓝绿条件"), "0, 1");
+        toolBar.add(new JBasicLabel(ConsoleLocaleFactory.getString("blue-green_condition")), "0, 1");
         toolBar.add(conditionPanel, "1, 1");
         toolBar.add(conditionToolBar, "2, 1");
 
@@ -193,7 +193,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         newBlueNode.setBusinessObject(NodeType.BLUE);
         if (blueNode == null) {
             TLink blueLink = addLink(gatewayNode, newBlueNode, LinkUI.BLUE);
-            blueLink.setDisplayName("蓝版本路由");
+            blueLink.setDisplayName(ConsoleLocaleFactory.getString("blue_route"));
             blueLink.setToolTipText(blueCondition);
             blueLink.setUserObject(blueCondition);
             blueLink.setBusinessObject(LinkType.BLUE);
@@ -213,7 +213,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         newGreenNode.setBusinessObject(NodeType.GREEN);
         if (greenNode == null) {
             TLink greenLink = addLink(gatewayNode, newGreenNode, LinkUI.GREEN);
-            greenLink.setDisplayName("绿版本路由");
+            greenLink.setDisplayName(ConsoleLocaleFactory.getString("green_route"));
             greenLink.setToolTipText(greenCondition);
             greenLink.setUserObject(greenCondition);
             greenLink.setBusinessObject(LinkType.GREEN);
@@ -233,7 +233,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         newBasicNode.setBusinessObject(NodeType.BASIC);
         if (basicNode == null) {
             TLink basicLink = addLink(gatewayNode, newBasicNode, LinkUI.YELLOW);
-            basicLink.setDisplayName("兜底路由");
+            basicLink.setDisplayName(ConsoleLocaleFactory.getString("basic_route"));
             basicLink.setBusinessObject(LinkType.BASIC);
         } else {
             TLink link = addLink(basicNode, newBasicNode, null);
