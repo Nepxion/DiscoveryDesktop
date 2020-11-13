@@ -136,7 +136,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
         gatewayNode = addNode(ButtonManager.getHtmlText(gateway.getServiceId() + "\n" + group), gatewayBlackNodeUI);
         gatewayNode.setUserObject(gateway);
-        gatewayNode.setBusinessObject(NodeType.GATEWAY);
+        gatewayNode.setBusinessObject(NodeType.PORTAL);
 
         setNodeTopBottom(gatewayNode, false);
     }
