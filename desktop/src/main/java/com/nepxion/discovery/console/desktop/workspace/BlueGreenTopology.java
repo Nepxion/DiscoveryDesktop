@@ -198,7 +198,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         newBlueNode.setBusinessObject(NodeType.BLUE);
         if (blueNode == null) {
             TLink blueLink = addLink(gatewayNode, newBlueNode, blueLinkUI);
-            blueLink.setDisplayName(ConsoleLocaleFactory.getString("blue_route"));
+            blueLink.setName(ConsoleLocaleFactory.getString("blue_route"));
             blueLink.setToolTipText(blueCondition);
             blueLink.setUserObject(blueCondition);
             blueLink.setBusinessObject(LinkType.BLUE);
@@ -218,7 +218,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         newGreenNode.setBusinessObject(NodeType.GREEN);
         if (greenNode == null) {
             TLink greenLink = addLink(gatewayNode, newGreenNode, greenLinkUI);
-            greenLink.setDisplayName(ConsoleLocaleFactory.getString("green_route"));
+            greenLink.setName(ConsoleLocaleFactory.getString("green_route"));
             greenLink.setToolTipText(greenCondition);
             greenLink.setUserObject(greenCondition);
             greenLink.setBusinessObject(LinkType.GREEN);
@@ -238,7 +238,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         newBasicNode.setBusinessObject(NodeType.BASIC);
         if (basicNode == null) {
             TLink basicLink = addLink(gatewayNode, newBasicNode, basicLinkUI);
-            basicLink.setDisplayName(ConsoleLocaleFactory.getString("basic_route"));
+            basicLink.setName(ConsoleLocaleFactory.getString("basic_route"));
             basicLink.setBusinessObject(LinkType.BASIC);
         } else {
             TLink link = addLink(basicNode, newBasicNode, null);

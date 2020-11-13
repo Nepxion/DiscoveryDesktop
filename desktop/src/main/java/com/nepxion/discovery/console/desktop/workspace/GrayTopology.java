@@ -225,8 +225,8 @@ public class GrayTopology extends AbstractReleaseTopology {
         newGrayNode.setBusinessObject(NodeType.GRAY);
         if (grayNode == null) {
             TLink grayLink = addLink(gatewayNode, newGrayNode, grayLinkUI);
-            grayLink.setDisplayName(ConsoleLocaleFactory.getString("gray_route"));
-            grayLink.setToolTipText(grayCondition);
+            grayLink.setName(ButtonManager.getHtmlText(ConsoleLocaleFactory.getString("gray_route") + "\n" + grayCondition + "%"));
+            grayLink.setToolTipText(grayCondition + "%");
             grayLink.setUserObject(grayCondition);
             grayLink.setBusinessObject(LinkType.GRAY);
         } else {
@@ -245,8 +245,8 @@ public class GrayTopology extends AbstractReleaseTopology {
         newStableNode.setBusinessObject(NodeType.STABLE);
         if (stableNode == null) {
             TLink stableLink = addLink(gatewayNode, newStableNode, stableLinkUI);
-            stableLink.setDisplayName(ConsoleLocaleFactory.getString("stable_route"));
-            stableLink.setToolTipText(stableCondition);
+            stableLink.setName(ButtonManager.getHtmlText(ConsoleLocaleFactory.getString("stable_route") + "\n" + stableCondition + "%"));
+            stableLink.setToolTipText(stableCondition + "%");
             stableLink.setUserObject(stableCondition);
             stableLink.setBusinessObject(LinkType.STABLE);
         } else {
@@ -313,10 +313,12 @@ public class GrayTopology extends AbstractReleaseTopology {
             LinkType linkType = (LinkType) link.getBusinessObject();
             switch (linkType) {
                 case GRAY:
+                    link.setName(ButtonManager.getHtmlText(ConsoleLocaleFactory.getString("gray_route") + "\n" + grayCondition + "%"));
                     link.setToolTipText(grayCondition);
                     link.setUserObject(grayCondition);
                     break;
                 case STABLE:
+                    link.setName(ButtonManager.getHtmlText(ConsoleLocaleFactory.getString("stable_route") + "\n" + stableCondition + "%"));
                     link.setToolTipText(stableCondition);
                     link.setUserObject(stableCondition);
                     break;
