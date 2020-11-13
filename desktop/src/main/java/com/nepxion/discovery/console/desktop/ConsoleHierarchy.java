@@ -21,15 +21,11 @@ import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.swing.element.ElementNode;
 import com.nepxion.swing.list.toggle.JToggleList;
 import com.nepxion.swing.shrinkbar.JShrinkOutlook;
-import com.nepxion.swing.style.texture.shrink.IHeaderTextureStyle;
-import com.nepxion.swing.style.texture.shrink.IOutlookTextureStyle;
 
 public class ConsoleHierarchy extends BasicConsoleHierarchy {
     private static final long serialVersionUID = 1L;
 
-    public ConsoleHierarchy(IHeaderTextureStyle headerTextureStyle, IOutlookTextureStyle outlookTextureStyle) {
-        super(headerTextureStyle, outlookTextureStyle);
-
+    public ConsoleHierarchy() {
         createReleaseManageShrinkOutlook();
         createBlacklistManageShrinkOutlook();
 

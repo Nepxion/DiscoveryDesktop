@@ -32,6 +32,8 @@ import com.nepxion.swing.shrinkbar.ShrinkListCellRenderer;
 import com.nepxion.swing.shrinkbar.ShrinkOutlookSelectionListener;
 import com.nepxion.swing.style.texture.shrink.IHeaderTextureStyle;
 import com.nepxion.swing.style.texture.shrink.IOutlookTextureStyle;
+import com.nepxion.swing.style.texture.shrink.JBlackHeaderTextureStyle;
+import com.nepxion.swing.style.texture.shrink.JGreenOutlookTextureStyle;
 import com.nepxion.util.data.CollectionUtil;
 
 public class BasicConsoleHierarchy extends JPanel {
@@ -40,7 +42,10 @@ public class BasicConsoleHierarchy extends JPanel {
     protected JShrinkBar shrinkContentBar;
     protected JShrinkOutlookBar shrinkOutlookBar;
 
-    public BasicConsoleHierarchy(IHeaderTextureStyle headerTextureStyle, IOutlookTextureStyle outlookTextureStyle) {
+    public BasicConsoleHierarchy() {
+        IHeaderTextureStyle headerTextureStyle = new JBlackHeaderTextureStyle();
+        IOutlookTextureStyle outlookTextureStyle = new JGreenOutlookTextureStyle();
+
         shrinkContentBar = new JShrinkBar(JShrinkBar.PLACEMENT_EAST, JShrinkBar.CONTENT_PANE_TYPE_LABEL, headerTextureStyle);
         shrinkContentBar.setShrinkable(false);
         shrinkContentBar.setTitle(ConsoleLocaleFactory.getString("content_bar"));

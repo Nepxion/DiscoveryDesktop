@@ -19,8 +19,6 @@ import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
 import com.nepxion.swing.frame.JBasicFrame;
 import com.nepxion.swing.framework.reflection.JReflectionHierarchy;
-import com.nepxion.swing.style.texture.shrink.JBlackHeaderTextureStyle;
-import com.nepxion.swing.style.texture.shrink.JGreenOutlookTextureStyle;
 
 public class ConsoleFrame extends JBasicFrame {
     private static final long serialVersionUID = 1L;
@@ -31,7 +29,7 @@ public class ConsoleFrame extends JBasicFrame {
     }
 
     public void launch() {
-        ConsoleHierarchy consoleHierarchy = new ConsoleHierarchy(new JBlackHeaderTextureStyle(), new JGreenOutlookTextureStyle());
+        ConsoleHierarchy consoleHierarchy = new ConsoleHierarchy();
 
         JReflectionHierarchy reflectionHierarchy = new JReflectionHierarchy(20, 20);
         reflectionHierarchy.setContentPane(consoleHierarchy);
