@@ -22,7 +22,7 @@ import javax.swing.JPanel;
 import org.apache.commons.lang3.StringUtils;
 
 import com.nepxion.discovery.common.entity.UserEntity;
-import com.nepxion.discovery.console.controller.ServiceController;
+import com.nepxion.discovery.console.controller.ConsoleController;
 import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
 import com.nepxion.swing.combobox.JBasicComboBox;
 import com.nepxion.swing.dialog.JLoginDialog;
@@ -52,7 +52,7 @@ public class ConsoleLogin extends JLoginDialog {
 
         String url = null;
         try {
-            url = ServiceController.getUrl();
+            url = ConsoleController.getUrl();
         } catch (Exception e) {
 
         }
@@ -114,13 +114,13 @@ public class ConsoleLogin extends JLoginDialog {
             throw new IllegalArgumentException("Console url can't be null or empty");
         }
 
-        ServiceController.setUrl(url.toString().trim());
+        ConsoleController.setUrl(url.toString().trim());
 
         UserEntity userEntity = new UserEntity();
         userEntity.setUserId(userId);
         userEntity.setPassword(password);
 
-        return ServiceController.authenticate(userEntity);
+        return ConsoleController.authenticate(userEntity);
     }
 
     public void launch() {

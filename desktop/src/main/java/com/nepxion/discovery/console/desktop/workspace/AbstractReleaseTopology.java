@@ -28,7 +28,7 @@ import com.nepxion.cots.twaver.element.TElementManager;
 import com.nepxion.cots.twaver.element.TLink;
 import com.nepxion.cots.twaver.element.TNode;
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
-import com.nepxion.discovery.console.controller.ServiceController;
+import com.nepxion.discovery.console.controller.ConsoleController;
 import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.topology.NodeImageType;
@@ -86,9 +86,9 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     public void refreshData() {
         try {
             if (deployType == DeployType.DOMAIN_GATEWAY) {
-                this.serviceIds = ServiceController.getInstanceMap(Arrays.asList(group)).keySet().toArray();
+                this.serviceIds = ConsoleController.getInstanceMap(Arrays.asList(group)).keySet().toArray();
             } else {
-                this.serviceIds = ServiceController.getServices().toArray();
+                this.serviceIds = ConsoleController.getServices().toArray();
             }
         } catch (Exception e) {
             JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("query_data_failure"), e);
@@ -101,7 +101,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         }
 
         try {
-            return ServiceController.getInstanceList(serviceId);
+            return ConsoleController.getInstanceList(serviceId);
         } catch (Exception e) {
             JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("query_data_failure"), e);
         }

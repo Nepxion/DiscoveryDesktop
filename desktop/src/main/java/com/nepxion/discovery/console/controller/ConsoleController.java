@@ -30,7 +30,7 @@ import com.nepxion.discovery.common.util.UrlUtil;
 import com.nepxion.discovery.console.desktop.context.PropertiesContext;
 import com.nepxion.discovery.console.entity.Instance;
 
-public class ServiceController {
+public class ConsoleController {
     public static RestTemplate restTemplate;
 
     private static String consoleUrl;

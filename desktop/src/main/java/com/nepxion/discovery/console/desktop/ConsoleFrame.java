@@ -14,7 +14,7 @@ import java.awt.Dimension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.nepxion.discovery.console.controller.ServiceController;
+import com.nepxion.discovery.console.controller.ConsoleController;
 import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
 import com.nepxion.swing.frame.JBasicFrame;
@@ -45,7 +45,7 @@ public class ConsoleFrame extends JBasicFrame {
 
     private static String getSubTitle() {
         try {
-            return "[" + ServiceController.getDiscoveryType() + " " + ConsoleLocaleFactory.getString("discovery_center") + "] [" + ServiceController.getConfigType() + " " + ConsoleLocaleFactory.getString("config_center") + "]";
+            return "[" + ConsoleController.getDiscoveryType() + " " + ConsoleLocaleFactory.getString("discovery_center") + "] [" + ConsoleController.getConfigType() + " " + ConsoleLocaleFactory.getString("config_center") + "]";
         } catch (Exception e) {
             LOG.error("Not connnect to Discovery Console", e);
 

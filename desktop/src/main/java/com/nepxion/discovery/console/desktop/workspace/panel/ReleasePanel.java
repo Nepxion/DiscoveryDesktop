@@ -27,7 +27,7 @@ import javax.swing.JPanel;
 import org.apache.commons.lang3.StringUtils;
 
 import com.nepxion.discovery.common.entity.ServiceType;
-import com.nepxion.discovery.console.controller.ServiceController;
+import com.nepxion.discovery.console.controller.ConsoleController;
 import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.workspace.type.ConfigType;
 import com.nepxion.discovery.console.desktop.workspace.type.DeployType;
@@ -256,7 +256,7 @@ public class ReleasePanel extends JPanel {
 
     public Object[] getGroups() {
         try {
-            return ServiceController.getGroups().toArray();
+            return ConsoleController.getGroups().toArray();
         } catch (Exception e) {
             JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("query_data_failure"), e);
         }
@@ -266,7 +266,7 @@ public class ReleasePanel extends JPanel {
 
     public Object[] geServiceIds(String group, boolean onlyGateway) {
         try {
-            Map<String, List<Instance>> instanceMap = ServiceController.getInstanceMap(Arrays.asList(group));
+            Map<String, List<Instance>> instanceMap = ConsoleController.getInstanceMap(Arrays.asList(group));
             if (onlyGateway) {
                 List<String> gatewayIds = new ArrayList<String>();
                 for (Map.Entry<String, List<Instance>> entry : instanceMap.entrySet()) {

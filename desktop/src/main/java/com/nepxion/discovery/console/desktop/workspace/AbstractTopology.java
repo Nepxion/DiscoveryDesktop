@@ -21,7 +21,7 @@ import javax.swing.JToolBar;
 import org.apache.commons.lang3.StringUtils;
 
 import com.nepxion.cots.twaver.graph.TGraphBackground;
-import com.nepxion.discovery.console.controller.ServiceController;
+import com.nepxion.discovery.console.controller.ConsoleController;
 import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.topology.BasicTopology;
@@ -93,7 +93,7 @@ public abstract class AbstractTopology extends BasicTopology {
 
     private void initializeData() {
         try {
-            configCenterType = ServiceController.getConfigType();
+            configCenterType = ConsoleController.getConfigType();
         } catch (Exception ex) {
             JExceptionDialog.traceException(HandleManager.getFrame(AbstractTopology.this), ConsoleLocaleFactory.getString("query_data_failure"), ex);
         }
