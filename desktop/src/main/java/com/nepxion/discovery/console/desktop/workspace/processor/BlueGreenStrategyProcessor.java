@@ -25,7 +25,7 @@ import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
 import com.nepxion.discovery.console.entity.Instance;
 
-public class BlueGreenStrategyProcessor implements StrategyProcessor {
+public class BlueGreenStrategyProcessor extends AbstractStrategyProcessor {
     @Override
     public TDataBox fromConfig() {
         return null;
@@ -104,10 +104,5 @@ public class BlueGreenStrategyProcessor implements StrategyProcessor {
         strategyStringBuilder.append("</rule>");
 
         return strategyStringBuilder.toString();
-    }
-
-    @Override
-    public void saveConfig(String group, String serviceId, String config) {
-
     }
 }
