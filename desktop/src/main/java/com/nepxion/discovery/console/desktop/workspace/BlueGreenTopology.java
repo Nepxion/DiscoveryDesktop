@@ -31,6 +31,7 @@ import com.nepxion.cots.twaver.element.TElementManager;
 import com.nepxion.cots.twaver.element.TLink;
 import com.nepxion.cots.twaver.element.TNode;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
+import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.workspace.processor.BlueGreenStrategyProcessor;
 import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessor;
 import com.nepxion.discovery.console.desktop.workspace.topology.LinkUI;
@@ -327,7 +328,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
     }
 
     public JSecurityAction createValidateConditionAction() {
-        JSecurityAction action = new JSecurityAction("校验", ConsoleIconFactory.getSwingIcon("config.png"), "校验条件表达式") {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("validate_text"), ConsoleIconFactory.getSwingIcon("config.png"), ConsoleLocaleFactory.getString("validate_condition_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
@@ -339,7 +340,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
     }
 
     public JSecurityAction createModifyConditionAction() {
-        JSecurityAction action = new JSecurityAction("修改", ConsoleIconFactory.getSwingIcon("paste.png"), "修改条件表达式") {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("modify_text"), ConsoleIconFactory.getSwingIcon("paste.png"), ConsoleLocaleFactory.getString("modify_condition_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
@@ -347,7 +348,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
                 String greenCondition = greenConditionTextField.getText().trim();
 
                 if (StringUtils.isBlank(blueCondition) || StringUtils.isBlank(greenCondition)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "条件必填", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), ConsoleLocaleFactory.getString("condition_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
                 }
@@ -389,7 +390,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         }
 
         if (StringUtils.isBlank(blueCondition) || StringUtils.isBlank(greenCondition)) {
-            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "条件必填", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), ConsoleLocaleFactory.getString("condition_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
             return;
         }
