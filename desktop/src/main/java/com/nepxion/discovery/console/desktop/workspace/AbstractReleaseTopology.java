@@ -216,7 +216,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         ReleasePanel releasePanel = new ReleasePanel(openReleaseType);
         releasePanel.setPreferredSize(new Dimension(480, 180));
 
-        int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractReleaseTopology.this), releasePanel, "打开或者新增 [ " + openReleaseType.getDescription() + " ]", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
+        int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractReleaseTopology.this), releasePanel, ConsoleLocaleFactory.getString("open_tooltip") + " [ " + openReleaseType.getDescription() + " ]", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
         if (selectedOption != 0) {
             return;
         }
@@ -244,7 +244,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         }
 
         Instance gateway = new Instance();
-        gateway.setServiceId(gatewayId != null ? gatewayId : "起点服务");
+        gateway.setServiceId(gatewayId != null ? gatewayId : ConsoleLocaleFactory.getString("portal_service_text"));
         Map<String, String> metadataMap = new HashMap<String, String>();
         gateway.setMetadata(metadataMap);
 

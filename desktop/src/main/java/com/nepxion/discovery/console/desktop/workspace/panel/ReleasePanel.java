@@ -147,7 +147,7 @@ public class ReleasePanel extends JPanel {
         gatewayIdComboBox.setEditable(true);
         gatewayIdComboBox.setPreferredSize(new Dimension(300, layoutTextField.getPreferredSize().height));
 
-        showOnlyGatewayCheckBox = new JBasicCheckBox("只显示网关", "只显示网关", true);
+        showOnlyGatewayCheckBox = new JBasicCheckBox(ConsoleLocaleFactory.getString("show_only_gateway_text"), ConsoleLocaleFactory.getString("show_only_gateway_text"), true);
         showOnlyGatewayCheckBox.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 setGatewayIds();
@@ -179,15 +179,15 @@ public class ReleasePanel extends JPanel {
 
         setLayout(tableLayout);
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        add(new JBasicLabel("发布策略"), "0, 0");
+        add(new JBasicLabel(ConsoleLocaleFactory.getString("strategy_text")), "0, 0");
         add(strategyPanel, "1, 0");
-        add(new JBasicLabel("配置方式"), "0, 1");
+        add(new JBasicLabel(ConsoleLocaleFactory.getString("config_text")), "0, 1");
         add(configPanel, "1, 1");
-        add(new JBasicLabel("部署模式"), "0, 2");
+        add(new JBasicLabel(ConsoleLocaleFactory.getString("deploy_text")), "0, 2");
         add(deployPanel, "1, 2");
-        add(new JBasicLabel("所属组"), "0, 3");
+        add(new JBasicLabel(ConsoleLocaleFactory.getString("belong_group_text")), "0, 3");
         add(groupComboBox, "1, 3");
-        add(new JBasicLabel("起点服务"), "0, 4");
+        add(new JBasicLabel(ConsoleLocaleFactory.getString("portal_service_text")), "0, 4");
         add(gatewayPanel, "1, 4");
 
         setGroups();

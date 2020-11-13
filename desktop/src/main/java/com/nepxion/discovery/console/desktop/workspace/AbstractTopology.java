@@ -179,7 +179,7 @@ public abstract class AbstractTopology extends BasicTopology {
                 previewPanel.setKey(key);
                 previewPanel.setConfig(config);
 
-                int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractTopology.this), previewPanel, ConsoleLocaleFactory.getString("preview_tooltip"), JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/property.png"), new Object[] { ConsoleLocaleFactory.getString("save_config"), ConsoleLocaleFactory.getString("close_preview") }, null, true);
+                int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractTopology.this), previewPanel, ConsoleLocaleFactory.getString("preview_tooltip"), JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/property.png"), new Object[] { ConsoleLocaleFactory.getString("save_config_text"), ConsoleLocaleFactory.getString("close_preview_text") }, null, true);
                 if (selectedOption != 0) {
                     return;
                 }
