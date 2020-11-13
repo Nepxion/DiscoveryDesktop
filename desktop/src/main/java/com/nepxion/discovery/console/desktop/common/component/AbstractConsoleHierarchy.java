@@ -77,7 +77,7 @@ public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
     }
 
     @SuppressWarnings("unchecked")
-    public JToggleList createtoggleList(List<ElementNode> elementNodes) {
+    public JToggleList createToggleList(List<ElementNode> elementNodes) {
         JToggleList toggleList = new JToggleList(CollectionUtil.parseVector(elementNodes));
         toggleList.setSelectionMode(JToggleList.SINGLE_SELECTION);
         toggleList.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));

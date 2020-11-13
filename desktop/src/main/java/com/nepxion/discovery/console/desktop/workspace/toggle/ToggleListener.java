@@ -15,8 +15,8 @@ import com.nepxion.swing.list.toggle.JToggleList;
 import com.nepxion.swing.toggle.ITogglePanel;
 
 public class ToggleListener extends AbstractToggleAdapter {
-    public ToggleListener(JToggleList list) {
-        super(list);
+    public ToggleListener(JToggleList toggleList) {
+        super(toggleList);
     }
 
     public ITogglePanel getTogglePanel(IElementNode elementNode) {

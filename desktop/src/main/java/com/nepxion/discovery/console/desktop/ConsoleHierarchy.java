@@ -38,7 +38,7 @@ public class ConsoleHierarchy extends AbstractConsoleHierarchy {
         elementNodes.add(new ElementNode(ReleaseType.BLUE_GREEN.toString(), ReleaseType.BLUE_GREEN.getDescription(), ConsoleIconFactory.getSwingIcon("component/ui_16.png"), ReleaseType.BLUE_GREEN.getDescription()));
         elementNodes.add(new ElementNode(ReleaseType.GRAY.toString(), ReleaseType.GRAY.getDescription(), ConsoleIconFactory.getSwingIcon("component/ui_16.png"), ReleaseType.GRAY.getDescription()));
 
-        JToggleList toggleList = createtoggleList(elementNodes);
+        JToggleList toggleList = createToggleList(elementNodes);
         toggleList.setSelectedIndex(0);
 
         JShrinkOutlook shrinkOutlook = shrinkOutlookBar.addShrinkOutlook(ConsoleLocaleFactory.getString("release_manage"), ConsoleIconFactory.getSwingIcon("stereo/favorite_16.png"), ConsoleIconFactory.getSwingIcon("stereo/favorite_add_16.png"), ConsoleLocaleFactory.getString("release_manage"), new Font(ConsoleUIContext.getFontName(), Font.BOLD, ConsoleUIContext.getMiddleFontSize()));
@@ -52,7 +52,7 @@ public class ConsoleHierarchy extends AbstractConsoleHierarchy {
         List<ElementNode> elementNodes = new ArrayList<ElementNode>();
         elementNodes.add(new ElementNode(ReleaseType.BLACKLIST.toString(), ReleaseType.BLACKLIST.getDescription(), ConsoleIconFactory.getSwingIcon("component/ui_16.png"), ReleaseType.BLACKLIST.getDescription()));
 
-        JToggleList toggleList = createtoggleList(elementNodes);
+        JToggleList toggleList = createToggleList(elementNodes);
 
         JShrinkOutlook shrinkOutlook = shrinkOutlookBar.addShrinkOutlook(ConsoleLocaleFactory.getString("blacklist_manage"), ConsoleIconFactory.getSwingIcon("stereo/favorite_16.png"), ConsoleIconFactory.getSwingIcon("stereo/favorite_add_16.png"), ConsoleLocaleFactory.getString("blacklist_manage"), new Font(ConsoleUIContext.getFontName(), Font.BOLD, ConsoleUIContext.getMiddleFontSize()));
         shrinkOutlook.setContentPane(toggleList);
