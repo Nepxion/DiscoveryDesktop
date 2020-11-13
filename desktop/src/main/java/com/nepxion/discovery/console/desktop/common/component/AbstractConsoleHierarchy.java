@@ -10,6 +10,7 @@ package com.nepxion.discovery.console.desktop.common.component;
  */
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
@@ -18,6 +19,8 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
 
 import com.nepxion.discovery.console.desktop.common.context.ConsoleUIContext;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
@@ -29,6 +32,7 @@ import com.nepxion.swing.list.toggle.JToggleList;
 import com.nepxion.swing.shrinkbar.JShrinkBar;
 import com.nepxion.swing.shrinkbar.JShrinkOutlook;
 import com.nepxion.swing.shrinkbar.JShrinkOutlookBar;
+import com.nepxion.swing.shrinkbar.JShrinkShortcutBar;
 import com.nepxion.swing.shrinkbar.ShrinkListCellRenderer;
 import com.nepxion.swing.shrinkbar.ShrinkOutlookSelectionListener;
 import com.nepxion.swing.style.texture.shrink.IHeaderTextureStyle;
@@ -40,6 +44,7 @@ import com.nepxion.util.data.CollectionUtil;
 public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
     private static final long serialVersionUID = 1L;
 
+    protected JShrinkOperationBar shrinkOperationBar;
     protected JShrinkBar shrinkContentBar;
     protected JShrinkOutlookBar shrinkOutlookBar;
 
@@ -48,6 +53,13 @@ public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
 
         IHeaderTextureStyle headerTextureStyle = new JBlackHeaderTextureStyle();
         IOutlookTextureStyle outlookTextureStyle = new JGreenOutlookTextureStyle();
+
+        shrinkOperationBar = new JShrinkOperationBar(JShrinkBar.PLACEMENT_EAST, JShrinkBar.CONTENT_PANE_TYPE_LABEL, headerTextureStyle);
+        shrinkOperationBar.setTitle(ConsoleLocaleFactory.getString("navigator_bar"));
+        shrinkOperationBar.setToolTipText(ConsoleLocaleFactory.getString("navigator_bar"));
+        shrinkOperationBar.setIcon(ConsoleIconFactory.getSwingIcon("hierarchy.png"));
+        shrinkOperationBar.setTitleFont(new Font(ConsoleUIContext.getFontName(), Font.BOLD, ConsoleUIContext.getLargeFontSize()));
+        shrinkOperationBar.setPreferredSize(new Dimension(360, shrinkOperationBar.getPreferredSize().height));
 
         shrinkContentBar = new JShrinkBar(JShrinkBar.PLACEMENT_EAST, JShrinkBar.CONTENT_PANE_TYPE_LABEL, headerTextureStyle);
         shrinkContentBar.setShrinkable(false);
@@ -62,7 +74,7 @@ public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
         shrinkOutlookBar.setToolTipText(ConsoleLocaleFactory.getString("navigator_bar"));
         shrinkOutlookBar.setIcon(ConsoleIconFactory.getSwingIcon("hierarchy.png"));
         shrinkOutlookBar.setTitleFont(new Font(ConsoleUIContext.getFontName(), Font.BOLD, ConsoleUIContext.getLargeFontSize()));
-        shrinkOutlookBar.setPreferredSize(new Dimension(210, shrinkOutlookBar.getPreferredSize().height));
+        shrinkOutlookBar.setPreferredSize(new Dimension(200, shrinkOutlookBar.getPreferredSize().height));
 
         initializeUI();
 
@@ -70,6 +82,7 @@ public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
 
         JPanel container = new JPanel();
         container.setLayout(new BorderLayout(5, 5));
+        container.add(shrinkOperationBar, BorderLayout.EAST);
         container.add(shrinkContentBar, BorderLayout.CENTER);
         container.add(shrinkOutlookBar, BorderLayout.WEST);
 
@@ -86,6 +99,18 @@ public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
         toggleList.setToggleAdapter(createToggleListener(toggleList));
 
         return toggleList;
+    }
+
+    public class JShrinkOperationBar extends JShrinkShortcutBar {
+        private static final long serialVersionUID = 1L;
+
+        public JShrinkOperationBar(int placement, int contentPaneType, IHeaderTextureStyle headerTextureStyle) {
+            super(placement, contentPaneType, headerTextureStyle);
+        }
+
+        public void setContentPane(Component contentPane) {
+            shrinkContentPane.add(contentPane, BorderLayout.CENTER);
+        }
     }
 
     public class ShrinkContentBarMouseListener extends MouseAdapter {

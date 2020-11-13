@@ -13,6 +13,9 @@ import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+
 import com.nepxion.discovery.console.desktop.common.component.AbstractConsoleHierarchy;
 import com.nepxion.discovery.console.desktop.common.context.ConsoleUIContext;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
@@ -31,6 +34,8 @@ public class ConsoleHierarchy extends AbstractConsoleHierarchy {
     public void initializeUI() {
         createReleaseManageShrinkOutlook();
         createBlacklistManageShrinkOutlook();
+
+        shrinkOperationBar.setContentPane(new JScrollPane(new JTree()));
     }
 
     private JShrinkOutlook createReleaseManageShrinkOutlook() {
