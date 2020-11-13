@@ -1,4 +1,4 @@
-package com.nepxion.discovery.console.desktop.toggle;
+package com.nepxion.discovery.console.desktop.workspace.toggle;
 
 /**
  * <p>Title: Nepxion Discovery</p>

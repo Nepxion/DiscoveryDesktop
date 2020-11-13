@@ -1,4 +1,4 @@
-package com.nepxion.discovery.console.desktop.component;
+package com.nepxion.discovery.console.desktop.common.component;
 
 /**
  * <p>Title: Nepxion Discovery</p>
@@ -19,10 +19,10 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-import com.nepxion.discovery.console.desktop.context.UIContext;
-import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
-import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
-import com.nepxion.discovery.console.desktop.toggle.ConsoleToggleListener;
+import com.nepxion.discovery.console.desktop.common.context.UIContext;
+import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
+import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
+import com.nepxion.discovery.console.desktop.workspace.toggle.ConsoleToggleListener;
 import com.nepxion.swing.element.ElementNode;
 import com.nepxion.swing.framework.reflection.JReflectionHierarchy;
 import com.nepxion.swing.list.toggle.JToggleList;

@@ -1,4 +1,4 @@
-package com.nepxion.discovery.console.desktop.locale;
+package com.nepxion.discovery.console.desktop.common.locale;
 
 /**
  * <p>Title: Nepxion Discovery</p>

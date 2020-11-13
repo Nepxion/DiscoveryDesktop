@@ -1,4 +1,4 @@
-package com.nepxion.discovery.console.desktop.context;
+package com.nepxion.discovery.console.desktop.common.context;
 
 /**
  * <p>Title: Nepxion Discovery</p>

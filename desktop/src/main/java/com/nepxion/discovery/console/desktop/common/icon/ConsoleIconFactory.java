@@ -1,4 +1,4 @@
-package com.nepxion.discovery.console.desktop.icon;
+package com.nepxion.discovery.console.desktop.common.icon;
 
 /**
  * <p>Title: Nepxion Discovery</p>

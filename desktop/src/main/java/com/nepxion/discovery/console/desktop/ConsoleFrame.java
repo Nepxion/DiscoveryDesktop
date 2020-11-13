@@ -15,8 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.nepxion.discovery.console.controller.ConsoleController;
-import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
-import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
+import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
+import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.swing.frame.JBasicFrame;
 
 public class ConsoleFrame extends JBasicFrame {

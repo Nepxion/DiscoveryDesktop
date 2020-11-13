@@ -1,4 +1,4 @@
-package com.nepxion.discovery.console.desktop.topology;
+package com.nepxion.discovery.console.desktop.workspace.topology;
 
 /**
  * <p>Title: Nepxion Discovery</p>

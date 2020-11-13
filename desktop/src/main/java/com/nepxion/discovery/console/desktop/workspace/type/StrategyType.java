@@ -12,7 +12,7 @@ package com.nepxion.discovery.console.desktop.workspace.type;
 import org.apache.commons.lang3.StringUtils;
 
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
-import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
+import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 
 public enum StrategyType {
     VERSION(DiscoveryConstant.VERSION, 0),

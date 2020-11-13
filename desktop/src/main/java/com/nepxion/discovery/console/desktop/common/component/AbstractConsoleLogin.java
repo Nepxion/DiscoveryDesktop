@@ -1,4 +1,4 @@
-package com.nepxion.discovery.console.desktop.component;
+package com.nepxion.discovery.console.desktop.common.component;
 
 /**
  * <p>Title: Nepxion Discovery</p>
@@ -23,7 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.nepxion.discovery.common.entity.UserEntity;
 import com.nepxion.discovery.console.controller.ConsoleController;
-import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
+import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.swing.combobox.JBasicComboBox;
 import com.nepxion.swing.dialog.JLoginDialog;
 import com.nepxion.swing.font.FontContext;

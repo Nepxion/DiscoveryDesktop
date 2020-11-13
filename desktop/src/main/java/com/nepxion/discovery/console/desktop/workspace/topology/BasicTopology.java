@@ -1,4 +1,4 @@
-package com.nepxion.discovery.console.desktop.topology;
+package com.nepxion.discovery.console.desktop.workspace.topology;
 
 /**
  * <p>Title: Nepxion Discovery</p>
@@ -44,8 +44,8 @@ import com.nepxion.cots.twaver.graph.TGraphPopupMenuGenerator;
 import com.nepxion.cots.twaver.graph.TLayoutPanel;
 import com.nepxion.cots.twaver.graph.TLayouterBar;
 import com.nepxion.cots.twaver.locale.TLocale;
-import com.nepxion.discovery.console.desktop.context.UIContext;
-import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
+import com.nepxion.discovery.console.desktop.common.context.UIContext;
+import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.JBasicButton;
 import com.nepxion.swing.button.JBasicToggleButton;

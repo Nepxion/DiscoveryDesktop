@@ -28,7 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.nepxion.discovery.common.entity.ServiceType;
 import com.nepxion.discovery.console.controller.ConsoleController;
-import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
+import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.workspace.type.ConfigType;
 import com.nepxion.discovery.console.desktop.workspace.type.DeployType;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;

@@ -22,11 +22,11 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.nepxion.cots.twaver.graph.TGraphBackground;
 import com.nepxion.discovery.console.controller.ConsoleController;
-import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
-import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
-import com.nepxion.discovery.console.desktop.topology.BasicTopology;
+import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
+import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.workspace.panel.PreviewPanel;
 import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessor;
+import com.nepxion.discovery.console.desktop.workspace.topology.BasicTopology;
 import com.nepxion.discovery.console.desktop.workspace.type.ConfigType;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;

@@ -1,4 +1,4 @@
-package com.nepxion.discovery.console.desktop.ui;
+package com.nepxion.discovery.console.desktop.common.ui;
 
 /**
  * <p>Title: Nepxion Thunder</p>
@@ -16,7 +16,7 @@ import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-import com.nepxion.discovery.console.desktop.context.UIContext;
+import com.nepxion.discovery.console.desktop.common.context.UIContext;
 import com.nepxion.swing.separator.JBasicSeparator;
 
 public class ConsoleUIFactory {

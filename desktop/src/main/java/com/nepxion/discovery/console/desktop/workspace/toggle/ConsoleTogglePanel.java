@@ -1,4 +1,4 @@
-package com.nepxion.discovery.console.desktop.toggle;
+package com.nepxion.discovery.console.desktop.workspace.toggle;
 
 /**
  * <p>Title: Nepxion Discovery</p>
@@ -12,8 +12,8 @@ package com.nepxion.discovery.console.desktop.toggle;
 import java.awt.BorderLayout;
 import java.awt.Component;
 
-import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
-import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
+import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
+import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.swing.element.IElementNode;
 import com.nepxion.swing.locale.SwingLocale;
 import com.nepxion.swing.toggle.JThreadTogglePanel;
