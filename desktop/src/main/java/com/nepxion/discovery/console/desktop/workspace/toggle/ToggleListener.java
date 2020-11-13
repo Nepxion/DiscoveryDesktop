@@ -14,15 +14,15 @@ import com.nepxion.swing.list.toggle.AbstractToggleAdapter;
 import com.nepxion.swing.list.toggle.JToggleList;
 import com.nepxion.swing.toggle.ITogglePanel;
 
-public class ConsoleToggleListener extends AbstractToggleAdapter {
-    public ConsoleToggleListener(JToggleList list) {
+public class ToggleListener extends AbstractToggleAdapter {
+    public ToggleListener(JToggleList list) {
         super(list);
     }
 
     public ITogglePanel getTogglePanel(IElementNode elementNode) {
         Object userObject = elementNode.getUserObject();
         if (userObject == null) {
-            userObject = new ConsoleTogglePanel(elementNode);
+            userObject = new TogglePanel(elementNode);
             elementNode.setUserObject(userObject);
         }
 

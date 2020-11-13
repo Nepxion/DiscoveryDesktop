@@ -18,14 +18,14 @@ import com.nepxion.swing.element.IElementNode;
 import com.nepxion.swing.locale.SwingLocale;
 import com.nepxion.swing.toggle.JThreadTogglePanel;
 
-public class ConsoleTogglePanel extends JThreadTogglePanel {
+public class TogglePanel extends JThreadTogglePanel {
     private static final long serialVersionUID = 1L;
 
     private IElementNode listElementNode;
 
-    private ConsoleToggleSpace toggleSpace;
+    private ToggleSpace toggleSpace;
 
-    public ConsoleTogglePanel(IElementNode listElementNode) {
+    public TogglePanel(IElementNode listElementNode) {
         super(SwingLocale.getString("initialize_and_wait"));
 
         this.listElementNode = listElementNode;
@@ -52,7 +52,7 @@ public class ConsoleTogglePanel extends JThreadTogglePanel {
 
     protected void loadForeground(Object data) throws Exception {
         if (toggleSpace == null) {
-            toggleSpace = new ConsoleToggleSpace(listElementNode);
+            toggleSpace = new ToggleSpace(listElementNode);
             add(toggleSpace, BorderLayout.CENTER);
         }
     }

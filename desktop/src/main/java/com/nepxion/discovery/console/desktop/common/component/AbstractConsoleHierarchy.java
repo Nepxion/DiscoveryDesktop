@@ -22,9 +22,9 @@ import javax.swing.JPanel;
 import com.nepxion.discovery.console.desktop.common.context.ConsoleUIContext;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
-import com.nepxion.discovery.console.desktop.workspace.toggle.ConsoleToggleListener;
 import com.nepxion.swing.element.ElementNode;
 import com.nepxion.swing.framework.reflection.JReflectionHierarchy;
+import com.nepxion.swing.list.toggle.AbstractToggleAdapter;
 import com.nepxion.swing.list.toggle.JToggleList;
 import com.nepxion.swing.shrinkbar.JShrinkBar;
 import com.nepxion.swing.shrinkbar.JShrinkOutlook;
@@ -77,15 +77,15 @@ public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
     }
 
     @SuppressWarnings("unchecked")
-    public JToggleList createList(List<ElementNode> elementNodes) {
-        JToggleList list = new JToggleList(CollectionUtil.parseVector(elementNodes));
-        list.setSelectionMode(JToggleList.SINGLE_SELECTION);
-        list.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
-        list.setCellRenderer(new ShrinkListCellRenderer(list, BorderFactory.createEmptyBorder(0, 10, 0, 0), 22));
-        list.setToggleContentPanel(shrinkContentBar);
-        list.setToggleAdapter(new ConsoleToggleListener(list));
+    public JToggleList createtoggleList(List<ElementNode> elementNodes) {
+        JToggleList toggleList = new JToggleList(CollectionUtil.parseVector(elementNodes));
+        toggleList.setSelectionMode(JToggleList.SINGLE_SELECTION);
+        toggleList.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+        toggleList.setCellRenderer(new ShrinkListCellRenderer(toggleList, BorderFactory.createEmptyBorder(0, 10, 0, 0), 22));
+        toggleList.setToggleContentPanel(shrinkContentBar);
+        toggleList.setToggleAdapter(createToggleListener(toggleList));
 
-        return list;
+        return toggleList;
     }
 
     public class ShrinkContentBarMouseListener extends MouseAdapter {
@@ -105,4 +105,6 @@ public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
     }
 
     public abstract void initialize();
+
+    public abstract AbstractToggleAdapter createToggleListener(JToggleList toggleList);
 }
