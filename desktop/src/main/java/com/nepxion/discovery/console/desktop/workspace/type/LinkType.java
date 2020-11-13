@@ -15,8 +15,8 @@ public enum LinkType {
     BLUE("blue"),
     GREEN("green"),
     BASIC("basic"),
-    STABLE("stable"),
     GRAY("gray"),
+    STABLE("stable"),
     UNDEFINED("undefined");
 
     private String value;
