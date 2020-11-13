@@ -12,6 +12,7 @@ package com.nepxion.discovery.console.desktop.workspace;
 import twaver.Link;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
@@ -60,6 +61,9 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
     protected NodeUI serviceBlueNodeUI = new NodeUI(NodeImageType.SERVICE_BLUE, NodeSizeType.MIDDLE, true);
     protected NodeUI serviceGreenNodeUI = new NodeUI(NodeImageType.SERVICE_GREEN, NodeSizeType.MIDDLE, true);
     protected NodeUI serviceBasicNodeUI = new NodeUI(NodeImageType.SERVICE_YELLOW, NodeSizeType.MIDDLE, true);
+    protected Color blueLinkUI = LinkUI.BLUE;
+    protected Color greenLinkUI = LinkUI.GREEN;
+    protected Color basicLinkUI = LinkUI.YELLOW;
 
     protected JBasicComboBox blueMetadataComboBox;
     protected JBasicComboBox greenMetadataComboBox;
@@ -109,7 +113,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         basicMetadataButton.setPreferredSize(new Dimension(30, basicMetadataButton.getPreferredSize().height));
 
         double[][] serviceSize = {
-                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },
+                { TableLayout.PREFERRED, TableLayout.PREFERRED, 5, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, 5, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, 5, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },
                 { TableLayout.PREFERRED }
         };
 
@@ -121,15 +125,15 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         servicePanel.setLayout(serviceTableLayout);
         servicePanel.add(serviceIdComboBox, "0, 0");
         servicePanel.add(refreshServicesButton, "1, 0");
-        servicePanel.add(new JBasicLabel(NodeType.BLUE.getDescription()), "2, 0");
-        servicePanel.add(blueMetadataComboBox, "3, 0");
-        servicePanel.add(blueMetadataButton, "4, 0");
-        servicePanel.add(new JBasicLabel(NodeType.GREEN.getDescription()), "5, 0");
-        servicePanel.add(greenMetadataComboBox, "6, 0");
-        servicePanel.add(greenMetadataButton, "7, 0");
-        servicePanel.add(new JBasicLabel(NodeType.BASIC.getDescription()), "8, 0");
-        servicePanel.add(basicMetadataComboBox, "9, 0");
-        servicePanel.add(basicMetadataButton, "10, 0");
+        servicePanel.add(new JBasicLabel(NodeType.BLUE.getDescription()), "3, 0");
+        servicePanel.add(blueMetadataComboBox, "4, 0");
+        servicePanel.add(blueMetadataButton, "5, 0");
+        servicePanel.add(new JBasicLabel(NodeType.GREEN.getDescription()), "7, 0");
+        servicePanel.add(greenMetadataComboBox, "8, 0");
+        servicePanel.add(greenMetadataButton, "9, 0");
+        servicePanel.add(new JBasicLabel(NodeType.BASIC.getDescription()), "11, 0");
+        servicePanel.add(basicMetadataComboBox, "12, 0");
+        servicePanel.add(basicMetadataButton, "13, 0");
 
         JPanel serviceToolBar = new JPanel();
         serviceToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
@@ -141,7 +145,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         greenConditionTextField = new JBasicTextField("#H['a'] == '3'");
 
         double[][] conditionSize = {
-                { TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, TableLayout.FILL },
+                { TableLayout.PREFERRED, TableLayout.FILL, 5, TableLayout.PREFERRED, TableLayout.FILL },
                 { TableLayout.PREFERRED }
         };
 
@@ -153,8 +157,8 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         conditionPanel.setLayout(conditionTableLayout);
         conditionPanel.add(new JBasicLabel(NodeType.BLUE.getDescription()), "0, 0");
         conditionPanel.add(blueConditionTextField, "1, 0");
-        conditionPanel.add(new JBasicLabel(NodeType.GREEN.getDescription()), "2, 0");
-        conditionPanel.add(greenConditionTextField, "3, 0");
+        conditionPanel.add(new JBasicLabel(NodeType.GREEN.getDescription()), "3, 0");
+        conditionPanel.add(greenConditionTextField, "4, 0");
 
         JPanel conditionToolBar = new JPanel();
         conditionToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
@@ -193,7 +197,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         newBlueNode.setUserObject(newBlueInstance);
         newBlueNode.setBusinessObject(NodeType.BLUE);
         if (blueNode == null) {
-            TLink blueLink = addLink(gatewayNode, newBlueNode, LinkUI.BLUE);
+            TLink blueLink = addLink(gatewayNode, newBlueNode, blueLinkUI);
             blueLink.setDisplayName(ConsoleLocaleFactory.getString("blue_route"));
             blueLink.setToolTipText(blueCondition);
             blueLink.setUserObject(blueCondition);
@@ -213,7 +217,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         newGreenNode.setUserObject(newGreenInstance);
         newGreenNode.setBusinessObject(NodeType.GREEN);
         if (greenNode == null) {
-            TLink greenLink = addLink(gatewayNode, newGreenNode, LinkUI.GREEN);
+            TLink greenLink = addLink(gatewayNode, newGreenNode, greenLinkUI);
             greenLink.setDisplayName(ConsoleLocaleFactory.getString("green_route"));
             greenLink.setToolTipText(greenCondition);
             greenLink.setUserObject(greenCondition);
@@ -233,7 +237,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         newBasicNode.setUserObject(newBasicInstance);
         newBasicNode.setBusinessObject(NodeType.BASIC);
         if (basicNode == null) {
-            TLink basicLink = addLink(gatewayNode, newBasicNode, LinkUI.YELLOW);
+            TLink basicLink = addLink(gatewayNode, newBasicNode, basicLinkUI);
             basicLink.setDisplayName(ConsoleLocaleFactory.getString("basic_route"));
             basicLink.setBusinessObject(LinkType.BASIC);
         } else {

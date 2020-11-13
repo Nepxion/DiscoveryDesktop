@@ -12,6 +12,7 @@ package com.nepxion.discovery.console.desktop.workspace;
 import twaver.Link;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
@@ -58,7 +59,9 @@ public class GrayTopology extends AbstractReleaseTopology {
     private static final long serialVersionUID = 1L;
 
     protected NodeUI serviceGrayNodeUI = new NodeUI(NodeImageType.SERVICE_GRAY, NodeSizeType.MIDDLE, true);
-    protected NodeUI serviceStableNodeUI = new NodeUI(NodeImageType.SERVICE_YELLOW, NodeSizeType.MIDDLE, true);
+    protected NodeUI serviceStableNodeUI = new NodeUI(NodeImageType.SERVICE_GREEN, NodeSizeType.MIDDLE, true);
+    protected Color grayLinkUI = LinkUI.GRAY;
+    protected Color stableLinkUI = LinkUI.GREEN;
 
     protected JBasicComboBox grayMetadataComboBox;
     protected JBasicComboBox stableMetadataComboBox;
@@ -101,7 +104,7 @@ public class GrayTopology extends AbstractReleaseTopology {
         stableMetadataButton.setPreferredSize(new Dimension(30, stableMetadataButton.getPreferredSize().height));
 
         double[][] serviceSize = {
-                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },
+                { TableLayout.PREFERRED, TableLayout.PREFERRED, 5, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, 5, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },
                 { TableLayout.PREFERRED }
         };
 
@@ -113,12 +116,12 @@ public class GrayTopology extends AbstractReleaseTopology {
         servicePanel.setLayout(serviceTableLayout);
         servicePanel.add(serviceIdComboBox, "0, 0");
         servicePanel.add(refreshServicesButton, "1, 0");
-        servicePanel.add(new JBasicLabel(NodeType.GRAY.getDescription()), "2, 0");
-        servicePanel.add(grayMetadataComboBox, "3, 0");
-        servicePanel.add(grayMetadataButton, "4, 0");
-        servicePanel.add(new JBasicLabel(NodeType.STABLE.getDescription()), "5, 0");
-        servicePanel.add(stableMetadataComboBox, "6, 0");
-        servicePanel.add(stableMetadataButton, "7, 0");
+        servicePanel.add(new JBasicLabel(NodeType.GRAY.getDescription()), "3, 0");
+        servicePanel.add(grayMetadataComboBox, "4, 0");
+        servicePanel.add(grayMetadataButton, "5, 0");
+        servicePanel.add(new JBasicLabel(NodeType.STABLE.getDescription()), "7, 0");
+        servicePanel.add(stableMetadataComboBox, "8, 0");
+        servicePanel.add(stableMetadataButton, "9 0");
 
         JPanel serviceToolBar = new JPanel();
         serviceToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
@@ -126,11 +129,11 @@ public class GrayTopology extends AbstractReleaseTopology {
         serviceToolBar.add(new JClassicButton(createRemoveServiceStrategyAction()));
         serviceToolBar.add(new JClassicButton(createModifyServiceStrategyAction()));
 
-        grayConditionTextField = new JBasicTextField("#H['a'] == '1' && #H['b'] <= '2'");
-        stableConditionTextField = new JBasicTextField("#H['a'] == '3'");
+        grayConditionTextField = new JBasicTextField();
+        stableConditionTextField = new JBasicTextField();
 
         double[][] conditionSize = {
-                { TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, TableLayout.FILL },
+                { TableLayout.PREFERRED, TableLayout.FILL, 5, TableLayout.PREFERRED, TableLayout.FILL },
                 { TableLayout.PREFERRED }
         };
 
@@ -142,12 +145,11 @@ public class GrayTopology extends AbstractReleaseTopology {
         conditionPanel.setLayout(conditionTableLayout);
         conditionPanel.add(new JBasicLabel(NodeType.GRAY.getDescription()), "0, 0");
         conditionPanel.add(grayConditionTextField, "1, 0");
-        conditionPanel.add(new JBasicLabel(NodeType.STABLE.getDescription()), "2, 0");
-        conditionPanel.add(stableConditionTextField, "3, 0");
+        conditionPanel.add(new JBasicLabel(NodeType.STABLE.getDescription()), "3, 0");
+        conditionPanel.add(stableConditionTextField, "4, 0");
 
         JPanel conditionToolBar = new JPanel();
         conditionToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
-        conditionToolBar.add(new JClassicButton(createValidateConditionAction()));
         conditionToolBar.add(new JClassicButton(createModifyConditionAction()));
 
         double[][] size = {
@@ -182,7 +184,7 @@ public class GrayTopology extends AbstractReleaseTopology {
         newGrayNode.setUserObject(newGrayInstance);
         newGrayNode.setBusinessObject(NodeType.GRAY);
         if (grayNode == null) {
-            TLink grayLink = addLink(gatewayNode, newGrayNode, LinkUI.GRAY);
+            TLink grayLink = addLink(gatewayNode, newGrayNode, grayLinkUI);
             grayLink.setDisplayName(ConsoleLocaleFactory.getString("gray_route"));
             grayLink.setToolTipText(grayCondition);
             grayLink.setUserObject(grayCondition);
@@ -202,7 +204,7 @@ public class GrayTopology extends AbstractReleaseTopology {
         newStableNode.setUserObject(newStableInstance);
         newStableNode.setBusinessObject(NodeType.STABLE);
         if (stableNode == null) {
-            TLink stableLink = addLink(gatewayNode, newStableNode, LinkUI.YELLOW);
+            TLink stableLink = addLink(gatewayNode, newStableNode, stableLinkUI);
             stableLink.setDisplayName(ConsoleLocaleFactory.getString("stable_route"));
             stableLink.setToolTipText(stableCondition);
             stableLink.setUserObject(stableCondition);
@@ -280,18 +282,6 @@ public class GrayTopology extends AbstractReleaseTopology {
                     break;
             }
         }
-    }
-
-    public JSecurityAction createValidateConditionAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("validate_text"), ConsoleIconFactory.getSwingIcon("config.png"), ConsoleLocaleFactory.getString("validate_condition_tooltip")) {
-            private static final long serialVersionUID = 1L;
-
-            public void execute(ActionEvent e) {
-
-            }
-        };
-
-        return action;
     }
 
     public JSecurityAction createModifyConditionAction() {
