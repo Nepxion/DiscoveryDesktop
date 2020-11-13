@@ -51,14 +51,17 @@ public abstract class AbstractTopology extends BasicTopology {
 
     protected JBasicTextField layoutTextField = new JBasicTextField();
 
-    protected String group;
     protected ReleaseType releaseType;
     protected StrategyType strategyType;
     protected ConfigType configType;
 
+    protected String group;
+
     protected String configCenterType;
 
-    public AbstractTopology() {
+    public AbstractTopology(ReleaseType releaseType) {
+        this.releaseType = releaseType;
+
         initializeToolBar();
         initializeTopology();
         initializeListener();

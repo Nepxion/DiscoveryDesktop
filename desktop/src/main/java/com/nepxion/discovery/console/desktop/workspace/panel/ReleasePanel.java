@@ -31,7 +31,6 @@ import com.nepxion.discovery.console.controller.ConsoleController;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.workspace.type.ConfigType;
 import com.nepxion.discovery.console.desktop.workspace.type.DeployType;
-import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
 import com.nepxion.discovery.console.entity.Instance;
 import com.nepxion.swing.checkbox.JBasicCheckBox;
@@ -57,11 +56,7 @@ public class ReleasePanel extends JPanel {
 
     private JBasicTextField layoutTextField = new JBasicTextField();
 
-    private ReleaseType releaseType;
-
-    public ReleasePanel(ReleaseType releaseType) {
-        this.releaseType = releaseType;
-
+    public ReleasePanel() {
         JPanel strategyPanel = new JPanel();
         strategyPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
         strategyButtonGroup = new ButtonGroup();
@@ -222,10 +217,6 @@ public class ReleasePanel extends JPanel {
         }
 
         return null;
-    }
-
-    public ReleaseType getReleaseType() {
-        return releaseType;
     }
 
     public StrategyType getStrategyType() {

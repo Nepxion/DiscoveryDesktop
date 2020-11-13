@@ -40,6 +40,7 @@ import com.nepxion.discovery.console.desktop.workspace.topology.NodeSizeType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeUI;
 import com.nepxion.discovery.console.desktop.workspace.type.LinkType;
 import com.nepxion.discovery.console.desktop.workspace.type.NodeType;
+import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.discovery.console.entity.Instance;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.ButtonManager;
@@ -73,7 +74,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
     protected StrategyProcessor strategyProcessor = new BlueGreenStrategyProcessor();
 
     public BlueGreenTopology() {
-        super();
+        super(ReleaseType.BLUE_GREEN);
 
         initializeContentBar();
     }
@@ -172,10 +173,10 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         JPanel toolBar = new JPanel();
         toolBar.setLayout(tableLayout);
         toolBar.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
-        toolBar.add(new JBasicLabel(ConsoleLocaleFactory.getString("blue-green_service")), "0, 0");
+        toolBar.add(new JBasicLabel(ConsoleLocaleFactory.getString(releaseType.toString() + "_service")), "0, 0");
         toolBar.add(servicePanel, "1, 0");
         toolBar.add(serviceToolBar, "2, 0");
-        toolBar.add(new JBasicLabel(ConsoleLocaleFactory.getString("blue-green_condition")), "0, 1");
+        toolBar.add(new JBasicLabel(ConsoleLocaleFactory.getString(releaseType.toString() + "_condition")), "0, 1");
         toolBar.add(conditionPanel, "1, 1");
         toolBar.add(conditionToolBar, "2, 1");
 

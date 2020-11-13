@@ -15,6 +15,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import com.nepxion.discovery.console.desktop.workspace.BlueGreenTopology;
+import com.nepxion.discovery.console.desktop.workspace.GrayTopology;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.swing.element.IElementNode;
 
@@ -41,7 +42,7 @@ public class ToggleSpace extends JPanel {
                 contentPane = new BlueGreenTopology();
                 break;
             case GRAY:
-                contentPane = blankPane;
+                contentPane = new GrayTopology();
                 break;
             case BLACKLIST:
                 contentPane = blankPane;

@@ -67,19 +67,18 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
     protected TNode gatewayNode;
 
-    protected Instance gateway;
     protected DeployType deployType;
 
+    protected Instance gateway;
     protected Object[] serviceIds;
 
-    public AbstractReleaseTopology() {
-        super();
+    public AbstractReleaseTopology(ReleaseType releaseType) {
+        super(releaseType);
     }
 
-    public void initializeData(String group, Instance gateway, ReleaseType releaseType, StrategyType strategyType, ConfigType configType, DeployType deployType) {
+    public void initializeData(String group, Instance gateway, StrategyType strategyType, ConfigType configType, DeployType deployType) {
         this.group = group;
         this.gateway = gateway;
-        this.releaseType = releaseType;
         this.strategyType = strategyType;
         this.configType = configType;
         this.deployType = deployType;
@@ -213,17 +212,14 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
     @Override
     public void open() {
-        ReleaseType openReleaseType = ReleaseType.BLUE_GREEN;
-
-        ReleasePanel releasePanel = new ReleasePanel(openReleaseType);
+        ReleasePanel releasePanel = new ReleasePanel();
         releasePanel.setPreferredSize(new Dimension(480, 180));
 
-        int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractReleaseTopology.this), releasePanel, ConsoleLocaleFactory.getString("open_tooltip") + " [ " + openReleaseType.getDescription() + " ]", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
+        int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractReleaseTopology.this), releasePanel, ConsoleLocaleFactory.getString("open_tooltip") + " [ " + releaseType.getDescription() + " ]", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
         if (selectedOption != 0) {
             return;
         }
 
-        ReleaseType releaseType = releasePanel.getReleaseType();
         StrategyType strategyType = releasePanel.getStrategyType();
         ConfigType configType = releasePanel.getConfigType();
         DeployType deployType = releasePanel.getDeployType();
@@ -250,7 +246,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         Map<String, String> metadataMap = new HashMap<String, String>();
         gateway.setMetadata(metadataMap);
 
-        initializeData(group, gateway, releaseType, strategyType, configType, deployType);
+        initializeData(group, gateway, strategyType, configType, deployType);
         initializeUI();
     }
 
