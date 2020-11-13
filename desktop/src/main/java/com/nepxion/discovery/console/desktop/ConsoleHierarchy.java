@@ -13,7 +13,7 @@ import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.nepxion.discovery.console.desktop.component.BasicConsoleHierarchy;
+import com.nepxion.discovery.console.desktop.component.AbstractConsoleHierarchy;
 import com.nepxion.discovery.console.desktop.context.UIContext;
 import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
@@ -22,14 +22,13 @@ import com.nepxion.swing.element.ElementNode;
 import com.nepxion.swing.list.toggle.JToggleList;
 import com.nepxion.swing.shrinkbar.JShrinkOutlook;
 
-public class ConsoleHierarchy extends BasicConsoleHierarchy {
+public class ConsoleHierarchy extends AbstractConsoleHierarchy {
     private static final long serialVersionUID = 1L;
 
-    public ConsoleHierarchy() {
+    @Override
+    public void initialize() {
         createReleaseManageShrinkOutlook();
         createBlacklistManageShrinkOutlook();
-
-        shrinkOutlookBar.getShrinkOutlook(0).setSelected(true);
     }
 
     private JShrinkOutlook createReleaseManageShrinkOutlook() {

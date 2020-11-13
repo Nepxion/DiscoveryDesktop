@@ -36,13 +36,13 @@ import com.nepxion.swing.style.texture.shrink.JBlackHeaderTextureStyle;
 import com.nepxion.swing.style.texture.shrink.JGreenOutlookTextureStyle;
 import com.nepxion.util.data.CollectionUtil;
 
-public class BasicConsoleHierarchy extends JPanel {
+public abstract class AbstractConsoleHierarchy extends JPanel {
     private static final long serialVersionUID = 1L;
 
     protected JShrinkBar shrinkContentBar;
     protected JShrinkOutlookBar shrinkOutlookBar;
 
-    public BasicConsoleHierarchy() {
+    public AbstractConsoleHierarchy() {
         IHeaderTextureStyle headerTextureStyle = new JBlackHeaderTextureStyle();
         IOutlookTextureStyle outlookTextureStyle = new JGreenOutlookTextureStyle();
 
@@ -60,6 +60,10 @@ public class BasicConsoleHierarchy extends JPanel {
         shrinkOutlookBar.setIcon(ConsoleIconFactory.getSwingIcon("hierarchy.png"));
         shrinkOutlookBar.setTitleFont(new Font(UIContext.getFontName(), Font.BOLD, UIContext.getLargeFontSize()));
         shrinkOutlookBar.setPreferredSize(new Dimension(210, shrinkOutlookBar.getPreferredSize().height));
+
+        initialize();
+
+        shrinkOutlookBar.getShrinkOutlook(0).setSelected(true);
 
         setLayout(new BorderLayout(5, 5));
         add(shrinkContentBar, BorderLayout.CENTER);
@@ -93,4 +97,6 @@ public class BasicConsoleHierarchy extends JPanel {
             toggleList.executeSelection(-1, toggleList.getSelectedIndex());
         }
     }
+
+    public abstract void initialize();
 }
