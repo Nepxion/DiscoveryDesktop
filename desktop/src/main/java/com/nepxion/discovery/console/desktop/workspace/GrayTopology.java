@@ -70,6 +70,9 @@ public class GrayTopology extends AbstractReleaseTopology {
     protected TNode grayNode;
     protected TNode stableNode;
 
+    protected boolean isGrayConditionTriggered = false;
+    protected boolean isStableConditionTriggered = false;
+
     protected StrategyProcessor strategyProcessor = new GrayStrategyProcessor();
 
     public GrayTopology() {
@@ -134,7 +137,11 @@ public class GrayTopology extends AbstractReleaseTopology {
         grayConditionComboBox.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (grayConditionComboBox.getSelectedItem() != e.getItem()) {
-                    setConditionUI(grayConditionComboBox);
+                    isGrayConditionTriggered = true;
+                    if (!isStableConditionTriggered) {
+                        setConditionUI(grayConditionComboBox);
+                    }
+                    isGrayConditionTriggered = false;
                 }
             }
         });
@@ -143,7 +150,11 @@ public class GrayTopology extends AbstractReleaseTopology {
         stableConditionComboBox.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (stableConditionComboBox.getSelectedItem() != e.getItem()) {
-                    setConditionUI(stableConditionComboBox);
+                    isStableConditionTriggered = true;
+                    if (!isGrayConditionTriggered) {
+                        setConditionUI(stableConditionComboBox);
+                    }
+                    isStableConditionTriggered = false;
                 }
             }
         });
@@ -199,7 +210,7 @@ public class GrayTopology extends AbstractReleaseTopology {
         if (comboBox == grayConditionComboBox) {
             stableConditionComboBox.setSelectedItem(String.valueOf(anotherPercent));
         } else if (comboBox == stableConditionComboBox) {
-         //   grayConditionComboBox.setSelectedItem(String.valueOf(anotherPercent));
+            grayConditionComboBox.setSelectedItem(String.valueOf(anotherPercent));
         }
     }
 
