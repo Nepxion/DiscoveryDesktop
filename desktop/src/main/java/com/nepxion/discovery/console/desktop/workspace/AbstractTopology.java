@@ -75,7 +75,7 @@ public abstract class AbstractTopology extends BasicTopology {
         toolBar.add(new JClassicButton(createClearAction()));
         toolBar.addSeparator();
         toolBar.add(new JClassicButton(createPreviewAction()));
-        toolBar.add(new JClassicButton(createInspectorAction()));
+        toolBar.add(new JClassicButton(createInspectAction()));
         toolBar.addSeparator();
         toolBar.add(new JClassicButton(createLayoutAction()));
 
@@ -111,7 +111,7 @@ public abstract class AbstractTopology extends BasicTopology {
     }
 
     private JSecurityAction createOpenAction() {
-        JSecurityAction action = new JSecurityAction("打开", ConsoleIconFactory.getSwingIcon("theme/tree/plastic/tree_open.png"), "打开或者新增策略") {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("open_text"), ConsoleIconFactory.getSwingIcon("theme/tree/plastic/tree_open.png"), ConsoleLocaleFactory.getString("open_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
@@ -123,7 +123,7 @@ public abstract class AbstractTopology extends BasicTopology {
     }
 
     private JSecurityAction createSaveAction() {
-        JSecurityAction action = new JSecurityAction("保存", ConsoleIconFactory.getSwingIcon("save.png"), "保存策略") {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("save_text"), ConsoleIconFactory.getSwingIcon("save.png"), ConsoleLocaleFactory.getString("save_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
@@ -142,7 +142,7 @@ public abstract class AbstractTopology extends BasicTopology {
     }
 
     private JSecurityAction createClearAction() {
-        JSecurityAction action = new JSecurityAction("清空", ConsoleIconFactory.getSwingIcon("paint.png"), "清空策略") {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("clear_text"), ConsoleIconFactory.getSwingIcon("paint.png"), ConsoleLocaleFactory.getString("clear_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
@@ -154,7 +154,7 @@ public abstract class AbstractTopology extends BasicTopology {
     }
 
     private JSecurityAction createPreviewAction() {
-        JSecurityAction action = new JSecurityAction("预览", ConsoleIconFactory.getSwingIcon("ticket.png"), "预览策略") {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("preview_text"), ConsoleIconFactory.getSwingIcon("ticket.png"), ConsoleLocaleFactory.getString("preview_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
@@ -179,7 +179,7 @@ public abstract class AbstractTopology extends BasicTopology {
                 previewPanel.setKey(key);
                 previewPanel.setConfig(config);
 
-                int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractTopology.this), previewPanel, "策略预览", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/property.png"), new Object[] { "保存配置", "关闭预览" }, null, true);
+                int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractTopology.this), previewPanel, ConsoleLocaleFactory.getString("preview_tooltip"), JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/property.png"), new Object[] { ConsoleLocaleFactory.getString("save_config"), ConsoleLocaleFactory.getString("close_preview") }, null, true);
                 if (selectedOption != 0) {
                     return;
                 }
@@ -198,8 +198,8 @@ public abstract class AbstractTopology extends BasicTopology {
         return action;
     }
 
-    private JSecurityAction createInspectorAction() {
-        JSecurityAction action = new JSecurityAction("侦测", ConsoleIconFactory.getSwingIcon("relation.png"), "侦测链路") {
+    private JSecurityAction createInspectAction() {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("inspect_text"), ConsoleIconFactory.getSwingIcon("relation.png"), ConsoleLocaleFactory.getString("inspect_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
@@ -211,7 +211,7 @@ public abstract class AbstractTopology extends BasicTopology {
     }
 
     private JSecurityAction createLayoutAction() {
-        JSecurityAction action = new JSecurityAction("布局", ConsoleIconFactory.getSwingIcon("layout.png"), "布局") {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("layout_text"), ConsoleIconFactory.getSwingIcon("layout.png"), ConsoleLocaleFactory.getString("layout_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
