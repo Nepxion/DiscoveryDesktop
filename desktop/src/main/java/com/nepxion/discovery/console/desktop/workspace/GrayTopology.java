@@ -53,7 +53,6 @@ import com.nepxion.swing.layout.filed.FiledLayout;
 import com.nepxion.swing.layout.table.TableLayout;
 import com.nepxion.swing.locale.SwingLocale;
 import com.nepxion.swing.optionpane.JBasicOptionPane;
-import com.nepxion.swing.textfield.JBasicTextField;
 
 public class GrayTopology extends AbstractReleaseTopology {
     private static final long serialVersionUID = 1L;
@@ -65,8 +64,8 @@ public class GrayTopology extends AbstractReleaseTopology {
 
     protected JBasicComboBox grayMetadataComboBox;
     protected JBasicComboBox stableMetadataComboBox;
-    protected JBasicTextField grayConditionTextField;
-    protected JBasicTextField stableConditionTextField;
+    protected JBasicComboBox grayConditionComboBox;
+    protected JBasicComboBox stableConditionComboBox;
 
     protected TNode grayNode;
     protected TNode stableNode;
@@ -129,11 +128,29 @@ public class GrayTopology extends AbstractReleaseTopology {
         serviceToolBar.add(new JClassicButton(createRemoveServiceStrategyAction()));
         serviceToolBar.add(new JClassicButton(createModifyServiceStrategyAction()));
 
-        grayConditionTextField = new JBasicTextField();
-        stableConditionTextField = new JBasicTextField();
+        String[] conditions = { "0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100" };
+        grayConditionComboBox = new JBasicComboBox(conditions);
+        grayConditionComboBox.setPreferredSize(new Dimension(grayConditionComboBox.getPreferredSize().width, grayConditionComboBox.getPreferredSize().height + 2));
+        grayConditionComboBox.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (grayConditionComboBox.getSelectedItem() != e.getItem()) {
+                    setConditionUI(grayConditionComboBox);
+                }
+            }
+        });
+        stableConditionComboBox = new JBasicComboBox(conditions);
+        stableConditionComboBox.setPreferredSize(new Dimension(stableConditionComboBox.getPreferredSize().width, stableConditionComboBox.getPreferredSize().height + 2));
+        stableConditionComboBox.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (stableConditionComboBox.getSelectedItem() != e.getItem()) {
+                    setConditionUI(stableConditionComboBox);
+                }
+            }
+        });
+        stableConditionComboBox.setSelectedItem(conditions[conditions.length - 1]);
 
         double[][] conditionSize = {
-                { TableLayout.PREFERRED, TableLayout.FILL, 5, TableLayout.PREFERRED, TableLayout.FILL },
+                { TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, 5, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },
                 { TableLayout.PREFERRED }
         };
 
@@ -144,9 +161,11 @@ public class GrayTopology extends AbstractReleaseTopology {
         JPanel conditionPanel = new JPanel();
         conditionPanel.setLayout(conditionTableLayout);
         conditionPanel.add(new JBasicLabel(NodeType.GRAY.getDescription()), "0, 0");
-        conditionPanel.add(grayConditionTextField, "1, 0");
-        conditionPanel.add(new JBasicLabel(NodeType.STABLE.getDescription()), "3, 0");
-        conditionPanel.add(stableConditionTextField, "4, 0");
+        conditionPanel.add(grayConditionComboBox, "1, 0");
+        conditionPanel.add(new JBasicLabel("%"), "2, 0");
+        conditionPanel.add(new JBasicLabel(NodeType.STABLE.getDescription()), "4, 0");
+        conditionPanel.add(stableConditionComboBox, "5, 0");
+        conditionPanel.add(new JBasicLabel("%"), "6, 0");
 
         JPanel conditionToolBar = new JPanel();
         conditionToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
@@ -172,6 +191,16 @@ public class GrayTopology extends AbstractReleaseTopology {
         toolBar.add(conditionToolBar, "2, 1");
 
         add(toolBar, BorderLayout.NORTH);
+    }
+
+    public void setConditionUI(JBasicComboBox comboBox) {
+        int onePercent = Integer.parseInt(comboBox.getSelectedItem().toString());
+        int anotherPercent = 100 - onePercent;
+        if (comboBox == grayConditionComboBox) {
+            stableConditionComboBox.setSelectedItem(String.valueOf(anotherPercent));
+        } else if (comboBox == stableConditionComboBox) {
+         //   grayConditionComboBox.setSelectedItem(String.valueOf(anotherPercent));
+        }
     }
 
     public void addNodes(String serviceId, String grayMetadata, String stableMetadata, String grayCondition, String stableCondition) {
@@ -289,8 +318,8 @@ public class GrayTopology extends AbstractReleaseTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                String grayCondition = grayConditionTextField.getText().trim();
-                String stableCondition = stableConditionTextField.getText().trim();
+                String grayCondition = grayConditionComboBox.getSelectedItem() != null ? grayConditionComboBox.getSelectedItem().toString().trim() : null;
+                String stableCondition = stableConditionComboBox.getSelectedItem() != null ? stableConditionComboBox.getSelectedItem().toString().trim() : null;
 
                 if (StringUtils.isBlank(grayCondition) || StringUtils.isBlank(stableCondition)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(GrayTopology.this), ConsoleLocaleFactory.getString("condition_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
@@ -322,8 +351,8 @@ public class GrayTopology extends AbstractReleaseTopology {
     public void addServiceStrategy(String serviceId) {
         String grayMetadata = grayMetadataComboBox.getSelectedItem() != null ? grayMetadataComboBox.getSelectedItem().toString().trim() : null;
         String stableMetadata = stableMetadataComboBox.getSelectedItem() != null ? stableMetadataComboBox.getSelectedItem().toString().trim() : null;
-        String grayCondition = grayConditionTextField.getText().trim();
-        String stableCondition = stableConditionTextField.getText().trim();
+        String grayCondition = grayConditionComboBox.getSelectedItem() != null ? grayConditionComboBox.getSelectedItem().toString().trim() : null;
+        String stableCondition = stableConditionComboBox.getSelectedItem() != null ? stableConditionComboBox.getSelectedItem().toString().trim() : null;
 
         if (StringUtils.isBlank(grayMetadata) || StringUtils.isBlank(stableMetadata)) {
             JBasicOptionPane.showMessageDialog(HandleManager.getFrame(GrayTopology.this), strategyType.getName() + " " + ConsoleLocaleFactory.getString("not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
