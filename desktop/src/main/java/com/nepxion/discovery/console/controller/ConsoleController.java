@@ -27,7 +27,7 @@ import com.nepxion.discovery.common.entity.UserEntity;
 import com.nepxion.discovery.common.handler.RestErrorHandler;
 import com.nepxion.discovery.common.util.RestUtil;
 import com.nepxion.discovery.common.util.UrlUtil;
-import com.nepxion.discovery.console.desktop.common.context.PropertiesContext;
+import com.nepxion.discovery.console.desktop.common.context.ConsolePropertiesContext;
 import com.nepxion.discovery.console.entity.Instance;
 
 public class ConsoleController {
@@ -281,7 +281,7 @@ public class ConsoleController {
         if (StringUtils.isNotEmpty(consoleUrl)) {
             url = consoleUrl;
         } else {
-            url = PropertiesContext.getProperties().getString("url");
+            url = ConsolePropertiesContext.getProperties().getString("url");
         }
 
         return UrlUtil.formatUrl(url);
