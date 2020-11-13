@@ -384,7 +384,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         String greenCondition = greenConditionTextField.getText().trim();
 
         if (StringUtils.isBlank(blueMetadata) || StringUtils.isBlank(greenMetadata) || StringUtils.isBlank(basicMetadata)) {
-            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "版本号必填", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), strategyType.getName() + " " + ConsoleLocaleFactory.getString("not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
             return;
         }
@@ -412,7 +412,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         String basicMetadata = basicMetadataComboBox.getSelectedItem().toString().trim();
 
         if (StringUtils.isBlank(blueMetadata) || StringUtils.isBlank(greenMetadata) || StringUtils.isBlank(basicMetadata)) {
-            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), "版本号必填", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), strategyType.getName() + " " + ConsoleLocaleFactory.getString("not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
             return;
         }

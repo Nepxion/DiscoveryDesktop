@@ -33,16 +33,20 @@ public enum StrategyType {
         return value;
     }
 
+    public String getCapitalizeValue() {
+        return StringUtils.capitalize(value);
+    }
+
     public int getCategory() {
         return category;
     }
 
-    public String getDescription() {
-        return ConsoleLocaleFactory.getString(value + "_strategy");
+    public String getName() {
+        return ConsoleLocaleFactory.getString(value);
     }
 
-    public String getLabel() {
-        return StringUtils.capitalize(value);
+    public String getDescription() {
+        return ConsoleLocaleFactory.getString(value + "_strategy");
     }
 
     public static StrategyType fromString(String value) {
