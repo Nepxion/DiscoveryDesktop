@@ -49,4 +49,8 @@ public class PreviewPanel extends JPanel {
     public void setConfig(String config) {
         configTextArea.setText(config);
     }
+
+    public String getConfig() {
+        return configTextArea.getText().trim();
+    }
 }

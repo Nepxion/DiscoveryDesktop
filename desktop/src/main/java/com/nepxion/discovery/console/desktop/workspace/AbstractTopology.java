@@ -134,7 +134,7 @@ public abstract class AbstractTopology extends BasicTopology {
                     return;
                 }
 
-                save();
+                save(config);
             }
         };
 
@@ -172,14 +172,26 @@ public abstract class AbstractTopology extends BasicTopology {
 
                 String key = null;
                 if (StringUtils.equals(configCenterType, APOLLO)) {
-                    key = group + "-" + getDataId();
+                    key = group + "-" + getServiceId();
                 } else {
-                    key = "Data ID=" + getDataId() + " | Group=" + group;
+                    key = "Data ID=" + getServiceId() + " | Group=" + group;
                 }
                 previewPanel.setKey(key);
                 previewPanel.setConfig(config);
 
-                JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractTopology.this), previewPanel, "策略预览", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/property.png"), new Object[] { SwingLocale.getString("close") }, null, true);
+                int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractTopology.this), previewPanel, "策略预览", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/property.png"), new Object[] { "保存配置", "关闭预览" }, null, true);
+                if (selectedOption != 0) {
+                    return;
+                }
+
+                config = previewPanel.getConfig();
+                if (StringUtils.isEmpty(config)) {
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractTopology.this), "策略为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+                    return;
+                }
+
+                save(config);
             }
         };
 
@@ -210,13 +222,17 @@ public abstract class AbstractTopology extends BasicTopology {
         return action;
     }
 
-    public abstract String getDataId();
+    public String getGroup() {
+        return group;
+    }
+
+    public abstract String getServiceId();
 
     public abstract void clear();
 
     public abstract void open();
 
-    public abstract void save();
+    public abstract void save(String config);
 
     public abstract StrategyProcessor getStrategyProcessor();
 }

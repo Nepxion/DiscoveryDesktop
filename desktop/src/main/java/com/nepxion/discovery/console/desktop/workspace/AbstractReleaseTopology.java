@@ -23,6 +23,8 @@ import javax.swing.DefaultComboBoxModel;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.nepxion.cots.twaver.element.TElementManager;
 import com.nepxion.cots.twaver.element.TLink;
@@ -55,6 +57,8 @@ import com.nepxion.swing.selector.checkbox.JCheckBoxSelector;
 
 public abstract class AbstractReleaseTopology extends AbstractTopology {
     private static final long serialVersionUID = 1L;
+
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractReleaseTopology.class);
 
     protected NodeLocation nodeLocation = new NodeLocation(440, 100, 200, 0);
     protected NodeUI gatewayBlackNodeUI = new NodeUI(NodeImageType.GATEWAY_BLACK, NodeSizeType.LARGE, true);
@@ -249,7 +253,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     }
 
     @Override
-    public String getDataId() {
+    public String getServiceId() {
         if (configType == ConfigType.PARTIAL) {
             return gateway.getServiceId();
         } else {
@@ -258,8 +262,11 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     }
 
     @Override
-    public void save() {
+    public void save(String config) {
+        String group = getGroup();
+        String serviceId = getServiceId();
 
+        LOG.info("Save Config, group={}, serviceId={}, config=\n{}", group, serviceId, config);
     }
 
     @Override

@@ -105,4 +105,9 @@ public class BlueGreenStrategyProcessor implements StrategyProcessor {
 
         return strategyStringBuilder.toString();
     }
+
+    @Override
+    public void saveConfig(String group, String serviceId, String config) {
+
+    }
 }

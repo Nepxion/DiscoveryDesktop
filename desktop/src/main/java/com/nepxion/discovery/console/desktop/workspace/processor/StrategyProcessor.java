@@ -17,4 +17,6 @@ public interface StrategyProcessor {
     TDataBox fromConfig();
 
     String toConfig(StrategyType strategyType, TDataBox dataBox);
+
+    void saveConfig(String group, String serviceId, String config);
 }
