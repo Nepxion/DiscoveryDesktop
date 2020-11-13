@@ -24,6 +24,7 @@ import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.toggle.ConsoleToggleListener;
 import com.nepxion.swing.element.ElementNode;
+import com.nepxion.swing.framework.reflection.JReflectionHierarchy;
 import com.nepxion.swing.list.toggle.JToggleList;
 import com.nepxion.swing.shrinkbar.JShrinkBar;
 import com.nepxion.swing.shrinkbar.JShrinkOutlook;
@@ -36,13 +37,15 @@ import com.nepxion.swing.style.texture.shrink.JBlackHeaderTextureStyle;
 import com.nepxion.swing.style.texture.shrink.JGreenOutlookTextureStyle;
 import com.nepxion.util.data.CollectionUtil;
 
-public abstract class AbstractConsoleHierarchy extends JPanel {
+public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
     private static final long serialVersionUID = 1L;
 
     protected JShrinkBar shrinkContentBar;
     protected JShrinkOutlookBar shrinkOutlookBar;
 
     public AbstractConsoleHierarchy() {
+        super(20, 20);
+
         IHeaderTextureStyle headerTextureStyle = new JBlackHeaderTextureStyle();
         IOutlookTextureStyle outlookTextureStyle = new JGreenOutlookTextureStyle();
 
@@ -65,9 +68,12 @@ public abstract class AbstractConsoleHierarchy extends JPanel {
 
         shrinkOutlookBar.getShrinkOutlook(0).setSelected(true);
 
-        setLayout(new BorderLayout(5, 5));
-        add(shrinkContentBar, BorderLayout.CENTER);
-        add(shrinkOutlookBar, BorderLayout.WEST);
+        JPanel container = new JPanel();
+        container.setLayout(new BorderLayout(5, 5));
+        container.add(shrinkContentBar, BorderLayout.CENTER);
+        container.add(shrinkOutlookBar, BorderLayout.WEST);
+
+        setContentPane(container);
     }
 
     @SuppressWarnings("unchecked")
