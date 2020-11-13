@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.nepxion.discovery.console.desktop.common.component.AbstractConsoleHierarchy;
-import com.nepxion.discovery.console.desktop.common.context.UIContext;
+import com.nepxion.discovery.console.desktop.common.context.ConsoleUIContext;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
@@ -39,7 +39,7 @@ public class ConsoleHierarchy extends AbstractConsoleHierarchy {
         JToggleList list = createList(elementNodes);
         list.setSelectedIndex(0);
 
-        JShrinkOutlook shrinkOutlook = shrinkOutlookBar.addShrinkOutlook(ConsoleLocaleFactory.getString("release_manage"), ConsoleIconFactory.getSwingIcon("stereo/favorite_16.png"), ConsoleIconFactory.getSwingIcon("stereo/favorite_add_16.png"), ConsoleLocaleFactory.getString("release_manage"), new Font(UIContext.getFontName(), Font.BOLD, UIContext.getMiddleFontSize()));
+        JShrinkOutlook shrinkOutlook = shrinkOutlookBar.addShrinkOutlook(ConsoleLocaleFactory.getString("release_manage"), ConsoleIconFactory.getSwingIcon("stereo/favorite_16.png"), ConsoleIconFactory.getSwingIcon("stereo/favorite_add_16.png"), ConsoleLocaleFactory.getString("release_manage"), new Font(ConsoleUIContext.getFontName(), Font.BOLD, ConsoleUIContext.getMiddleFontSize()));
         shrinkOutlook.setContentPane(list);
         shrinkOutlook.addPropertyChangeListener(new OutlookSelectionListener());
 
@@ -52,7 +52,7 @@ public class ConsoleHierarchy extends AbstractConsoleHierarchy {
 
         JToggleList list = createList(elementNodes);
 
-        JShrinkOutlook shrinkOutlook = shrinkOutlookBar.addShrinkOutlook(ConsoleLocaleFactory.getString("blacklist_manage"), ConsoleIconFactory.getSwingIcon("stereo/favorite_16.png"), ConsoleIconFactory.getSwingIcon("stereo/favorite_add_16.png"), ConsoleLocaleFactory.getString("blacklist_manage"), new Font(UIContext.getFontName(), Font.BOLD, UIContext.getMiddleFontSize()));
+        JShrinkOutlook shrinkOutlook = shrinkOutlookBar.addShrinkOutlook(ConsoleLocaleFactory.getString("blacklist_manage"), ConsoleIconFactory.getSwingIcon("stereo/favorite_16.png"), ConsoleIconFactory.getSwingIcon("stereo/favorite_add_16.png"), ConsoleLocaleFactory.getString("blacklist_manage"), new Font(ConsoleUIContext.getFontName(), Font.BOLD, ConsoleUIContext.getMiddleFontSize()));
         shrinkOutlook.setContentPane(list);
         shrinkOutlook.addPropertyChangeListener(new OutlookSelectionListener());
 
