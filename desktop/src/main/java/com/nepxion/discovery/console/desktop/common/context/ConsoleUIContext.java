@@ -15,7 +15,7 @@ import com.nepxion.swing.font.FontContext;
 import com.nepxion.swing.lookandfeel.LookAndFeelManager;
 import com.nepxion.util.locale.LocaleContext;
 
-public class UIContext {
+public class ConsoleUIContext {
     private static final String FONT_NAME_YAHEI = "\u5fae\u8f6f\u96c5\u9ed1"; // 微软雅黑
     private static final int FONT_SMALL_SIZE_YAHEI = 12; // 11
     private static final int FONT_MIDDLE_SIZE_YAHEI = FONT_SMALL_SIZE_YAHEI + 1;

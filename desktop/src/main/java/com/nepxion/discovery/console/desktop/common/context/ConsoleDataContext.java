@@ -13,7 +13,7 @@ import com.nepxion.swing.exception.ExceptionTracerContext;
 import com.nepxion.util.encoder.EncoderContext;
 import com.nepxion.util.locale.LocaleContext;
 
-public class DataContext {
+public class ConsoleDataContext {
     public static final String CHARSET = "UTF-8";
     public static final String LOCALE = "zh_CN";
 

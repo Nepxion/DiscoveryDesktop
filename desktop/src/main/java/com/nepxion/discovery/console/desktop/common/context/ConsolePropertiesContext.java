@@ -15,30 +15,30 @@ import java.net.URL;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
-public class PropertiesContext extends PropertiesConfiguration {
-    private static PropertiesContext propertiesContext;
+public class ConsolePropertiesContext extends PropertiesConfiguration {
+    private static ConsolePropertiesContext propertiesContext;
 
     public static void initialize(String propertiesPath) {
         try {
-            propertiesContext = new PropertiesContext(propertiesPath);
+            propertiesContext = new ConsolePropertiesContext(propertiesPath);
         } catch (ConfigurationException e) {
             e.printStackTrace();
         }
     }
 
-    public static PropertiesContext getProperties() {
+    public static ConsolePropertiesContext getProperties() {
         return propertiesContext;
     }
 
-    public PropertiesContext(String path) throws ConfigurationException {
+    public ConsolePropertiesContext(String path) throws ConfigurationException {
         super(path);
     }
 
-    public PropertiesContext(File file) throws ConfigurationException {
+    public ConsolePropertiesContext(File file) throws ConfigurationException {
         super(file);
     }
 
-    public PropertiesContext(URL url) throws ConfigurationException {
+    public ConsolePropertiesContext(URL url) throws ConfigurationException {
         super(url);
     }
 }

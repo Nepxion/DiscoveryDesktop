@@ -1,8 +1,8 @@
 package com.nepxion.discovery.console.desktop.common.ui;
 
 /**
- * <p>Title: Nepxion Thunder</p>
- * <p>Description: Nepxion Thunder For Distribution</p>
+ * <p>Title: Nepxion Discovery</p>
+ * <p>Description: Nepxion Discovery</p>
  * <p>Copyright: Copyright (c) 2017-2050</p>
  * <p>Company: Nepxion</p>
  * @author Haojun Ren
@@ -16,7 +16,7 @@ import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-import com.nepxion.discovery.console.desktop.common.context.UIContext;
+import com.nepxion.discovery.console.desktop.common.context.ConsoleUIContext;
 import com.nepxion.swing.separator.JBasicSeparator;
 
 public class ConsoleUIFactory {
@@ -29,6 +29,6 @@ public class ConsoleUIFactory {
     }
 
     public static Border createTitledBorder(String title) {
-        return BorderFactory.createTitledBorder(null, title, TitledBorder.LEADING, TitledBorder.DEFAULT_POSITION, new Font(UIContext.getFontName(), Font.PLAIN, UIContext.getLargeFontSize()), new Color(64, 0, 0));
+        return BorderFactory.createTitledBorder(null, title, TitledBorder.LEADING, TitledBorder.DEFAULT_POSITION, new Font(ConsoleUIContext.getFontName(), Font.PLAIN, ConsoleUIContext.getLargeFontSize()), new Color(64, 0, 0));
     }
 }

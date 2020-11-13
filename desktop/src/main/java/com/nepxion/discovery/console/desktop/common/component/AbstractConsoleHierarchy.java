@@ -19,7 +19,7 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-import com.nepxion.discovery.console.desktop.common.context.UIContext;
+import com.nepxion.discovery.console.desktop.common.context.ConsoleUIContext;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.workspace.toggle.ConsoleToggleListener;
@@ -54,14 +54,14 @@ public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
         shrinkContentBar.setTitle(ConsoleLocaleFactory.getString("content_bar"));
         shrinkContentBar.setToolTipText(ConsoleLocaleFactory.getString("content_bar"));
         shrinkContentBar.setIcon(ConsoleIconFactory.getSwingIcon("paste.png"));
-        shrinkContentBar.setTitleFont(new Font(UIContext.getFontName(), Font.BOLD, UIContext.getLargeFontSize()));
+        shrinkContentBar.setTitleFont(new Font(ConsoleUIContext.getFontName(), Font.BOLD, ConsoleUIContext.getLargeFontSize()));
         shrinkContentBar.getShrinkHeader().getLabel().addMouseListener(new ShrinkContentBarMouseListener());
 
         shrinkOutlookBar = new JShrinkOutlookBar(JShrinkBar.PLACEMENT_WEST, JShrinkBar.CONTENT_PANE_TYPE_LABEL, headerTextureStyle, outlookTextureStyle);
         shrinkOutlookBar.setTitle(ConsoleLocaleFactory.getString("navigator_bar"));
         shrinkOutlookBar.setToolTipText(ConsoleLocaleFactory.getString("navigator_bar"));
         shrinkOutlookBar.setIcon(ConsoleIconFactory.getSwingIcon("hierarchy.png"));
-        shrinkOutlookBar.setTitleFont(new Font(UIContext.getFontName(), Font.BOLD, UIContext.getLargeFontSize()));
+        shrinkOutlookBar.setTitleFont(new Font(ConsoleUIContext.getFontName(), Font.BOLD, ConsoleUIContext.getLargeFontSize()));
         shrinkOutlookBar.setPreferredSize(new Dimension(210, shrinkOutlookBar.getPreferredSize().height));
 
         initialize();
