@@ -57,9 +57,9 @@ import com.nepxion.swing.textfield.JBasicTextField;
 public class BlueGreenTopology extends AbstractReleaseTopology {
     private static final long serialVersionUID = 1L;
 
-    protected NodeUI serviceYellowNodeUI = new NodeUI(NodeImageType.SERVICE_YELLOW, NodeSizeType.MIDDLE, true);
     protected NodeUI serviceBlueNodeUI = new NodeUI(NodeImageType.SERVICE_BLUE, NodeSizeType.MIDDLE, true);
     protected NodeUI serviceGreenNodeUI = new NodeUI(NodeImageType.SERVICE_GREEN, NodeSizeType.MIDDLE, true);
+    protected NodeUI serviceBasicNodeUI = new NodeUI(NodeImageType.SERVICE_YELLOW, NodeSizeType.MIDDLE, true);
 
     protected JBasicComboBox blueMetadataComboBox;
     protected JBasicComboBox greenMetadataComboBox;
@@ -224,7 +224,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         }
         greenNode = newGreenNode;
 
-        TNode newBasicNode = addNode(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.toString() + "=" + basicMetadata), serviceYellowNodeUI);
+        TNode newBasicNode = addNode(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.toString() + "=" + basicMetadata), serviceBasicNodeUI);
         Instance newBasicInstance = new Instance();
         newBasicInstance.setServiceId(serviceId);
         Map<String, String> newBasicMetadataMap = new HashMap<String, String>();

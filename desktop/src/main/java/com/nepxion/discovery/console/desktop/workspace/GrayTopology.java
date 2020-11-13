@@ -1,0 +1,378 @@
+package com.nepxion.discovery.console.desktop.workspace;
+
+/**
+ * <p>Title: Nepxion Discovery</p>
+ * <p>Description: Nepxion Discovery</p>
+ * <p>Copyright: Copyright (c) 2017-2050</p>
+ * <p>Company: Nepxion</p>
+ * @author Haojun Ren
+ * @version 1.0
+ */
+
+import twaver.Link;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JPanel;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import com.nepxion.cots.twaver.element.TElementManager;
+import com.nepxion.cots.twaver.element.TLink;
+import com.nepxion.cots.twaver.element.TNode;
+import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
+import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
+import com.nepxion.discovery.console.desktop.workspace.processor.GrayStrategyProcessor;
+import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessor;
+import com.nepxion.discovery.console.desktop.workspace.topology.LinkUI;
+import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
+import com.nepxion.discovery.console.desktop.workspace.topology.NodeSizeType;
+import com.nepxion.discovery.console.desktop.workspace.topology.NodeUI;
+import com.nepxion.discovery.console.desktop.workspace.type.LinkType;
+import com.nepxion.discovery.console.desktop.workspace.type.NodeType;
+import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
+import com.nepxion.discovery.console.entity.Instance;
+import com.nepxion.swing.action.JSecurityAction;
+import com.nepxion.swing.button.ButtonManager;
+import com.nepxion.swing.button.JClassicButton;
+import com.nepxion.swing.combobox.JBasicComboBox;
+import com.nepxion.swing.handle.HandleManager;
+import com.nepxion.swing.label.JBasicLabel;
+import com.nepxion.swing.layout.filed.FiledLayout;
+import com.nepxion.swing.layout.table.TableLayout;
+import com.nepxion.swing.locale.SwingLocale;
+import com.nepxion.swing.optionpane.JBasicOptionPane;
+import com.nepxion.swing.textfield.JBasicTextField;
+
+public class GrayTopology extends AbstractReleaseTopology {
+    private static final long serialVersionUID = 1L;
+
+    protected NodeUI serviceGrayNodeUI = new NodeUI(NodeImageType.SERVICE_GRAY, NodeSizeType.MIDDLE, true);
+    protected NodeUI serviceStableNodeUI = new NodeUI(NodeImageType.SERVICE_YELLOW, NodeSizeType.MIDDLE, true);
+
+    protected JBasicComboBox grayMetadataComboBox;
+    protected JBasicComboBox stableMetadataComboBox;
+    protected JBasicTextField grayConditionTextField;
+    protected JBasicTextField stableConditionTextField;
+
+    protected TNode grayNode;
+    protected TNode stableNode;
+
+    protected StrategyProcessor strategyProcessor = new GrayStrategyProcessor();
+
+    public GrayTopology() {
+        super(ReleaseType.GRAY);
+
+        initializeContentBar();
+    }
+
+    private void initializeContentBar() {
+        serviceIdComboBox = new JBasicComboBox();
+        serviceIdComboBox.setEditable(true);
+        serviceIdComboBox.setPreferredSize(new Dimension(300, layoutTextField.getPreferredSize().height));
+        serviceIdComboBox.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (serviceIdComboBox.getSelectedItem() != e.getItem()) {
+                    setMetadataUI();
+                }
+            }
+        });
+        JClassicButton refreshServicesButton = new JClassicButton(createRefreshServiceListAction());
+        refreshServicesButton.setPreferredSize(new Dimension(30, refreshServicesButton.getPreferredSize().height));
+
+        grayMetadataComboBox = new JBasicComboBox();
+        grayMetadataComboBox.setEditable(true);
+        JClassicButton grayMetadataButton = new JClassicButton(createMetadataSelectorAction(grayMetadataComboBox));
+        grayMetadataButton.setPreferredSize(new Dimension(30, grayMetadataButton.getPreferredSize().height));
+
+        stableMetadataComboBox = new JBasicComboBox();
+        stableMetadataComboBox.setEditable(true);
+        JClassicButton stableMetadataButton = new JClassicButton(createMetadataSelectorAction(stableMetadataComboBox));
+        stableMetadataButton.setPreferredSize(new Dimension(30, stableMetadataButton.getPreferredSize().height));
+
+        double[][] serviceSize = {
+                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },
+                { TableLayout.PREFERRED }
+        };
+
+        TableLayout serviceTableLayout = new TableLayout(serviceSize);
+        serviceTableLayout.setHGap(5);
+        serviceTableLayout.setVGap(5);
+
+        JPanel servicePanel = new JPanel();
+        servicePanel.setLayout(serviceTableLayout);
+        servicePanel.add(serviceIdComboBox, "0, 0");
+        servicePanel.add(refreshServicesButton, "1, 0");
+        servicePanel.add(new JBasicLabel(NodeType.GRAY.getDescription()), "2, 0");
+        servicePanel.add(grayMetadataComboBox, "3, 0");
+        servicePanel.add(grayMetadataButton, "4, 0");
+        servicePanel.add(new JBasicLabel(NodeType.STABLE.getDescription()), "5, 0");
+        servicePanel.add(stableMetadataComboBox, "6, 0");
+        servicePanel.add(stableMetadataButton, "7, 0");
+
+        JPanel serviceToolBar = new JPanel();
+        serviceToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
+        serviceToolBar.add(new JClassicButton(createAddServiceStrategyAction()));
+        serviceToolBar.add(new JClassicButton(createRemoveServiceStrategyAction()));
+        serviceToolBar.add(new JClassicButton(createModifyServiceStrategyAction()));
+
+        grayConditionTextField = new JBasicTextField("#H['a'] == '1' && #H['b'] <= '2'");
+        stableConditionTextField = new JBasicTextField("#H['a'] == '3'");
+
+        double[][] conditionSize = {
+                { TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, TableLayout.FILL },
+                { TableLayout.PREFERRED }
+        };
+
+        TableLayout conditionTableLayout = new TableLayout(conditionSize);
+        conditionTableLayout.setHGap(5);
+        conditionTableLayout.setVGap(5);
+
+        JPanel conditionPanel = new JPanel();
+        conditionPanel.setLayout(conditionTableLayout);
+        conditionPanel.add(new JBasicLabel(NodeType.GRAY.getDescription()), "0, 0");
+        conditionPanel.add(grayConditionTextField, "1, 0");
+        conditionPanel.add(new JBasicLabel(NodeType.STABLE.getDescription()), "2, 0");
+        conditionPanel.add(stableConditionTextField, "3, 0");
+
+        JPanel conditionToolBar = new JPanel();
+        conditionToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
+        conditionToolBar.add(new JClassicButton(createValidateConditionAction()));
+        conditionToolBar.add(new JClassicButton(createModifyConditionAction()));
+
+        double[][] size = {
+                { TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },
+                { TableLayout.PREFERRED, TableLayout.PREFERRED }
+        };
+
+        TableLayout tableLayout = new TableLayout(size);
+        tableLayout.setHGap(10);
+        tableLayout.setVGap(5);
+
+        JPanel toolBar = new JPanel();
+        toolBar.setLayout(tableLayout);
+        toolBar.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
+        toolBar.add(new JBasicLabel(ConsoleLocaleFactory.getString(releaseType.toString() + "_service")), "0, 0");
+        toolBar.add(servicePanel, "1, 0");
+        toolBar.add(serviceToolBar, "2, 0");
+        toolBar.add(new JBasicLabel(ConsoleLocaleFactory.getString(releaseType.toString() + "_condition")), "0, 1");
+        toolBar.add(conditionPanel, "1, 1");
+        toolBar.add(conditionToolBar, "2, 1");
+
+        add(toolBar, BorderLayout.NORTH);
+    }
+
+    public void addNodes(String serviceId, String grayMetadata, String stableMetadata, String grayCondition, String stableCondition) {
+        TNode newGrayNode = addNode(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.toString() + "=" + grayMetadata), serviceGrayNodeUI);
+        Instance newGrayInstance = new Instance();
+        newGrayInstance.setServiceId(serviceId);
+        Map<String, String> newGrayMetadataMap = new HashMap<String, String>();
+        newGrayMetadataMap.put(strategyType.toString(), grayMetadata);
+        newGrayInstance.setMetadata(newGrayMetadataMap);
+        newGrayNode.setUserObject(newGrayInstance);
+        newGrayNode.setBusinessObject(NodeType.GRAY);
+        if (grayNode == null) {
+            TLink grayLink = addLink(gatewayNode, newGrayNode, LinkUI.GRAY);
+            grayLink.setDisplayName(ConsoleLocaleFactory.getString("gray_route"));
+            grayLink.setToolTipText(grayCondition);
+            grayLink.setUserObject(grayCondition);
+            grayLink.setBusinessObject(LinkType.GRAY);
+        } else {
+            TLink link = addLink(grayNode, newGrayNode, null);
+            link.setBusinessObject(LinkType.UNDEFINED);
+        }
+        grayNode = newGrayNode;
+
+        TNode newStableNode = addNode(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.toString() + "=" + stableMetadata), serviceStableNodeUI);
+        Instance newStableInstance = new Instance();
+        newStableInstance.setServiceId(serviceId);
+        Map<String, String> newStableMetadataMap = new HashMap<String, String>();
+        newStableMetadataMap.put(strategyType.toString(), stableMetadata);
+        newStableInstance.setMetadata(newStableMetadataMap);
+        newStableNode.setUserObject(newStableInstance);
+        newStableNode.setBusinessObject(NodeType.STABLE);
+        if (stableNode == null) {
+            TLink stableLink = addLink(gatewayNode, newStableNode, LinkUI.YELLOW);
+            stableLink.setDisplayName(ConsoleLocaleFactory.getString("stable_route"));
+            stableLink.setToolTipText(stableCondition);
+            stableLink.setUserObject(stableCondition);
+            stableLink.setBusinessObject(LinkType.STABLE);
+        } else {
+            TLink link = addLink(stableNode, newStableNode, null);
+            link.setBusinessObject(LinkType.UNDEFINED);
+        }
+        stableNode = newStableNode;
+    }
+
+    @SuppressWarnings("unchecked")
+    public void removeNodes() {
+        if (grayNode != null) {
+            List<Link> grayLinks = grayNode.getAllLinks();
+            if (CollectionUtils.isNotEmpty(grayLinks)) {
+                TNode currentGrayNode = (TNode) grayLinks.get(0).getFrom();
+                dataBox.removeElement(grayNode);
+                if (currentGrayNode != gatewayNode) {
+                    grayNode = currentGrayNode;
+                } else {
+                    grayNode = null;
+                }
+            }
+        }
+
+        if (stableNode != null) {
+            List<Link> stableLinks = stableNode.getAllLinks();
+            if (CollectionUtils.isNotEmpty(stableLinks)) {
+                TNode currentStableNode = (TNode) stableLinks.get(0).getFrom();
+                dataBox.removeElement(stableNode);
+                if (currentStableNode != gatewayNode) {
+                    stableNode = currentStableNode;
+                } else {
+                    stableNode = null;
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings({ "unchecked", "incomplete-switch" })
+    public void modifyNodes(String serviceId, String grayMetadata, String stableMetadata) {
+        List<TNode> nodes = TElementManager.getNodes(dataBox);
+        for (TNode node : nodes) {
+            Instance instance = (Instance) node.getUserObject();
+            if (StringUtils.equalsIgnoreCase(instance.getServiceId(), serviceId)) {
+                NodeType nodeType = (NodeType) node.getBusinessObject();
+                switch (nodeType) {
+                    case GRAY:
+                        node.setName(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.toString() + "=" + grayMetadata));
+                        instance.getMetadata().put(strategyType.toString(), grayMetadata);
+                        break;
+                    case STABLE:
+                        node.setName(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.toString() + "=" + stableMetadata));
+                        instance.getMetadata().put(strategyType.toString(), stableMetadata);
+                        break;
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings({ "unchecked", "incomplete-switch" })
+    public void modifyLinks(String grayCondition, String stableCondition) {
+        List<TLink> links = TElementManager.getLinks(dataBox);
+        for (TLink link : links) {
+            LinkType linkType = (LinkType) link.getBusinessObject();
+            switch (linkType) {
+                case GRAY:
+                    link.setToolTipText(grayCondition);
+                    link.setUserObject(grayCondition);
+                    break;
+                case STABLE:
+                    link.setToolTipText(stableCondition);
+                    link.setUserObject(stableCondition);
+                    break;
+            }
+        }
+    }
+
+    public JSecurityAction createValidateConditionAction() {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("validate_text"), ConsoleIconFactory.getSwingIcon("config.png"), ConsoleLocaleFactory.getString("validate_condition_tooltip")) {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+
+            }
+        };
+
+        return action;
+    }
+
+    public JSecurityAction createModifyConditionAction() {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("modify_text"), ConsoleIconFactory.getSwingIcon("paste.png"), ConsoleLocaleFactory.getString("modify_condition_tooltip")) {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+                String grayCondition = grayConditionTextField.getText().trim();
+                String stableCondition = stableConditionTextField.getText().trim();
+
+                if (StringUtils.isBlank(grayCondition) || StringUtils.isBlank(stableCondition)) {
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(GrayTopology.this), ConsoleLocaleFactory.getString("condition_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+                    return;
+                }
+
+                modifyLinks(grayCondition, stableCondition);
+            }
+        };
+
+        return action;
+    }
+
+    @Override
+    public void reset() {
+        grayNode = null;
+        stableNode = null;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void setMetadataUI(Object[] metadatas) {
+        grayMetadataComboBox.setModel(new DefaultComboBoxModel<>(metadatas));
+        stableMetadataComboBox.setModel(new DefaultComboBoxModel<>(metadatas));
+    }
+
+    @Override
+    public void addServiceStrategy(String serviceId) {
+        String grayMetadata = grayMetadataComboBox.getSelectedItem() != null ? grayMetadataComboBox.getSelectedItem().toString().trim() : null;
+        String stableMetadata = stableMetadataComboBox.getSelectedItem() != null ? stableMetadataComboBox.getSelectedItem().toString().trim() : null;
+        String grayCondition = grayConditionTextField.getText().trim();
+        String stableCondition = stableConditionTextField.getText().trim();
+
+        if (StringUtils.isBlank(grayMetadata) || StringUtils.isBlank(stableMetadata)) {
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(GrayTopology.this), strategyType.getName() + " " + ConsoleLocaleFactory.getString("not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+            return;
+        }
+
+        if (StringUtils.isBlank(grayCondition) || StringUtils.isBlank(stableCondition)) {
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(GrayTopology.this), ConsoleLocaleFactory.getString("condition_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+            return;
+        }
+
+        addNodes(serviceId, grayMetadata, stableMetadata, grayCondition, stableCondition);
+
+        layoutActionListener.actionPerformed(null);
+    }
+
+    @Override
+    public void removeServiceStrategy() {
+        removeNodes();
+    }
+
+    @Override
+    public void modifyServiceStrategy(String serviceId) {
+        String grayMetadata = grayMetadataComboBox.getSelectedItem().toString().trim();
+        String stableMetadata = stableMetadataComboBox.getSelectedItem().toString().trim();
+
+        if (StringUtils.isBlank(grayMetadata) || StringUtils.isBlank(stableMetadata)) {
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(GrayTopology.this), strategyType.getName() + " " + ConsoleLocaleFactory.getString("not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+            return;
+        }
+
+        modifyNodes(serviceId, grayMetadata, stableMetadata);
+    }
+
+    @Override
+    public StrategyProcessor getStrategyProcessor() {
+        return strategyProcessor;
+    }
+}
