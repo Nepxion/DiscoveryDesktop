@@ -28,7 +28,7 @@ public class ConsoleHierarchy extends AbstractConsoleHierarchy {
     private static final long serialVersionUID = 1L;
 
     @Override
-    public void initialize() {
+    public void initializeUI() {
         createReleaseManageShrinkOutlook();
         createBlacklistManageShrinkOutlook();
     }

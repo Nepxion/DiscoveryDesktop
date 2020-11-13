@@ -15,7 +15,7 @@ public class ConsoleLogin extends AbstractConsoleLogin {
     private static final long serialVersionUID = 1L;
 
     @Override
-    public void initialize() {
+    public void initializeUI() {
         accountTextField.setText("admin");
         passwordField.setText("admin");
     }

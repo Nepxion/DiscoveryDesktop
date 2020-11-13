@@ -39,13 +39,13 @@ public abstract class AbstractConsoleLogin extends JLoginDialog {
     public AbstractConsoleLogin() {
         super(null);
         
-        initialize();
+        initializeUI();
     }
 
     public AbstractConsoleLogin(Frame parent) {
         super(parent);
         
-        initialize();
+        initializeUI();
     }
 
     @SuppressWarnings("unchecked")
@@ -129,5 +129,5 @@ public abstract class AbstractConsoleLogin extends JLoginDialog {
         toFront();
     }
     
-    public abstract void initialize();
+    public abstract void initializeUI();
 }

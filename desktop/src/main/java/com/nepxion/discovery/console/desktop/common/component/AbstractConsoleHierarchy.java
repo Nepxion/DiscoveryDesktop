@@ -64,7 +64,7 @@ public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
         shrinkOutlookBar.setTitleFont(new Font(ConsoleUIContext.getFontName(), Font.BOLD, ConsoleUIContext.getLargeFontSize()));
         shrinkOutlookBar.setPreferredSize(new Dimension(210, shrinkOutlookBar.getPreferredSize().height));
 
-        initialize();
+        initializeUI();
 
         shrinkOutlookBar.getShrinkOutlook(0).setSelected(true);
 
@@ -104,7 +104,7 @@ public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
         }
     }
 
-    public abstract void initialize();
+    public abstract void initializeUI();
 
     public abstract AbstractToggleAdapter createToggleListener(JToggleList toggleList);
 }
