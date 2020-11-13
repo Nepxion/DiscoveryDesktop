@@ -95,7 +95,7 @@ public abstract class AbstractTopology extends BasicTopology {
         try {
             configCenterType = ConsoleController.getConfigType();
         } catch (Exception ex) {
-            JExceptionDialog.traceException(HandleManager.getFrame(AbstractTopology.this), ConsoleLocaleFactory.getString("query_data_failure"), ex);
+            JExceptionDialog.traceException(HandleManager.getFrame(AbstractTopology.this), ConsoleLocaleFactory.getString("operation_failure"), ex);
         }
     }
 
@@ -129,7 +129,7 @@ public abstract class AbstractTopology extends BasicTopology {
             public void execute(ActionEvent e) {
                 String config = getStrategyProcessor().toConfig(strategyType, dataBox);
                 if (StringUtils.isEmpty(config)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractTopology.this), "策略为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractTopology.this), ConsoleLocaleFactory.getString("strategy_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
                 }
@@ -160,7 +160,7 @@ public abstract class AbstractTopology extends BasicTopology {
             public void execute(ActionEvent e) {
                 String config = getStrategyProcessor().toConfig(strategyType, dataBox);
                 if (StringUtils.isEmpty(config)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractTopology.this), "策略为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractTopology.this), ConsoleLocaleFactory.getString("strategy_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
                 }
@@ -186,7 +186,7 @@ public abstract class AbstractTopology extends BasicTopology {
 
                 config = previewPanel.getConfig();
                 if (StringUtils.isEmpty(config)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractTopology.this), "策略为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractTopology.this), ConsoleLocaleFactory.getString("strategy_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
                 }

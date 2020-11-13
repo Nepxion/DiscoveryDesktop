@@ -95,7 +95,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
                 this.serviceIds = ConsoleController.getServices().toArray();
             }
         } catch (Exception e) {
-            JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("query_data_failure"), e);
+            JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
         }
     }
 
@@ -107,7 +107,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         try {
             return ConsoleController.getInstanceList(serviceId);
         } catch (Exception e) {
-            JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("query_data_failure"), e);
+            JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
         }
 
         return null;
@@ -228,7 +228,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
         String group = releasePanel.getGroup();
         if (StringUtils.isBlank(group)) {
-            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), "组不能为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("group_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
             return;
         }
@@ -237,7 +237,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         if (configType == ConfigType.PARTIAL) {
             gatewayId = releasePanel.getGatewayId();
             if (StringUtils.isBlank(gatewayId)) {
-                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), "服务名不能为空", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("service_id_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                 return;
             }
@@ -347,7 +347,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
                 String serviceId = serviceIdComboBox.getSelectedItem() != null ? serviceIdComboBox.getSelectedItem().toString().trim() : null;
                 if (StringUtils.isBlank(serviceId)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), "服务名必填", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("service_id_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
                 }
@@ -384,7 +384,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
             public void execute(ActionEvent e) {
                 String serviceId = serviceIdComboBox.getSelectedItem().toString();
                 if (StringUtils.isBlank(serviceId)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), "服务名必填", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("service_id_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
                 }
