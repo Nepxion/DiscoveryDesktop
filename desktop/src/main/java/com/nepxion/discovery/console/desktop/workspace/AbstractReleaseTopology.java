@@ -278,7 +278,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     }
 
     public JSecurityAction createRefreshServiceListAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("refresh.png"), "刷新服务列表") {
+        JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("refresh.png"), ConsoleLocaleFactory.getString("refresh_service_list_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
@@ -291,7 +291,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     }
 
     public JSecurityAction createMetadataSelectorAction(JBasicComboBox metadataComboBox) {
-        JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("direction_south.png"), "拾选器") {
+        JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("direction_south.png"), ConsoleLocaleFactory.getString("metadata_selector_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -303,7 +303,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
                     metadataElementNodes.add(new ElementNode(metadata, IconFactory.getSwingIcon("component/file_chooser_16.png"), metadata, metadata));
                 }
 
-                JCheckBoxSelector checkBoxSelector = new JCheckBoxSelector(HandleManager.getFrame(AbstractReleaseTopology.this), "拾选器", new Dimension(400, 350), metadataElementNodes);
+                JCheckBoxSelector checkBoxSelector = new JCheckBoxSelector(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("metadata_selector_tooltip"), new Dimension(400, 350), metadataElementNodes);
                 checkBoxSelector.setVisible(true);
                 checkBoxSelector.dispose();
 
@@ -335,12 +335,12 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     }
 
     public JSecurityAction createAddServiceStrategyAction() {
-        JSecurityAction action = new JSecurityAction("添加", ConsoleIconFactory.getSwingIcon("add.png"), "添加一层服务策略") {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("add_text"), ConsoleIconFactory.getSwingIcon("add.png"), ConsoleLocaleFactory.getString("add_service_strategy_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
                 if (TElementManager.getNodes(dataBox).size() == 0) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), "无入口网关或者服务", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("portal_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
                 }
@@ -353,7 +353,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
                 }
 
                 if (hasNodes(serviceId)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), serviceId + "已存在", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), "[" + serviceId + "]" + ConsoleLocaleFactory.getString("existed"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
                 }
@@ -366,7 +366,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     }
 
     public JSecurityAction createRemoveServiceStrategyAction() {
-        JSecurityAction action = new JSecurityAction("删除", ConsoleIconFactory.getSwingIcon("delete.png"), "删除一层服务策略") {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("remove_text"), ConsoleIconFactory.getSwingIcon("delete.png"), ConsoleLocaleFactory.getString("remove_service_strategy_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
@@ -378,7 +378,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     }
 
     public JSecurityAction createModifyServiceStrategyAction() {
-        JSecurityAction action = new JSecurityAction("修改", ConsoleIconFactory.getSwingIcon("paste.png"), "修改一层服务策略") {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("modify_text"), ConsoleIconFactory.getSwingIcon("paste.png"), ConsoleLocaleFactory.getString("modify_service_strategy_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
