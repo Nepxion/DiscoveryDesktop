@@ -43,6 +43,7 @@ import com.nepxion.discovery.console.desktop.workspace.type.DeployType;
 import com.nepxion.discovery.console.desktop.workspace.type.NodeType;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
+import com.nepxion.discovery.console.desktop.workspace.util.ComboBoxUtil;
 import com.nepxion.discovery.console.entity.Instance;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.ButtonManager;
@@ -147,10 +148,9 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
     public void setMetadataUI() {
         List<String> metadatas = new ArrayList<String>();
-        Object selectedItem = serviceIdComboBox.getSelectedItem();
-        if (selectedItem != null) {
-            String serviceId = selectedItem.toString().trim();
-            List<Instance> instances = getInstances(serviceId.trim());
+        String serviceId = ComboBoxUtil.getSelectedValue(serviceIdComboBox);
+        if (StringUtils.isNotBlank(serviceId)) {
+            List<Instance> instances = getInstances(serviceId);
             if (CollectionUtils.isNotEmpty(instances)) {
                 for (Instance instance : instances) {
                     String metadata = instance.getMetadata().get(strategyType.toString());
@@ -348,7 +348,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
                     return;
                 }
 
-                String serviceId = serviceIdComboBox.getSelectedItem() != null ? serviceIdComboBox.getSelectedItem().toString().trim() : null;
+                String serviceId = ComboBoxUtil.getSelectedValue(serviceIdComboBox);
                 if (StringUtils.isBlank(serviceId)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("service_id_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
@@ -373,7 +373,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                String serviceId = serviceIdComboBox.getSelectedItem().toString();
+                String serviceId = ComboBoxUtil.getSelectedValue(serviceIdComboBox);
                 if (StringUtils.isBlank(serviceId)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("service_id_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
