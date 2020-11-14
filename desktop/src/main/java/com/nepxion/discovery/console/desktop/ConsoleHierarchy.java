@@ -17,6 +17,7 @@ import com.nepxion.discovery.console.desktop.common.component.AbstractConsoleHie
 import com.nepxion.discovery.console.desktop.common.context.ConsoleUIContext;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
+import com.nepxion.discovery.console.desktop.workspace.AbstractTopology;
 import com.nepxion.discovery.console.desktop.workspace.BlueGreenTopology;
 import com.nepxion.discovery.console.desktop.workspace.GrayTopology;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
@@ -59,5 +60,13 @@ public class ConsoleHierarchy extends AbstractConsoleHierarchy {
         shrinkOutlook.addPropertyChangeListener(new OutlookSelectionListener());
 
         return shrinkOutlook;
+    }
+
+    @Override
+    public void toggleListSelected(ElementNode elementNode) {
+        AbstractTopology topology = (AbstractTopology) elementNode.getUserObject();
+
+        shrinkContentBar.setContentPane(topology);
+        shrinkOperationBar.setContentPane(topology.getOperationContentPane());
     }
 }

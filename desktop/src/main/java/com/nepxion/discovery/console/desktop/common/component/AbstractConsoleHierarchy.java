@@ -22,9 +22,7 @@ import javax.swing.JPanel;
 import com.nepxion.discovery.console.desktop.common.context.ConsoleUIContext;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
-import com.nepxion.discovery.console.desktop.workspace.AbstractTopology;
 import com.nepxion.swing.element.ElementNode;
-import com.nepxion.swing.element.IElementNode;
 import com.nepxion.swing.framework.reflection.JReflectionHierarchy;
 import com.nepxion.swing.list.JBasicList;
 import com.nepxion.swing.shrinkbar.JShrinkBar;
@@ -97,11 +95,8 @@ public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
                     return;
                 }
 
-                IElementNode elementNode = (IElementNode) getModel().getElementAt(newSelectedRow);
-                AbstractTopology topology = (AbstractTopology) elementNode.getUserObject();
-
-                shrinkContentBar.setContentPane(topology);
-                shrinkOperationBar.setContentPane(topology.getOperationContentPane());
+                ElementNode elementNode = (ElementNode) getModel().getElementAt(newSelectedRow);
+                toggleListSelected(elementNode);
             }
         };
         toggleList.setSelectionMode(JBasicList.SINGLE_SELECTION);
@@ -129,4 +124,6 @@ public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
     }
 
     public abstract void initializeUI();
+
+    public abstract void toggleListSelected(ElementNode elementNode);
 }
