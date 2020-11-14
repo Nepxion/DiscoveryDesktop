@@ -138,7 +138,6 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         JPanel serviceToolBar = new JPanel();
         serviceToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
         serviceToolBar.add(new JClassicButton(createAddServiceStrategyAction()));
-        serviceToolBar.add(new JClassicButton(createRemoveServiceStrategyAction()));
         serviceToolBar.add(new JClassicButton(createModifyServiceStrategyAction()));
 
         blueConditionTextField = new JBasicTextField("#H['a'] == '1' && #H['b'] <= '2'");
@@ -289,6 +288,12 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         }
     }
 
+    public void resetNodes() {
+        blueNode = null;
+        greenNode = null;
+        basicNode = null;
+    }
+
     @SuppressWarnings({ "unchecked", "incomplete-switch" })
     public void modifyNodes(String serviceId, String blueMetadata, String greenMetadata, String basicMetadata) {
         List<TNode> nodes = TElementManager.getNodes(dataBox);
@@ -366,10 +371,13 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
     }
 
     @Override
+    public void remove() {
+        removeNodes();
+    }
+
+    @Override
     public void reset() {
-        blueNode = null;
-        greenNode = null;
-        basicNode = null;
+        resetNodes();
     }
 
     @SuppressWarnings("unchecked")
@@ -403,11 +411,6 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         addNodes(serviceId, blueMetadata, greenMetadata, basicMetadata, blueCondition, greenCondition);
 
         layoutActionListener.actionPerformed(null);
-    }
-
-    @Override
-    public void removeServiceStrategy() {
-        removeNodes();
     }
 
     @Override

@@ -128,7 +128,6 @@ public class GrayTopology extends AbstractReleaseTopology {
         JPanel serviceToolBar = new JPanel();
         serviceToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
         serviceToolBar.add(new JClassicButton(createAddServiceStrategyAction()));
-        serviceToolBar.add(new JClassicButton(createRemoveServiceStrategyAction()));
         serviceToolBar.add(new JClassicButton(createModifyServiceStrategyAction()));
 
         String[] conditions = { "0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100" };
@@ -285,6 +284,11 @@ public class GrayTopology extends AbstractReleaseTopology {
         }
     }
 
+    public void resetNodes() {
+        grayNode = null;
+        stableNode = null;
+    }
+
     @SuppressWarnings({ "unchecked", "incomplete-switch" })
     public void modifyNodes(String serviceId, String grayMetadata, String stableMetadata) {
         List<TNode> nodes = TElementManager.getNodes(dataBox);
@@ -348,9 +352,13 @@ public class GrayTopology extends AbstractReleaseTopology {
     }
 
     @Override
+    public void remove() {
+        removeNodes();
+    }
+
+    @Override
     public void reset() {
-        grayNode = null;
-        stableNode = null;
+        resetNodes();
     }
 
     @SuppressWarnings("unchecked")
@@ -382,11 +390,6 @@ public class GrayTopology extends AbstractReleaseTopology {
         addNodes(serviceId, grayMetadata, stableMetadata, grayCondition, stableCondition);
 
         layoutActionListener.actionPerformed(null);
-    }
-
-    @Override
-    public void removeServiceStrategy() {
-        removeNodes();
     }
 
     @Override

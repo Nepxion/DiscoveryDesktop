@@ -75,6 +75,8 @@ public abstract class AbstractTopology extends BasicTopology {
         toolBar.addSeparator();
         toolBar.add(new JClassicButton(createCreateAction()));
         toolBar.add(new JClassicButton(createSaveAction()));
+        toolBar.addSeparator();
+        toolBar.add(new JClassicButton(createRemoveAction()));
         toolBar.add(new JClassicButton(createClearAction()));
         toolBar.addSeparator();
         toolBar.add(new JClassicButton(createPreviewAction()));
@@ -138,6 +140,18 @@ public abstract class AbstractTopology extends BasicTopology {
                 }
 
                 save(config);
+            }
+        };
+
+        return action;
+    }
+
+    public JSecurityAction createRemoveAction() {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("remove_text"), ConsoleIconFactory.getSwingIcon("cut.png"), getRemoveTooltip()) {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+                remove();
             }
         };
 
@@ -231,9 +245,13 @@ public abstract class AbstractTopology extends BasicTopology {
 
     public abstract String getServiceId();
 
+    public abstract String getRemoveTooltip();
+
     public abstract void create();
 
     public abstract void save(String config);
+
+    public abstract void remove();
 
     public abstract void clear();
 

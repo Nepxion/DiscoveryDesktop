@@ -260,6 +260,11 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     }
 
     @Override
+    public String getRemoveTooltip() {
+        return ConsoleLocaleFactory.getString("remove_service_strategy_tooltip");
+    }
+
+    @Override
     public void save(String config) {
         String group = getGroup();
         String serviceId = getServiceId();
@@ -363,18 +368,6 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         return action;
     }
 
-    public JSecurityAction createRemoveServiceStrategyAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("remove_text"), ConsoleIconFactory.getSwingIcon("delete.png"), ConsoleLocaleFactory.getString("remove_service_strategy_tooltip")) {
-            private static final long serialVersionUID = 1L;
-
-            public void execute(ActionEvent e) {
-                removeServiceStrategy();
-            }
-        };
-
-        return action;
-    }
-
     public JSecurityAction createModifyServiceStrategyAction() {
         JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("modify_text"), ConsoleIconFactory.getSwingIcon("paste.png"), ConsoleLocaleFactory.getString("modify_service_strategy_tooltip")) {
             private static final long serialVersionUID = 1L;
@@ -399,8 +392,6 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     public abstract void setMetadataUI(Object[] metadatas);
 
     public abstract void addServiceStrategy(String serviceId);
-
-    public abstract void removeServiceStrategy();
 
     public abstract void modifyServiceStrategy(String serviceId);
 }
