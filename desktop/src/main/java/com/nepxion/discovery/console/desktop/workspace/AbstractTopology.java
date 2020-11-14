@@ -70,7 +70,7 @@ public abstract class AbstractTopology extends BasicTopology {
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
     }
 
-    private void initializeToolBar() {
+    public void initializeToolBar() {
         JToolBar toolBar = getGraph().getToolbar();
         toolBar.addSeparator();
         toolBar.add(new JClassicButton(createCreateAction()));
@@ -87,7 +87,7 @@ public abstract class AbstractTopology extends BasicTopology {
         ButtonManager.updateUI(toolBar);
     }
 
-    private void initializeTopology() {
+    public void initializeTopology() {
         background = graph.getGraphBackground();
         graph.setElementStateOutlineColorGenerator(new Generator() {
             public Object generate(Object object) {
@@ -96,7 +96,7 @@ public abstract class AbstractTopology extends BasicTopology {
         });
     }
 
-    private void initializeData() {
+    public void initializeData() {
         try {
             configCenterType = ConsoleController.getConfigType();
         } catch (Exception ex) {
@@ -104,7 +104,7 @@ public abstract class AbstractTopology extends BasicTopology {
         }
     }
 
-    private void initializeListener() {
+    public void initializeListener() {
         addHierarchyListener(new DisplayAbilityListener() {
             public void displayAbilityChanged(HierarchyEvent e) {
                 showLayoutBar(150, 100, 200, 60);
@@ -115,7 +115,7 @@ public abstract class AbstractTopology extends BasicTopology {
         });
     }
 
-    private JSecurityAction createCreateAction() {
+    public JSecurityAction createCreateAction() {
         JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("create_text"), ConsoleIconFactory.getSwingIcon("theme/tree/plastic/tree_leaf.png"), ConsoleLocaleFactory.getString("create_tooltip")) {
             private static final long serialVersionUID = 1L;
 
@@ -127,7 +127,7 @@ public abstract class AbstractTopology extends BasicTopology {
         return action;
     }
 
-    private JSecurityAction createSaveAction() {
+    public JSecurityAction createSaveAction() {
         JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("save_text"), ConsoleIconFactory.getSwingIcon("save.png"), ConsoleLocaleFactory.getString("save_tooltip")) {
             private static final long serialVersionUID = 1L;
 
@@ -158,7 +158,7 @@ public abstract class AbstractTopology extends BasicTopology {
         return action;
     }
 
-    private JSecurityAction createClearAction() {
+    public JSecurityAction createClearAction() {
         JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("clear_text"), ConsoleIconFactory.getSwingIcon("paint.png"), ConsoleLocaleFactory.getString("clear_tooltip")) {
             private static final long serialVersionUID = 1L;
 
@@ -170,7 +170,7 @@ public abstract class AbstractTopology extends BasicTopology {
         return action;
     }
 
-    private JSecurityAction createPreviewAction() {
+    public JSecurityAction createPreviewAction() {
         JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("preview_text"), ConsoleIconFactory.getSwingIcon("ticket.png"), ConsoleLocaleFactory.getString("preview_tooltip")) {
             private static final long serialVersionUID = 1L;
 
@@ -215,7 +215,7 @@ public abstract class AbstractTopology extends BasicTopology {
         return action;
     }
 
-    private JSecurityAction createInspectAction() {
+    public JSecurityAction createInspectAction() {
         JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("inspect_text"), ConsoleIconFactory.getSwingIcon("relation.png"), ConsoleLocaleFactory.getString("inspect_tooltip")) {
             private static final long serialVersionUID = 1L;
 
@@ -227,7 +227,7 @@ public abstract class AbstractTopology extends BasicTopology {
         return action;
     }
 
-    private JSecurityAction createLayoutAction() {
+    public JSecurityAction createLayoutAction() {
         JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("layout_text"), ConsoleIconFactory.getSwingIcon("layout.png"), ConsoleLocaleFactory.getString("layout_tooltip")) {
             private static final long serialVersionUID = 1L;
 

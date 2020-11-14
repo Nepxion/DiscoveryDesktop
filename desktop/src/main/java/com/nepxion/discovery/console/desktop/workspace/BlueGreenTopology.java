@@ -83,7 +83,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         initializeContentBar();
     }
 
-    private void initializeContentBar() {
+    public void initializeContentBar() {
         serviceIdComboBox = new JBasicComboBox();
         serviceIdComboBox.setEditable(true);
         serviceIdComboBox.setPreferredSize(new Dimension(300, layoutTextField.getPreferredSize().height));
@@ -350,7 +350,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
     }
 
     public JSecurityAction createModifyConditionAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("modify_text"), ConsoleIconFactory.getSwingIcon("paste.png"), ConsoleLocaleFactory.getString("modify_condition_tooltip")) {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("modify_text"), ConsoleIconFactory.getSwingIcon("modify.png"), ConsoleLocaleFactory.getString("modify_condition_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
