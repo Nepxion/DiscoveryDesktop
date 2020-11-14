@@ -410,7 +410,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
 
         addNodes(serviceId, blueMetadata, greenMetadata, basicMetadata, blueCondition, greenCondition);
 
-        layoutActionListener.actionPerformed(null);
+        executeLayout();
     }
 
     @Override

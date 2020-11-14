@@ -42,6 +42,7 @@ import com.nepxion.cots.twaver.graph.TGraphManager;
 import com.nepxion.cots.twaver.graph.TGraphPointBackground;
 import com.nepxion.cots.twaver.graph.TGraphPopupMenuGenerator;
 import com.nepxion.cots.twaver.graph.TLayoutPanel;
+import com.nepxion.cots.twaver.graph.TLayouter;
 import com.nepxion.cots.twaver.graph.TLayouterBar;
 import com.nepxion.cots.twaver.locale.TLocale;
 import com.nepxion.discovery.console.desktop.common.context.ConsoleUIContext;
@@ -72,6 +73,7 @@ public class BasicTopology extends JPanel {
     protected JBasicRadioButtonMenuItem linkAutoHideRadioButtonMenuItem;
 
     protected ActionListener layoutActionListener;
+    protected TLayouter layouter;
 
     public BasicTopology() {
         setLayout(new BorderLayout());
@@ -87,6 +89,8 @@ public class BasicTopology extends JPanel {
             graph.setDataBox(dataBox);
             graph.setGraphBackground(createBackground());
             graph.getControlBarInternalFrame().setVisible(false);
+
+            layouter = new TLayouter(graph);
         }
 
         return graph;

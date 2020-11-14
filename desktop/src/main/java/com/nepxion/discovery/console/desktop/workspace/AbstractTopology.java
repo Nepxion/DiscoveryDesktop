@@ -22,6 +22,7 @@ import javax.swing.JToolBar;
 import org.apache.commons.lang3.StringUtils;
 
 import com.nepxion.cots.twaver.graph.TGraphBackground;
+import com.nepxion.cots.twaver.graph.TLayoutType;
 import com.nepxion.discovery.console.controller.ConsoleController;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
@@ -68,7 +69,7 @@ public abstract class AbstractTopology extends BasicTopology {
         initializeToolBar();
         initializeTopology();
         initializeOperationContentPane();
-        initializeListener();
+        // initializeListener();
         initializeData();
 
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -123,6 +124,10 @@ public abstract class AbstractTopology extends BasicTopology {
 
     public JPanel getOperationContentPane() {
         return operationContentPane;
+    }
+
+    public void executeLayout() {
+        layouter.doLayout(TLayoutType.HIERARCHIC_LAYOUT_TYPE, 150, 100, 200, 60);
     }
 
     public JSecurityAction createCreateAction() {
@@ -242,7 +247,7 @@ public abstract class AbstractTopology extends BasicTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                toggleLayoutBar();
+                executeLayout();
             }
         };
 

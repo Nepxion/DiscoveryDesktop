@@ -389,7 +389,7 @@ public class GrayTopology extends AbstractReleaseTopology {
 
         addNodes(serviceId, grayMetadata, stableMetadata, grayCondition, stableCondition);
 
-        layoutActionListener.actionPerformed(null);
+        executeLayout();
     }
 
     @Override
