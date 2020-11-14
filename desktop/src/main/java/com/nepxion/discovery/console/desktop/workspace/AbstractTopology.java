@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.HierarchyEvent;
 
 import javax.swing.BorderFactory;
+import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
 import org.apache.commons.lang3.StringUtils;
@@ -51,6 +52,8 @@ public abstract class AbstractTopology extends BasicTopology {
 
     protected JBasicTextField layoutTextField = new JBasicTextField();
 
+    protected JPanel operationContentPane = new JPanel();
+
     protected ReleaseType releaseType;
     protected StrategyType strategyType;
     protected ConfigType configType;
@@ -64,6 +67,7 @@ public abstract class AbstractTopology extends BasicTopology {
 
         initializeToolBar();
         initializeTopology();
+        initializeOperationContentPane();
         initializeListener();
         initializeData();
 
@@ -113,6 +117,12 @@ public abstract class AbstractTopology extends BasicTopology {
                 removeHierarchyListener(this);
             }
         });
+    }
+
+    public abstract void initializeOperationContentPane();
+
+    public JPanel getOperationContentPane() {
+        return operationContentPane;
     }
 
     public JSecurityAction createCreateAction() {

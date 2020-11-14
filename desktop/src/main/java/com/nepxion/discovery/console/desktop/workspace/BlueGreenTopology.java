@@ -80,11 +80,10 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
 
     public BlueGreenTopology() {
         super(ReleaseType.BLUE_GREEN);
-
-        initializeContentBar();
     }
 
-    public void initializeContentBar() {
+    @Override
+    public void initializeOperationContentPane() {
         serviceIdComboBox = new JBasicComboBox();
         serviceIdComboBox.setEditable(true);
         serviceIdComboBox.setPreferredSize(new Dimension(300, layoutTextField.getPreferredSize().height));
@@ -184,7 +183,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         toolBar.add(conditionPanel, "1, 1");
         toolBar.add(conditionToolBar, "2, 1");
 
-        add(toolBar, BorderLayout.NORTH);
+        operationContentPane.add(toolBar, BorderLayout.NORTH);
     }
 
     public void addNodes(String serviceId, String blueMetadata, String greenMetadata, String basicMetadata, String blueCondition, String greenCondition) {

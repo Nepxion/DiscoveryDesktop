@@ -78,11 +78,10 @@ public class GrayTopology extends AbstractReleaseTopology {
 
     public GrayTopology() {
         super(ReleaseType.GRAY);
-
-        initializeContentBar();
     }
 
-    public void initializeContentBar() {
+    @Override
+    public void initializeOperationContentPane() {
         serviceIdComboBox = new JBasicComboBox();
         serviceIdComboBox.setEditable(true);
         serviceIdComboBox.setPreferredSize(new Dimension(300, layoutTextField.getPreferredSize().height));
@@ -201,7 +200,7 @@ public class GrayTopology extends AbstractReleaseTopology {
         toolBar.add(conditionPanel, "1, 1");
         toolBar.add(conditionToolBar, "2, 1");
 
-        add(toolBar, BorderLayout.NORTH);
+        operationContentPane.add(toolBar, BorderLayout.NORTH);
     }
 
     public void setConditionUI(JBasicComboBox comboBox) {

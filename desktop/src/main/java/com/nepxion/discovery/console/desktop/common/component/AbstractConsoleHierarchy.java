@@ -22,10 +22,11 @@ import javax.swing.JPanel;
 import com.nepxion.discovery.console.desktop.common.context.ConsoleUIContext;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
+import com.nepxion.discovery.console.desktop.workspace.AbstractTopology;
 import com.nepxion.swing.element.ElementNode;
+import com.nepxion.swing.element.IElementNode;
 import com.nepxion.swing.framework.reflection.JReflectionHierarchy;
-import com.nepxion.swing.list.toggle.AbstractToggleAdapter;
-import com.nepxion.swing.list.toggle.JToggleList;
+import com.nepxion.swing.list.JBasicList;
 import com.nepxion.swing.shrinkbar.JShrinkBar;
 import com.nepxion.swing.shrinkbar.JShrinkOutlook;
 import com.nepxion.swing.shrinkbar.JShrinkOutlookBar;
@@ -86,13 +87,26 @@ public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
     }
 
     @SuppressWarnings("unchecked")
-    public JToggleList createToggleList(List<ElementNode> elementNodes) {
-        JToggleList toggleList = new JToggleList(CollectionUtil.parseVector(elementNodes));
-        toggleList.setSelectionMode(JToggleList.SINGLE_SELECTION);
+    public JBasicList createToggleList(List<ElementNode> elementNodes) {
+        JBasicList toggleList = new JBasicList(CollectionUtil.parseVector(elementNodes)) {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void executeSelection(int oldSelectedRow, int newSelectedRow) {
+                if (newSelectedRow == -1) {
+                    return;
+                }
+
+                IElementNode elementNode = (IElementNode) getModel().getElementAt(newSelectedRow);
+                AbstractTopology topology = (AbstractTopology) elementNode.getUserObject();
+
+                shrinkContentBar.setContentPane(topology);
+                shrinkOperationBar.setContentPane(topology.getOperationContentPane());
+            }
+        };
+        toggleList.setSelectionMode(JBasicList.SINGLE_SELECTION);
         toggleList.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
         toggleList.setCellRenderer(new ShrinkListCellRenderer(toggleList, BorderFactory.createEmptyBorder(0, 10, 0, 0), 22));
-        toggleList.setToggleContentPanel(shrinkContentBar);
-        toggleList.setToggleAdapter(createToggleListener(toggleList));
 
         return toggleList;
     }
@@ -109,12 +123,10 @@ public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
 
     public class OutlookSelectionListener extends ShrinkOutlookSelectionListener {
         public void selectionStateChanged(JShrinkOutlook shrinkOutlook) {
-            JToggleList toggleList = (JToggleList) shrinkOutlook.getContentPane();
+            JBasicList toggleList = (JBasicList) shrinkOutlook.getContentPane();
             toggleList.executeSelection(-1, toggleList.getSelectedIndex());
         }
     }
 
     public abstract void initializeUI();
-
-    public abstract AbstractToggleAdapter createToggleListener(JToggleList toggleList);
 }

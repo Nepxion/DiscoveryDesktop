@@ -17,11 +17,11 @@ import com.nepxion.discovery.console.desktop.common.component.AbstractConsoleHie
 import com.nepxion.discovery.console.desktop.common.context.ConsoleUIContext;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
-import com.nepxion.discovery.console.desktop.workspace.toggle.ToggleListener;
+import com.nepxion.discovery.console.desktop.workspace.BlueGreenTopology;
+import com.nepxion.discovery.console.desktop.workspace.GrayTopology;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.swing.element.ElementNode;
-import com.nepxion.swing.list.toggle.AbstractToggleAdapter;
-import com.nepxion.swing.list.toggle.JToggleList;
+import com.nepxion.swing.list.JBasicList;
 import com.nepxion.swing.shrinkbar.JShrinkOutlook;
 
 public class ConsoleHierarchy extends AbstractConsoleHierarchy {
@@ -35,10 +35,10 @@ public class ConsoleHierarchy extends AbstractConsoleHierarchy {
 
     private JShrinkOutlook createReleaseManageShrinkOutlook() {
         List<ElementNode> elementNodes = new ArrayList<ElementNode>();
-        elementNodes.add(new ElementNode(ReleaseType.BLUE_GREEN.toString(), ReleaseType.BLUE_GREEN.getDescription(), ConsoleIconFactory.getSwingIcon("component/ui_16.png"), ReleaseType.BLUE_GREEN.getDescription()));
-        elementNodes.add(new ElementNode(ReleaseType.GRAY.toString(), ReleaseType.GRAY.getDescription(), ConsoleIconFactory.getSwingIcon("component/ui_16.png"), ReleaseType.GRAY.getDescription()));
+        elementNodes.add(new ElementNode(ReleaseType.BLUE_GREEN.toString(), ReleaseType.BLUE_GREEN.getDescription(), ConsoleIconFactory.getSwingIcon("component/ui_16.png"), ReleaseType.BLUE_GREEN.getDescription(), new BlueGreenTopology()));
+        elementNodes.add(new ElementNode(ReleaseType.GRAY.toString(), ReleaseType.GRAY.getDescription(), ConsoleIconFactory.getSwingIcon("component/ui_16.png"), ReleaseType.GRAY.getDescription(), new GrayTopology()));
 
-        JToggleList toggleList = createToggleList(elementNodes);
+        JBasicList toggleList = createToggleList(elementNodes);
         toggleList.setSelectedIndex(0);
 
         JShrinkOutlook shrinkOutlook = shrinkOutlookBar.addShrinkOutlook(ConsoleLocaleFactory.getString("release_manage"), ConsoleIconFactory.getSwingIcon("stereo/favorite_16.png"), ConsoleIconFactory.getSwingIcon("stereo/favorite_add_16.png"), ConsoleLocaleFactory.getString("release_manage"), new Font(ConsoleUIContext.getFontName(), Font.BOLD, ConsoleUIContext.getMiddleFontSize()));
@@ -52,17 +52,12 @@ public class ConsoleHierarchy extends AbstractConsoleHierarchy {
         List<ElementNode> elementNodes = new ArrayList<ElementNode>();
         elementNodes.add(new ElementNode(ReleaseType.BLACKLIST.toString(), ReleaseType.BLACKLIST.getDescription(), ConsoleIconFactory.getSwingIcon("component/ui_16.png"), ReleaseType.BLACKLIST.getDescription()));
 
-        JToggleList toggleList = createToggleList(elementNodes);
+        JBasicList toggleList = createToggleList(elementNodes);
 
         JShrinkOutlook shrinkOutlook = shrinkOutlookBar.addShrinkOutlook(ConsoleLocaleFactory.getString("blacklist_manage"), ConsoleIconFactory.getSwingIcon("stereo/favorite_16.png"), ConsoleIconFactory.getSwingIcon("stereo/favorite_add_16.png"), ConsoleLocaleFactory.getString("blacklist_manage"), new Font(ConsoleUIContext.getFontName(), Font.BOLD, ConsoleUIContext.getMiddleFontSize()));
         shrinkOutlook.setContentPane(toggleList);
         shrinkOutlook.addPropertyChangeListener(new OutlookSelectionListener());
 
         return shrinkOutlook;
-    }
-
-    @Override
-    public AbstractToggleAdapter createToggleListener(JToggleList toggleList) {
-        return new ToggleListener(toggleList);
     }
 }
