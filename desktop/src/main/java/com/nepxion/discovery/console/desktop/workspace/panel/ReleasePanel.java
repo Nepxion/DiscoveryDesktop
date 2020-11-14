@@ -47,15 +47,15 @@ import com.nepxion.swing.textfield.JBasicTextField;
 public class ReleasePanel extends JPanel {
     private static final long serialVersionUID = 1L;
 
-    private ButtonGroup strategyButtonGroup;
-    private ButtonGroup configButtonGroup;
-    private ButtonGroup deployButtonGroup;
+    protected ButtonGroup strategyButtonGroup;
+    protected ButtonGroup configButtonGroup;
+    protected ButtonGroup deployButtonGroup;
 
-    private JBasicComboBox groupComboBox;
-    private JBasicComboBox gatewayIdComboBox;
-    private JBasicCheckBox showOnlyGatewayCheckBox;
+    protected JBasicComboBox groupComboBox;
+    protected JBasicComboBox gatewayIdComboBox;
+    protected JBasicCheckBox showOnlyGatewayCheckBox;
 
-    private JBasicTextField layoutTextField = new JBasicTextField();
+    protected JBasicTextField layoutTextField = new JBasicTextField();
 
     public ReleasePanel() {
         JPanel strategyPanel = new JPanel();
@@ -191,7 +191,7 @@ public class ReleasePanel extends JPanel {
     }
 
     @SuppressWarnings("unchecked")
-    private void setGroups() {
+    public void setGroups() {
         Object[] groups = getGroups();
         if (groups != null) {
             groupComboBox.setModel(new DefaultComboBoxModel<>(groups));
@@ -199,7 +199,7 @@ public class ReleasePanel extends JPanel {
     }
 
     @SuppressWarnings("unchecked")
-    private void setGatewayIds() {
+    public void setGatewayIds() {
         String group = ComboBoxUtil.getSelectedValue(groupComboBox);
         if (StringUtils.isNotBlank(group)) {
             Object[] gatewayIds = geServiceIds(group, showOnlyGatewayCheckBox.isSelected());
@@ -209,7 +209,7 @@ public class ReleasePanel extends JPanel {
         }
     }
 
-    private String getRationButtonName(ButtonGroup buttonGroup) {
+    public String getRationButtonName(ButtonGroup buttonGroup) {
         for (Enumeration<AbstractButton> enumeration = buttonGroup.getElements(); enumeration.hasMoreElements();) {
             AbstractButton button = enumeration.nextElement();
             if (button.isSelected()) {

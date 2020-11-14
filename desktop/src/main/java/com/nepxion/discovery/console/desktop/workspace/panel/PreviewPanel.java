@@ -22,8 +22,8 @@ import com.nepxion.swing.textfield.JBasicTextField;
 public class PreviewPanel extends JPanel {
     private static final long serialVersionUID = 1L;
 
-    private JBasicTextField keyTextField;
-    private JBasicTextArea configTextArea;
+    protected JBasicTextField keyTextField;
+    protected JBasicTextArea configTextArea;
 
     public PreviewPanel() {
         keyTextField = new JBasicTextField();

@@ -19,8 +19,6 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
 
 import com.nepxion.discovery.console.desktop.common.context.ConsoleUIContext;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
@@ -55,9 +53,9 @@ public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
         IOutlookTextureStyle outlookTextureStyle = new JGreenOutlookTextureStyle();
 
         shrinkOperationBar = new JShrinkOperationBar(JShrinkBar.PLACEMENT_EAST, JShrinkBar.CONTENT_PANE_TYPE_LABEL, headerTextureStyle);
-        shrinkOperationBar.setTitle(ConsoleLocaleFactory.getString("navigator_bar"));
-        shrinkOperationBar.setToolTipText(ConsoleLocaleFactory.getString("navigator_bar"));
-        shrinkOperationBar.setIcon(ConsoleIconFactory.getSwingIcon("hierarchy.png"));
+        shrinkOperationBar.setTitle(ConsoleLocaleFactory.getString("operation_bar"));
+        shrinkOperationBar.setToolTipText(ConsoleLocaleFactory.getString("operation_bar"));
+        shrinkOperationBar.setIcon(ConsoleIconFactory.getSwingIcon("property.png"));
         shrinkOperationBar.setTitleFont(new Font(ConsoleUIContext.getFontName(), Font.BOLD, ConsoleUIContext.getLargeFontSize()));
         shrinkOperationBar.setPreferredSize(new Dimension(360, shrinkOperationBar.getPreferredSize().height));
 
