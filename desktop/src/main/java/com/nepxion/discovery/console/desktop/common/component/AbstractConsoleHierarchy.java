@@ -10,7 +10,6 @@ package com.nepxion.discovery.console.desktop.common.component;
  */
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
@@ -30,7 +29,6 @@ import com.nepxion.swing.list.toggle.JToggleList;
 import com.nepxion.swing.shrinkbar.JShrinkBar;
 import com.nepxion.swing.shrinkbar.JShrinkOutlook;
 import com.nepxion.swing.shrinkbar.JShrinkOutlookBar;
-import com.nepxion.swing.shrinkbar.JShrinkShortcutBar;
 import com.nepxion.swing.shrinkbar.ShrinkListCellRenderer;
 import com.nepxion.swing.shrinkbar.ShrinkOutlookSelectionListener;
 import com.nepxion.swing.style.texture.shrink.IHeaderTextureStyle;
