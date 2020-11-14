@@ -73,7 +73,7 @@ public abstract class AbstractTopology extends BasicTopology {
     private void initializeToolBar() {
         JToolBar toolBar = getGraph().getToolbar();
         toolBar.addSeparator();
-        toolBar.add(new JClassicButton(createOpenAction()));
+        toolBar.add(new JClassicButton(createCreateAction()));
         toolBar.add(new JClassicButton(createSaveAction()));
         toolBar.add(new JClassicButton(createClearAction()));
         toolBar.addSeparator();
@@ -113,12 +113,12 @@ public abstract class AbstractTopology extends BasicTopology {
         });
     }
 
-    private JSecurityAction createOpenAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("open_text"), ConsoleIconFactory.getSwingIcon("theme/tree/plastic/tree_open.png"), ConsoleLocaleFactory.getString("open_tooltip")) {
+    private JSecurityAction createCreateAction() {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("create_text"), ConsoleIconFactory.getSwingIcon("theme/tree/plastic/tree_leaf.png"), ConsoleLocaleFactory.getString("create_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                open();
+                create();
             }
         };
 
@@ -231,11 +231,11 @@ public abstract class AbstractTopology extends BasicTopology {
 
     public abstract String getServiceId();
 
-    public abstract void clear();
-
-    public abstract void open();
+    public abstract void create();
 
     public abstract void save(String config);
+
+    public abstract void clear();
 
     public abstract StrategyProcessor getStrategyProcessor();
 }
