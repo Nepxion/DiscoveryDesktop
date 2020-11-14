@@ -42,7 +42,7 @@ import com.nepxion.util.data.CollectionUtil;
 public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
     private static final long serialVersionUID = 1L;
 
-    protected JShrinkOperationBar shrinkOperationBar;
+    protected JShrinkBar shrinkOperationBar;
     protected JShrinkBar shrinkContentBar;
     protected JShrinkOutlookBar shrinkOutlookBar;
 
@@ -52,7 +52,7 @@ public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
         IHeaderTextureStyle headerTextureStyle = new JBlackHeaderTextureStyle();
         IOutlookTextureStyle outlookTextureStyle = new JGreenOutlookTextureStyle();
 
-        shrinkOperationBar = new JShrinkOperationBar(JShrinkBar.PLACEMENT_EAST, JShrinkBar.CONTENT_PANE_TYPE_LABEL, headerTextureStyle);
+        shrinkOperationBar = new JShrinkBar(JShrinkBar.PLACEMENT_EAST, JShrinkBar.CONTENT_PANE_TYPE_LABEL, headerTextureStyle);
         shrinkOperationBar.setTitle(ConsoleLocaleFactory.getString("operation_bar"));
         shrinkOperationBar.setToolTipText(ConsoleLocaleFactory.getString("operation_bar"));
         shrinkOperationBar.setIcon(ConsoleIconFactory.getSwingIcon("property.png"));
@@ -99,23 +99,12 @@ public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
         return toggleList;
     }
 
-    public class JShrinkOperationBar extends JShrinkShortcutBar {
-        private static final long serialVersionUID = 1L;
-
-        public JShrinkOperationBar(int placement, int contentPaneType, IHeaderTextureStyle headerTextureStyle) {
-            super(placement, contentPaneType, headerTextureStyle);
-        }
-
-        public void setContentPane(Component contentPane) {
-            shrinkContentPane.add(contentPane, BorderLayout.CENTER);
-        }
-    }
-
     public class ShrinkContentBarMouseListener extends MouseAdapter {
         public void mouseClicked(MouseEvent e) {
             if (e.getClickCount() > 1) {
                 boolean isShrinked = !shrinkOutlookBar.isShrinked();
                 shrinkOutlookBar.setShrinked(isShrinked);
+                shrinkOperationBar.setShrinked(isShrinked);
             }
         }
     }
