@@ -285,6 +285,10 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
+                if (strategyType == null) {
+                    return;
+                }
+
                 refreshData();
                 refreshUI();
             }
@@ -342,7 +346,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                if (TElementManager.getNodes(dataBox).size() == 0) {
+                if (strategyType == null) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("portal_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
@@ -373,6 +377,12 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
+                if (strategyType == null) {
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("portal_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+                    return;
+                }
+
                 String serviceId = ComboBoxUtil.getSelectedValue(serviceIdComboBox);
                 if (StringUtils.isBlank(serviceId)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("service_id_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
