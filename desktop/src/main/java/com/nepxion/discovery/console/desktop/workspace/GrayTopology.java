@@ -116,18 +116,18 @@ public class GrayTopology extends AbstractReleaseTopology {
         };
 
         TableLayout serviceTableLayout = new TableLayout(serviceSize);
-        serviceTableLayout.setHGap(5);
+        serviceTableLayout.setHGap(0);
         serviceTableLayout.setVGap(5);
 
         JPanel servicePanel = new JPanel();
         servicePanel.setLayout(serviceTableLayout);
-        servicePanel.add(new JBasicLabel(ConsoleLocaleFactory.getString("service")), "0, 0");
+        servicePanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("service")), 5), "0, 0");
         servicePanel.add(serviceIdComboBox, "1, 0");
         servicePanel.add(refreshServicesButton, "2, 0");
-        servicePanel.add(new JBasicLabel(NodeType.GRAY.getDescription()), "0, 1");
+        servicePanel.add(DimensionUtil.addWidth(new JBasicLabel(NodeType.GRAY.getDescription()), 5), "0, 1");
         servicePanel.add(grayMetadataComboBox, "1, 1");
         servicePanel.add(grayMetadataButton, "2, 1");
-        servicePanel.add(new JBasicLabel(NodeType.STABLE.getDescription()), "0, 2");
+        servicePanel.add(DimensionUtil.addWidth(new JBasicLabel(NodeType.STABLE.getDescription()), 5), "0, 2");
         servicePanel.add(stableMetadataComboBox, "1, 2");
         servicePanel.add(stableMetadataButton, "2, 2");
 
@@ -174,15 +174,15 @@ public class GrayTopology extends AbstractReleaseTopology {
         };
 
         TableLayout conditionTableLayout = new TableLayout(conditionSize);
-        conditionTableLayout.setHGap(5);
+        conditionTableLayout.setHGap(0);
         conditionTableLayout.setVGap(5);
 
         JPanel conditionPanel = new JPanel();
         conditionPanel.setLayout(conditionTableLayout);
-        conditionPanel.add(new JBasicLabel(NodeType.GRAY.getDescription()), "0, 0");
+        conditionPanel.add(DimensionUtil.addWidth(new JBasicLabel(NodeType.GRAY.getDescription()), 5), "0, 0");
         conditionPanel.add(grayConditionComboBox, "1, 0");
         conditionPanel.add(new JBasicLabel("%"), "2, 0");
-        conditionPanel.add(new JBasicLabel(NodeType.STABLE.getDescription()), "0, 1");
+        conditionPanel.add(DimensionUtil.addWidth(new JBasicLabel(NodeType.STABLE.getDescription()), 5), "0, 1");
         conditionPanel.add(stableConditionComboBox, "1, 1");
         conditionPanel.add(new JBasicLabel("%"), "2, 1");
 
@@ -196,7 +196,7 @@ public class GrayTopology extends AbstractReleaseTopology {
         };
 
         TableLayout tableLayout = new TableLayout(size);
-        tableLayout.setHGap(5);
+        tableLayout.setHGap(0);
         tableLayout.setVGap(5);
 
         operationBar.setLayout(tableLayout);
