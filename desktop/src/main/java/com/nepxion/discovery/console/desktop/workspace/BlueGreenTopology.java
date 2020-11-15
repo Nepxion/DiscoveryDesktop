@@ -85,10 +85,10 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
 
     @Override
     public void initializeOperationBar() {
-        JShrinkShortcut metadataShrinkShortcut = new JShrinkShortcut();
-        metadataShrinkShortcut.setTitle(ConsoleLocaleFactory.getString(releaseType.toString() + "_service"));
-        metadataShrinkShortcut.setIcon(IconFactory.getSwingIcon("stereo/paste_16.png"));
-        metadataShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString(releaseType.toString() + "_service"));
+        JShrinkShortcut serviceShrinkShortcut = new JShrinkShortcut();
+        serviceShrinkShortcut.setTitle(ConsoleLocaleFactory.getString(releaseType.toString() + "_service"));
+        serviceShrinkShortcut.setIcon(IconFactory.getSwingIcon("stereo/paste_16.png"));
+        serviceShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString(releaseType.toString() + "_service"));
 
         serviceIdComboBox = new JBasicComboBox();
         serviceIdComboBox.setEditable(true);
@@ -118,34 +118,34 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         JClassicButton basicMetadataButton = new JClassicButton(createMetadataSelectorAction(basicMetadataComboBox));
         basicMetadataButton.setPreferredSize(new Dimension(30, basicMetadataButton.getPreferredSize().height));
 
-        double[][] metadataSize = {
+        double[][] serviceSize = {
                 { TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },
                 { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
         };
 
-        TableLayout metadataTableLayout = new TableLayout(metadataSize);
-        metadataTableLayout.setHGap(5);
-        metadataTableLayout.setVGap(5);
+        TableLayout serviceTableLayout = new TableLayout(serviceSize);
+        serviceTableLayout.setHGap(5);
+        serviceTableLayout.setVGap(5);
 
-        JPanel metadataPanel = new JPanel();
-        metadataPanel.setLayout(metadataTableLayout);
-        metadataPanel.add(new JBasicLabel(ConsoleLocaleFactory.getString("service")), "0, 0");
-        metadataPanel.add(serviceIdComboBox, "1, 0");
-        metadataPanel.add(refreshServicesButton, "2, 0");
-        metadataPanel.add(new JBasicLabel(NodeType.BLUE.getDescription()), "0, 1");
-        metadataPanel.add(blueMetadataComboBox, "1, 1");
-        metadataPanel.add(blueMetadataButton, "2, 1");
-        metadataPanel.add(new JBasicLabel(NodeType.GREEN.getDescription()), "0, 2");
-        metadataPanel.add(greenMetadataComboBox, "1, 2");
-        metadataPanel.add(greenMetadataButton, "2, 2");
-        metadataPanel.add(new JBasicLabel(NodeType.BASIC.getDescription()), "0, 3");
-        metadataPanel.add(basicMetadataComboBox, "1, 3");
-        metadataPanel.add(basicMetadataButton, "2, 3");
+        JPanel servicePanel = new JPanel();
+        servicePanel.setLayout(serviceTableLayout);
+        servicePanel.add(new JBasicLabel(ConsoleLocaleFactory.getString("service")), "0, 0");
+        servicePanel.add(serviceIdComboBox, "1, 0");
+        servicePanel.add(refreshServicesButton, "2, 0");
+        servicePanel.add(new JBasicLabel(NodeType.BLUE.getDescription()), "0, 1");
+        servicePanel.add(blueMetadataComboBox, "1, 1");
+        servicePanel.add(blueMetadataButton, "2, 1");
+        servicePanel.add(new JBasicLabel(NodeType.GREEN.getDescription()), "0, 2");
+        servicePanel.add(greenMetadataComboBox, "1, 2");
+        servicePanel.add(greenMetadataButton, "2, 2");
+        servicePanel.add(new JBasicLabel(NodeType.BASIC.getDescription()), "0, 3");
+        servicePanel.add(basicMetadataComboBox, "1, 3");
+        servicePanel.add(basicMetadataButton, "2, 3");
 
-        JPanel metadataToolBar = new JPanel();
-        metadataToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
-        metadataToolBar.add(new JClassicButton(createAddServiceStrategyAction()));
-        metadataToolBar.add(new JClassicButton(createModifyServiceStrategyAction()));
+        JPanel serviceToolBar = new JPanel();
+        serviceToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
+        serviceToolBar.add(new JClassicButton(createAddServiceStrategyAction()));
+        serviceToolBar.add(new JClassicButton(createModifyServiceStrategyAction()));
 
         JShrinkShortcut conditionShrinkShortcut = new JShrinkShortcut();
         conditionShrinkShortcut.setTitle(ConsoleLocaleFactory.getString(releaseType.toString() + "_condition"));
@@ -187,9 +187,9 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
 
         operationBar.setLayout(tableLayout);
         operationBar.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        operationBar.add(metadataShrinkShortcut, "0, 0");
-        operationBar.add(metadataPanel, "0, 1");
-        operationBar.add(metadataToolBar, "0, 2");
+        operationBar.add(serviceShrinkShortcut, "0, 0");
+        operationBar.add(servicePanel, "0, 1");
+        operationBar.add(serviceToolBar, "0, 2");
         operationBar.add(conditionShrinkShortcut, "0, 4");
         operationBar.add(conditionPanel, "0, 5");
         operationBar.add(conditionToolBar, "0, 6");
