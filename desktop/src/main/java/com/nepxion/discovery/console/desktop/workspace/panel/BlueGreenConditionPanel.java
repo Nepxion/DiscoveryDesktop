@@ -13,8 +13,8 @@ import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 
+import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.workspace.type.NodeType;
-import com.nepxion.discovery.console.desktop.workspace.util.DimensionUtil;
 import com.nepxion.swing.button.JClassicButton;
 import com.nepxion.swing.combobox.JBasicComboBox;
 import com.nepxion.swing.icon.IconFactory;

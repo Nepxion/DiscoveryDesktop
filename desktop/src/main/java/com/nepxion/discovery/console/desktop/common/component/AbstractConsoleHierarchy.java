@@ -21,7 +21,7 @@ import javax.swing.JPanel;
 import com.nepxion.discovery.console.desktop.common.context.ConsoleUIContext;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
-import com.nepxion.discovery.console.desktop.workspace.util.DimensionUtil;
+import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.swing.element.ElementNode;
 import com.nepxion.swing.framework.reflection.JReflectionHierarchy;
 import com.nepxion.swing.list.JBasicList;
