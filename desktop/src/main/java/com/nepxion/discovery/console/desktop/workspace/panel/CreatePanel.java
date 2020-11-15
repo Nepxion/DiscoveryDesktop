@@ -133,9 +133,11 @@ public class CreatePanel extends JPanel {
                 }
             }
         });
+        // JSearchableFactory.installSearchable(groupComboBox);
 
         gatewayIdComboBox = new JBasicComboBox();
         gatewayIdComboBox.setEditable(true);
+        // JSearchableFactory.installSearchable(gatewayIdComboBox);
 
         showOnlyGatewayCheckBox = new JBasicCheckBox(ConsoleLocaleFactory.getString("show_only_gateway_text"), ConsoleLocaleFactory.getString("show_only_gateway_text"), true);
         showOnlyGatewayCheckBox.addItemListener(new ItemListener() {
