@@ -9,7 +9,6 @@ package com.nepxion.discovery.console.desktop.workspace.panel;
  * @version 1.0
  */
 
-import java.awt.Dimension;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
@@ -42,7 +41,6 @@ import com.nepxion.swing.label.JBasicLabel;
 import com.nepxion.swing.layout.filed.FiledLayout;
 import com.nepxion.swing.layout.table.TableLayout;
 import com.nepxion.swing.radiobutton.JBasicRadioButton;
-import com.nepxion.swing.textfield.JBasicTextField;
 
 public class CreatePanel extends JPanel {
     private static final long serialVersionUID = 1L;
@@ -54,8 +52,6 @@ public class CreatePanel extends JPanel {
     protected JBasicComboBox groupComboBox;
     protected JBasicComboBox gatewayIdComboBox;
     protected JBasicCheckBox showOnlyGatewayCheckBox;
-
-    protected JBasicTextField layoutTextField = new JBasicTextField();
 
     public CreatePanel() {
         JPanel strategyPanel = new JPanel();
@@ -130,7 +126,6 @@ public class CreatePanel extends JPanel {
 
         groupComboBox = new JBasicComboBox();
         groupComboBox.setEditable(true);
-        groupComboBox.setPreferredSize(new Dimension(300, layoutTextField.getPreferredSize().height));
         groupComboBox.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (groupComboBox.getSelectedItem() != e.getItem()) {
@@ -141,7 +136,6 @@ public class CreatePanel extends JPanel {
 
         gatewayIdComboBox = new JBasicComboBox();
         gatewayIdComboBox.setEditable(true);
-        gatewayIdComboBox.setPreferredSize(new Dimension(300, layoutTextField.getPreferredSize().height));
 
         showOnlyGatewayCheckBox = new JBasicCheckBox(ConsoleLocaleFactory.getString("show_only_gateway_text"), ConsoleLocaleFactory.getString("show_only_gateway_text"), true);
         showOnlyGatewayCheckBox.addItemListener(new ItemListener() {

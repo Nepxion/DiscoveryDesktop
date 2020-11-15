@@ -12,7 +12,6 @@ package com.nepxion.discovery.console.desktop.workspace;
 import twaver.Link;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -33,6 +32,7 @@ import com.nepxion.cots.twaver.element.TNode;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
+import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.workspace.processor.GrayStrategyProcessor;
 import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessor;
 import com.nepxion.discovery.console.desktop.workspace.topology.LinkUI;
@@ -98,17 +98,17 @@ public class GrayTopology extends AbstractReleaseTopology {
             }
         });
         JClassicButton refreshServicesButton = new JClassicButton(createRefreshServiceListAction());
-        refreshServicesButton.setPreferredSize(new Dimension(30, refreshServicesButton.getPreferredSize().height));
+        DimensionUtil.setWidth(refreshServicesButton, 30);
 
         grayMetadataComboBox = new JBasicComboBox();
         grayMetadataComboBox.setEditable(true);
         JClassicButton grayMetadataButton = new JClassicButton(createMetadataSelectorAction(grayMetadataComboBox));
-        grayMetadataButton.setPreferredSize(new Dimension(30, grayMetadataButton.getPreferredSize().height));
+        DimensionUtil.setWidth(grayMetadataButton, 30);
 
         stableMetadataComboBox = new JBasicComboBox();
         stableMetadataComboBox.setEditable(true);
         JClassicButton stableMetadataButton = new JClassicButton(createMetadataSelectorAction(stableMetadataComboBox));
-        stableMetadataButton.setPreferredSize(new Dimension(30, stableMetadataButton.getPreferredSize().height));
+        DimensionUtil.setWidth(stableMetadataButton, 30);
 
         double[][] serviceSize = {
                 { TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },
@@ -143,7 +143,6 @@ public class GrayTopology extends AbstractReleaseTopology {
 
         String[] conditions = { "0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100" };
         grayConditionComboBox = new JBasicComboBox(conditions);
-        grayConditionComboBox.setPreferredSize(new Dimension(grayConditionComboBox.getPreferredSize().width, grayConditionComboBox.getPreferredSize().height + 2));
         grayConditionComboBox.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (grayConditionComboBox.getSelectedItem() != e.getItem()) {
@@ -156,7 +155,6 @@ public class GrayTopology extends AbstractReleaseTopology {
             }
         });
         stableConditionComboBox = new JBasicComboBox(conditions);
-        stableConditionComboBox.setPreferredSize(new Dimension(stableConditionComboBox.getPreferredSize().width, stableConditionComboBox.getPreferredSize().height + 2));
         stableConditionComboBox.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (stableConditionComboBox.getSelectedItem() != e.getItem()) {

@@ -12,7 +12,6 @@ package com.nepxion.discovery.console.desktop.workspace;
 import twaver.Link;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -33,6 +32,7 @@ import com.nepxion.cots.twaver.element.TNode;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
+import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.BlueGreenConditionPanel;
 import com.nepxion.discovery.console.desktop.workspace.processor.BlueGreenStrategyProcessor;
 import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessor;
@@ -101,22 +101,22 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
             }
         });
         JClassicButton refreshServicesButton = new JClassicButton(createRefreshServiceListAction());
-        refreshServicesButton.setPreferredSize(new Dimension(30, refreshServicesButton.getPreferredSize().height));
+        DimensionUtil.setWidth(refreshServicesButton, 30);
 
         blueMetadataComboBox = new JBasicComboBox();
         blueMetadataComboBox.setEditable(true);
         JClassicButton blueMetadataButton = new JClassicButton(createMetadataSelectorAction(blueMetadataComboBox));
-        blueMetadataButton.setPreferredSize(new Dimension(30, blueMetadataButton.getPreferredSize().height));
+        DimensionUtil.setWidth(blueMetadataButton, 30);
 
         greenMetadataComboBox = new JBasicComboBox();
         greenMetadataComboBox.setEditable(true);
         JClassicButton greenMetadataButton = new JClassicButton(createMetadataSelectorAction(greenMetadataComboBox));
-        greenMetadataButton.setPreferredSize(new Dimension(30, greenMetadataButton.getPreferredSize().height));
+        DimensionUtil.setWidth(greenMetadataButton, 30);
 
         basicMetadataComboBox = new JBasicComboBox();
         basicMetadataComboBox.setEditable(true);
         JClassicButton basicMetadataButton = new JClassicButton(createMetadataSelectorAction(basicMetadataComboBox));
-        basicMetadataButton.setPreferredSize(new Dimension(30, basicMetadataButton.getPreferredSize().height));
+        DimensionUtil.setWidth(basicMetadataButton, 30);
 
         double[][] serviceSize = {
                 { TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },

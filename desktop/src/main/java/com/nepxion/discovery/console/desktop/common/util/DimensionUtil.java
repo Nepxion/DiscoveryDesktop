@@ -12,16 +12,14 @@ package com.nepxion.discovery.console.desktop.common.util;
 import java.awt.Component;
 import java.awt.Dimension;
 
-import com.nepxion.swing.label.JBasicLabel;
-
 public class DimensionUtil {
-    public static Component addWidth(JBasicLabel Component, int width) {
+    public static Component addWidth(Component Component, int width) {
         Component.setPreferredSize(new Dimension(Component.getPreferredSize().width + width, Component.getPreferredSize().height));
 
         return Component;
     }
 
-    public static Component addHeight(JBasicLabel Component, int height) {
+    public static Component addHeight(Component Component, int height) {
         Component.setPreferredSize(new Dimension(Component.getPreferredSize().width, Component.getPreferredSize().height + height));
 
         return Component;

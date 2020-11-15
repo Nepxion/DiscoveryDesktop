@@ -34,7 +34,6 @@ import com.nepxion.discovery.console.controller.ConsoleController;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
-import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.CreatePanel;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeLocation;
