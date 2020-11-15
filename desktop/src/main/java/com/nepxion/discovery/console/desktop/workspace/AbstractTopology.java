@@ -40,7 +40,6 @@ import com.nepxion.swing.handle.HandleManager;
 import com.nepxion.swing.listener.DisplayAbilityListener;
 import com.nepxion.swing.locale.SwingLocale;
 import com.nepxion.swing.optionpane.JBasicOptionPane;
-import com.nepxion.swing.textfield.JBasicTextField;
 
 public abstract class AbstractTopology extends BasicTopology {
     private static final long serialVersionUID = 1L;
@@ -50,8 +49,6 @@ public abstract class AbstractTopology extends BasicTopology {
     protected TGraphBackground background;
 
     protected PreviewPanel previewPanel;
-
-    protected JBasicTextField layoutTextField = new JBasicTextField();
 
     protected JPanel operationBar = new JPanel();
 

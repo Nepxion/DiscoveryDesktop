@@ -43,7 +43,7 @@ import com.nepxion.discovery.console.desktop.workspace.type.DeployType;
 import com.nepxion.discovery.console.desktop.workspace.type.NodeType;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
-import com.nepxion.discovery.console.desktop.workspace.util.ComboBoxUtil;
+import com.nepxion.discovery.console.desktop.workspace.util.ComponentUtil;
 import com.nepxion.discovery.console.entity.Instance;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.ButtonManager;
@@ -148,7 +148,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
     public void setMetadataUI() {
         List<String> metadatas = new ArrayList<String>();
-        String serviceId = ComboBoxUtil.getSelectedValue(serviceIdComboBox);
+        String serviceId = ComponentUtil.getSelectedValue(serviceIdComboBox);
         if (StringUtils.isNotBlank(serviceId)) {
             List<Instance> instances = getInstances(serviceId);
             if (CollectionUtils.isNotEmpty(instances)) {
@@ -352,7 +352,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
                     return;
                 }
 
-                String serviceId = ComboBoxUtil.getSelectedValue(serviceIdComboBox);
+                String serviceId = ComponentUtil.getSelectedValue(serviceIdComboBox);
                 if (StringUtils.isBlank(serviceId)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("service_id_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
@@ -383,7 +383,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
                     return;
                 }
 
-                String serviceId = ComboBoxUtil.getSelectedValue(serviceIdComboBox);
+                String serviceId = ComponentUtil.getSelectedValue(serviceIdComboBox);
                 if (StringUtils.isBlank(serviceId)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("service_id_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 

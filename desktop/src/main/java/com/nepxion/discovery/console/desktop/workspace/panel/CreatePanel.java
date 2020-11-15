@@ -32,7 +32,7 @@ import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.workspace.type.ConfigType;
 import com.nepxion.discovery.console.desktop.workspace.type.DeployType;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
-import com.nepxion.discovery.console.desktop.workspace.util.ComboBoxUtil;
+import com.nepxion.discovery.console.desktop.workspace.util.ComponentUtil;
 import com.nepxion.discovery.console.entity.Instance;
 import com.nepxion.swing.checkbox.JBasicCheckBox;
 import com.nepxion.swing.combobox.JBasicComboBox;
@@ -200,7 +200,7 @@ public class CreatePanel extends JPanel {
 
     @SuppressWarnings("unchecked")
     public void setGatewayIds() {
-        String group = ComboBoxUtil.getSelectedValue(groupComboBox);
+        String group = ComponentUtil.getSelectedValue(groupComboBox);
         if (StringUtils.isNotBlank(group)) {
             Object[] gatewayIds = geServiceIds(group, showOnlyGatewayCheckBox.isSelected());
             if (gatewayIds != null) {
@@ -239,11 +239,11 @@ public class CreatePanel extends JPanel {
     }
 
     public String getGroup() {
-        return ComboBoxUtil.getSelectedValue(groupComboBox);
+        return ComponentUtil.getSelectedValue(groupComboBox);
     }
 
     public String getGatewayId() {
-        return ComboBoxUtil.getSelectedValue(gatewayIdComboBox);
+        return ComponentUtil.getSelectedValue(gatewayIdComboBox);
     }
 
     public Object[] getGroups() {

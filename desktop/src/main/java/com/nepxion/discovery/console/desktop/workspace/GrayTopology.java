@@ -41,7 +41,7 @@ import com.nepxion.discovery.console.desktop.workspace.topology.NodeUI;
 import com.nepxion.discovery.console.desktop.workspace.type.LinkType;
 import com.nepxion.discovery.console.desktop.workspace.type.NodeType;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
-import com.nepxion.discovery.console.desktop.workspace.util.ComboBoxUtil;
+import com.nepxion.discovery.console.desktop.workspace.util.ComponentUtil;
 import com.nepxion.discovery.console.entity.Instance;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.ButtonManager;
@@ -90,7 +90,6 @@ public class GrayTopology extends AbstractReleaseTopology {
 
         serviceIdComboBox = new JBasicComboBox();
         serviceIdComboBox.setEditable(true);
-        serviceIdComboBox.setPreferredSize(new Dimension(300, layoutTextField.getPreferredSize().height));
         serviceIdComboBox.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (serviceIdComboBox.getSelectedItem() != e.getItem()) {
@@ -133,7 +132,7 @@ public class GrayTopology extends AbstractReleaseTopology {
         servicePanel.add(stableMetadataButton, "2, 2");
 
         JPanel serviceToolBar = new JPanel();
-        serviceToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 5));
+        serviceToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
         serviceToolBar.add(new JClassicButton(createAddServiceStrategyAction()));
         serviceToolBar.add(new JClassicButton(createModifyServiceStrategyAction()));
 
@@ -190,7 +189,7 @@ public class GrayTopology extends AbstractReleaseTopology {
         conditionPanel.add(new JBasicLabel("%"), "2, 1");
 
         JPanel conditionToolBar = new JPanel();
-        conditionToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 5));
+        conditionToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
         conditionToolBar.add(new JClassicButton(createModifyConditionAction()));
 
         double[][] size = {
@@ -213,7 +212,7 @@ public class GrayTopology extends AbstractReleaseTopology {
     }
 
     public void setConditionUI(JBasicComboBox comboBox) {
-        int onePercent = Integer.parseInt(ComboBoxUtil.getSelectedValue(comboBox));
+        int onePercent = Integer.parseInt(ComponentUtil.getSelectedValue(comboBox));
         int anotherPercent = 100 - onePercent;
         if (comboBox == grayConditionComboBox) {
             stableConditionComboBox.setSelectedItem(String.valueOf(anotherPercent));
@@ -344,8 +343,8 @@ public class GrayTopology extends AbstractReleaseTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                String grayCondition = ComboBoxUtil.getSelectedValue(grayConditionComboBox);
-                String stableCondition = ComboBoxUtil.getSelectedValue(stableConditionComboBox);
+                String grayCondition = ComponentUtil.getSelectedValue(grayConditionComboBox);
+                String stableCondition = ComponentUtil.getSelectedValue(stableConditionComboBox);
 
                 if (StringUtils.isBlank(grayCondition) || StringUtils.isBlank(stableCondition)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(GrayTopology.this), ConsoleLocaleFactory.getString("condition_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
@@ -379,10 +378,10 @@ public class GrayTopology extends AbstractReleaseTopology {
 
     @Override
     public void addServiceStrategy(String serviceId) {
-        String grayMetadata = ComboBoxUtil.getSelectedValue(grayMetadataComboBox);
-        String stableMetadata = ComboBoxUtil.getSelectedValue(stableMetadataComboBox);
-        String grayCondition = ComboBoxUtil.getSelectedValue(grayConditionComboBox);
-        String stableCondition = ComboBoxUtil.getSelectedValue(stableConditionComboBox);
+        String grayMetadata = ComponentUtil.getSelectedValue(grayMetadataComboBox);
+        String stableMetadata = ComponentUtil.getSelectedValue(stableMetadataComboBox);
+        String grayCondition = ComponentUtil.getSelectedValue(grayConditionComboBox);
+        String stableCondition = ComponentUtil.getSelectedValue(stableConditionComboBox);
 
         if (StringUtils.isBlank(grayMetadata) || StringUtils.isBlank(stableMetadata)) {
             JBasicOptionPane.showMessageDialog(HandleManager.getFrame(GrayTopology.this), strategyType.getName() + " " + ConsoleLocaleFactory.getString("not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
@@ -403,8 +402,8 @@ public class GrayTopology extends AbstractReleaseTopology {
 
     @Override
     public void modifyServiceStrategy(String serviceId) {
-        String grayMetadata = ComboBoxUtil.getSelectedValue(grayMetadataComboBox);
-        String stableMetadata = ComboBoxUtil.getSelectedValue(stableMetadataComboBox);
+        String grayMetadata = ComponentUtil.getSelectedValue(grayMetadataComboBox);
+        String stableMetadata = ComponentUtil.getSelectedValue(stableMetadataComboBox);
 
         if (StringUtils.isBlank(grayMetadata) || StringUtils.isBlank(stableMetadata)) {
             JBasicOptionPane.showMessageDialog(HandleManager.getFrame(GrayTopology.this), strategyType.getName() + " " + ConsoleLocaleFactory.getString("not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
