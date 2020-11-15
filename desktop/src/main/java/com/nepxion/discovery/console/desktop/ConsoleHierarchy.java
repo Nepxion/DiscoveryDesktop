@@ -69,4 +69,14 @@ public class ConsoleHierarchy extends AbstractConsoleHierarchy {
         shrinkContentBar.setContentPane(topology);
         shrinkOperationBar.setContentPane(topology.getOperationBar());
     }
+
+    @Override
+    public int getOutlookBarWidth() {
+        return 200;
+    }
+
+    @Override
+    public int getOperationBar() {
+        return 400;
+    }
 }

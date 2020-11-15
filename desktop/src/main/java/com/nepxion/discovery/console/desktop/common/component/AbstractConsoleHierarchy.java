@@ -54,7 +54,7 @@ public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
         shrinkOperationBar.setToolTipText(ConsoleLocaleFactory.getString("operation_bar"));
         shrinkOperationBar.setIcon(ConsoleIconFactory.getSwingIcon("property.png"));
         shrinkOperationBar.setTitleFont(new Font(ConsoleUIContext.getFontName(), Font.BOLD, ConsoleUIContext.getLargeFontSize()));
-        DimensionUtil.setWidth(shrinkOperationBar, 360);
+        DimensionUtil.setWidth(shrinkOperationBar, getOperationBar());
 
         shrinkContentBar = new JShrinkBar(JShrinkBar.PLACEMENT_EAST, JShrinkBar.CONTENT_PANE_TYPE_LABEL, headerTextureStyle);
         shrinkContentBar.setShrinkable(false);
@@ -69,7 +69,7 @@ public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
         shrinkOutlookBar.setToolTipText(ConsoleLocaleFactory.getString("navigator_bar"));
         shrinkOutlookBar.setIcon(ConsoleIconFactory.getSwingIcon("hierarchy.png"));
         shrinkOutlookBar.setTitleFont(new Font(ConsoleUIContext.getFontName(), Font.BOLD, ConsoleUIContext.getLargeFontSize()));
-        DimensionUtil.setWidth(shrinkOutlookBar, 200);
+        DimensionUtil.setWidth(shrinkOutlookBar, getOutlookBarWidth());
 
         initializeUI();
 
@@ -126,4 +126,8 @@ public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
     public abstract void initializeUI();
 
     public abstract void toggleListSelected(ElementNode elementNode);
+
+    public abstract int getOutlookBarWidth();
+
+    public abstract int getOperationBar();
 }
