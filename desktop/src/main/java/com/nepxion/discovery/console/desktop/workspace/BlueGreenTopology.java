@@ -84,7 +84,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
     }
 
     @Override
-    public void initializeOperationContentPane() {
+    public void initializeOperationBar() {
         JShrinkShortcut serviceShrinkShortcut = new JShrinkShortcut();
         serviceShrinkShortcut.setTitle(ConsoleLocaleFactory.getString(releaseType.toString() + "_service"));
         serviceShrinkShortcut.setIcon(IconFactory.getSwingIcon("stereo/paste_16.png"));
@@ -185,14 +185,14 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         tableLayout.setHGap(5);
         tableLayout.setVGap(5);
 
-        operationContentPane.setLayout(tableLayout);
-        operationContentPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        operationContentPane.add(serviceShrinkShortcut, "0, 0");
-        operationContentPane.add(servicePanel, "0, 1");
-        operationContentPane.add(serviceToolBar, "0, 2");
-        operationContentPane.add(conditionShrinkShortcut, "0, 4");
-        operationContentPane.add(conditionPanel, "0, 5");
-        operationContentPane.add(conditionToolBar, "0, 6");
+        operationBar.setLayout(tableLayout);
+        operationBar.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        operationBar.add(serviceShrinkShortcut, "0, 0");
+        operationBar.add(servicePanel, "0, 1");
+        operationBar.add(serviceToolBar, "0, 2");
+        operationBar.add(conditionShrinkShortcut, "0, 4");
+        operationBar.add(conditionPanel, "0, 5");
+        operationBar.add(conditionToolBar, "0, 6");
     }
 
     public void addNodes(String serviceId, String blueMetadata, String greenMetadata, String basicMetadata, String blueCondition, String greenCondition) {

@@ -53,7 +53,7 @@ public abstract class AbstractTopology extends BasicTopology {
 
     protected JBasicTextField layoutTextField = new JBasicTextField();
 
-    protected JPanel operationContentPane = new JPanel();
+    protected JPanel operationBar = new JPanel();
 
     protected ReleaseType releaseType;
     protected StrategyType strategyType;
@@ -68,7 +68,7 @@ public abstract class AbstractTopology extends BasicTopology {
 
         initializeToolBar();
         initializeTopology();
-        initializeOperationContentPane();
+        initializeOperationBar();
         // initializeListener();
         initializeData();
 
@@ -120,10 +120,10 @@ public abstract class AbstractTopology extends BasicTopology {
         });
     }
 
-    public abstract void initializeOperationContentPane();
+    public abstract void initializeOperationBar();
 
-    public JPanel getOperationContentPane() {
-        return operationContentPane;
+    public JPanel getOperationBar() {
+        return operationBar;
     }
 
     public void executeLayout() {
