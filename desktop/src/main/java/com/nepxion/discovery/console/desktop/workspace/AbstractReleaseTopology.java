@@ -33,7 +33,7 @@ import com.nepxion.discovery.common.constant.DiscoveryConstant;
 import com.nepxion.discovery.console.controller.ConsoleController;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
-import com.nepxion.discovery.console.desktop.workspace.panel.ReleasePanel;
+import com.nepxion.discovery.console.desktop.workspace.panel.CreatePanel;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeLocation;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeSizeType;
@@ -212,19 +212,19 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
     @Override
     public void create() {
-        ReleasePanel releasePanel = new ReleasePanel();
-        releasePanel.setPreferredSize(new Dimension(480, 180));
+        CreatePanel createPanel = new CreatePanel();
+        createPanel.setPreferredSize(new Dimension(480, 180));
 
-        int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractReleaseTopology.this), releasePanel, ConsoleLocaleFactory.getString("create_tooltip") + " [ " + releaseType.getDescription() + " ]", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
+        int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractReleaseTopology.this), createPanel, ConsoleLocaleFactory.getString("create_tooltip") + " [ " + releaseType.getDescription() + " ]", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
         if (selectedOption != 0) {
             return;
         }
 
-        StrategyType strategyType = releasePanel.getStrategyType();
-        ConfigType configType = releasePanel.getConfigType();
-        DeployType deployType = releasePanel.getDeployType();
+        StrategyType strategyType = createPanel.getStrategyType();
+        ConfigType configType = createPanel.getConfigType();
+        DeployType deployType = createPanel.getDeployType();
 
-        String group = releasePanel.getGroup();
+        String group = createPanel.getGroup();
         if (StringUtils.isBlank(group)) {
             JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("group_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
@@ -233,7 +233,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
         String gatewayId = null;
         if (configType == ConfigType.PARTIAL) {
-            gatewayId = releasePanel.getGatewayId();
+            gatewayId = createPanel.getGatewayId();
             if (StringUtils.isBlank(gatewayId)) {
                 JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("service_id_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 

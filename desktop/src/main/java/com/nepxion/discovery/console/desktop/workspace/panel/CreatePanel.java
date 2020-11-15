@@ -44,7 +44,7 @@ import com.nepxion.swing.layout.table.TableLayout;
 import com.nepxion.swing.radiobutton.JBasicRadioButton;
 import com.nepxion.swing.textfield.JBasicTextField;
 
-public class ReleasePanel extends JPanel {
+public class CreatePanel extends JPanel {
     private static final long serialVersionUID = 1L;
 
     protected ButtonGroup strategyButtonGroup;
@@ -57,7 +57,7 @@ public class ReleasePanel extends JPanel {
 
     protected JBasicTextField layoutTextField = new JBasicTextField();
 
-    public ReleasePanel() {
+    public CreatePanel() {
         JPanel strategyPanel = new JPanel();
         strategyPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
         strategyButtonGroup = new ButtonGroup();
