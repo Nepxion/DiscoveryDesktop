@@ -336,7 +336,7 @@ public class GrayTopology extends AbstractReleaseTopology {
     }
 
     public JSecurityAction createModifyConditionAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("modify_text"), ConsoleIconFactory.getSwingIcon("modify.png"), ConsoleLocaleFactory.getString("modify_condition_tooltip")) {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("modify_text"), ConsoleIconFactory.getSwingIcon("adjust.png"), ConsoleLocaleFactory.getString("modify_condition_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
