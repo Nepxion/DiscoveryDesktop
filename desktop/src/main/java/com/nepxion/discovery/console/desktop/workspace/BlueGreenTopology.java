@@ -49,14 +49,12 @@ import com.nepxion.swing.button.ButtonManager;
 import com.nepxion.swing.button.JClassicButton;
 import com.nepxion.swing.combobox.JBasicComboBox;
 import com.nepxion.swing.handle.HandleManager;
-import com.nepxion.swing.icon.IconFactory;
 import com.nepxion.swing.label.JBasicLabel;
 import com.nepxion.swing.layout.filed.FiledLayout;
 import com.nepxion.swing.layout.table.TableLayout;
 import com.nepxion.swing.locale.SwingLocale;
 import com.nepxion.swing.optionpane.JBasicOptionPane;
 import com.nepxion.swing.shrinkbar.JShrinkShortcut;
-import com.nepxion.swing.textfield.JBasicTextField;
 
 public class BlueGreenTopology extends AbstractReleaseTopology {
     private static final long serialVersionUID = 1L;
@@ -68,8 +66,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
     protected Color greenLinkUI = LinkUI.GREEN;
     protected Color basicLinkUI = LinkUI.YELLOW;
 
-    protected JBasicTextField blueConditionTextField;
-    protected JBasicTextField greenConditionTextField;
+    protected BlueGreenConditionPanel conditionPanel;
     protected JBasicComboBox blueMetadataComboBox;
     protected JBasicComboBox greenMetadataComboBox;
     protected JBasicComboBox basicMetadataComboBox;
@@ -86,33 +83,15 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
 
     @Override
     public void initializeOperationBar() {
-        blueConditionTextField = new JBasicTextField("#H['a'] == '1' && #H['b'] <= '2'");
-        greenConditionTextField = new JBasicTextField("#H['a'] == '3'");
-
-        double[][] conditionSize = {
-                { TableLayout.PREFERRED, TableLayout.FILL },
-                { TableLayout.PREFERRED, TableLayout.PREFERRED }
-        };
-
-        TableLayout conditionTableLayout = new TableLayout(conditionSize);
-        conditionTableLayout.setHGap(0);
-        conditionTableLayout.setVGap(5);
-
-        JPanel conditionPanel = new JPanel();
-        conditionPanel.setLayout(conditionTableLayout);
-        conditionPanel.add(DimensionUtil.addWidth(new JBasicLabel(NodeType.BLUE.getDescription()), 5), "0, 0");
-        conditionPanel.add(blueConditionTextField, "1, 0");
-        conditionPanel.add(DimensionUtil.addWidth(new JBasicLabel(NodeType.GREEN.getDescription()), 5), "0, 1");
-        conditionPanel.add(greenConditionTextField, "1, 1");
+        conditionPanel = new BlueGreenConditionPanel();
 
         JPanel conditionToolBar = new JPanel();
         conditionToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
-        conditionToolBar.add(new JClassicButton(createValidateConditionAction()));
         conditionToolBar.add(new JClassicButton(createModifyConditionAction()));
 
         JShrinkShortcut serviceShrinkShortcut = new JShrinkShortcut();
         serviceShrinkShortcut.setTitle(ConsoleLocaleFactory.getString(releaseType.toString() + "_service"));
-        serviceShrinkShortcut.setIcon(IconFactory.getSwingIcon("stereo/paste_16.png"));
+        serviceShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
         serviceShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString(releaseType.toString() + "_service"));
 
         serviceIdComboBox = new JBasicComboBox();
@@ -173,7 +152,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
 
         JShrinkShortcut conditionShrinkShortcut = new JShrinkShortcut();
         conditionShrinkShortcut.setTitle(ConsoleLocaleFactory.getString(releaseType.toString() + "_condition"));
-        conditionShrinkShortcut.setIcon(IconFactory.getSwingIcon("stereo/paste_16.png"));
+        conditionShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
         conditionShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString(releaseType.toString() + "_condition"));
 
         double[][] size = {
@@ -188,7 +167,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         operationBar.setLayout(tableLayout);
         operationBar.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         operationBar.add(conditionShrinkShortcut, "0, 0");
-        operationBar.add(new BlueGreenConditionPanel(), "0, 1");
+        operationBar.add(conditionPanel, "0, 1");
         operationBar.add(conditionToolBar, "0, 2");
         operationBar.add(serviceShrinkShortcut, "0, 4");
         operationBar.add(servicePanel, "0, 5");
@@ -346,25 +325,13 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         }
     }
 
-    public JSecurityAction createValidateConditionAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("validate_text"), ConsoleIconFactory.getSwingIcon("config.png"), ConsoleLocaleFactory.getString("validate_condition_tooltip")) {
-            private static final long serialVersionUID = 1L;
-
-            public void execute(ActionEvent e) {
-
-            }
-        };
-
-        return action;
-    }
-
     public JSecurityAction createModifyConditionAction() {
         JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("modify_text"), ConsoleIconFactory.getSwingIcon("modify.png"), ConsoleLocaleFactory.getString("modify_condition_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                String blueCondition = blueConditionTextField.getText().trim();
-                String greenCondition = greenConditionTextField.getText().trim();
+                String blueCondition = conditionPanel.getBlueCondition();
+                String greenCondition = conditionPanel.getGreenCondition();
 
                 if (StringUtils.isBlank(blueCondition) || StringUtils.isBlank(greenCondition)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), ConsoleLocaleFactory.getString("condition_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
@@ -402,8 +369,8 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         String blueMetadata = ComboBoxUtil.getSelectedValue(blueMetadataComboBox);
         String greenMetadata = ComboBoxUtil.getSelectedValue(greenMetadataComboBox);
         String basicMetadata = ComboBoxUtil.getSelectedValue(basicMetadataComboBox);
-        String blueCondition = blueConditionTextField.getText().trim();
-        String greenCondition = greenConditionTextField.getText().trim();
+        String blueCondition = conditionPanel.getBlueCondition();
+        String greenCondition = conditionPanel.getGreenCondition();
 
         if (StringUtils.isBlank(blueMetadata) || StringUtils.isBlank(greenMetadata) || StringUtils.isBlank(basicMetadata)) {
             JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), strategyType.getName() + " " + ConsoleLocaleFactory.getString("not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);

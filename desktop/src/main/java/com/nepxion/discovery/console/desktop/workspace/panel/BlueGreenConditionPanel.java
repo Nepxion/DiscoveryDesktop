@@ -10,16 +10,19 @@ package com.nepxion.discovery.console.desktop.workspace.panel;
  */
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JPanel;
 
+import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
+import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.workspace.type.NodeType;
+import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.JClassicButton;
 import com.nepxion.swing.combobox.JBasicComboBox;
-import com.nepxion.swing.icon.IconFactory;
 import com.nepxion.swing.label.JBasicLabel;
 import com.nepxion.swing.layout.filed.FiledLayout;
 import com.nepxion.swing.layout.table.TableLayout;
@@ -29,10 +32,24 @@ import com.nepxion.swing.textfield.JBasicTextField;
 public class BlueGreenConditionPanel extends JPanel {
     private static final long serialVersionUID = 1L;
 
+    protected ConditionBar blueConditionBar;
+    protected ConditionBar greenConditionBar;
+
     public BlueGreenConditionPanel() {
+        blueConditionBar = new ConditionBar(NodeType.BLUE);
+        greenConditionBar = new ConditionBar(NodeType.GREEN);
+
         setLayout(new FiledLayout(FiledLayout.COLUMN, FiledLayout.FULL, 10));
-        add(new ConditionBar(NodeType.BLUE));
-        add(new ConditionBar(NodeType.GREEN));
+        add(blueConditionBar);
+        add(greenConditionBar);
+    }
+
+    public String getBlueCondition() {
+        return blueConditionBar.getResult();
+    }
+
+    public String getGreenCondition() {
+        return greenConditionBar.getResult();
     }
 
     public class ConditionBar extends JPanel {
@@ -49,16 +66,21 @@ public class BlueGreenConditionPanel extends JPanel {
 
             JShrinkShortcut shrinkShortcut = new JShrinkShortcut();
             shrinkShortcut.setTitle(nodeType.getDescription());
-            shrinkShortcut.setIcon(nodeType == NodeType.BLUE ? IconFactory.getSwingIcon("circle_blue.png") : IconFactory.getSwingIcon("circle_green.png"));
+            shrinkShortcut.setIcon(nodeType == NodeType.BLUE ? ConsoleIconFactory.getSwingIcon("circle_blue.png") : ConsoleIconFactory.getSwingIcon("circle_green.png"));
             shrinkShortcut.setToolTipText(nodeType.getDescription());
 
-            resultTextField = new JBasicTextField("#H['a'] == '1' && #H['b'] <= '2'");
+            resultTextField = new JBasicTextField();
+
+            JPanel resultButtonBar = new JPanel();
+            resultButtonBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
+            resultButtonBar.add(DimensionUtil.setWidth(new JClassicButton(createAggregateConditionAction()), 30));
+            resultButtonBar.add(DimensionUtil.setWidth(new JClassicButton(createValidateConditionAction()), 30));
 
             JPanel resultBar = new JPanel();
             resultBar.setLayout(new BorderLayout(0, 5));
             resultBar.add(DimensionUtil.addWidth(new JBasicLabel("结果"), 5), BorderLayout.WEST);
             resultBar.add(resultTextField, BorderLayout.CENTER);
-            resultBar.add(DimensionUtil.setWidth(new JClassicButton(IconFactory.getSwingIcon("edit.png")), 30), BorderLayout.EAST);
+            resultBar.add(resultButtonBar, BorderLayout.EAST);
 
             double[][] size = {
                     { TableLayout.FILL, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },
@@ -99,12 +121,36 @@ public class BlueGreenConditionPanel extends JPanel {
         protected JBasicComboBox arithmeticComboBox = new JBasicComboBox(new String[] { "==", "!=", ">", ">=", "<", "<=", "匹配" });
         protected JBasicTextField valueTextField = new JBasicTextField();
         protected JBasicComboBox logicComboBox = new JBasicComboBox(new String[] { "&&", "||" });
-        // protected JClassicButton addButton = new JClassicButton(IconFactory.getSwingIcon("add.png"));
-        // protected JClassicButton deleteButton = new JClassicButton(IconFactory.getSwingIcon("delete.png"));
+        // protected JClassicButton addButton = new JClassicButton(ConsoleIconFactory.getSwingIcon("add.png"));
+        // protected JClassicButton deleteButton = new JClassicButton(ConsoleIconFactory.getSwingIcon("delete.png"));
 
         public ConditionItem() {
             // DimensionUtil.setWidth(addButton, 30);
             // DimensionUtil.setWidth(deleteButton, 30);
         }
+    }
+
+    public JSecurityAction createAggregateConditionAction() {
+        JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("theme/folder/deploy.png"), ConsoleLocaleFactory.getString("aggregate_condition_tooltip")) {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+
+            }
+        };
+
+        return action;
+    }
+
+    public JSecurityAction createValidateConditionAction() {
+        JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("theme/folder/snapshot.png"), ConsoleLocaleFactory.getString("validate_condition_tooltip")) {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+
+            }
+        };
+
+        return action;
     }
 }

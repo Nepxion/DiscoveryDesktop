@@ -51,7 +51,6 @@ import com.nepxion.swing.combobox.JBasicComboBox;
 import com.nepxion.swing.dialog.JExceptionDialog;
 import com.nepxion.swing.element.ElementNode;
 import com.nepxion.swing.handle.HandleManager;
-import com.nepxion.swing.icon.IconFactory;
 import com.nepxion.swing.locale.SwingLocale;
 import com.nepxion.swing.optionpane.JBasicOptionPane;
 import com.nepxion.swing.selector.checkbox.JCheckBoxSelector;
@@ -307,7 +306,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
                 List<ElementNode> metadataElementNodes = new ArrayList<ElementNode>();
                 for (int i = 0; i < metadataComboBoxModel.getSize(); i++) {
                     String metadata = metadataComboBoxModel.getElementAt(i).toString();
-                    metadataElementNodes.add(new ElementNode(metadata, IconFactory.getSwingIcon("component/file_chooser_16.png"), metadata, metadata));
+                    metadataElementNodes.add(new ElementNode(metadata, ConsoleIconFactory.getSwingIcon("component/file_chooser_16.png"), metadata, metadata));
                 }
 
                 JCheckBoxSelector checkBoxSelector = new JCheckBoxSelector(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("metadata_selector_tooltip"), new Dimension(400, 350), metadataElementNodes);

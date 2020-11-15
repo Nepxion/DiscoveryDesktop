@@ -48,7 +48,6 @@ import com.nepxion.swing.button.ButtonManager;
 import com.nepxion.swing.button.JClassicButton;
 import com.nepxion.swing.combobox.JBasicComboBox;
 import com.nepxion.swing.handle.HandleManager;
-import com.nepxion.swing.icon.IconFactory;
 import com.nepxion.swing.label.JBasicLabel;
 import com.nepxion.swing.layout.filed.FiledLayout;
 import com.nepxion.swing.layout.table.TableLayout;
@@ -85,7 +84,7 @@ public class GrayTopology extends AbstractReleaseTopology {
     public void initializeOperationBar() {
         JShrinkShortcut conditionShrinkShortcut = new JShrinkShortcut();
         conditionShrinkShortcut.setTitle(ConsoleLocaleFactory.getString(releaseType.toString() + "_condition"));
-        conditionShrinkShortcut.setIcon(IconFactory.getSwingIcon("stereo/paste_16.png"));
+        conditionShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
         conditionShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString(releaseType.toString() + "_condition"));
 
         String[] conditions = { "0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100" };
@@ -139,7 +138,7 @@ public class GrayTopology extends AbstractReleaseTopology {
 
         JShrinkShortcut serviceShrinkShortcut = new JShrinkShortcut();
         serviceShrinkShortcut.setTitle(ConsoleLocaleFactory.getString(releaseType.toString() + "_service"));
-        serviceShrinkShortcut.setIcon(IconFactory.getSwingIcon("stereo/paste_16.png"));
+        serviceShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
         serviceShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString(releaseType.toString() + "_service"));
 
         serviceIdComboBox = new JBasicComboBox();
