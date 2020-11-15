@@ -32,6 +32,7 @@ import com.nepxion.cots.twaver.element.TLink;
 import com.nepxion.cots.twaver.element.TNode;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
+import com.nepxion.discovery.console.desktop.workspace.panel.BlueGreenConditionPanel;
 import com.nepxion.discovery.console.desktop.workspace.processor.BlueGreenStrategyProcessor;
 import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessor;
 import com.nepxion.discovery.console.desktop.workspace.topology.LinkUI;
@@ -143,7 +144,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         servicePanel.add(basicMetadataButton, "2, 3");
 
         JPanel serviceToolBar = new JPanel();
-        serviceToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
+        serviceToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 5));
         serviceToolBar.add(new JClassicButton(createAddServiceStrategyAction()));
         serviceToolBar.add(new JClassicButton(createModifyServiceStrategyAction()));
 
@@ -172,7 +173,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         conditionPanel.add(greenConditionTextField, "1, 1");
 
         JPanel conditionToolBar = new JPanel();
-        conditionToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
+        conditionToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 5));
         conditionToolBar.add(new JClassicButton(createValidateConditionAction()));
         conditionToolBar.add(new JClassicButton(createModifyConditionAction()));
 
@@ -191,7 +192,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         operationBar.add(servicePanel, "0, 1");
         operationBar.add(serviceToolBar, "0, 2");
         operationBar.add(conditionShrinkShortcut, "0, 4");
-        operationBar.add(conditionPanel, "0, 5");
+        operationBar.add(new BlueGreenConditionPanel(), "0, 5");
         operationBar.add(conditionToolBar, "0, 6");
     }
 

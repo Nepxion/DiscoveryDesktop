@@ -133,7 +133,7 @@ public class GrayTopology extends AbstractReleaseTopology {
         servicePanel.add(stableMetadataButton, "2, 2");
 
         JPanel serviceToolBar = new JPanel();
-        serviceToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
+        serviceToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 5));
         serviceToolBar.add(new JClassicButton(createAddServiceStrategyAction()));
         serviceToolBar.add(new JClassicButton(createModifyServiceStrategyAction()));
 
@@ -190,7 +190,7 @@ public class GrayTopology extends AbstractReleaseTopology {
         conditionPanel.add(new JBasicLabel("%"), "2, 1");
 
         JPanel conditionToolBar = new JPanel();
-        conditionToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
+        conditionToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 5));
         conditionToolBar.add(new JClassicButton(createModifyConditionAction()));
 
         double[][] size = {

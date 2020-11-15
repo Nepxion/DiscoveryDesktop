@@ -1,7 +1,5 @@
 package com.nepxion.discovery.console.desktop.workspace.panel;
 
-import java.awt.Dimension;
-
 /**
  * <p>Title: Nepxion Discovery</p>
  * <p>Description: Nepxion Discovery</p>
@@ -10,6 +8,9 @@ import java.awt.Dimension;
  * @author Haojun Ren
  * @version 1.0
  */
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 import javax.swing.JPanel;
 
@@ -27,7 +28,7 @@ public class BlueGreenConditionPanel extends JPanel {
     private static final long serialVersionUID = 1L;
 
     public BlueGreenConditionPanel() {
-        setLayout(new FiledLayout(FiledLayout.COLUMN, FiledLayout.FULL, 0));
+        setLayout(new FiledLayout(FiledLayout.COLUMN, FiledLayout.FULL, 10));
         add(new ConditionBar(NodeType.BLUE));
         add(new ConditionBar(NodeType.GREEN));
     }
@@ -35,17 +36,25 @@ public class BlueGreenConditionPanel extends JPanel {
     public class ConditionBar extends JPanel {
         private static final long serialVersionUID = 1L;
 
-        public JBasicLabel x = new JBasicLabel("结果");
-        public JBasicTextField y = new JBasicTextField("#H['a'] == '1' && #H['b'] <= '2'");
-        public JClassicButton z = new JClassicButton(IconFactory.getSwingIcon("config.png"));
+        protected JBasicTextField resultTextField;
 
         public ConditionBar(NodeType nodeType) {
-            JShrinkShortcut conditionShrinkShortcut = new JShrinkShortcut();
-            conditionShrinkShortcut.setTitle(nodeType.getDescription());
-            conditionShrinkShortcut.setIcon(IconFactory.getSwingIcon("stereo/paste_16.png"));
-            conditionShrinkShortcut.setToolTipText(nodeType.getDescription());
-            
-            z.setPreferredSize(new Dimension(30, z.getPreferredSize().height));
+            JShrinkShortcut shrinkShortcut = new JShrinkShortcut();
+            shrinkShortcut.setTitle(nodeType.getDescription());
+            shrinkShortcut.setIcon(nodeType == NodeType.BLUE ? IconFactory.getSwingIcon("circle_blue.png") : IconFactory.getSwingIcon("circle_green.png"));
+            shrinkShortcut.setToolTipText(nodeType.getDescription());
+
+            JBasicLabel resultLabel = new JBasicLabel("结果");
+            resultLabel.setPreferredSize(new Dimension(resultLabel.getPreferredSize().width + 5, resultLabel.getPreferredSize().height));
+            resultTextField = new JBasicTextField("#H['a'] == '1' && #H['b'] <= '2'");
+            JClassicButton validateButton = new JClassicButton(IconFactory.getSwingIcon("edit.png"));
+            validateButton.setPreferredSize(new Dimension(30, validateButton.getPreferredSize().height));
+
+            JPanel resultBar = new JPanel();
+            resultBar.setLayout(new BorderLayout(0, 5));
+            resultBar.add(resultLabel, BorderLayout.WEST);
+            resultBar.add(resultTextField, BorderLayout.CENTER);
+            resultBar.add(validateButton, BorderLayout.EAST);
 
             double[][] size = {
                     { TableLayout.FILL, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED },
@@ -57,37 +66,39 @@ public class BlueGreenConditionPanel extends JPanel {
             tableLayout.setVGap(5);
 
             setLayout(tableLayout);
-            add(conditionShrinkShortcut, "0, 0, 5, 0");
+            add(shrinkShortcut, "0, 0, 5, 0");
             add(new JBasicLabel("参数"), "0, 1");
             add(new JBasicLabel("运算"), "1, 1");
             add(new JBasicLabel("赋值"), "2, 1");
             add(new JBasicLabel("逻辑"), "3, 1, 5, 1");
 
-            ConditionItem c1 = new ConditionItem();
-            add(c1.a, "0, 2");
-            add(c1.b, "1, 2");
-            add(c1.c, "2, 2");
-            add(c1.d, "3, 2");
-            add(c1.e, "4, 2");
-            add(c1.f, "5, 2");
+            ConditionItem conditionItem1 = new ConditionItem();
+            add(conditionItem1.parameterTextField, "0, 2");
+            add(conditionItem1.arithmeticComboBox, "1, 2");
+            add(conditionItem1.valueTextField, "2, 2");
+            add(conditionItem1.logicComboBox, "3, 2");
+            add(conditionItem1.addButton, "4, 2");
+            add(conditionItem1.deleteButton, "5, 2");
 
-            add(x, "0, 3");
-            add(y, "1, 3, 4, 3");
-            add(z, "5, 3");
+            add(resultBar, "0, 3, 5, 3");
+        }
+
+        public String getResult() {
+            return resultTextField.getText().trim();
         }
     }
 
     public class ConditionItem {
-        public JBasicTextField a = new JBasicTextField("abcd");
-        public JBasicComboBox b = new JBasicComboBox(new String[] { "==", "!=", ">", ">=", "<", "<=", "匹配" });
-        public JBasicTextField c = new JBasicTextField("1234");
-        public JBasicComboBox d = new JBasicComboBox(new String[] { "&&", "||" });
-        public JClassicButton e = new JClassicButton(IconFactory.getSwingIcon("add.png"));
-        public JClassicButton f = new JClassicButton(IconFactory.getSwingIcon("delete.png"));
+        protected JBasicTextField parameterTextField = new JBasicTextField("abcd");
+        protected JBasicComboBox arithmeticComboBox = new JBasicComboBox(new String[] { "==", "!=", ">", ">=", "<", "<=", "匹配" });
+        protected JBasicTextField valueTextField = new JBasicTextField("1234");
+        protected JBasicComboBox logicComboBox = new JBasicComboBox(new String[] { "&&", "||" });
+        protected JClassicButton addButton = new JClassicButton(IconFactory.getSwingIcon("add.png"));
+        protected JClassicButton deleteButton = new JClassicButton(IconFactory.getSwingIcon("delete.png"));
 
         public ConditionItem() {
-            e.setPreferredSize(new Dimension(30, e.getPreferredSize().height));
-            f.setPreferredSize(new Dimension(30, f.getPreferredSize().height));
+            addButton.setPreferredSize(new Dimension(30, addButton.getPreferredSize().height));
+            deleteButton.setPreferredSize(new Dimension(30, deleteButton.getPreferredSize().height));
         }
     }
 }
