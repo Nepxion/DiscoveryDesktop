@@ -74,11 +74,6 @@ public class BlueGreenConditionPanel extends JPanel {
             shrinkShortcut.setIcon(nodeType == NodeType.BLUE ? ConsoleIconFactory.getSwingIcon("circle_blue.png") : ConsoleIconFactory.getSwingIcon("circle_green.png"));
             shrinkShortcut.setToolTipText(nodeType.getDescription());
 
-            for (int i = 0; i < initialConditionItemCount; i++) {
-                ConditionItem conditionItem = new ConditionItem(UUID.randomUUID().toString());
-                conditionItems.add(conditionItem);
-            }
-
             conditionItemBar = new JPanel();
             resultTextField = new JBasicTextField();
 
@@ -98,6 +93,9 @@ public class BlueGreenConditionPanel extends JPanel {
             add(conditionItemBar, BorderLayout.CENTER);
             add(resultBar, BorderLayout.SOUTH);
 
+            for (int i = 0; i < initialConditionItemCount; i++) {
+                conditionItems.add(new ConditionItem(UUID.randomUUID().toString()));
+            }
             layoutConditionItems();
         }
 
@@ -145,6 +143,16 @@ public class BlueGreenConditionPanel extends JPanel {
             return resultTextField.getText().trim();
         }
 
+        public ConditionItem getConditionItem(String uuid) {
+            for (ConditionItem conditionItem : conditionItems) {
+                if (StringUtils.equals(conditionItem.uuid, uuid)) {
+                    return conditionItem;
+                }
+            }
+
+            return null;
+        }
+
         public class ConditionItem {
             protected JBasicTextField parameterTextField = new JBasicTextField();
             protected JBasicComboBox arithmeticComboBox = new JBasicComboBox(new String[] { "==", "!=", ">", ">=", "<", "<=", "matches" });
@@ -171,8 +179,15 @@ public class BlueGreenConditionPanel extends JPanel {
                 private static final long serialVersionUID = 1L;
 
                 public void execute(ActionEvent e) {
-                    ConditionItem conditionItem = new ConditionItem(UUID.randomUUID().toString());
-                    conditionItems.add(conditionItem);
+                    JClassicButton addButton = (JClassicButton) e.getSource();
+                    String uuid = addButton.getName();
+
+                    ConditionItem conditionItem = getConditionItem(uuid);
+                    if (conditionItem == null) {
+                        return;
+                    }
+
+                    conditionItems.add(conditionItems.indexOf(conditionItem) + 1, new ConditionItem(UUID.randomUUID().toString()));
                     layoutConditionItems();
                 }
             };
@@ -194,20 +209,12 @@ public class BlueGreenConditionPanel extends JPanel {
                     JClassicButton removeButton = (JClassicButton) e.getSource();
                     String uuid = removeButton.getName();
 
-                    ConditionItem removedConditionItem = null;
-                    for (ConditionItem conditionItem : conditionItems) {
-                        if (StringUtils.equals(conditionItem.uuid, uuid)) {
-                            removedConditionItem = conditionItem;
-
-                            break;
-                        }
-                    }
-
-                    if (removedConditionItem == null) {
+                    ConditionItem conditionItem = getConditionItem(uuid);
+                    if (conditionItem == null) {
                         return;
                     }
 
-                    conditionItems.remove(removedConditionItem);
+                    conditionItems.remove(conditionItem);
                     layoutConditionItems();
                 }
             };
