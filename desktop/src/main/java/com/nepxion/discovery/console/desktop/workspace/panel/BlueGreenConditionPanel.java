@@ -13,8 +13,11 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.swing.JPanel;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
@@ -23,9 +26,13 @@ import com.nepxion.discovery.console.desktop.workspace.type.NodeType;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.JClassicButton;
 import com.nepxion.swing.combobox.JBasicComboBox;
+import com.nepxion.swing.container.ContainerManager;
+import com.nepxion.swing.handle.HandleManager;
 import com.nepxion.swing.label.JBasicLabel;
 import com.nepxion.swing.layout.filed.FiledLayout;
 import com.nepxion.swing.layout.table.TableLayout;
+import com.nepxion.swing.locale.SwingLocale;
+import com.nepxion.swing.optionpane.JBasicOptionPane;
 import com.nepxion.swing.shrinkbar.JShrinkShortcut;
 import com.nepxion.swing.textfield.JBasicTextField;
 
@@ -55,20 +62,24 @@ public class BlueGreenConditionPanel extends JPanel {
     public class ConditionBar extends JPanel {
         private static final long serialVersionUID = 1L;
 
-        private List<ConditionItem> conditionItems = new ArrayList<ConditionItem>();
+        protected int initialConditionItemCount = 1;
+        protected List<ConditionItem> conditionItems = new ArrayList<ConditionItem>();
+
+        protected JPanel conditionItemBar;
         protected JBasicTextField resultTextField;
 
         public ConditionBar(NodeType nodeType) {
-            for (int i = 0; i < 5; i++) {
-                ConditionItem conditionItem = new ConditionItem();
-                conditionItems.add(conditionItem);
-            }
-
             JShrinkShortcut shrinkShortcut = new JShrinkShortcut();
             shrinkShortcut.setTitle(nodeType.getDescription());
             shrinkShortcut.setIcon(nodeType == NodeType.BLUE ? ConsoleIconFactory.getSwingIcon("circle_blue.png") : ConsoleIconFactory.getSwingIcon("circle_green.png"));
             shrinkShortcut.setToolTipText(nodeType.getDescription());
 
+            for (int i = 0; i < initialConditionItemCount; i++) {
+                ConditionItem conditionItem = new ConditionItem(UUID.randomUUID().toString());
+                conditionItems.add(conditionItem);
+            }
+
+            conditionItemBar = new JPanel();
             resultTextField = new JBasicTextField();
 
             JPanel resultButtonBar = new JPanel();
@@ -82,45 +93,127 @@ public class BlueGreenConditionPanel extends JPanel {
             resultBar.add(resultTextField, BorderLayout.CENTER);
             resultBar.add(resultButtonBar, BorderLayout.EAST);
 
+            setLayout(new BorderLayout());
+            add(shrinkShortcut, BorderLayout.NORTH);
+            add(conditionItemBar, BorderLayout.CENTER);
+            add(resultBar, BorderLayout.SOUTH);
+
+            layoutConditionItems();
+        }
+
+        public void layoutConditionItems() {
+            conditionItemBar.removeAll();
+
+            double[] row = new double[conditionItems.size() + 1];
+            for (int i = 0; i < row.length; i++) {
+                row[i] = TableLayout.PREFERRED;
+            }
             double[][] size = {
-                    { TableLayout.FILL, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },
-                    { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
+                    { TableLayout.FILL, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED },
+                    row
             };
 
             TableLayout tableLayout = new TableLayout(size);
             tableLayout.setHGap(0);
             tableLayout.setVGap(5);
 
-            setLayout(tableLayout);
-            add(shrinkShortcut, "0, 0, 3, 0");
-            add(new JBasicLabel(ConsoleLocaleFactory.getString("parameter")), "0, 1");
-            add(new JBasicLabel(ConsoleLocaleFactory.getString("arithmetic")), "1, 1");
-            add(new JBasicLabel(ConsoleLocaleFactory.getString("value")), "2, 1");
-            add(new JBasicLabel(ConsoleLocaleFactory.getString("logic")), "3, 1, 3, 1");
+            int index = 0;
 
-            int index = 2;
+            conditionItemBar.setLayout(tableLayout);
+            conditionItemBar.add(new JBasicLabel(ConsoleLocaleFactory.getString("parameter")), "0, " + index);
+            conditionItemBar.add(new JBasicLabel(ConsoleLocaleFactory.getString("arithmetic")), "1, " + index);
+            conditionItemBar.add(new JBasicLabel(ConsoleLocaleFactory.getString("value")), "2, " + index);
+            conditionItemBar.add(new JBasicLabel(ConsoleLocaleFactory.getString("logic")), "3, " + index + ", 5, " + index);
+
+            index++;
+
             for (ConditionItem conditionItem : conditionItems) {
-                add(conditionItem.parameterTextField, "0, " + index);
-                add(conditionItem.arithmeticComboBox, "1, " + index);
-                add(conditionItem.valueTextField, "2, " + index);
-                add(conditionItem.logicComboBox, "3, " + index);
+                conditionItemBar.add(conditionItem.parameterTextField, "0, " + index);
+                conditionItemBar.add(conditionItem.arithmeticComboBox, "1, " + index);
+                conditionItemBar.add(conditionItem.valueTextField, "2, " + index);
+                conditionItemBar.add(conditionItem.logicComboBox, "3, " + index);
+                conditionItemBar.add(conditionItem.addButton, "4, " + index);
+                conditionItemBar.add(conditionItem.removeButton, "5, " + index);
 
                 index++;
             }
 
-            add(resultBar, "0, 7, 3, 7");
+            ContainerManager.update(conditionItemBar);
         }
 
         public String getResult() {
             return resultTextField.getText().trim();
         }
-    }
 
-    public class ConditionItem {
-        protected JBasicTextField parameterTextField = new JBasicTextField();
-        protected JBasicComboBox arithmeticComboBox = new JBasicComboBox(new String[] { "==", "!=", ">", ">=", "<", "<=", "matches" });
-        protected JBasicTextField valueTextField = new JBasicTextField();
-        protected JBasicComboBox logicComboBox = new JBasicComboBox(new String[] { "&&", "||" });
+        public class ConditionItem {
+            protected JBasicTextField parameterTextField = new JBasicTextField();
+            protected JBasicComboBox arithmeticComboBox = new JBasicComboBox(new String[] { "==", "!=", ">", ">=", "<", "<=", "matches" });
+            protected JBasicTextField valueTextField = new JBasicTextField();
+            protected JBasicComboBox logicComboBox = new JBasicComboBox(new String[] { "&&", "||" });
+            protected JClassicButton addButton = new JClassicButton(createAddConditionItemAction());
+            protected JClassicButton removeButton = new JClassicButton(createRemoveConditionItemAction());
+
+            protected String uuid;
+
+            public ConditionItem(String uuid) {
+                this.uuid = uuid;
+
+                addButton.setName(uuid);
+                removeButton.setName(uuid);
+
+                DimensionUtil.setWidth(addButton, 30);
+                DimensionUtil.setWidth(removeButton, 30);
+            }
+        }
+
+        public JSecurityAction createAddConditionItemAction() {
+            JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("add.png"), ConsoleLocaleFactory.getString("add_condition_item")) {
+                private static final long serialVersionUID = 1L;
+
+                public void execute(ActionEvent e) {
+                    ConditionItem conditionItem = new ConditionItem(UUID.randomUUID().toString());
+                    conditionItems.add(conditionItem);
+                    layoutConditionItems();
+                }
+            };
+
+            return action;
+        }
+
+        public JSecurityAction createRemoveConditionItemAction() {
+            JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("delete.png"), ConsoleLocaleFactory.getString("remove_condition_item")) {
+                private static final long serialVersionUID = 1L;
+
+                public void execute(ActionEvent e) {
+                    if (conditionItems.size() < 2) {
+                        JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenConditionPanel.this), ConsoleLocaleFactory.getString("condition_item_one_at_least"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+                        return;
+                    }
+
+                    JClassicButton removeButton = (JClassicButton) e.getSource();
+                    String uuid = removeButton.getName();
+
+                    ConditionItem removedConditionItem = null;
+                    for (ConditionItem conditionItem : conditionItems) {
+                        if (StringUtils.equals(conditionItem.uuid, uuid)) {
+                            removedConditionItem = conditionItem;
+
+                            break;
+                        }
+                    }
+
+                    if (removedConditionItem == null) {
+                        return;
+                    }
+
+                    conditionItems.remove(removedConditionItem);
+                    layoutConditionItems();
+                }
+            };
+
+            return action;
+        }
     }
 
     public JSecurityAction createAggregateConditionAction() {
