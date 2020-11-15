@@ -297,7 +297,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     }
 
     public JSecurityAction createMetadataSelectorAction(JBasicComboBox metadataComboBox) {
-        JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("direction_south.png"), ConsoleLocaleFactory.getString("metadata_selector_tooltip")) {
+        JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getContextIcon("selector.png"), ConsoleLocaleFactory.getString("metadata_selector_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             @SuppressWarnings({ "unchecked", "rawtypes" })
