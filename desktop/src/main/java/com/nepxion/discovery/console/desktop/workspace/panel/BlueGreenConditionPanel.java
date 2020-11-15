@@ -78,7 +78,7 @@ public class BlueGreenConditionPanel extends JPanel {
 
             JPanel resultBar = new JPanel();
             resultBar.setLayout(new BorderLayout(0, 5));
-            resultBar.add(DimensionUtil.addWidth(new JBasicLabel("结果"), 5), BorderLayout.WEST);
+            resultBar.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("result")), 5), BorderLayout.WEST);
             resultBar.add(resultTextField, BorderLayout.CENTER);
             resultBar.add(resultButtonBar, BorderLayout.EAST);
 
@@ -93,10 +93,10 @@ public class BlueGreenConditionPanel extends JPanel {
 
             setLayout(tableLayout);
             add(shrinkShortcut, "0, 0, 3, 0");
-            add(new JBasicLabel("参数"), "0, 1");
-            add(new JBasicLabel("运算"), "1, 1");
-            add(new JBasicLabel("赋值"), "2, 1");
-            add(new JBasicLabel("逻辑"), "3, 1, 3, 1");
+            add(new JBasicLabel(ConsoleLocaleFactory.getString("parameter")), "0, 1");
+            add(new JBasicLabel(ConsoleLocaleFactory.getString("arithmetic")), "1, 1");
+            add(new JBasicLabel(ConsoleLocaleFactory.getString("value")), "2, 1");
+            add(new JBasicLabel(ConsoleLocaleFactory.getString("logic")), "3, 1, 3, 1");
 
             int index = 2;
             for (ConditionItem conditionItem : conditionItems) {
@@ -118,16 +118,9 @@ public class BlueGreenConditionPanel extends JPanel {
 
     public class ConditionItem {
         protected JBasicTextField parameterTextField = new JBasicTextField();
-        protected JBasicComboBox arithmeticComboBox = new JBasicComboBox(new String[] { "==", "!=", ">", ">=", "<", "<=", "匹配" });
+        protected JBasicComboBox arithmeticComboBox = new JBasicComboBox(new String[] { "==", "!=", ">", ">=", "<", "<=", "matches" });
         protected JBasicTextField valueTextField = new JBasicTextField();
         protected JBasicComboBox logicComboBox = new JBasicComboBox(new String[] { "&&", "||" });
-        // protected JClassicButton addButton = new JClassicButton(ConsoleIconFactory.getSwingIcon("add.png"));
-        // protected JClassicButton deleteButton = new JClassicButton(ConsoleIconFactory.getSwingIcon("delete.png"));
-
-        public ConditionItem() {
-            // DimensionUtil.setWidth(addButton, 30);
-            // DimensionUtil.setWidth(deleteButton, 30);
-        }
     }
 
     public JSecurityAction createAggregateConditionAction() {
