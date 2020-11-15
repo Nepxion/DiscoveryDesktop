@@ -10,6 +10,8 @@ package com.nepxion.discovery.console.desktop.workspace.panel;
  */
 
 import java.awt.BorderLayout;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -36,9 +38,15 @@ public class BlueGreenConditionPanel extends JPanel {
     public class ConditionBar extends JPanel {
         private static final long serialVersionUID = 1L;
 
+        private List<ConditionItem> conditionItems = new ArrayList<ConditionItem>();
         protected JBasicTextField resultTextField;
 
         public ConditionBar(NodeType nodeType) {
+            for (int i = 0; i < 5; i++) {
+                ConditionItem conditionItem = new ConditionItem();
+                conditionItems.add(conditionItem);
+            }
+
             JShrinkShortcut shrinkShortcut = new JShrinkShortcut();
             shrinkShortcut.setTitle(nodeType.getDescription());
             shrinkShortcut.setIcon(nodeType == NodeType.BLUE ? IconFactory.getSwingIcon("circle_blue.png") : IconFactory.getSwingIcon("circle_green.png"));
@@ -53,8 +61,8 @@ public class BlueGreenConditionPanel extends JPanel {
             resultBar.add(DimensionUtil.setWidth(new JClassicButton(IconFactory.getSwingIcon("edit.png")), 30), BorderLayout.EAST);
 
             double[][] size = {
-                    { TableLayout.FILL, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED },
-                    { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
+                    { TableLayout.FILL, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },
+                    { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
             };
 
             TableLayout tableLayout = new TableLayout(size);
@@ -62,21 +70,23 @@ public class BlueGreenConditionPanel extends JPanel {
             tableLayout.setVGap(5);
 
             setLayout(tableLayout);
-            add(shrinkShortcut, "0, 0, 5, 0");
+            add(shrinkShortcut, "0, 0, 3, 0");
             add(new JBasicLabel("参数"), "0, 1");
             add(new JBasicLabel("运算"), "1, 1");
             add(new JBasicLabel("赋值"), "2, 1");
-            add(new JBasicLabel("逻辑"), "3, 1, 5, 1");
+            add(new JBasicLabel("逻辑"), "3, 1, 3, 1");
 
-            ConditionItem conditionItem1 = new ConditionItem();
-            add(conditionItem1.parameterTextField, "0, 2");
-            add(conditionItem1.arithmeticComboBox, "1, 2");
-            add(conditionItem1.valueTextField, "2, 2");
-            add(conditionItem1.logicComboBox, "3, 2");
-            add(conditionItem1.addButton, "4, 2");
-            add(conditionItem1.deleteButton, "5, 2");
+            int index = 2;
+            for (ConditionItem conditionItem : conditionItems) {
+                add(conditionItem.parameterTextField, "0, " + index);
+                add(conditionItem.arithmeticComboBox, "1, " + index);
+                add(conditionItem.valueTextField, "2, " + index);
+                add(conditionItem.logicComboBox, "3, " + index);
 
-            add(resultBar, "0, 3, 5, 3");
+                index++;
+            }
+
+            add(resultBar, "0, 7, 3, 7");
         }
 
         public String getResult() {
@@ -85,16 +95,16 @@ public class BlueGreenConditionPanel extends JPanel {
     }
 
     public class ConditionItem {
-        protected JBasicTextField parameterTextField = new JBasicTextField("abcd");
+        protected JBasicTextField parameterTextField = new JBasicTextField();
         protected JBasicComboBox arithmeticComboBox = new JBasicComboBox(new String[] { "==", "!=", ">", ">=", "<", "<=", "匹配" });
-        protected JBasicTextField valueTextField = new JBasicTextField("1234");
+        protected JBasicTextField valueTextField = new JBasicTextField();
         protected JBasicComboBox logicComboBox = new JBasicComboBox(new String[] { "&&", "||" });
-        protected JClassicButton addButton = new JClassicButton(IconFactory.getSwingIcon("add.png"));
-        protected JClassicButton deleteButton = new JClassicButton(IconFactory.getSwingIcon("delete.png"));
+        // protected JClassicButton addButton = new JClassicButton(IconFactory.getSwingIcon("add.png"));
+        // protected JClassicButton deleteButton = new JClassicButton(IconFactory.getSwingIcon("delete.png"));
 
         public ConditionItem() {
-            DimensionUtil.setWidth(addButton, 30);
-            DimensionUtil.setWidth(deleteButton, 30);
+            // DimensionUtil.setWidth(addButton, 30);
+            // DimensionUtil.setWidth(deleteButton, 30);
         }
     }
 }
