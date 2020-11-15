@@ -11,7 +11,6 @@ package com.nepxion.discovery.console.desktop.workspace;
 
 import twaver.Link;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -49,11 +48,13 @@ import com.nepxion.swing.button.ButtonManager;
 import com.nepxion.swing.button.JClassicButton;
 import com.nepxion.swing.combobox.JBasicComboBox;
 import com.nepxion.swing.handle.HandleManager;
+import com.nepxion.swing.icon.IconFactory;
 import com.nepxion.swing.label.JBasicLabel;
 import com.nepxion.swing.layout.filed.FiledLayout;
 import com.nepxion.swing.layout.table.TableLayout;
 import com.nepxion.swing.locale.SwingLocale;
 import com.nepxion.swing.optionpane.JBasicOptionPane;
+import com.nepxion.swing.shrinkbar.JShrinkShortcut;
 
 public class GrayTopology extends AbstractReleaseTopology {
     private static final long serialVersionUID = 1L;
@@ -82,6 +83,11 @@ public class GrayTopology extends AbstractReleaseTopology {
 
     @Override
     public void initializeOperationBar() {
+        JShrinkShortcut serviceShrinkShortcut = new JShrinkShortcut();
+        serviceShrinkShortcut.setTitle(ConsoleLocaleFactory.getString(releaseType.toString() + "_service"));
+        serviceShrinkShortcut.setIcon(IconFactory.getSwingIcon("stereo/paste_16.png"));
+        serviceShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString(releaseType.toString() + "_service"));
+
         serviceIdComboBox = new JBasicComboBox();
         serviceIdComboBox.setEditable(true);
         serviceIdComboBox.setPreferredSize(new Dimension(300, layoutTextField.getPreferredSize().height));
@@ -106,8 +112,8 @@ public class GrayTopology extends AbstractReleaseTopology {
         stableMetadataButton.setPreferredSize(new Dimension(30, stableMetadataButton.getPreferredSize().height));
 
         double[][] serviceSize = {
-                { TableLayout.PREFERRED, TableLayout.PREFERRED, 5, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, 5, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },
-                { TableLayout.PREFERRED }
+                { TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },
+                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
         };
 
         TableLayout serviceTableLayout = new TableLayout(serviceSize);
@@ -116,19 +122,25 @@ public class GrayTopology extends AbstractReleaseTopology {
 
         JPanel servicePanel = new JPanel();
         servicePanel.setLayout(serviceTableLayout);
-        servicePanel.add(serviceIdComboBox, "0, 0");
-        servicePanel.add(refreshServicesButton, "1, 0");
-        servicePanel.add(new JBasicLabel(NodeType.GRAY.getDescription()), "3, 0");
-        servicePanel.add(grayMetadataComboBox, "4, 0");
-        servicePanel.add(grayMetadataButton, "5, 0");
-        servicePanel.add(new JBasicLabel(NodeType.STABLE.getDescription()), "7, 0");
-        servicePanel.add(stableMetadataComboBox, "8, 0");
-        servicePanel.add(stableMetadataButton, "9 0");
+        servicePanel.add(new JBasicLabel(ConsoleLocaleFactory.getString("service")), "0, 0");
+        servicePanel.add(serviceIdComboBox, "1, 0");
+        servicePanel.add(refreshServicesButton, "2, 0");
+        servicePanel.add(new JBasicLabel(NodeType.GRAY.getDescription()), "0, 1");
+        servicePanel.add(grayMetadataComboBox, "1, 1");
+        servicePanel.add(grayMetadataButton, "2, 1");
+        servicePanel.add(new JBasicLabel(NodeType.STABLE.getDescription()), "0, 2");
+        servicePanel.add(stableMetadataComboBox, "1, 2");
+        servicePanel.add(stableMetadataButton, "2, 2");
 
         JPanel serviceToolBar = new JPanel();
         serviceToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
         serviceToolBar.add(new JClassicButton(createAddServiceStrategyAction()));
         serviceToolBar.add(new JClassicButton(createModifyServiceStrategyAction()));
+
+        JShrinkShortcut conditionShrinkShortcut = new JShrinkShortcut();
+        conditionShrinkShortcut.setTitle(ConsoleLocaleFactory.getString(releaseType.toString() + "_condition"));
+        conditionShrinkShortcut.setIcon(IconFactory.getSwingIcon("stereo/paste_16.png"));
+        conditionShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString(releaseType.toString() + "_condition"));
 
         String[] conditions = { "0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100" };
         grayConditionComboBox = new JBasicComboBox(conditions);
@@ -160,8 +172,8 @@ public class GrayTopology extends AbstractReleaseTopology {
         stableConditionComboBox.setSelectedItem(conditions[conditions.length - 1]);
 
         double[][] conditionSize = {
-                { TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, 5, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },
-                { TableLayout.PREFERRED }
+                { TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },
+                { TableLayout.PREFERRED, TableLayout.PREFERRED }
         };
 
         TableLayout conditionTableLayout = new TableLayout(conditionSize);
@@ -173,34 +185,31 @@ public class GrayTopology extends AbstractReleaseTopology {
         conditionPanel.add(new JBasicLabel(NodeType.GRAY.getDescription()), "0, 0");
         conditionPanel.add(grayConditionComboBox, "1, 0");
         conditionPanel.add(new JBasicLabel("%"), "2, 0");
-        conditionPanel.add(new JBasicLabel(NodeType.STABLE.getDescription()), "4, 0");
-        conditionPanel.add(stableConditionComboBox, "5, 0");
-        conditionPanel.add(new JBasicLabel("%"), "6, 0");
+        conditionPanel.add(new JBasicLabel(NodeType.STABLE.getDescription()), "0, 1");
+        conditionPanel.add(stableConditionComboBox, "1, 1");
+        conditionPanel.add(new JBasicLabel("%"), "2, 1");
 
         JPanel conditionToolBar = new JPanel();
         conditionToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
         conditionToolBar.add(new JClassicButton(createModifyConditionAction()));
 
         double[][] size = {
-                { TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },
-                { TableLayout.PREFERRED, TableLayout.PREFERRED }
+                { TableLayout.FILL },
+                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
         };
 
         TableLayout tableLayout = new TableLayout(size);
-        tableLayout.setHGap(10);
+        tableLayout.setHGap(5);
         tableLayout.setVGap(5);
 
-        JPanel toolBar = new JPanel();
-        toolBar.setLayout(tableLayout);
-        toolBar.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
-        toolBar.add(new JBasicLabel(ConsoleLocaleFactory.getString(releaseType.toString() + "_service")), "0, 0");
-        toolBar.add(servicePanel, "1, 0");
-        toolBar.add(serviceToolBar, "2, 0");
-        toolBar.add(new JBasicLabel(ConsoleLocaleFactory.getString(releaseType.toString() + "_condition")), "0, 1");
-        toolBar.add(conditionPanel, "1, 1");
-        toolBar.add(conditionToolBar, "2, 1");
-
-        operationBar.add(toolBar, BorderLayout.NORTH);
+        operationBar.setLayout(tableLayout);
+        operationBar.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        operationBar.add(serviceShrinkShortcut, "0, 0");
+        operationBar.add(servicePanel, "0, 1");
+        operationBar.add(serviceToolBar, "0, 2");
+        operationBar.add(conditionShrinkShortcut, "0, 4");
+        operationBar.add(conditionPanel, "0, 5");
+        operationBar.add(conditionToolBar, "0, 6");
     }
 
     public void setConditionUI(JBasicComboBox comboBox) {
