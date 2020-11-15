@@ -33,63 +33,69 @@ public class GrayStrategyProcessor extends AbstractStrategyProcessor {
     @SuppressWarnings({ "unchecked", "incomplete-switch" })
     @Override
     public String toConfig(StrategyType strategyType, TDataBox dataBox) {
-        if (TElementManager.getNodes(dataBox).size() <= 1) {
+        if (strategyType == null) {
             return StringUtils.EMPTY;
         }
 
         String strategyValue = strategyType.toString();
-
-        StringBuilder grayStrategyStringBuilder = new StringBuilder();
-        StringBuilder stableStrategyStringBuilder = new StringBuilder();
-        List<TNode> nodes = TElementManager.getNodes(dataBox);
-        for (int i = nodes.size() - 1; i >= 0; i--) {
-            TNode node = nodes.get(i);
-            Instance instance = (Instance) node.getUserObject();
-            NodeType nodeType = (NodeType) node.getBusinessObject();
-            String serviceId = instance.getServiceId();
-            String metadata = instance.getMetadata().get(strategyValue);
-            switch (nodeType) {
-                case GRAY:
-                    grayStrategyStringBuilder.append("\"" + serviceId + "\":\"" + metadata + "\", ");
-                    break;
-                case STABLE:
-                    stableStrategyStringBuilder.append("\"" + serviceId + "\":\"" + metadata + "\", ");
-                    break;
-            }
-        }
-        String grayStrategy = grayStrategyStringBuilder.toString();
-        grayStrategy = grayStrategy.substring(0, grayStrategy.length() - 2);
-        String stableStrategy = stableStrategyStringBuilder.toString();
-        stableStrategy = stableStrategy.substring(0, stableStrategy.length() - 2);
-
         String grayCondition = null;
         String stableCondition = null;
-        List<TLink> links = TElementManager.getLinks(dataBox);
-        for (int i = links.size() - 1; i >= 0; i--) {
-            TLink link = links.get(i);
-            LinkType linkType = (LinkType) link.getBusinessObject();
-            switch (linkType) {
-                case GRAY:
-                    grayCondition = link.getUserObject().toString();
-                    break;
-                case STABLE:
-                    stableCondition = link.getUserObject().toString();
-                    break;
+        String grayStrategy = null;
+        String stableStrategy = null;
+
+        if (TElementManager.getNodes(dataBox).size() > 1) {
+            StringBuilder grayStrategyStringBuilder = new StringBuilder();
+            StringBuilder stableStrategyStringBuilder = new StringBuilder();
+            List<TNode> nodes = TElementManager.getNodes(dataBox);
+            for (int i = nodes.size() - 1; i >= 0; i--) {
+                TNode node = nodes.get(i);
+                Instance instance = (Instance) node.getUserObject();
+                NodeType nodeType = (NodeType) node.getBusinessObject();
+                String serviceId = instance.getServiceId();
+                String metadata = instance.getMetadata().get(strategyValue);
+                switch (nodeType) {
+                    case GRAY:
+                        grayStrategyStringBuilder.append("\"" + serviceId + "\":\"" + metadata + "\", ");
+                        break;
+                    case STABLE:
+                        stableStrategyStringBuilder.append("\"" + serviceId + "\":\"" + metadata + "\", ");
+                        break;
+                }
+            }
+            grayStrategy = grayStrategyStringBuilder.toString();
+            grayStrategy = grayStrategy.substring(0, grayStrategy.length() - 2);
+            stableStrategy = stableStrategyStringBuilder.toString();
+            stableStrategy = stableStrategy.substring(0, stableStrategy.length() - 2);
+
+            List<TLink> links = TElementManager.getLinks(dataBox);
+            for (int i = links.size() - 1; i >= 0; i--) {
+                TLink link = links.get(i);
+                LinkType linkType = (LinkType) link.getBusinessObject();
+                switch (linkType) {
+                    case GRAY:
+                        grayCondition = link.getUserObject().toString();
+                        break;
+                    case STABLE:
+                        stableCondition = link.getUserObject().toString();
+                        break;
+                }
             }
         }
 
         StringBuilder strategyStringBuilder = new StringBuilder();
         strategyStringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         strategyStringBuilder.append("<rule>\n");
-        strategyStringBuilder.append("    <strategy-customization>\n");
-        strategyStringBuilder.append("        <conditions type=\"" + ReleaseType.GRAY.toString() + "\">\n");
-        strategyStringBuilder.append("            <condition id=\"gray-condition\" " + strategyValue + "-id=\"gray-" + strategyValue + "-route=" + grayCondition + ";stable-" + strategyValue + "-route=" + stableCondition + "\"/>\n");
-        strategyStringBuilder.append("        </conditions>\n\n");
-        strategyStringBuilder.append("        <routes>\n");
-        strategyStringBuilder.append("            <route id=\"gray-" + strategyValue + "-route\" type=\"" + strategyValue + "\">{" + grayStrategy + "}</route>\n");
-        strategyStringBuilder.append("            <route id=\"stable-" + strategyValue + "-route\" type=\"" + strategyValue + "\">{" + stableStrategy + "}</route>\n");
-        strategyStringBuilder.append("        </routes>\n");
-        strategyStringBuilder.append("    </strategy-customization>\n");
+        if (TElementManager.getNodes(dataBox).size() > 1) {
+            strategyStringBuilder.append("    <strategy-customization>\n");
+            strategyStringBuilder.append("        <conditions type=\"" + ReleaseType.GRAY.toString() + "\">\n");
+            strategyStringBuilder.append("            <condition id=\"gray-condition\" " + strategyValue + "-id=\"gray-" + strategyValue + "-route=" + grayCondition + ";stable-" + strategyValue + "-route=" + stableCondition + "\"/>\n");
+            strategyStringBuilder.append("        </conditions>\n\n");
+            strategyStringBuilder.append("        <routes>\n");
+            strategyStringBuilder.append("            <route id=\"gray-" + strategyValue + "-route\" type=\"" + strategyValue + "\">{" + grayStrategy + "}</route>\n");
+            strategyStringBuilder.append("            <route id=\"stable-" + strategyValue + "-route\" type=\"" + strategyValue + "\">{" + stableStrategy + "}</route>\n");
+            strategyStringBuilder.append("        </routes>\n");
+            strategyStringBuilder.append("    </strategy-customization>\n");
+        }
         strategyStringBuilder.append("</rule>");
 
         return strategyStringBuilder.toString();
