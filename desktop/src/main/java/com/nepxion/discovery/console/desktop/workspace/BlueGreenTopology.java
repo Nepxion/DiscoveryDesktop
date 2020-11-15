@@ -68,11 +68,11 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
     protected Color greenLinkUI = LinkUI.GREEN;
     protected Color basicLinkUI = LinkUI.YELLOW;
 
+    protected JBasicTextField blueConditionTextField;
+    protected JBasicTextField greenConditionTextField;
     protected JBasicComboBox blueMetadataComboBox;
     protected JBasicComboBox greenMetadataComboBox;
     protected JBasicComboBox basicMetadataComboBox;
-    protected JBasicTextField blueConditionTextField;
-    protected JBasicTextField greenConditionTextField;
 
     protected TNode blueNode;
     protected TNode greenNode;
@@ -86,6 +86,30 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
 
     @Override
     public void initializeOperationBar() {
+        blueConditionTextField = new JBasicTextField("#H['a'] == '1' && #H['b'] <= '2'");
+        greenConditionTextField = new JBasicTextField("#H['a'] == '3'");
+
+        double[][] conditionSize = {
+                { TableLayout.PREFERRED, TableLayout.FILL },
+                { TableLayout.PREFERRED, TableLayout.PREFERRED }
+        };
+
+        TableLayout conditionTableLayout = new TableLayout(conditionSize);
+        conditionTableLayout.setHGap(0);
+        conditionTableLayout.setVGap(5);
+
+        JPanel conditionPanel = new JPanel();
+        conditionPanel.setLayout(conditionTableLayout);
+        conditionPanel.add(DimensionUtil.addWidth(new JBasicLabel(NodeType.BLUE.getDescription()), 5), "0, 0");
+        conditionPanel.add(blueConditionTextField, "1, 0");
+        conditionPanel.add(DimensionUtil.addWidth(new JBasicLabel(NodeType.GREEN.getDescription()), 5), "0, 1");
+        conditionPanel.add(greenConditionTextField, "1, 1");
+
+        JPanel conditionToolBar = new JPanel();
+        conditionToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
+        conditionToolBar.add(new JClassicButton(createValidateConditionAction()));
+        conditionToolBar.add(new JClassicButton(createModifyConditionAction()));
+
         JShrinkShortcut serviceShrinkShortcut = new JShrinkShortcut();
         serviceShrinkShortcut.setTitle(ConsoleLocaleFactory.getString(releaseType.toString() + "_service"));
         serviceShrinkShortcut.setIcon(IconFactory.getSwingIcon("stereo/paste_16.png"));
@@ -152,30 +176,6 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         conditionShrinkShortcut.setIcon(IconFactory.getSwingIcon("stereo/paste_16.png"));
         conditionShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString(releaseType.toString() + "_condition"));
 
-        blueConditionTextField = new JBasicTextField("#H['a'] == '1' && #H['b'] <= '2'");
-        greenConditionTextField = new JBasicTextField("#H['a'] == '3'");
-
-        double[][] conditionSize = {
-                { TableLayout.PREFERRED, TableLayout.FILL },
-                { TableLayout.PREFERRED, TableLayout.PREFERRED }
-        };
-
-        TableLayout conditionTableLayout = new TableLayout(conditionSize);
-        conditionTableLayout.setHGap(0);
-        conditionTableLayout.setVGap(5);
-
-        JPanel conditionPanel = new JPanel();
-        conditionPanel.setLayout(conditionTableLayout);
-        conditionPanel.add(DimensionUtil.addWidth(new JBasicLabel(NodeType.BLUE.getDescription()), 5), "0, 0");
-        conditionPanel.add(blueConditionTextField, "1, 0");
-        conditionPanel.add(DimensionUtil.addWidth(new JBasicLabel(NodeType.GREEN.getDescription()), 5), "0, 1");
-        conditionPanel.add(greenConditionTextField, "1, 1");
-
-        JPanel conditionToolBar = new JPanel();
-        conditionToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
-        conditionToolBar.add(new JClassicButton(createValidateConditionAction()));
-        conditionToolBar.add(new JClassicButton(createModifyConditionAction()));
-
         double[][] size = {
                 { TableLayout.FILL },
                 { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
@@ -187,12 +187,12 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
 
         operationBar.setLayout(tableLayout);
         operationBar.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        operationBar.add(serviceShrinkShortcut, "0, 0");
-        operationBar.add(servicePanel, "0, 1");
-        operationBar.add(serviceToolBar, "0, 2");
-        operationBar.add(conditionShrinkShortcut, "0, 4");
-        operationBar.add(new BlueGreenConditionPanel(), "0, 5");
-        operationBar.add(conditionToolBar, "0, 6");
+        operationBar.add(conditionShrinkShortcut, "0, 0");
+        operationBar.add(new BlueGreenConditionPanel(), "0, 1");
+        operationBar.add(conditionToolBar, "0, 2");
+        operationBar.add(serviceShrinkShortcut, "0, 4");
+        operationBar.add(servicePanel, "0, 5");
+        operationBar.add(serviceToolBar, "0, 6");
     }
 
     public void addNodes(String serviceId, String blueMetadata, String greenMetadata, String basicMetadata, String blueCondition, String greenCondition) {
