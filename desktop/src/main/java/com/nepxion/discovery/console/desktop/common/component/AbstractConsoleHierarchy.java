@@ -10,7 +10,6 @@ package com.nepxion.discovery.console.desktop.common.component;
  */
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -22,6 +21,7 @@ import javax.swing.JPanel;
 import com.nepxion.discovery.console.desktop.common.context.ConsoleUIContext;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
+import com.nepxion.discovery.console.desktop.workspace.util.DimensionUtil;
 import com.nepxion.swing.element.ElementNode;
 import com.nepxion.swing.framework.reflection.JReflectionHierarchy;
 import com.nepxion.swing.list.JBasicList;
@@ -54,7 +54,7 @@ public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
         shrinkOperationBar.setToolTipText(ConsoleLocaleFactory.getString("operation_bar"));
         shrinkOperationBar.setIcon(ConsoleIconFactory.getSwingIcon("property.png"));
         shrinkOperationBar.setTitleFont(new Font(ConsoleUIContext.getFontName(), Font.BOLD, ConsoleUIContext.getLargeFontSize()));
-        shrinkOperationBar.setPreferredSize(new Dimension(360, shrinkOperationBar.getPreferredSize().height));
+        DimensionUtil.setWidth(shrinkOperationBar, 360);
 
         shrinkContentBar = new JShrinkBar(JShrinkBar.PLACEMENT_EAST, JShrinkBar.CONTENT_PANE_TYPE_LABEL, headerTextureStyle);
         shrinkContentBar.setShrinkable(false);
@@ -69,7 +69,7 @@ public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
         shrinkOutlookBar.setToolTipText(ConsoleLocaleFactory.getString("navigator_bar"));
         shrinkOutlookBar.setIcon(ConsoleIconFactory.getSwingIcon("hierarchy.png"));
         shrinkOutlookBar.setTitleFont(new Font(ConsoleUIContext.getFontName(), Font.BOLD, ConsoleUIContext.getLargeFontSize()));
-        shrinkOutlookBar.setPreferredSize(new Dimension(200, shrinkOutlookBar.getPreferredSize().height));
+        DimensionUtil.setWidth(shrinkOutlookBar, 200);
 
         initializeUI();
 

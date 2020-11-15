@@ -14,7 +14,7 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 
 import com.nepxion.discovery.console.desktop.workspace.type.NodeType;
-import com.nepxion.discovery.console.desktop.workspace.util.ComponentUtil;
+import com.nepxion.discovery.console.desktop.workspace.util.DimensionUtil;
 import com.nepxion.swing.button.JClassicButton;
 import com.nepxion.swing.combobox.JBasicComboBox;
 import com.nepxion.swing.icon.IconFactory;
@@ -48,9 +48,9 @@ public class BlueGreenConditionPanel extends JPanel {
 
             JPanel resultBar = new JPanel();
             resultBar.setLayout(new BorderLayout(0, 5));
-            resultBar.add(ComponentUtil.addWidth(new JBasicLabel("结果"), 5), BorderLayout.WEST);
+            resultBar.add(DimensionUtil.addWidth(new JBasicLabel("结果"), 5), BorderLayout.WEST);
             resultBar.add(resultTextField, BorderLayout.CENTER);
-            resultBar.add(ComponentUtil.setWidth(new JClassicButton(IconFactory.getSwingIcon("edit.png")), 30), BorderLayout.EAST);
+            resultBar.add(DimensionUtil.setWidth(new JClassicButton(IconFactory.getSwingIcon("edit.png")), 30), BorderLayout.EAST);
 
             double[][] size = {
                     { TableLayout.FILL, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED },
@@ -93,8 +93,8 @@ public class BlueGreenConditionPanel extends JPanel {
         protected JClassicButton deleteButton = new JClassicButton(IconFactory.getSwingIcon("delete.png"));
 
         public ConditionItem() {
-            ComponentUtil.setWidth(addButton, 30);
-            ComponentUtil.setWidth(deleteButton, 30);
+            DimensionUtil.setWidth(addButton, 30);
+            DimensionUtil.setWidth(deleteButton, 30);
         }
     }
 }

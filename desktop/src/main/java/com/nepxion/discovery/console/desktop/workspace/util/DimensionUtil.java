@@ -12,10 +12,9 @@ package com.nepxion.discovery.console.desktop.workspace.util;
 import java.awt.Component;
 import java.awt.Dimension;
 
-import com.nepxion.swing.combobox.JBasicComboBox;
 import com.nepxion.swing.label.JBasicLabel;
 
-public class ComponentUtil {
+public class DimensionUtil {
     public static Component addWidth(JBasicLabel Component, int width) {
         Component.setPreferredSize(new Dimension(Component.getPreferredSize().width + width, Component.getPreferredSize().height));
 
@@ -38,9 +37,5 @@ public class ComponentUtil {
         component.setPreferredSize(new Dimension(component.getPreferredSize().width, height));
 
         return component;
-    }
-
-    public static String getSelectedValue(JBasicComboBox comoboBox) {
-        return comoboBox.getSelectedItem() != null ? comoboBox.getSelectedItem().toString().trim() : null;
     }
 }

@@ -42,7 +42,7 @@ import com.nepxion.discovery.console.desktop.workspace.topology.NodeUI;
 import com.nepxion.discovery.console.desktop.workspace.type.LinkType;
 import com.nepxion.discovery.console.desktop.workspace.type.NodeType;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
-import com.nepxion.discovery.console.desktop.workspace.util.ComponentUtil;
+import com.nepxion.discovery.console.desktop.workspace.util.ComboBoxUtil;
 import com.nepxion.discovery.console.entity.Instance;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.ButtonManager;
@@ -399,9 +399,9 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
 
     @Override
     public void addServiceStrategy(String serviceId) {
-        String blueMetadata = ComponentUtil.getSelectedValue(blueMetadataComboBox);
-        String greenMetadata = ComponentUtil.getSelectedValue(greenMetadataComboBox);
-        String basicMetadata = ComponentUtil.getSelectedValue(basicMetadataComboBox);
+        String blueMetadata = ComboBoxUtil.getSelectedValue(blueMetadataComboBox);
+        String greenMetadata = ComboBoxUtil.getSelectedValue(greenMetadataComboBox);
+        String basicMetadata = ComboBoxUtil.getSelectedValue(basicMetadataComboBox);
         String blueCondition = blueConditionTextField.getText().trim();
         String greenCondition = greenConditionTextField.getText().trim();
 
@@ -424,9 +424,9 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
 
     @Override
     public void modifyServiceStrategy(String serviceId) {
-        String blueMetadata = ComponentUtil.getSelectedValue(blueMetadataComboBox);
-        String greenMetadata = ComponentUtil.getSelectedValue(greenMetadataComboBox);
-        String basicMetadata = ComponentUtil.getSelectedValue(basicMetadataComboBox);
+        String blueMetadata = ComboBoxUtil.getSelectedValue(blueMetadataComboBox);
+        String greenMetadata = ComboBoxUtil.getSelectedValue(greenMetadataComboBox);
+        String basicMetadata = ComboBoxUtil.getSelectedValue(basicMetadataComboBox);
 
         if (StringUtils.isBlank(blueMetadata) || StringUtils.isBlank(greenMetadata) || StringUtils.isBlank(basicMetadata)) {
             JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), strategyType.getName() + " " + ConsoleLocaleFactory.getString("not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
