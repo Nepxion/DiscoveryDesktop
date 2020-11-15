@@ -79,7 +79,7 @@ public class BlueGreenConditionPanel extends JPanel {
 
             JPanel resultButtonBar = new JPanel();
             resultButtonBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
-            resultButtonBar.add(DimensionUtil.setWidth(new JClassicButton(createAggregateConditionAction()), 30));
+            resultButtonBar.add(DimensionUtil.setWidth(new JClassicButton(createAggregateConditionAction(conditionItems)), 30));
             resultButtonBar.add(DimensionUtil.setWidth(new JClassicButton(createValidateConditionAction()), 30));
 
             JPanel resultBar = new JPanel();
@@ -132,6 +132,8 @@ public class BlueGreenConditionPanel extends JPanel {
                 conditionItemBar.add(conditionItem.logicComboBox, "3, " + index);
                 conditionItemBar.add(conditionItem.addButton, "4, " + index);
                 conditionItemBar.add(conditionItem.removeButton, "5, " + index);
+
+                conditionItem.logicComboBox.setVisible(index != conditionItems.size());
 
                 index++;
             }
@@ -221,29 +223,53 @@ public class BlueGreenConditionPanel extends JPanel {
 
             return action;
         }
-    }
 
-    public JSecurityAction createAggregateConditionAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("theme/folder/deploy.png"), ConsoleLocaleFactory.getString("aggregate_condition_tooltip")) {
-            private static final long serialVersionUID = 1L;
+        public JSecurityAction createAggregateConditionAction(List<ConditionItem> conditionItems) {
+            JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("theme/folder/deploy.png"), ConsoleLocaleFactory.getString("aggregate_condition_tooltip")) {
+                private static final long serialVersionUID = 1L;
 
-            public void execute(ActionEvent e) {
+                public void execute(ActionEvent e) {
+                    StringBuilder stringBuilder = new StringBuilder();
 
-            }
-        };
+                    int index = 0;
+                    for (ConditionItem conditionItem : conditionItems) {
+                        String parameter = conditionItem.parameterTextField.getText().trim();
+                        String arithmetic = conditionItem.arithmeticComboBox.getSelectedItem().toString();
+                        String value = conditionItem.valueTextField.getText().trim();
+                        String logic = conditionItem.logicComboBox.getSelectedItem().toString();
 
-        return action;
-    }
+                        if (StringUtils.isBlank(parameter)) {
+                            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenConditionPanel.this), ConsoleLocaleFactory.getString("condition_item_one_at_least"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
-    public JSecurityAction createValidateConditionAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("theme/folder/snapshot.png"), ConsoleLocaleFactory.getString("validate_condition_tooltip")) {
-            private static final long serialVersionUID = 1L;
+                            return;
+                        }
 
-            public void execute(ActionEvent e) {
+                        stringBuilder.append("#H['").append(parameter).append("'] ").append(arithmetic).append(" '").append(value).append("'");
 
-            }
-        };
+                        if (index < conditionItems.size() - 1) {
+                            stringBuilder.append(" ").append(logic).append(" ");
+                        }
 
-        return action;
+                        index++;
+                    }
+
+                    resultTextField.setText(stringBuilder.toString());
+                }
+            };
+
+            return action;
+        }
+
+        public JSecurityAction createValidateConditionAction() {
+            JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("theme/folder/snapshot.png"), ConsoleLocaleFactory.getString("validate_condition_tooltip")) {
+                private static final long serialVersionUID = 1L;
+
+                public void execute(ActionEvent e) {
+
+                }
+            };
+
+            return action;
+        }
     }
 }
