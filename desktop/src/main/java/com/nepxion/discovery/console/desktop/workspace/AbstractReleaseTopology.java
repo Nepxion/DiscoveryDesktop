@@ -112,7 +112,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         return null;
     }
 
-    public void initializeUI() {
+    public void initializeUI(CreatePanel createPanel) {
         setTitle();
         setGatewayNode();
 
@@ -246,7 +246,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         gateway.setMetadata(metadataMap);
 
         initializeData(group, gateway, strategyType, configType, deployType);
-        initializeUI();
+        initializeUI(createPanel);
     }
 
     @Override

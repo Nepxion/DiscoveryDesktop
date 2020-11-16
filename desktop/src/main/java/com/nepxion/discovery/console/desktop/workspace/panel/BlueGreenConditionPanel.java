@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import org.apache.commons.lang3.StringUtils;
@@ -49,6 +50,23 @@ public class BlueGreenConditionPanel extends JPanel {
         setLayout(new FiledLayout(FiledLayout.COLUMN, FiledLayout.FULL, 10));
         add(blueConditionBar);
         add(greenConditionBar);
+    }
+
+    public void setGreenConditionBarEnabled(boolean enabled) {
+        setComponentEnabled(greenConditionBar, enabled);
+    }
+
+    public void setComponentEnabled(JComponent component, boolean enabled) {
+        if (component.getComponentCount() > 0) {
+            for (int i = 0; i < component.getComponentCount(); i++) {
+                if (component.getComponent(i) instanceof JComponent) {
+                    JComponent childComponent = (JComponent) component.getComponent(i);
+                    childComponent.setEnabled(enabled);
+
+                    setComponentEnabled(childComponent, enabled);
+                }
+            }
+        }
     }
 
     public String getBlueCondition() {

@@ -65,6 +65,11 @@ public class GrayTopology extends AbstractReleaseTopology {
     protected Color grayLinkUI = LinkUI.GRAY;
     protected Color stableLinkUI = LinkUI.GREEN;
 
+    protected JPanel conditionToolBar;
+    protected JPanel conditionPanel;
+    protected JPanel servicePanel;
+    protected JPanel serviceToolBar;
+
     protected JBasicComboBox grayConditionComboBox;
     protected JBasicComboBox stableConditionComboBox;
     protected JBasicComboBox grayMetadataComboBox;
@@ -125,7 +130,7 @@ public class GrayTopology extends AbstractReleaseTopology {
         conditionTableLayout.setHGap(0);
         conditionTableLayout.setVGap(5);
 
-        JPanel conditionPanel = new JPanel();
+        conditionPanel = new JPanel();
         conditionPanel.setLayout(conditionTableLayout);
         conditionPanel.add(DimensionUtil.addWidth(new JBasicLabel(NodeType.GRAY.getDescription()), 5), "0, 0");
         conditionPanel.add(grayConditionComboBox, "1, 0");
@@ -134,7 +139,7 @@ public class GrayTopology extends AbstractReleaseTopology {
         conditionPanel.add(stableConditionComboBox, "1, 1");
         conditionPanel.add(new JBasicLabel("%"), "2, 1");
 
-        JPanel conditionToolBar = new JPanel();
+        conditionToolBar = new JPanel();
         conditionToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
         conditionToolBar.add(new JClassicButton(createModifyConditionAction()));
 
@@ -174,7 +179,7 @@ public class GrayTopology extends AbstractReleaseTopology {
         serviceTableLayout.setHGap(0);
         serviceTableLayout.setVGap(5);
 
-        JPanel servicePanel = new JPanel();
+        servicePanel = new JPanel();
         servicePanel.setLayout(serviceTableLayout);
         servicePanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("service")), 5), "0, 0");
         servicePanel.add(serviceIdComboBox, "1, 0");
@@ -186,7 +191,7 @@ public class GrayTopology extends AbstractReleaseTopology {
         servicePanel.add(stableMetadataComboBox, "1, 2");
         servicePanel.add(stableMetadataButton, "2, 2");
 
-        JPanel serviceToolBar = new JPanel();
+        serviceToolBar = new JPanel();
         serviceToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
         serviceToolBar.add(new JClassicButton(createAddServiceStrategyAction()));
         serviceToolBar.add(new JClassicButton(createModifyServiceStrategyAction()));

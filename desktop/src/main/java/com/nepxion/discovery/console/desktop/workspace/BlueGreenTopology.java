@@ -42,6 +42,7 @@ import com.nepxion.discovery.console.desktop.workspace.topology.LinkUI;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeSizeType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeUI;
+import com.nepxion.discovery.console.desktop.workspace.type.BlueGreenRouteType;
 import com.nepxion.discovery.console.desktop.workspace.type.LinkType;
 import com.nepxion.discovery.console.desktop.workspace.type.NodeType;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
@@ -68,7 +69,11 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
     protected Color greenLinkUI = LinkUI.GREEN;
     protected Color basicLinkUI = LinkUI.YELLOW;
 
+    protected JPanel conditionToolBar;
     protected BlueGreenConditionPanel conditionPanel;
+    protected JPanel servicePanel;
+    protected JPanel serviceToolBar;
+
     protected JBasicComboBox blueMetadataComboBox;
     protected JBasicComboBox greenMetadataComboBox;
     protected JBasicComboBox basicMetadataComboBox;
@@ -77,6 +82,8 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
     protected TNode greenNode;
     protected TNode basicNode;
 
+    protected BlueGreenRouteType blueGreenRouteType;
+
     protected StrategyProcessor strategyProcessor = new BlueGreenStrategyProcessor();
 
     public BlueGreenTopology() {
@@ -84,10 +91,24 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
     }
 
     @Override
+    public void initializeUI(CreatePanel createPanel) {
+        BlueGreenCreatePanel blueGreenCreatePanel = (BlueGreenCreatePanel) createPanel;
+        blueGreenRouteType = blueGreenCreatePanel.getBlueGreenRouteType();
+
+        boolean enabled = blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC;
+        servicePanel.getComponent(6).setEnabled(enabled);
+        servicePanel.getComponent(7).setEnabled(enabled);
+        servicePanel.getComponent(8).setEnabled(enabled);
+        conditionPanel.setGreenConditionBarEnabled(enabled);
+
+        super.initializeUI(createPanel);
+    }
+
+    @Override
     public void initializeOperationBar() {
         conditionPanel = new BlueGreenConditionPanel();
 
-        JPanel conditionToolBar = new JPanel();
+        conditionToolBar = new JPanel();
         conditionToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
         conditionToolBar.add(new JClassicButton(createModifyConditionAction()));
 
@@ -132,7 +153,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         serviceTableLayout.setHGap(0);
         serviceTableLayout.setVGap(5);
 
-        JPanel servicePanel = new JPanel();
+        servicePanel = new JPanel();
         servicePanel.setLayout(serviceTableLayout);
         servicePanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("service")), 5), "0, 0");
         servicePanel.add(serviceIdComboBox, "1, 0");
@@ -147,7 +168,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         servicePanel.add(basicMetadataComboBox, "1, 3");
         servicePanel.add(basicMetadataButton, "2, 3");
 
-        JPanel serviceToolBar = new JPanel();
+        serviceToolBar = new JPanel();
         serviceToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
         serviceToolBar.add(new JClassicButton(createAddServiceStrategyAction()));
         serviceToolBar.add(new JClassicButton(createModifyServiceStrategyAction()));
