@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.AbstractButton;
-import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
@@ -162,7 +161,7 @@ public class CreatePanel extends JPanel {
 
         double[][] size = {
                 { TableLayout.PREFERRED, TableLayout.FILL },
-                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
+                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
         };
 
         TableLayout tableLayout = new TableLayout(size);
@@ -170,7 +169,6 @@ public class CreatePanel extends JPanel {
         tableLayout.setVGap(10);
 
         setLayout(tableLayout);
-        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         add(new JBasicLabel(ConsoleLocaleFactory.getString("strategy_text")), "0, 0");
         add(strategyPanel, "1, 0");
         add(new JBasicLabel(ConsoleLocaleFactory.getString("config_text")), "0, 1");
