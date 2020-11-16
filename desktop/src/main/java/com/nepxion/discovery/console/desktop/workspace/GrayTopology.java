@@ -70,8 +70,6 @@ public class GrayTopology extends AbstractReleaseTopology {
     protected JBasicComboBox grayMetadataComboBox;
     protected JBasicComboBox stableMetadataComboBox;
 
-    protected GrayCreatePanel createPanel = new GrayCreatePanel();
-
     protected TNode grayNode;
     protected TNode stableNode;
 
@@ -362,7 +360,7 @@ public class GrayTopology extends AbstractReleaseTopology {
 
     @Override
     public CreatePanel getCreatePanel() {
-        return createPanel;
+        return new GrayCreatePanel();
     }
 
     @Override

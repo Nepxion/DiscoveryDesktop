@@ -73,8 +73,6 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
     protected JBasicComboBox greenMetadataComboBox;
     protected JBasicComboBox basicMetadataComboBox;
 
-    protected BlueGreenCreatePanel createPanel = new BlueGreenCreatePanel();
-
     protected TNode blueNode;
     protected TNode greenNode;
     protected TNode basicNode;
@@ -352,7 +350,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
 
     @Override
     public CreatePanel getCreatePanel() {
-        return createPanel;
+        return new BlueGreenCreatePanel();
     }
 
     @Override
