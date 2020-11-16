@@ -10,6 +10,7 @@ package com.nepxion.discovery.console.desktop.common.component;
  */
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -22,6 +23,7 @@ import com.nepxion.discovery.console.desktop.common.context.ConsoleUIContext;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
+import com.nepxion.swing.container.ContainerManager;
 import com.nepxion.swing.element.ElementNode;
 import com.nepxion.swing.framework.reflection.JReflectionHierarchy;
 import com.nepxion.swing.list.JBasicList;
@@ -49,7 +51,34 @@ public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
         IHeaderTextureStyle headerTextureStyle = new JBlackHeaderTextureStyle();
         IOutlookTextureStyle outlookTextureStyle = new JGreenOutlookTextureStyle();
 
-        shrinkOperationBar = new JShrinkBar(JShrinkBar.PLACEMENT_EAST, JShrinkBar.CONTENT_PANE_TYPE_LABEL, headerTextureStyle);
+        shrinkOperationBar = new JShrinkBar(JShrinkBar.PLACEMENT_EAST, JShrinkBar.CONTENT_PANE_TYPE_LABEL, headerTextureStyle) {
+            private static final long serialVersionUID = 1L;
+
+            private JPanel container;
+            private Component contentPane;
+
+            @Override
+            public Component getContentPane() {
+                return contentPane;
+            }
+
+            @Override
+            public void setContentPane(Component contentPane) {
+                this.contentPane = contentPane;
+
+                if (container == null) {
+                    container = new JPanel();
+                    container.setLayout(new BorderLayout());
+
+                    shrinkContentPane.add(container, BorderLayout.CENTER);
+                }
+
+                container.removeAll();
+                container.add(contentPane, BorderLayout.CENTER);
+
+                ContainerManager.update(container);
+            }
+        };
         shrinkOperationBar.setTitle(ConsoleLocaleFactory.getString("operation_bar"));
         shrinkOperationBar.setToolTipText(ConsoleLocaleFactory.getString("operation_bar"));
         shrinkOperationBar.setIcon(ConsoleIconFactory.getSwingIcon("property.png"));
