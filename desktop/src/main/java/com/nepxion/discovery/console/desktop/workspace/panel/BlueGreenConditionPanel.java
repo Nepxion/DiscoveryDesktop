@@ -70,11 +70,11 @@ public class BlueGreenConditionPanel extends JPanel {
     }
 
     public String getBlueCondition() {
-        return blueConditionBar.getResult();
+        return blueConditionBar.getCondition();
     }
 
     public String getGreenCondition() {
-        return greenConditionBar.getResult();
+        return greenConditionBar.getCondition();
     }
 
     public class ConditionBar extends JPanel {
@@ -84,7 +84,7 @@ public class BlueGreenConditionPanel extends JPanel {
         protected List<ConditionItem> conditionItems = new ArrayList<ConditionItem>();
 
         protected JPanel conditionItemBar;
-        protected JBasicTextField resultTextField;
+        protected JBasicTextField conditionTextField;
 
         public ConditionBar(NodeType nodeType) {
             JShrinkShortcut shrinkShortcut = new JShrinkShortcut();
@@ -93,23 +93,30 @@ public class BlueGreenConditionPanel extends JPanel {
             shrinkShortcut.setToolTipText(nodeType.getDescription());
 
             conditionItemBar = new JPanel();
-            resultTextField = new JBasicTextField();
+            conditionTextField = new JBasicTextField();
 
-            JPanel resultButtonBar = new JPanel();
-            resultButtonBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
-            resultButtonBar.add(DimensionUtil.setWidth(new JClassicButton(createAggregateConditionAction(conditionItems)), 30));
-            resultButtonBar.add(DimensionUtil.setWidth(new JClassicButton(createValidateConditionAction()), 30));
+            double[][] size = {
+                    { TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },
+                    { TableLayout.PREFERRED, TableLayout.PREFERRED }
+            };
 
-            JPanel resultBar = new JPanel();
-            resultBar.setLayout(new BorderLayout(0, 5));
-            resultBar.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("result")), 5), BorderLayout.WEST);
-            resultBar.add(resultTextField, BorderLayout.CENTER);
-            resultBar.add(resultButtonBar, BorderLayout.EAST);
+            TableLayout tableLayout = new TableLayout(size);
+            tableLayout.setHGap(0);
+            tableLayout.setVGap(5);
+
+            JPanel conditionBar = new JPanel();
+            conditionBar.setLayout(tableLayout);
+            conditionBar.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("aggregate_text")), 5), "0, 0");
+            conditionBar.add(conditionTextField, "1, 0");
+            conditionBar.add(DimensionUtil.setWidth(new JClassicButton(createAggregateConditionAction(conditionItems)), 30), "2, 0");
+            conditionBar.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("validate_text")), 5), "0, 1");
+            conditionBar.add(new JBasicTextField(), "1, 1");
+            conditionBar.add(DimensionUtil.setWidth(new JClassicButton(createValidateConditionAction()), 30), "2, 1");
 
             setLayout(new BorderLayout());
             add(shrinkShortcut, BorderLayout.NORTH);
             add(conditionItemBar, BorderLayout.CENTER);
-            add(resultBar, BorderLayout.SOUTH);
+            add(conditionBar, BorderLayout.SOUTH);
 
             for (int i = 0; i < initialConditionItemCount; i++) {
                 conditionItems.add(new ConditionItem(UUID.randomUUID().toString()));
@@ -159,8 +166,8 @@ public class BlueGreenConditionPanel extends JPanel {
             ContainerManager.update(conditionItemBar);
         }
 
-        public String getResult() {
-            return resultTextField.getText().trim();
+        public String getCondition() {
+            return conditionTextField.getText().trim();
         }
 
         public ConditionItem getConditionItem(String uuid) {
@@ -271,7 +278,7 @@ public class BlueGreenConditionPanel extends JPanel {
                         index++;
                     }
 
-                    resultTextField.setText(stringBuilder.toString());
+                    conditionTextField.setText(stringBuilder.toString());
                 }
             };
 
