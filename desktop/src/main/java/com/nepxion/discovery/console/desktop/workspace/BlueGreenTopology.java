@@ -218,25 +218,27 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         }
         blueNode = newBlueNode;
 
-        TNode newGreenNode = addNode(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.toString() + "=" + greenMetadata), serviceGreenNodeUI);
-        Instance newGreenInstance = new Instance();
-        newGreenInstance.setServiceId(serviceId);
-        Map<String, String> newGreenMetadataMap = new HashMap<String, String>();
-        newGreenMetadataMap.put(strategyType.toString(), greenMetadata);
-        newGreenInstance.setMetadata(newGreenMetadataMap);
-        newGreenNode.setUserObject(newGreenInstance);
-        newGreenNode.setBusinessObject(NodeType.GREEN);
-        if (greenNode == null) {
-            TLink greenLink = addLink(gatewayNode, newGreenNode, greenLinkUI);
-            greenLink.setName(ConsoleLocaleFactory.getString("green_route"));
-            greenLink.setToolTipText(greenCondition);
-            greenLink.setUserObject(greenCondition);
-            greenLink.setBusinessObject(LinkType.GREEN);
-        } else {
-            TLink link = addLink(greenNode, newGreenNode, null);
-            link.setBusinessObject(LinkType.UNDEFINED);
+        if (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC) {
+            TNode newGreenNode = addNode(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.toString() + "=" + greenMetadata), serviceGreenNodeUI);
+            Instance newGreenInstance = new Instance();
+            newGreenInstance.setServiceId(serviceId);
+            Map<String, String> newGreenMetadataMap = new HashMap<String, String>();
+            newGreenMetadataMap.put(strategyType.toString(), greenMetadata);
+            newGreenInstance.setMetadata(newGreenMetadataMap);
+            newGreenNode.setUserObject(newGreenInstance);
+            newGreenNode.setBusinessObject(NodeType.GREEN);
+            if (greenNode == null) {
+                TLink greenLink = addLink(gatewayNode, newGreenNode, greenLinkUI);
+                greenLink.setName(ConsoleLocaleFactory.getString("green_route"));
+                greenLink.setToolTipText(greenCondition);
+                greenLink.setUserObject(greenCondition);
+                greenLink.setBusinessObject(LinkType.GREEN);
+            } else {
+                TLink link = addLink(greenNode, newGreenNode, null);
+                link.setBusinessObject(LinkType.UNDEFINED);
+            }
+            greenNode = newGreenNode;
         }
-        greenNode = newGreenNode;
 
         TNode newBasicNode = addNode(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.toString() + "=" + basicMetadata), serviceBasicNodeUI);
         Instance newBasicInstance = new Instance();
@@ -356,7 +358,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
                 String blueCondition = conditionPanel.getBlueCondition();
                 String greenCondition = conditionPanel.getGreenCondition();
 
-                if (StringUtils.isBlank(blueCondition) || StringUtils.isBlank(greenCondition)) {
+                if (StringUtils.isBlank(blueCondition) || (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && StringUtils.isBlank(greenCondition))) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), ConsoleLocaleFactory.getString("condition_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
@@ -400,13 +402,13 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         String blueCondition = conditionPanel.getBlueCondition();
         String greenCondition = conditionPanel.getGreenCondition();
 
-        if (StringUtils.isBlank(blueMetadata) || StringUtils.isBlank(greenMetadata) || StringUtils.isBlank(basicMetadata)) {
+        if (StringUtils.isBlank(blueMetadata) || (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && StringUtils.isBlank(greenMetadata)) || StringUtils.isBlank(basicMetadata)) {
             JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), strategyType.getName() + " " + ConsoleLocaleFactory.getString("not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
             return;
         }
 
-        if (StringUtils.isBlank(blueCondition) || StringUtils.isBlank(greenCondition)) {
+        if (StringUtils.isBlank(blueCondition) || (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && StringUtils.isBlank(greenCondition))) {
             JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), ConsoleLocaleFactory.getString("condition_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
             return;
@@ -423,7 +425,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         String greenMetadata = ComboBoxUtil.getSelectedValue(greenMetadataComboBox);
         String basicMetadata = ComboBoxUtil.getSelectedValue(basicMetadataComboBox);
 
-        if (StringUtils.isBlank(blueMetadata) || StringUtils.isBlank(greenMetadata) || StringUtils.isBlank(basicMetadata)) {
+        if (StringUtils.isBlank(blueMetadata) || (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && StringUtils.isBlank(greenMetadata)) || StringUtils.isBlank(basicMetadata)) {
             JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), strategyType.getName() + " " + ConsoleLocaleFactory.getString("not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
             return;

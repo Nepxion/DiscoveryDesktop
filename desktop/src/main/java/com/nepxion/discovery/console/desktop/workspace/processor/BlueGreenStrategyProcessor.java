@@ -46,9 +46,9 @@ public class BlueGreenStrategyProcessor extends AbstractStrategyProcessor {
         String greenCondition = null;
 
         if (TElementManager.getNodes(dataBox).size() > 1) {
-            StringBuilder basicStrategyStringBuilder = new StringBuilder();
             StringBuilder blueStrategyStringBuilder = new StringBuilder();
             StringBuilder greenStrategyStringBuilder = new StringBuilder();
+            StringBuilder basicStrategyStringBuilder = new StringBuilder();
             List<TNode> nodes = TElementManager.getNodes(dataBox);
             for (int i = nodes.size() - 1; i >= 0; i--) {
                 TNode node = nodes.get(i);
@@ -68,12 +68,14 @@ public class BlueGreenStrategyProcessor extends AbstractStrategyProcessor {
                         break;
                 }
             }
-            basicStrategy = basicStrategyStringBuilder.toString();
-            basicStrategy = basicStrategy.substring(0, basicStrategy.length() - 2);
             blueStrategy = blueStrategyStringBuilder.toString();
             blueStrategy = blueStrategy.substring(0, blueStrategy.length() - 2);
             greenStrategy = greenStrategyStringBuilder.toString();
-            greenStrategy = greenStrategy.substring(0, greenStrategy.length() - 2);
+            if (StringUtils.isNotEmpty(greenStrategy)) {
+                greenStrategy = greenStrategy.substring(0, greenStrategy.length() - 2);
+            }
+            basicStrategy = basicStrategyStringBuilder.toString();
+            basicStrategy = basicStrategy.substring(0, basicStrategy.length() - 2);
 
             List<TLink> links = TElementManager.getLinks(dataBox);
             for (int i = links.size() - 1; i >= 0; i--) {
@@ -100,11 +102,15 @@ public class BlueGreenStrategyProcessor extends AbstractStrategyProcessor {
             strategyStringBuilder.append("    <strategy-customization>\n");
             strategyStringBuilder.append("        <conditions type=\"" + ReleaseType.BLUE_GREEN.toString() + "\">\n");
             strategyStringBuilder.append("            <condition id=\"blue-condition\" header=\"" + EscapeType.escape(blueCondition) + "\" " + strategyValue + "-id=\"blue-" + strategyValue + "-route\"/>\n");
-            strategyStringBuilder.append("            <condition id=\"green-condition\" header=\"" + EscapeType.escape(greenCondition) + "\" " + strategyValue + "-id=\"green-" + strategyValue + "-route\"/>\n");
+            if (StringUtils.isNotEmpty(greenCondition)) {
+                strategyStringBuilder.append("            <condition id=\"green-condition\" header=\"" + EscapeType.escape(greenCondition) + "\" " + strategyValue + "-id=\"green-" + strategyValue + "-route\"/>\n");
+            }
             strategyStringBuilder.append("        </conditions>\n\n");
             strategyStringBuilder.append("        <routes>\n");
             strategyStringBuilder.append("            <route id=\"blue-" + strategyValue + "-route\" type=\"" + strategyValue + "\">{" + blueStrategy + "}</route>\n");
-            strategyStringBuilder.append("            <route id=\"green-" + strategyValue + "-route\" type=\"" + strategyValue + "\">{" + greenStrategy + "}</route>\n");
+            if (StringUtils.isNotEmpty(greenStrategy)) {
+                strategyStringBuilder.append("            <route id=\"green-" + strategyValue + "-route\" type=\"" + strategyValue + "\">{" + greenStrategy + "}</route>\n");
+            }
             strategyStringBuilder.append("        </routes>\n");
             strategyStringBuilder.append("    </strategy-customization>\n");
         }
