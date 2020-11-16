@@ -211,7 +211,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
     @Override
     public void create() {
-        CreatePanel createPanel = new CreatePanel();
+        CreatePanel createPanel = getCreatePanel();
         createPanel.setPreferredSize(new Dimension(createPanel.getPreferredSize().width, createPanel.getPreferredSize().height));
 
         int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractReleaseTopology.this), createPanel, ConsoleLocaleFactory.getString("create_tooltip") + " [ " + releaseType.getDescription() + " ]", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
@@ -395,6 +395,8 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
         return action;
     }
+
+    public abstract CreatePanel getCreatePanel();
 
     public abstract void reset();
 

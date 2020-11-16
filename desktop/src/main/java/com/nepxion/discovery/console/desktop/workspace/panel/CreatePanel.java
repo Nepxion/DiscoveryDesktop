@@ -161,7 +161,7 @@ public class CreatePanel extends JPanel {
 
         double[][] size = {
                 { TableLayout.PREFERRED, TableLayout.FILL },
-                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
+                getLayoutRow()
         };
 
         TableLayout tableLayout = new TableLayout(size);
@@ -182,6 +182,10 @@ public class CreatePanel extends JPanel {
 
         setGroups();
         setGatewayIds();
+    }
+
+    public double[] getLayoutRow() {
+        return new double[] { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED };
     }
 
     @SuppressWarnings("unchecked")

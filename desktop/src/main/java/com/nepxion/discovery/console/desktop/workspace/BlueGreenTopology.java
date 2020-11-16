@@ -34,6 +34,8 @@ import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.BlueGreenConditionPanel;
+import com.nepxion.discovery.console.desktop.workspace.panel.BlueGreenCreatePanel;
+import com.nepxion.discovery.console.desktop.workspace.panel.CreatePanel;
 import com.nepxion.discovery.console.desktop.workspace.processor.BlueGreenStrategyProcessor;
 import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessor;
 import com.nepxion.discovery.console.desktop.workspace.topology.LinkUI;
@@ -344,6 +346,11 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         };
 
         return action;
+    }
+
+    @Override
+    public CreatePanel getCreatePanel() {
+        return new BlueGreenCreatePanel();
     }
 
     @Override
