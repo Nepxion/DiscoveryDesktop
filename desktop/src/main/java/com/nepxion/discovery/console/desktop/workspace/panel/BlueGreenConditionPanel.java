@@ -13,13 +13,19 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.expression.TypeComparator;
 
+import com.nepxion.discovery.common.constant.DiscoveryConstant;
+import com.nepxion.discovery.common.expression.DiscoveryExpressionResolver;
+import com.nepxion.discovery.common.expression.DiscoveryTypeComparor;
+import com.nepxion.discovery.common.util.StringUtil;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
@@ -42,6 +48,8 @@ public class BlueGreenConditionPanel extends JPanel {
 
     protected ConditionBar blueConditionBar;
     protected ConditionBar greenConditionBar;
+
+    protected TypeComparator typeComparator = new DiscoveryTypeComparor();
 
     public BlueGreenConditionPanel() {
         blueConditionBar = new ConditionBar(NodeType.BLUE);
@@ -85,6 +93,7 @@ public class BlueGreenConditionPanel extends JPanel {
 
         protected JPanel conditionItemBar;
         protected JBasicTextField conditionTextField;
+        protected JBasicTextField validateTextField;
 
         public ConditionBar(NodeType nodeType) {
             JShrinkShortcut shrinkShortcut = new JShrinkShortcut();
@@ -94,6 +103,7 @@ public class BlueGreenConditionPanel extends JPanel {
 
             conditionItemBar = new JPanel();
             conditionTextField = new JBasicTextField();
+            validateTextField = new JBasicTextField(ConsoleLocaleFactory.getString("validate_condition_example"));
 
             double[][] size = {
                     { TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },
@@ -110,7 +120,7 @@ public class BlueGreenConditionPanel extends JPanel {
             conditionBar.add(conditionTextField, "1, 0");
             conditionBar.add(DimensionUtil.setWidth(new JClassicButton(createAggregateConditionAction(conditionItems)), 30), "2, 0");
             conditionBar.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("validate_text")), 5), "0, 1");
-            conditionBar.add(new JBasicTextField(), "1, 1");
+            conditionBar.add(validateTextField, "1, 1");
             conditionBar.add(DimensionUtil.setWidth(new JClassicButton(createValidateConditionAction()), 30), "2, 1");
 
             setLayout(new BorderLayout());
@@ -290,7 +300,21 @@ public class BlueGreenConditionPanel extends JPanel {
                 private static final long serialVersionUID = 1L;
 
                 public void execute(ActionEvent e) {
+                    String condition = conditionTextField.getText().trim();
+                    String validation = validateTextField.getText().trim();
 
+                    Map<String, String> map = null;
+                    try {
+                        map = StringUtil.splitToMap(validation);
+                    } catch (Exception ex) {
+                        JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenConditionPanel.this), ConsoleLocaleFactory.getString("validate_condition_invalid_format"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+                        return;
+                    }
+
+                    boolean value = DiscoveryExpressionResolver.eval(condition, DiscoveryConstant.EXPRESSION_PREFIX, map, typeComparator);
+
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenConditionPanel.this), ConsoleLocaleFactory.getString("validate_condition_result") + " : " + value, SwingLocale.getString("information"), JBasicOptionPane.INFORMATION_MESSAGE);
                 }
             };
 
