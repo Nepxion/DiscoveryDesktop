@@ -69,6 +69,7 @@ public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
                 if (container == null) {
                     container = new JPanel();
                     container.setLayout(new BorderLayout());
+                    // container.setBorder(BorderFactory.createLineBorder(outlookTextureStyle.getBorderColor()));
 
                     shrinkContentPane.add(container, BorderLayout.CENTER);
                 }

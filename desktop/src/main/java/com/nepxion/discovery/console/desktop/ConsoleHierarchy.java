@@ -23,6 +23,7 @@ import com.nepxion.discovery.console.desktop.workspace.GrayTopology;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.swing.element.ElementNode;
 import com.nepxion.swing.list.JBasicList;
+import com.nepxion.swing.scrollpane.JBasicScrollPane;
 import com.nepxion.swing.shrinkbar.JShrinkOutlook;
 
 public class ConsoleHierarchy extends AbstractConsoleHierarchy {
@@ -67,7 +68,7 @@ public class ConsoleHierarchy extends AbstractConsoleHierarchy {
         AbstractTopology topology = (AbstractTopology) elementNode.getUserObject();
 
         shrinkContentBar.setContentPane(topology);
-        shrinkOperationBar.setContentPane(topology.getOperationBar());
+        shrinkOperationBar.setContentPane(new JBasicScrollPane(topology.getOperationBar()));
     }
 
     @Override
