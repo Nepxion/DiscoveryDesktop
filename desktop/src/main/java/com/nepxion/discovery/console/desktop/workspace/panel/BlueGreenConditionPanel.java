@@ -225,7 +225,8 @@ public class BlueGreenConditionPanel extends JPanel {
         }
 
         public JSecurityAction createAggregateConditionAction(List<ConditionItem> conditionItems) {
-            JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("theme/folder/deploy.png"), ConsoleLocaleFactory.getString("aggregate_condition_tooltip")) {
+            // JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("theme/folder/deploy.png"), ConsoleLocaleFactory.getString("aggregate_condition_tooltip")) {
+            JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("netbean/action_16.png"), ConsoleLocaleFactory.getString("aggregate_condition_tooltip")) {
                 private static final long serialVersionUID = 1L;
 
                 public void execute(ActionEvent e) {
@@ -261,7 +262,8 @@ public class BlueGreenConditionPanel extends JPanel {
         }
 
         public JSecurityAction createValidateConditionAction() {
-            JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("theme/folder/snapshot.png"), ConsoleLocaleFactory.getString("validate_condition_tooltip")) {
+            // JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("theme/folder/snapshot.png"), ConsoleLocaleFactory.getString("validate_condition_tooltip")) {
+            JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("netbean/linear_16.png"), ConsoleLocaleFactory.getString("validate_condition_tooltip")) {
                 private static final long serialVersionUID = 1L;
 
                 public void execute(ActionEvent e) {
