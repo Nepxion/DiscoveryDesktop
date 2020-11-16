@@ -16,7 +16,7 @@ import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-import com.nepxion.discovery.console.desktop.common.context.ConsoleUIContext;
+import com.nepxion.discovery.console.desktop.common.context.ConsoleFontContext;
 import com.nepxion.swing.separator.JBasicSeparator;
 
 public class ConsoleUIFactory {
@@ -29,6 +29,6 @@ public class ConsoleUIFactory {
     }
 
     public static Border createTitledBorder(String title) {
-        return BorderFactory.createTitledBorder(null, title, TitledBorder.LEADING, TitledBorder.DEFAULT_POSITION, new Font(ConsoleUIContext.getFontName(), Font.PLAIN, ConsoleUIContext.getLargeFontSize()), new Color(64, 0, 0));
+        return BorderFactory.createTitledBorder(null, title, TitledBorder.LEADING, TitledBorder.DEFAULT_POSITION, new Font(ConsoleFontContext.getFontName(), Font.PLAIN, ConsoleFontContext.getLargeFontSize()), new Color(64, 0, 0));
     }
 }
