@@ -279,7 +279,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         reset();
     }
 
-    public JSecurityAction createRefreshServiceListAction() {
+    public JSecurityAction createRefreshServiceIdAction() {
         JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("refresh.png"), ConsoleLocaleFactory.getString("refresh_service_list_tooltip")) {
             private static final long serialVersionUID = 1L;
 

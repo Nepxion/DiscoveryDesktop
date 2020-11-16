@@ -73,6 +73,8 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
     protected JBasicComboBox greenMetadataComboBox;
     protected JBasicComboBox basicMetadataComboBox;
 
+    protected BlueGreenCreatePanel createPanel = new BlueGreenCreatePanel();
+
     protected TNode blueNode;
     protected TNode greenNode;
     protected TNode basicNode;
@@ -105,8 +107,8 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
                 }
             }
         });
-        JClassicButton refreshServicesButton = new JClassicButton(createRefreshServiceListAction());
-        DimensionUtil.setWidth(refreshServicesButton, 30);
+        JClassicButton refreshServiceIdButton = new JClassicButton(createRefreshServiceIdAction());
+        DimensionUtil.setWidth(refreshServiceIdButton, 30);
 
         blueMetadataComboBox = new JBasicComboBox();
         blueMetadataComboBox.setEditable(true);
@@ -136,7 +138,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         servicePanel.setLayout(serviceTableLayout);
         servicePanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("service")), 5), "0, 0");
         servicePanel.add(serviceIdComboBox, "1, 0");
-        servicePanel.add(refreshServicesButton, "2, 0");
+        servicePanel.add(refreshServiceIdButton, "2, 0");
         servicePanel.add(DimensionUtil.addWidth(new JBasicLabel(NodeType.BLUE.getDescription()), 5), "0, 1");
         servicePanel.add(blueMetadataComboBox, "1, 1");
         servicePanel.add(blueMetadataButton, "2, 1");
@@ -350,7 +352,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
 
     @Override
     public CreatePanel getCreatePanel() {
-        return new BlueGreenCreatePanel();
+        return createPanel;
     }
 
     @Override

@@ -70,6 +70,8 @@ public class GrayTopology extends AbstractReleaseTopology {
     protected JBasicComboBox grayMetadataComboBox;
     protected JBasicComboBox stableMetadataComboBox;
 
+    protected GrayCreatePanel createPanel = new GrayCreatePanel();
+
     protected TNode grayNode;
     protected TNode stableNode;
 
@@ -152,8 +154,8 @@ public class GrayTopology extends AbstractReleaseTopology {
                 }
             }
         });
-        JClassicButton refreshServicesButton = new JClassicButton(createRefreshServiceListAction());
-        DimensionUtil.setWidth(refreshServicesButton, 30);
+        JClassicButton refreshServiceIdButton = new JClassicButton(createRefreshServiceIdAction());
+        DimensionUtil.setWidth(refreshServiceIdButton, 30);
 
         grayMetadataComboBox = new JBasicComboBox();
         grayMetadataComboBox.setEditable(true);
@@ -178,7 +180,7 @@ public class GrayTopology extends AbstractReleaseTopology {
         servicePanel.setLayout(serviceTableLayout);
         servicePanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("service")), 5), "0, 0");
         servicePanel.add(serviceIdComboBox, "1, 0");
-        servicePanel.add(refreshServicesButton, "2, 0");
+        servicePanel.add(refreshServiceIdButton, "2, 0");
         servicePanel.add(DimensionUtil.addWidth(new JBasicLabel(NodeType.GRAY.getDescription()), 5), "0, 1");
         servicePanel.add(grayMetadataComboBox, "1, 1");
         servicePanel.add(grayMetadataButton, "2, 1");
@@ -360,7 +362,7 @@ public class GrayTopology extends AbstractReleaseTopology {
 
     @Override
     public CreatePanel getCreatePanel() {
-        return new GrayCreatePanel();
+        return createPanel;
     }
 
     @Override
