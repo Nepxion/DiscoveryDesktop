@@ -225,7 +225,6 @@ public class BlueGreenConditionPanel extends JPanel {
         }
 
         public JSecurityAction createAggregateConditionAction(List<ConditionItem> conditionItems) {
-            // JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("theme/folder/deploy.png"), ConsoleLocaleFactory.getString("aggregate_condition_tooltip")) {
             JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("netbean/action_16.png"), ConsoleLocaleFactory.getString("aggregate_condition_tooltip")) {
                 private static final long serialVersionUID = 1L;
 
@@ -240,7 +239,7 @@ public class BlueGreenConditionPanel extends JPanel {
                         String relational = conditionItem.relationalComboBox.getSelectedItem().toString();
 
                         if (StringUtils.isBlank(parameter)) {
-                            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenConditionPanel.this), ConsoleLocaleFactory.getString("condition_item_one_at_least"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenConditionPanel.this), ConsoleLocaleFactory.getString("condition_item_parameter_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                             return;
                         }
@@ -262,7 +261,6 @@ public class BlueGreenConditionPanel extends JPanel {
         }
 
         public JSecurityAction createValidateConditionAction() {
-            // JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("theme/folder/snapshot.png"), ConsoleLocaleFactory.getString("validate_condition_tooltip")) {
             JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("netbean/linear_16.png"), ConsoleLocaleFactory.getString("validate_condition_tooltip")) {
                 private static final long serialVersionUID = 1L;
 
