@@ -121,7 +121,7 @@ public class BlueGreenConditionPanel extends JPanel {
             conditionItemBar.add(new JBasicLabel(ConsoleLocaleFactory.getString("parameter")), "0, " + index);
             conditionItemBar.add(new JBasicLabel(ConsoleLocaleFactory.getString("arithmetic")), "1, " + index);
             conditionItemBar.add(new JBasicLabel(ConsoleLocaleFactory.getString("value")), "2, " + index);
-            conditionItemBar.add(new JBasicLabel(ConsoleLocaleFactory.getString("logic")), "3, " + index + ", 5, " + index);
+            conditionItemBar.add(new JBasicLabel(ConsoleLocaleFactory.getString("relational")), "3, " + index + ", 5, " + index);
 
             index++;
 
@@ -129,11 +129,11 @@ public class BlueGreenConditionPanel extends JPanel {
                 conditionItemBar.add(conditionItem.parameterTextField, "0, " + index);
                 conditionItemBar.add(conditionItem.arithmeticComboBox, "1, " + index);
                 conditionItemBar.add(conditionItem.valueTextField, "2, " + index);
-                conditionItemBar.add(conditionItem.logicComboBox, "3, " + index);
+                conditionItemBar.add(conditionItem.relationalComboBox, "3, " + index);
                 conditionItemBar.add(conditionItem.addButton, "4, " + index);
                 conditionItemBar.add(conditionItem.removeButton, "5, " + index);
 
-                conditionItem.logicComboBox.setVisible(index != conditionItems.size());
+                conditionItem.relationalComboBox.setVisible(index != conditionItems.size());
 
                 index++;
             }
@@ -159,7 +159,7 @@ public class BlueGreenConditionPanel extends JPanel {
             protected JBasicTextField parameterTextField = new JBasicTextField();
             protected JBasicComboBox arithmeticComboBox = new JBasicComboBox(new String[] { "==", "!=", ">", ">=", "<", "<=", "matches" });
             protected JBasicTextField valueTextField = new JBasicTextField();
-            protected JBasicComboBox logicComboBox = new JBasicComboBox(new String[] { "&&", "||" });
+            protected JBasicComboBox relationalComboBox = new JBasicComboBox(new String[] { "&&", "||" });
             protected JClassicButton addButton = new JClassicButton(createAddConditionItemAction());
             protected JClassicButton removeButton = new JClassicButton(createRemoveConditionItemAction());
 
@@ -236,7 +236,7 @@ public class BlueGreenConditionPanel extends JPanel {
                         String parameter = conditionItem.parameterTextField.getText().trim();
                         String arithmetic = conditionItem.arithmeticComboBox.getSelectedItem().toString();
                         String value = conditionItem.valueTextField.getText().trim();
-                        String logic = conditionItem.logicComboBox.getSelectedItem().toString();
+                        String relational = conditionItem.relationalComboBox.getSelectedItem().toString();
 
                         if (StringUtils.isBlank(parameter)) {
                             JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenConditionPanel.this), ConsoleLocaleFactory.getString("condition_item_one_at_least"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
@@ -247,7 +247,7 @@ public class BlueGreenConditionPanel extends JPanel {
                         stringBuilder.append("#H['").append(parameter).append("'] ").append(arithmetic).append(" '").append(value).append("'");
 
                         if (index < conditionItems.size() - 1) {
-                            stringBuilder.append(" ").append(logic).append(" ");
+                            stringBuilder.append(" ").append(relational).append(" ");
                         }
 
                         index++;
