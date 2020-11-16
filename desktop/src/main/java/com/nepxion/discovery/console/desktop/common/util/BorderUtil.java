@@ -1,4 +1,4 @@
-package com.nepxion.discovery.console.desktop.common.ui;
+package com.nepxion.discovery.console.desktop.common.util;
 
 /**
  * <p>Title: Nepxion Discovery</p>
@@ -16,10 +16,10 @@ import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-import com.nepxion.discovery.console.desktop.common.context.ConsoleFontContext;
+import com.nepxion.discovery.console.desktop.common.context.ConsoleUIContext;
 import com.nepxion.swing.separator.JBasicSeparator;
 
-public class ConsoleUIFactory {
+public class BorderUtil {
     public static JBasicSeparator createSeparator() {
         JBasicSeparator separator = new JBasicSeparator(JBasicSeparator.HORIZONTAL, JBasicSeparator.LOWERED_STYLE, -1);
         separator.setBrightColor(new Color(197, 196, 198));
@@ -29,6 +29,6 @@ public class ConsoleUIFactory {
     }
 
     public static Border createTitledBorder(String title) {
-        return BorderFactory.createTitledBorder(null, title, TitledBorder.LEADING, TitledBorder.DEFAULT_POSITION, new Font(ConsoleFontContext.getFontName(), Font.PLAIN, ConsoleFontContext.getLargeFontSize()), new Color(64, 0, 0));
+        return BorderFactory.createTitledBorder(null, title, TitledBorder.LEADING, TitledBorder.DEFAULT_POSITION, new Font(ConsoleUIContext.getFontName(), Font.PLAIN, ConsoleUIContext.getLargeFontSize()), new Color(64, 0, 0));
     }
 }

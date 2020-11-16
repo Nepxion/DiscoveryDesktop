@@ -15,7 +15,7 @@ import com.nepxion.swing.font.FontContext;
 import com.nepxion.swing.lookandfeel.LookAndFeelManager;
 import com.nepxion.util.locale.LocaleContext;
 
-public class ConsoleFontContext {
+public class ConsoleUIContext {
     private static final String FONT_NAME_ZH_CN = "\u5fae\u8f6f\u96c5\u9ed1"; // 微软雅黑
     private static final int FONT_SMALL_SIZE_ZH_CN = 12; // 11
     private static final int FONT_MIDDLE_SIZE_ZH_CN = FONT_SMALL_SIZE_ZH_CN + 1;

@@ -45,7 +45,7 @@ import com.nepxion.cots.twaver.graph.TLayoutPanel;
 import com.nepxion.cots.twaver.graph.TLayouter;
 import com.nepxion.cots.twaver.graph.TLayouterBar;
 import com.nepxion.cots.twaver.locale.TLocale;
-import com.nepxion.discovery.console.desktop.common.context.ConsoleFontContext;
+import com.nepxion.discovery.console.desktop.common.context.ConsoleUIContext;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.JBasicButton;
@@ -271,7 +271,7 @@ public class BasicTopology extends JPanel {
         TGroup group = new TGroup();
         group.setName(name);
         group.setImage(IMAGE_FOLDER + image);
-        group.putLabelFont(new Font(ConsoleFontContext.getFontName(), Font.PLAIN, ConsoleFontContext.getDefaultFontSize()));
+        group.putLabelFont(new Font(ConsoleUIContext.getFontName(), Font.PLAIN, ConsoleUIContext.getDefaultFontSize()));
         group.setLocation(location);
 
         return group;
@@ -300,7 +300,7 @@ public class BasicTopology extends JPanel {
         TNode node = new TNode();
         node.setName(name);
         node.setImage(IMAGE_FOLDER + image);
-        node.putLabelFont(new Font(ConsoleFontContext.getFontName(), Font.PLAIN, ConsoleFontContext.getSmallFontSize()));
+        node.putLabelFont(new Font(ConsoleUIContext.getFontName(), Font.PLAIN, ConsoleUIContext.getSmallFontSize()));
         node.setLocation(location);
 
         setNodeTopBottom(node, true);
@@ -326,7 +326,7 @@ public class BasicTopology extends JPanel {
         TLink link = new TLink(fromNode, toNode);
         link.putLinkToArrow(toArrow);
         link.putLabelYOffset(-2);
-        link.putLabelFont(new Font(ConsoleFontContext.getFontName(), Font.PLAIN, ConsoleFontContext.getSmallFontSize()));
+        link.putLabelFont(new Font(ConsoleUIContext.getFontName(), Font.PLAIN, ConsoleUIContext.getSmallFontSize()));
 
         return link;
     }
