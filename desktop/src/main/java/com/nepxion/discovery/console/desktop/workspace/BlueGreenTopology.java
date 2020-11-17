@@ -432,6 +432,10 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
             return;
         }
 
+        if (!addParameter()) {
+            return;
+        }
+
         addNodes(serviceId, blueMetadata, greenMetadata, basicMetadata, blueCondition, greenCondition);
 
         executeLayout();
@@ -472,7 +476,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         modifyLinks(blueCondition, greenCondition);
     }
 
-    public void modifyParameter() {
+    public boolean addParameter() {
         String parameter = parameterTextField.getText().trim();
         if (StringUtils.equals(parameter, ConsoleLocaleFactory.getString("blue-green_parameter_example"))) {
             parameter = "";
@@ -484,10 +488,16 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         } catch (Exception ex) {
             showParameterInvalidFormatTip();
 
-            return;
+            return false;
         }
 
         dataBox.setID(map);
+
+        return true;
+    }
+
+    public void modifyParameter() {
+        addParameter();
     }
 
     public void showParameterInvalidFormatTip() {
