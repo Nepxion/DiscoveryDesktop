@@ -15,7 +15,8 @@ import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 public enum ReleaseType {
     BLUE_GREEN(DiscoveryConstant.BLUE_GREEN),
     GRAY(DiscoveryConstant.GRAY),
-    BLACKLIST(DiscoveryConstant.BLACKLIST);
+    BLACKLIST(DiscoveryConstant.BLACKLIST),
+    MIDDLEWARE_GRAY("middleware_gray");
 
     private String value;
 
