@@ -20,6 +20,8 @@ import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.nepxion.cots.twaver.graph.TGraphBackground;
 import com.nepxion.cots.twaver.graph.TLayoutType;
@@ -40,9 +42,13 @@ import com.nepxion.swing.handle.HandleManager;
 import com.nepxion.swing.listener.DisplayAbilityListener;
 import com.nepxion.swing.locale.SwingLocale;
 import com.nepxion.swing.optionpane.JBasicOptionPane;
+import com.nepxion.swing.scrollpane.JBasicScrollPane;
+import com.nepxion.swing.textarea.JBasicTextArea;
 
 public abstract class AbstractTopology extends BasicTopology {
     private static final long serialVersionUID = 1L;
+
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractTopology.class);
 
     public static final String APOLLO = "Apollo";
 
@@ -127,6 +133,18 @@ public abstract class AbstractTopology extends BasicTopology {
         layouter.doLayout(TLayoutType.HIERARCHIC_LAYOUT_TYPE, 150, 100, 200, 60);
     }
 
+    public void showResult(Object result) {
+        JBasicTextArea resultTextArea = new JBasicTextArea();
+        resultTextArea.setLineWrap(true);
+        resultTextArea.setText(result.toString());
+
+        JBasicScrollPane resultScrollPane = new JBasicScrollPane(resultTextArea);
+        resultScrollPane.setPreferredSize(new Dimension(resultScrollPane.getPreferredSize().width, resultScrollPane.getPreferredSize().height + 20));
+        resultScrollPane.setMaximumSize(new Dimension(800, 600));
+
+        JBasicOptionPane.showOptionDialog(HandleManager.getFrame(this), resultScrollPane, ConsoleLocaleFactory.getString("execute_result"), JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/edit.png"), new Object[] { SwingLocale.getString("close") }, null, true);
+    }
+
     public JSecurityAction createCreateAction() {
         JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("create_text"), ConsoleIconFactory.getSwingIcon("theme/tree/plastic/tree_leaf.png"), ConsoleLocaleFactory.getString("create_tooltip")) {
             private static final long serialVersionUID = 1L;
@@ -148,6 +166,11 @@ public abstract class AbstractTopology extends BasicTopology {
                 if (StringUtils.isEmpty(config)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractTopology.this), ConsoleLocaleFactory.getString("strategy_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
+                    return;
+                }
+
+                int selectedValue = JBasicOptionPane.showConfirmDialog(HandleManager.getFrame(AbstractTopology.this), "确认保存策略？\n" + getKey(), SwingLocale.getString("confirm"), JBasicOptionPane.YES_NO_OPTION);
+                if (selectedValue != JBasicOptionPane.OK_OPTION) {
                     return;
                 }
 
@@ -199,12 +222,8 @@ public abstract class AbstractTopology extends BasicTopology {
                     previewPanel.setPreferredSize(new Dimension(920, 420));
                 }
 
-                String key = null;
-                if (StringUtils.equals(configCenterType, APOLLO)) {
-                    key = group + "-" + getServiceId();
-                } else {
-                    key = "Data ID=" + getServiceId() + " | Group=" + group;
-                }
+                String key = getKey();
+
                 previewPanel.setKey(key);
                 previewPanel.setConfig(config);
 
@@ -251,8 +270,30 @@ public abstract class AbstractTopology extends BasicTopology {
         return action;
     }
 
+    public String getKey() {
+        String key = null;
+        if (StringUtils.equals(configCenterType, APOLLO)) {
+            key = group + "-" + getServiceId();
+        } else {
+            key = "Data ID=" + getServiceId() + " | Group=" + group;
+        }
+
+        return key;
+    }
+
     public String getGroup() {
         return group;
+    }
+
+    public void save(String config) {
+        String key = getKey();
+        String group = getGroup();
+        String serviceId = getServiceId();
+
+        LOG.info("Save Config, key={}, config=\n{}", key, config);
+
+        String result = ConsoleController.remoteConfigUpdate(group, serviceId, config);
+        showResult(result);
     }
 
     public abstract String getServiceId();
@@ -260,8 +301,6 @@ public abstract class AbstractTopology extends BasicTopology {
     public abstract String getRemoveTooltip();
 
     public abstract void create();
-
-    public abstract void save(String config);
 
     public abstract void remove();
 
