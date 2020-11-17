@@ -312,9 +312,9 @@ public class BlueGreenConditionPanel extends JPanel {
                         return;
                     }
 
-                    boolean value = DiscoveryExpressionResolver.eval(condition, DiscoveryConstant.EXPRESSION_PREFIX, map, typeComparator);
+                    boolean validated = DiscoveryExpressionResolver.eval(condition, DiscoveryConstant.EXPRESSION_PREFIX, map, typeComparator);
 
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenConditionPanel.this), ConsoleLocaleFactory.getString("validate_condition_result") + " : " + value, SwingLocale.getString("information"), JBasicOptionPane.INFORMATION_MESSAGE);
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenConditionPanel.this), ConsoleLocaleFactory.getString("validate_condition_result") + " : " + validated, SwingLocale.getString("information"), JBasicOptionPane.INFORMATION_MESSAGE);
                 }
             };
 
