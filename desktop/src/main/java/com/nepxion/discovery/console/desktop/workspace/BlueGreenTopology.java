@@ -56,6 +56,7 @@ import com.nepxion.swing.layout.table.TableLayout;
 import com.nepxion.swing.locale.SwingLocale;
 import com.nepxion.swing.optionpane.JBasicOptionPane;
 import com.nepxion.swing.shrinkbar.JShrinkShortcut;
+import com.nepxion.swing.textfield.JBasicTextField;
 
 public class BlueGreenTopology extends AbstractReleaseTopology {
     private static final long serialVersionUID = 1L;
@@ -71,6 +72,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
     protected BlueGreenConditionPanel conditionPanel;
     protected JPanel servicePanel;
     protected JPanel serviceToolBar;
+    protected JPanel parameterPanel;
 
     protected JBasicComboBox blueMetadataComboBox;
     protected JBasicComboBox greenMetadataComboBox;
@@ -104,6 +106,11 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
 
     @Override
     public void initializeOperationBar() {
+        JShrinkShortcut conditionShrinkShortcut = new JShrinkShortcut();
+        conditionShrinkShortcut.setTitle(ConsoleLocaleFactory.getString(releaseType.toString() + "_condition"));
+        conditionShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
+        conditionShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString(releaseType.toString() + "_condition"));
+
         conditionPanel = new BlueGreenConditionPanel();
 
         conditionToolBar = new JPanel();
@@ -171,14 +178,28 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         serviceToolBar.add(new JClassicButton(createAddServiceStrategyAction()));
         serviceToolBar.add(new JClassicButton(createModifyServiceStrategyAction()));
 
-        JShrinkShortcut conditionShrinkShortcut = new JShrinkShortcut();
-        conditionShrinkShortcut.setTitle(ConsoleLocaleFactory.getString(releaseType.toString() + "_condition"));
-        conditionShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
-        conditionShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString(releaseType.toString() + "_condition"));
+        JShrinkShortcut parameterShrinkShortcut = new JShrinkShortcut();
+        parameterShrinkShortcut.setTitle("蓝绿参数");
+        parameterShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
+        parameterShrinkShortcut.setToolTipText("蓝绿参数");
+
+        double[][] parameterSize = {
+                { TableLayout.PREFERRED, TableLayout.FILL },
+                { TableLayout.PREFERRED }
+        };
+
+        TableLayout parameterTableLayout = new TableLayout(parameterSize);
+        parameterTableLayout.setHGap(0);
+        parameterTableLayout.setVGap(5);
+
+        parameterPanel = new JPanel();
+        parameterPanel.setLayout(parameterTableLayout);
+        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel("参数"), 5), "0, 0");
+        parameterPanel.add(new JBasicTextField("内置Header | Parameter | Cookie，例如：a=1;b=1"), "1, 0");
 
         double[][] size = {
                 { TableLayout.FILL },
-                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
+                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, TableLayout.PREFERRED }
         };
 
         TableLayout tableLayout = new TableLayout(size);
@@ -193,6 +214,8 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         operationBar.add(serviceShrinkShortcut, "0, 4");
         operationBar.add(servicePanel, "0, 5");
         operationBar.add(serviceToolBar, "0, 6");
+        operationBar.add(parameterShrinkShortcut, "0, 8");
+        operationBar.add(parameterPanel, "0, 9");
     }
 
     public void addNodes(String serviceId, String blueMetadata, String greenMetadata, String basicMetadata, String blueCondition, String greenCondition) {

@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
@@ -41,6 +42,7 @@ import com.nepxion.swing.layout.table.TableLayout;
 import com.nepxion.swing.locale.SwingLocale;
 import com.nepxion.swing.optionpane.JBasicOptionPane;
 import com.nepxion.swing.shrinkbar.JShrinkShortcut;
+import com.nepxion.swing.tabbedpane.JBasicTabbedPane;
 import com.nepxion.swing.textfield.JBasicTextField;
 
 public class BlueGreenConditionPanel extends JPanel {
@@ -56,8 +58,13 @@ public class BlueGreenConditionPanel extends JPanel {
         greenConditionBar = new ConditionBar(NodeType.GREEN);
 
         setLayout(new FiledLayout(FiledLayout.COLUMN, FiledLayout.FULL, 10));
-        add(blueConditionBar);
-        add(greenConditionBar);
+        // add(blueConditionBar);
+        // add(greenConditionBar);
+
+        JBasicTabbedPane conditionTabbedPane = new JBasicTabbedPane();
+        conditionTabbedPane.addTab(" " + NodeType.BLUE.getDescription() + " ", blueConditionBar, NodeType.BLUE.getDescription());
+        conditionTabbedPane.addTab(" " + NodeType.GREEN.getDescription() + " ", greenConditionBar, NodeType.GREEN.getDescription());
+        add(conditionTabbedPane);
     }
 
     public void setGreenConditionBarEnabled(boolean enabled) {
@@ -132,7 +139,8 @@ public class BlueGreenConditionPanel extends JPanel {
             conditionBar.add(DimensionUtil.setWidth(new JClassicButton(createValidateConditionAction()), 30), "2, 1");
 
             setLayout(new BorderLayout());
-            add(shrinkShortcut, BorderLayout.NORTH);
+            setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+            // add(shrinkShortcut, BorderLayout.NORTH);
             add(conditionItemBar, BorderLayout.CENTER);
             add(conditionBar, BorderLayout.SOUTH);
 
