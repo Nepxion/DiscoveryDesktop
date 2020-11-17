@@ -409,13 +409,13 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         }
 
         if (StringUtils.isBlank(blueCondition)) {
-            conditionPanel.getBlueConditionBar().getConditionTextField().showTip(ConsoleLocaleFactory.getString("condition_not_null"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
+            conditionPanel.showBlueConditionNotNullTip();
 
             return;
         }
 
         if (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && StringUtils.isBlank(greenCondition)) {
-            conditionPanel.getGreenConditionBar().getConditionTextField().showTip(ConsoleLocaleFactory.getString("condition_not_null"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
+            conditionPanel.showGreenConditionNotNullTip();
 
             return;
         }
@@ -446,13 +446,13 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         String greenCondition = conditionPanel.getGreenCondition();
 
         if (StringUtils.isBlank(blueCondition)) {
-            conditionPanel.getBlueConditionBar().getConditionTextField().showTip(ConsoleLocaleFactory.getString("condition_not_null"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
+            conditionPanel.showBlueConditionNotNullTip();
 
             return;
         }
 
         if (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && StringUtils.isBlank(greenCondition)) {
-            conditionPanel.getGreenConditionBar().getConditionTextField().showTip(ConsoleLocaleFactory.getString("condition_not_null"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
+            conditionPanel.showGreenConditionNotNullTip();
 
             return;
         }

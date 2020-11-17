@@ -51,19 +51,19 @@ public class BlueGreenConditionPanel extends JPanel {
     protected ConditionBar blueConditionBar;
     protected ConditionBar greenConditionBar;
 
+    protected JBasicTabbedPane conditionTabbedPane;
+
     protected TypeComparator typeComparator = new DiscoveryTypeComparor();
 
     public BlueGreenConditionPanel() {
         blueConditionBar = new ConditionBar(NodeType.BLUE);
         greenConditionBar = new ConditionBar(NodeType.GREEN);
 
-        setLayout(new FiledLayout(FiledLayout.COLUMN, FiledLayout.FULL, 10));
-        // add(blueConditionBar);
-        // add(greenConditionBar);
-
-        JBasicTabbedPane conditionTabbedPane = new JBasicTabbedPane();
+        conditionTabbedPane = new JBasicTabbedPane();
         conditionTabbedPane.addTab(" " + NodeType.BLUE.getDescription() + " ", blueConditionBar, NodeType.BLUE.getDescription());
         conditionTabbedPane.addTab(" " + NodeType.GREEN.getDescription() + " ", greenConditionBar, NodeType.GREEN.getDescription());
+
+        setLayout(new FiledLayout(FiledLayout.COLUMN, FiledLayout.FULL, 10));
         add(conditionTabbedPane);
     }
 
@@ -84,20 +84,22 @@ public class BlueGreenConditionPanel extends JPanel {
         }
     }
 
-    public ConditionBar getBlueConditionBar() {
-        return blueConditionBar;
-    }
-
-    public ConditionBar getGreenConditionBar() {
-        return greenConditionBar;
-    }
-
     public String getBlueCondition() {
         return blueConditionBar.getCondition();
     }
 
     public String getGreenCondition() {
         return greenConditionBar.getCondition();
+    }
+
+    public void showBlueConditionNotNullTip() {
+        conditionTabbedPane.setSelectedIndex(0);
+        blueConditionBar.showConditionNotNullTip();
+    }
+
+    public void showGreenConditionNotNullTip() {
+        conditionTabbedPane.setSelectedIndex(1);
+        greenConditionBar.showConditionNotNullTip();
     }
 
     public class ConditionBar extends JPanel {
@@ -192,14 +194,6 @@ public class BlueGreenConditionPanel extends JPanel {
             ContainerManager.update(conditionItemBar);
         }
 
-        public String getCondition() {
-            return conditionTextField.getText().trim();
-        }
-
-        public JBasicTextField getConditionTextField() {
-            return conditionTextField;
-        }
-
         public ConditionItem getConditionItem(String uuid) {
             for (ConditionItem conditionItem : conditionItems) {
                 if (StringUtils.equals(conditionItem.uuid, uuid)) {
@@ -208,6 +202,22 @@ public class BlueGreenConditionPanel extends JPanel {
             }
 
             return null;
+        }
+
+        public String getCondition() {
+            return conditionTextField.getText().trim();
+        }
+
+        public void showConditionNotNullTip() {
+            conditionTextField.showTip(ConsoleLocaleFactory.getString("condition_not_null"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
+        }
+
+        public void showValidationInvalidFormatTip() {
+            validateTextField.showTip(ConsoleLocaleFactory.getString("validate_condition_invalid_format"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
+        }
+
+        public void showValidationResultTip(boolean validated) {
+            validateTextField.showTip(ConsoleLocaleFactory.getString("validate_condition_result") + " : " + validated, ConsoleIconFactory.getSwingIcon(validated ? "question_message.png" : "error_message.png"), 1, 12);
         }
 
         public class ConditionItem {
@@ -324,7 +334,7 @@ public class BlueGreenConditionPanel extends JPanel {
                     String validation = validateTextField.getText().trim();
 
                     if (StringUtils.isBlank(condition)) {
-                        conditionTextField.showTip(ConsoleLocaleFactory.getString("condition_not_null"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
+                        showConditionNotNullTip();
 
                         return;
                     }
@@ -333,14 +343,14 @@ public class BlueGreenConditionPanel extends JPanel {
                     try {
                         map = StringUtil.splitToMap(validation);
                     } catch (Exception ex) {
-                        validateTextField.showTip(ConsoleLocaleFactory.getString("validate_condition_invalid_format"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
+                        showValidationInvalidFormatTip();
 
                         return;
                     }
 
                     boolean validated = DiscoveryExpressionResolver.eval(condition, DiscoveryConstant.EXPRESSION_PREFIX, map, typeComparator);
 
-                    validateTextField.showTip(ConsoleLocaleFactory.getString("validate_condition_result") + " : " + validated, ConsoleIconFactory.getSwingIcon(validated ? "question_message.png" : "error_message.png"), 1, 12);
+                    showValidationResultTip(validated);
                 }
             };
 
