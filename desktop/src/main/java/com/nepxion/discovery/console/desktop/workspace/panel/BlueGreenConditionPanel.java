@@ -77,6 +77,14 @@ public class BlueGreenConditionPanel extends JPanel {
         }
     }
 
+    public ConditionBar getBlueConditionBar() {
+        return blueConditionBar;
+    }
+
+    public ConditionBar getGreenConditionBar() {
+        return greenConditionBar;
+    }
+
     public String getBlueCondition() {
         return blueConditionBar.getCondition();
     }
@@ -180,6 +188,10 @@ public class BlueGreenConditionPanel extends JPanel {
             return conditionTextField.getText().trim();
         }
 
+        public JBasicTextField getConditionTextField() {
+            return conditionTextField;
+        }
+
         public ConditionItem getConditionItem(String uuid) {
             for (ConditionItem conditionItem : conditionItems) {
                 if (StringUtils.equals(conditionItem.uuid, uuid)) {
@@ -274,7 +286,7 @@ public class BlueGreenConditionPanel extends JPanel {
                         String relational = conditionItem.relationalComboBox.getSelectedItem().toString();
 
                         if (StringUtils.isBlank(parameter)) {
-                            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenConditionPanel.this), ConsoleLocaleFactory.getString("condition_item_parameter_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                            conditionItem.parameterTextField.showTip(ConsoleLocaleFactory.getString("condition_item_parameter_not_null"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
 
                             return;
                         }
@@ -303,18 +315,24 @@ public class BlueGreenConditionPanel extends JPanel {
                     String condition = conditionTextField.getText().trim();
                     String validation = validateTextField.getText().trim();
 
+                    if (StringUtils.isBlank(condition)) {
+                        conditionTextField.showTip(ConsoleLocaleFactory.getString("condition_not_null"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
+
+                        return;
+                    }
+
                     Map<String, String> map = null;
                     try {
                         map = StringUtil.splitToMap(validation);
                     } catch (Exception ex) {
-                        JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenConditionPanel.this), ConsoleLocaleFactory.getString("validate_condition_invalid_format"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                        validateTextField.showTip(ConsoleLocaleFactory.getString("validate_condition_invalid_format"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
 
                         return;
                     }
 
                     boolean validated = DiscoveryExpressionResolver.eval(condition, DiscoveryConstant.EXPRESSION_PREFIX, map, typeComparator);
 
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenConditionPanel.this), ConsoleLocaleFactory.getString("validate_condition_result") + " : " + validated, SwingLocale.getString("information"), JBasicOptionPane.INFORMATION_MESSAGE);
+                    validateTextField.showTip(ConsoleLocaleFactory.getString("validate_condition_result") + " : " + validated, ConsoleIconFactory.getSwingIcon(validated ? "question_message.png" : "error_message.png"), 1, 12);
                 }
             };
 

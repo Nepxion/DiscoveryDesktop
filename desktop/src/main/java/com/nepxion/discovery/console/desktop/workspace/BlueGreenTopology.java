@@ -385,8 +385,14 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
             return;
         }
 
-        if (StringUtils.isBlank(blueCondition) || (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && StringUtils.isBlank(greenCondition))) {
-            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), ConsoleLocaleFactory.getString("condition_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+        if (StringUtils.isBlank(blueCondition)) {
+            conditionPanel.getBlueConditionBar().getConditionTextField().showTip(ConsoleLocaleFactory.getString("condition_not_null"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
+
+            return;
+        }
+
+        if (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && StringUtils.isBlank(greenCondition)) {
+            conditionPanel.getGreenConditionBar().getConditionTextField().showTip(ConsoleLocaleFactory.getString("condition_not_null"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
 
             return;
         }
@@ -416,8 +422,14 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         String blueCondition = conditionPanel.getBlueCondition();
         String greenCondition = conditionPanel.getGreenCondition();
 
-        if (StringUtils.isBlank(blueCondition) || (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && StringUtils.isBlank(greenCondition))) {
-            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), ConsoleLocaleFactory.getString("condition_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+        if (StringUtils.isBlank(blueCondition)) {
+            conditionPanel.getBlueConditionBar().getConditionTextField().showTip(ConsoleLocaleFactory.getString("condition_not_null"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
+
+            return;
+        }
+
+        if (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && StringUtils.isBlank(greenCondition)) {
+            conditionPanel.getGreenConditionBar().getConditionTextField().showTip(ConsoleLocaleFactory.getString("condition_not_null"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
 
             return;
         }
