@@ -219,7 +219,7 @@ public abstract class AbstractTopology extends BasicTopology {
 
                 if (previewPanel == null) {
                     previewPanel = new PreviewPanel();
-                    previewPanel.setPreferredSize(new Dimension(920, 420));
+                    previewPanel.setPreferredSize(new Dimension(900, 500));
                 }
 
                 String key = getKey();

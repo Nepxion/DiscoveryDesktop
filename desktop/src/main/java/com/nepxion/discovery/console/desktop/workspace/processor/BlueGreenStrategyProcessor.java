@@ -12,7 +12,9 @@ package com.nepxion.discovery.console.desktop.workspace.processor;
 import twaver.TDataBox;
 
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.nepxion.cots.twaver.element.TElementManager;
@@ -92,6 +94,8 @@ public class BlueGreenStrategyProcessor extends AbstractStrategyProcessor {
             }
         }
 
+        Map<String, String> parameterMap = (Map<String, String>) dataBox.getID();
+
         StringBuilder strategyStringBuilder = new StringBuilder();
         strategyStringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         strategyStringBuilder.append("<rule>\n");
@@ -112,6 +116,14 @@ public class BlueGreenStrategyProcessor extends AbstractStrategyProcessor {
                 strategyStringBuilder.append("            <route id=\"green-" + strategyValue + "-route\" type=\"" + strategyValue + "\">{" + greenStrategy + "}</route>\n");
             }
             strategyStringBuilder.append("        </routes>\n");
+            if (MapUtils.isNotEmpty(parameterMap)) {
+                strategyStringBuilder.append("\n");
+                strategyStringBuilder.append("        <headers>\n");
+                for (Map.Entry<String, String> entry : parameterMap.entrySet()) {
+                    strategyStringBuilder.append("            <header key=\"" + entry.getKey() + "\" value=\"" + entry.getValue() + "\"/>\n");
+                }
+                strategyStringBuilder.append("        </headers>\n");
+            }
             strategyStringBuilder.append("    </strategy-customization>\n");
         }
         strategyStringBuilder.append("</rule>");

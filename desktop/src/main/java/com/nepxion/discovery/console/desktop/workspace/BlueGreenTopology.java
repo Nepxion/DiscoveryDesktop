@@ -29,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.nepxion.cots.twaver.element.TElementManager;
 import com.nepxion.cots.twaver.element.TLink;
 import com.nepxion.cots.twaver.element.TNode;
+import com.nepxion.discovery.common.util.StringUtil;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
@@ -474,10 +475,23 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
     public void modifyParameter() {
         String parameter = parameterTextField.getText().trim();
         if (StringUtils.equals(parameter, ConsoleLocaleFactory.getString("blue-green_parameter_example"))) {
+            parameter = "";
+        }
+
+        Map<String, String> map = null;
+        try {
+            map = StringUtil.splitToMap(parameter);
+        } catch (Exception ex) {
+            showParameterInvalidFormatTip();
+
             return;
         }
 
-        dataBox.setName(parameter);
+        dataBox.setID(map);
+    }
+
+    public void showParameterInvalidFormatTip() {
+        parameterTextField.showTip(ConsoleLocaleFactory.getString("parameter_invalid_format"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
     }
 
     @Override
