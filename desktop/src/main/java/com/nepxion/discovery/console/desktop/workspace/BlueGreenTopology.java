@@ -77,6 +77,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
     protected JBasicComboBox blueMetadataComboBox;
     protected JBasicComboBox greenMetadataComboBox;
     protected JBasicComboBox basicMetadataComboBox;
+    protected JBasicTextField parameterTextField;
 
     protected TNode blueNode;
     protected TNode greenNode;
@@ -179,9 +180,9 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         serviceToolBar.add(new JClassicButton(createModifyServiceStrategyAction()));
 
         JShrinkShortcut parameterShrinkShortcut = new JShrinkShortcut();
-        parameterShrinkShortcut.setTitle("蓝绿参数");
+        parameterShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("blue-green_parameter"));
         parameterShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
-        parameterShrinkShortcut.setToolTipText("蓝绿参数");
+        parameterShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString("blue-green_parameter"));
 
         double[][] parameterSize = {
                 { TableLayout.PREFERRED, TableLayout.FILL },
@@ -192,10 +193,11 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         parameterTableLayout.setHGap(0);
         parameterTableLayout.setVGap(5);
 
+        parameterTextField = new JBasicTextField(ConsoleLocaleFactory.getString("blue-green_parameter_example"));
         parameterPanel = new JPanel();
         parameterPanel.setLayout(parameterTableLayout);
-        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel("参数"), 5), "0, 0");
-        parameterPanel.add(new JBasicTextField("内置Header | Parameter | Cookie，例如：a=1;b=1"), "1, 0");
+        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("parameter")), 5), "0, 0");
+        parameterPanel.add(parameterTextField, "1, 0");
 
         double[][] size = {
                 { TableLayout.FILL },
@@ -458,6 +460,15 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         }
 
         modifyLinks(blueCondition, greenCondition);
+    }
+
+    @Override
+    public void save(String config) {
+        String parameter = parameterTextField.getText().trim();
+
+        dataBox.setName(parameter);
+
+        super.save(config);
     }
 
     @Override
