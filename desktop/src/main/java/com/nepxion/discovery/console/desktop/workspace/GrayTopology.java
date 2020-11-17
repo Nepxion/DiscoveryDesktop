@@ -12,7 +12,6 @@ package com.nepxion.discovery.console.desktop.workspace;
 import twaver.Link;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.HashMap;
@@ -45,7 +44,6 @@ import com.nepxion.discovery.console.desktop.workspace.type.LinkType;
 import com.nepxion.discovery.console.desktop.workspace.type.NodeType;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.discovery.console.entity.Instance;
-import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.ButtonManager;
 import com.nepxion.swing.button.JClassicButton;
 import com.nepxion.swing.combobox.JBasicComboBox;
@@ -342,27 +340,6 @@ public class GrayTopology extends AbstractReleaseTopology {
         }
     }
 
-    public JSecurityAction createModifyConditionAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("modify_text"), ConsoleIconFactory.getSwingIcon("adjust.png"), ConsoleLocaleFactory.getString("modify_condition_tooltip")) {
-            private static final long serialVersionUID = 1L;
-
-            public void execute(ActionEvent e) {
-                String grayCondition = ComboBoxUtil.getSelectedValue(grayConditionComboBox);
-                String stableCondition = ComboBoxUtil.getSelectedValue(stableConditionComboBox);
-
-                if (StringUtils.isBlank(grayCondition) || StringUtils.isBlank(stableCondition)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(GrayTopology.this), ConsoleLocaleFactory.getString("condition_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
-
-                    return;
-                }
-
-                modifyLinks(grayCondition, stableCondition);
-            }
-        };
-
-        return action;
-    }
-
     @Override
     public CreatePanel getCreatePanel() {
         return new GrayCreatePanel();
@@ -421,6 +398,20 @@ public class GrayTopology extends AbstractReleaseTopology {
         }
 
         modifyNodes(serviceId, grayMetadata, stableMetadata);
+    }
+
+    @Override
+    public void modifyCondition() {
+        String grayCondition = ComboBoxUtil.getSelectedValue(grayConditionComboBox);
+        String stableCondition = ComboBoxUtil.getSelectedValue(stableConditionComboBox);
+
+        if (StringUtils.isBlank(grayCondition) || StringUtils.isBlank(stableCondition)) {
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(GrayTopology.this), ConsoleLocaleFactory.getString("condition_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+            return;
+        }
+
+        modifyLinks(grayCondition, stableCondition);
     }
 
     @Override

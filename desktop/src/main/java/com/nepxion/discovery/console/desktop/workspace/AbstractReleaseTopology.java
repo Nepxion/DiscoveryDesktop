@@ -341,7 +341,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     }
 
     public JSecurityAction createAddServiceStrategyAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("add_text"), ConsoleIconFactory.getSwingIcon("structure.png"), ConsoleLocaleFactory.getString("add_service_strategy_tooltip")) {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("add_text"), ConsoleIconFactory.getSwingIcon("netbean/media_16.png"), ConsoleLocaleFactory.getString("add_service_strategy_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
@@ -372,7 +372,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     }
 
     public JSecurityAction createModifyServiceStrategyAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("modify_text"), ConsoleIconFactory.getSwingIcon("adjust.png"), ConsoleLocaleFactory.getString("modify_service_strategy_tooltip")) {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("modify_text"), ConsoleIconFactory.getSwingIcon("netbean/canvas_16.png"), ConsoleLocaleFactory.getString("modify_service_strategy_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
@@ -396,6 +396,18 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         return action;
     }
 
+    public JSecurityAction createModifyConditionAction() {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("modify_text"), ConsoleIconFactory.getSwingIcon("netbean/canvas_16.png"), ConsoleLocaleFactory.getString("modify_condition_tooltip")) {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+                modifyCondition();
+            }
+        };
+
+        return action;
+    }
+
     public abstract CreatePanel getCreatePanel();
 
     public abstract void reset();
@@ -405,4 +417,6 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     public abstract void addServiceStrategy(String serviceId);
 
     public abstract void modifyServiceStrategy(String serviceId);
+
+    public abstract void modifyCondition();
 }
