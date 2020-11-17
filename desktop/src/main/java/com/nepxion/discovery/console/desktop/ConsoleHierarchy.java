@@ -68,7 +68,8 @@ public class ConsoleHierarchy extends AbstractConsoleHierarchy {
         AbstractTopology topology = (AbstractTopology) elementNode.getUserObject();
 
         shrinkContentBar.setContentPane(topology);
-        shrinkOperationBar.setContentPane(new JBasicScrollPane(topology.getOperationBar()));
+        shrinkOperationBar.setContentPane(topology.getOperationBar());
+        // shrinkOperationBar.setContentPane(new JBasicScrollPane(topology.getOperationBar()));
     }
 
     @Override
