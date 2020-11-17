@@ -30,6 +30,7 @@ import com.nepxion.discovery.common.util.StringUtil;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
+import com.nepxion.discovery.console.desktop.common.util.TextFieldUtil;
 import com.nepxion.discovery.console.desktop.workspace.type.NodeType;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.JClassicButton;
@@ -120,7 +121,7 @@ public class BlueGreenConditionPanel extends JPanel {
 
             conditionItemBar = new JPanel();
             conditionTextField = new JBasicTextField();
-            validateTextField = new JBasicTextField(ConsoleLocaleFactory.getString("validate_condition_example"));
+            validateTextField = new JBasicTextField();
 
             double[][] size = {
                     { TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },
@@ -137,7 +138,7 @@ public class BlueGreenConditionPanel extends JPanel {
             conditionBar.add(conditionTextField, "1, 0");
             conditionBar.add(DimensionUtil.setWidth(new JClassicButton(createAggregateConditionAction(conditionItems)), 30), "2, 0");
             conditionBar.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("validate_text")), 5), "0, 1");
-            conditionBar.add(validateTextField, "1, 1");
+            conditionBar.add(TextFieldUtil.setTip(validateTextField, ConsoleLocaleFactory.getString("validate_condition_example")), "1, 1");
             conditionBar.add(DimensionUtil.setWidth(new JClassicButton(createValidateConditionAction()), 30), "2, 1");
 
             setLayout(new BorderLayout());

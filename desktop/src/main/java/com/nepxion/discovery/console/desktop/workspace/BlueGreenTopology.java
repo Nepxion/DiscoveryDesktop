@@ -32,6 +32,7 @@ import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
+import com.nepxion.discovery.console.desktop.common.util.TextFieldUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.BlueGreenConditionPanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.BlueGreenCreatePanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.CreatePanel;
@@ -193,11 +194,11 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         parameterTableLayout.setHGap(0);
         parameterTableLayout.setVGap(5);
 
-        parameterTextField = new JBasicTextField(ConsoleLocaleFactory.getString("blue-green_parameter_example"));
+        parameterTextField = new JBasicTextField();
         parameterPanel = new JPanel();
         parameterPanel.setLayout(parameterTableLayout);
         parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("parameter")), 5), "0, 0");
-        parameterPanel.add(parameterTextField, "1, 0");
+        parameterPanel.add(TextFieldUtil.setTip(parameterTextField, ConsoleLocaleFactory.getString("blue-green_parameter_example")), "1, 0");
 
         double[][] size = {
                 { TableLayout.FILL },
