@@ -12,6 +12,7 @@ package com.nepxion.discovery.console.desktop.workspace;
 import twaver.Link;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.HashMap;
@@ -47,6 +48,7 @@ import com.nepxion.discovery.console.desktop.workspace.type.LinkType;
 import com.nepxion.discovery.console.desktop.workspace.type.NodeType;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.discovery.console.entity.Instance;
+import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.ButtonManager;
 import com.nepxion.swing.button.JClassicButton;
 import com.nepxion.swing.combobox.JBasicComboBox;
@@ -74,6 +76,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
     protected JPanel servicePanel;
     protected JPanel serviceToolBar;
     protected JPanel parameterPanel;
+    protected JPanel parameterToolBar;
 
     protected JBasicComboBox blueMetadataComboBox;
     protected JBasicComboBox greenMetadataComboBox;
@@ -200,9 +203,13 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("parameter")), 5), "0, 0");
         parameterPanel.add(TextFieldUtil.setTip(parameterTextField, ConsoleLocaleFactory.getString("blue-green_parameter_example")), "1, 0");
 
+        parameterToolBar = new JPanel();
+        parameterToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
+        parameterToolBar.add(new JClassicButton(createModifyParameterAction()));
+
         double[][] size = {
                 { TableLayout.FILL },
-                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, TableLayout.PREFERRED }
+                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
         };
 
         TableLayout tableLayout = new TableLayout(size);
@@ -219,6 +226,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         operationBar.add(serviceToolBar, "0, 6");
         operationBar.add(parameterShrinkShortcut, "0, 8");
         operationBar.add(parameterPanel, "0, 9");
+        operationBar.add(parameterToolBar, "0, 10");
     }
 
     public void addNodes(String serviceId, String blueMetadata, String greenMetadata, String basicMetadata, String blueCondition, String greenCondition) {
@@ -463,17 +471,29 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         modifyLinks(blueCondition, greenCondition);
     }
 
-    @Override
-    public void save(String config) {
+    public void modifyParameter() {
         String parameter = parameterTextField.getText().trim();
+        if (StringUtils.equals(parameter, ConsoleLocaleFactory.getString("blue-green_parameter_example"))) {
+            return;
+        }
 
         dataBox.setName(parameter);
-
-        super.save(config);
     }
 
     @Override
     public StrategyProcessor getStrategyProcessor() {
         return strategyProcessor;
+    }
+
+    public JSecurityAction createModifyParameterAction() {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("modify_text"), ConsoleIconFactory.getSwingIcon("netbean/canvas_16.png"), ConsoleLocaleFactory.getString("modify_parameter_tooltip")) {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+                modifyParameter();
+            }
+        };
+
+        return action;
     }
 }
