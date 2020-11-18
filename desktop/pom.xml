@@ -43,33 +43,12 @@
     <dependencies>
         <dependency>
             <groupId>com.nepxion</groupId>
-            <artifactId>discovery-plugin-config-center-starter</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.nepxion</groupId>
-                    <artifactId>eventbus-aop-starter</artifactId>
-                </exclusion>
+            <artifactId>discovery-plugin-framework-starter-parser</artifactId>
+        </dependency>
 
-                <exclusion>
-                    <groupId>org.springframework.cloud</groupId>
-                    <artifactId>spring-cloud-starter</artifactId>
-                </exclusion>
-
-                <exclusion>
-                    <groupId>org.springframework.cloud</groupId>
-                    <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
-                </exclusion>
-
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-
-                <exclusion>
-                    <groupId>com.github.ben-manes.caffeine</groupId>
-                    <artifactId>caffeine</artifactId>
-                </exclusion>
-            </exclusions>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>banner</artifactId>
         </dependency>
 
         <dependency>

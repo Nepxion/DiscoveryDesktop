@@ -24,7 +24,7 @@ import com.nepxion.discovery.common.entity.InstanceEntityWrapper;
 import com.nepxion.discovery.common.entity.ResultEntity;
 import com.nepxion.discovery.common.entity.RouterEntity;
 import com.nepxion.discovery.common.entity.UserEntity;
-import com.nepxion.discovery.common.handler.RestErrorHandler;
+import com.nepxion.discovery.common.handler.DiscoveryResponseErrorHandler;
 import com.nepxion.discovery.common.util.RestUtil;
 import com.nepxion.discovery.common.util.UrlUtil;
 import com.nepxion.discovery.console.desktop.common.context.ConsolePropertiesContext;
@@ -37,7 +37,7 @@ public class ConsoleController {
 
     static {
         restTemplate = new RestTemplate();
-        restTemplate.setErrorHandler(new RestErrorHandler());
+        restTemplate.setErrorHandler(new DiscoveryResponseErrorHandler());
     }
 
     public static boolean authenticate(UserEntity userEntity) {
