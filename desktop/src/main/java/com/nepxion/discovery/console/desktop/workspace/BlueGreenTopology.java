@@ -432,6 +432,18 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
             return;
         }
 
+        if (blueCondition.contains("#H['']")) {
+            conditionPanel.showBlueConditionInvalidFormatTip();
+
+            return;
+        }
+
+        if (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && greenCondition.contains("#H['']")) {
+            conditionPanel.showGreenConditionInvalidFormatTip();
+
+            return;
+        }
+
         if (!addParameter()) {
             return;
         }
@@ -469,6 +481,18 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
 
         if (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && StringUtils.isBlank(greenCondition)) {
             conditionPanel.showGreenConditionNotNullTip();
+
+            return;
+        }
+
+        if (blueCondition.contains("#H['']")) {
+            conditionPanel.showBlueConditionInvalidFormatTip();
+
+            return;
+        }
+
+        if (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && greenCondition.contains("#H['']")) {
+            conditionPanel.showGreenConditionInvalidFormatTip();
 
             return;
         }

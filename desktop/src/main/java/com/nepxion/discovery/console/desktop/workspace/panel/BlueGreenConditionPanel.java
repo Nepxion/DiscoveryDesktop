@@ -11,6 +11,10 @@ package com.nepxion.discovery.console.desktop.workspace.panel;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -103,6 +107,16 @@ public class BlueGreenConditionPanel extends JPanel {
         greenConditionBar.showConditionNotNullTip();
     }
 
+    public void showBlueConditionInvalidFormatTip() {
+        conditionTabbedPane.setSelectedIndex(0);
+        blueConditionBar.showConditionInvalidFormatTip();
+    }
+
+    public void showGreenConditionInvalidFormatTip() {
+        conditionTabbedPane.setSelectedIndex(1);
+        greenConditionBar.showConditionInvalidFormatTip();
+    }
+
     public class ConditionBar extends JPanel {
         private static final long serialVersionUID = 1L;
 
@@ -111,7 +125,9 @@ public class BlueGreenConditionPanel extends JPanel {
 
         protected JPanel conditionItemBar;
         protected JBasicTextField conditionTextField;
+        protected JClassicButton aggregateButton;
         protected JBasicTextField validateTextField;
+        protected JClassicButton validateButton;
 
         public ConditionBar(NodeType nodeType) {
             JShrinkShortcut shrinkShortcut = new JShrinkShortcut();
@@ -122,6 +138,9 @@ public class BlueGreenConditionPanel extends JPanel {
             conditionItemBar = new JPanel();
             conditionTextField = new JBasicTextField();
             validateTextField = new JBasicTextField();
+
+            aggregateButton = new JClassicButton(createAggregateConditionAction());
+            validateButton = new JClassicButton(createValidateConditionAction());
 
             double[][] size = {
                     { TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },
@@ -136,10 +155,10 @@ public class BlueGreenConditionPanel extends JPanel {
             conditionBar.setLayout(tableLayout);
             conditionBar.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("aggregate_text")), 5), "0, 0");
             conditionBar.add(conditionTextField, "1, 0");
-            conditionBar.add(DimensionUtil.setWidth(new JClassicButton(createAggregateConditionAction(conditionItems)), 30), "2, 0");
+            conditionBar.add(DimensionUtil.setWidth(aggregateButton, 30), "2, 0");
             conditionBar.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("validate_text")), 5), "0, 1");
             conditionBar.add(TextFieldUtil.setTip(validateTextField, ConsoleLocaleFactory.getString("validate_condition_example")), "1, 1");
-            conditionBar.add(DimensionUtil.setWidth(new JClassicButton(createValidateConditionAction()), 30), "2, 1");
+            conditionBar.add(DimensionUtil.setWidth(validateButton, 30), "2, 1");
 
             setLayout(new BorderLayout());
             setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
@@ -213,6 +232,10 @@ public class BlueGreenConditionPanel extends JPanel {
             conditionTextField.showTip(ConsoleLocaleFactory.getString("condition_not_null"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
         }
 
+        public void showConditionInvalidFormatTip() {
+            conditionTextField.showTip(ConsoleLocaleFactory.getString("condition_invalid_format"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 16);
+        }
+
         public void showValidationInvalidFormatTip() {
             validateTextField.showTip(ConsoleLocaleFactory.getString("validate_condition_invalid_format"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
         }
@@ -239,6 +262,41 @@ public class BlueGreenConditionPanel extends JPanel {
 
                 DimensionUtil.setWidth(addButton, 30);
                 DimensionUtil.setWidth(removeButton, 30);
+
+                parameterTextField.addKeyListener(new KeyAdapter() {
+                    @Override
+                    public void keyReleased(KeyEvent e) {
+                        aggregateButton.getAction().actionPerformed(null);
+                    }
+                });
+                arithmeticComboBox.addItemListener(new ItemListener() {
+                    public void itemStateChanged(ItemEvent e) {
+                        if (arithmeticComboBox.getSelectedItem() != e.getItem()) {
+                            aggregateButton.getAction().actionPerformed(null);
+                        }
+                    }
+                });
+                valueTextField.addKeyListener(new KeyAdapter() {
+                    @Override
+                    public void keyReleased(KeyEvent e) {
+                        aggregateButton.getAction().actionPerformed(null);
+                    }
+                });
+                relationalComboBox.addItemListener(new ItemListener() {
+                    public void itemStateChanged(ItemEvent e) {
+                        if (arithmeticComboBox.getSelectedItem() != e.getItem()) {
+                            aggregateButton.getAction().actionPerformed(null);
+                        }
+                    }
+                });
+            }
+
+            public void showParameterNotNullTip() {
+                parameterTextField.showTip(ConsoleLocaleFactory.getString("condition_item_parameter_not_null"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
+            }
+
+            public void showValueNotNullTip() {
+                valueTextField.showTip(ConsoleLocaleFactory.getString("condition_item_value_not_null"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
             }
         }
 
@@ -257,6 +315,8 @@ public class BlueGreenConditionPanel extends JPanel {
 
                     conditionItems.add(conditionItems.indexOf(conditionItem) + 1, new ConditionItem(UUID.randomUUID().toString()));
                     layoutConditionItems();
+
+                    aggregateButton.getAction().actionPerformed(null);
                 }
             };
 
@@ -284,13 +344,15 @@ public class BlueGreenConditionPanel extends JPanel {
 
                     conditionItems.remove(conditionItem);
                     layoutConditionItems();
+
+                    aggregateButton.getAction().actionPerformed(null);
                 }
             };
 
             return action;
         }
 
-        public JSecurityAction createAggregateConditionAction(List<ConditionItem> conditionItems) {
+        public JSecurityAction createAggregateConditionAction() {
             JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("netbean/action_16.png"), ConsoleLocaleFactory.getString("aggregate_condition_tooltip")) {
                 private static final long serialVersionUID = 1L;
 
@@ -304,11 +366,17 @@ public class BlueGreenConditionPanel extends JPanel {
                         String value = conditionItem.valueTextField.getText().trim();
                         String relational = conditionItem.relationalComboBox.getSelectedItem().toString();
 
-                        if (StringUtils.isBlank(parameter)) {
-                            conditionItem.parameterTextField.showTip(ConsoleLocaleFactory.getString("condition_item_parameter_not_null"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
+                        // if (StringUtils.isBlank(parameter)) {
+                        //    conditionItem.showParameterNotNullTip();
 
-                            return;
-                        }
+                        //    return;
+                        // }
+
+                        // if (StringUtils.isBlank(value)) {
+                        //    conditionItem.showValueNotNullTip();
+
+                        //    return;
+                        // }
 
                         stringBuilder.append("#H['").append(parameter).append("'] ").append(arithmetic).append(" '").append(value).append("'");
 
@@ -336,6 +404,12 @@ public class BlueGreenConditionPanel extends JPanel {
 
                     if (StringUtils.isBlank(condition)) {
                         showConditionNotNullTip();
+
+                        return;
+                    }
+
+                    if (condition.contains("#H['']")) {
+                        showBlueConditionInvalidFormatTip();
 
                         return;
                     }
