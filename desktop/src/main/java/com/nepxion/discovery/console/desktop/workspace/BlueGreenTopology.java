@@ -74,8 +74,8 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
 
     protected JPanel conditionToolBar;
     protected BlueGreenConditionPanel conditionPanel;
-    protected JPanel servicePanel;
-    protected JPanel serviceToolBar;
+    protected JPanel orchestrationPanel;
+    protected JPanel orchestrationToolBar;
     protected JPanel parameterPanel;
     protected JPanel parameterToolBar;
 
@@ -102,9 +102,9 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         blueGreenRouteType = blueGreenCreatePanel.getBlueGreenRouteType();
 
         boolean enabled = blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC;
-        servicePanel.getComponent(6).setEnabled(enabled);
-        servicePanel.getComponent(7).setEnabled(enabled);
-        servicePanel.getComponent(8).setEnabled(enabled);
+        orchestrationPanel.getComponent(6).setEnabled(enabled);
+        orchestrationPanel.getComponent(7).setEnabled(enabled);
+        orchestrationPanel.getComponent(8).setEnabled(enabled);
         conditionPanel.setGreenConditionBarEnabled(enabled);
 
         super.initializeUI(createPanel);
@@ -123,10 +123,10 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         conditionToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
         conditionToolBar.add(new JClassicButton(createModifyConditionAction()));
 
-        JShrinkShortcut serviceShrinkShortcut = new JShrinkShortcut();
-        serviceShrinkShortcut.setTitle(ConsoleLocaleFactory.getString(releaseType.toString() + "_service"));
-        serviceShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
-        serviceShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString(releaseType.toString() + "_service"));
+        JShrinkShortcut orchestrationShrinkShortcut = new JShrinkShortcut();
+        orchestrationShrinkShortcut.setTitle(ConsoleLocaleFactory.getString(releaseType.toString() + "_orchestration"));
+        orchestrationShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
+        orchestrationShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString(releaseType.toString() + "_orchestration"));
 
         serviceIdComboBox = new JBasicComboBox();
         serviceIdComboBox.setEditable(true);
@@ -155,34 +155,34 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         JClassicButton basicMetadataButton = new JClassicButton(createMetadataSelectorAction(basicMetadataComboBox));
         DimensionUtil.setWidth(basicMetadataButton, 30);
 
-        double[][] serviceSize = {
+        double[][] orchestrationSize = {
                 { TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },
                 { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
         };
 
-        TableLayout serviceTableLayout = new TableLayout(serviceSize);
-        serviceTableLayout.setHGap(0);
-        serviceTableLayout.setVGap(5);
+        TableLayout orchestrationTableLayout = new TableLayout(orchestrationSize);
+        orchestrationTableLayout.setHGap(0);
+        orchestrationTableLayout.setVGap(5);
 
-        servicePanel = new JPanel();
-        servicePanel.setLayout(serviceTableLayout);
-        servicePanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("service")), 5), "0, 0");
-        servicePanel.add(serviceIdComboBox, "1, 0");
-        servicePanel.add(refreshServiceIdButton, "2, 0");
-        servicePanel.add(DimensionUtil.addWidth(new JBasicLabel(NodeType.BLUE.getDescription()), 5), "0, 1");
-        servicePanel.add(blueMetadataComboBox, "1, 1");
-        servicePanel.add(blueMetadataButton, "2, 1");
-        servicePanel.add(DimensionUtil.addWidth(new JBasicLabel(NodeType.GREEN.getDescription()), 5), "0, 2");
-        servicePanel.add(greenMetadataComboBox, "1, 2");
-        servicePanel.add(greenMetadataButton, "2, 2");
-        servicePanel.add(DimensionUtil.addWidth(new JBasicLabel(NodeType.BASIC.getDescription()), 5), "0, 3");
-        servicePanel.add(basicMetadataComboBox, "1, 3");
-        servicePanel.add(basicMetadataButton, "2, 3");
+        orchestrationPanel = new JPanel();
+        orchestrationPanel.setLayout(orchestrationTableLayout);
+        orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("service")), 5), "0, 0");
+        orchestrationPanel.add(serviceIdComboBox, "1, 0");
+        orchestrationPanel.add(refreshServiceIdButton, "2, 0");
+        orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(NodeType.BLUE.getDescription()), 5), "0, 1");
+        orchestrationPanel.add(blueMetadataComboBox, "1, 1");
+        orchestrationPanel.add(blueMetadataButton, "2, 1");
+        orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(NodeType.GREEN.getDescription()), 5), "0, 2");
+        orchestrationPanel.add(greenMetadataComboBox, "1, 2");
+        orchestrationPanel.add(greenMetadataButton, "2, 2");
+        orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(NodeType.BASIC.getDescription()), 5), "0, 3");
+        orchestrationPanel.add(basicMetadataComboBox, "1, 3");
+        orchestrationPanel.add(basicMetadataButton, "2, 3");
 
-        serviceToolBar = new JPanel();
-        serviceToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
-        serviceToolBar.add(new JClassicButton(createAddServiceStrategyAction()));
-        serviceToolBar.add(new JClassicButton(createModifyServiceStrategyAction()));
+        orchestrationToolBar = new JPanel();
+        orchestrationToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
+        orchestrationToolBar.add(new JClassicButton(createAddServiceStrategyAction()));
+        orchestrationToolBar.add(new JClassicButton(createModifyServiceStrategyAction()));
 
         JShrinkShortcut parameterShrinkShortcut = new JShrinkShortcut();
         parameterShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("blue-green_parameter"));
@@ -222,9 +222,9 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         operationBar.add(conditionShrinkShortcut, "0, 0");
         operationBar.add(conditionPanel, "0, 1");
         operationBar.add(conditionToolBar, "0, 2");
-        operationBar.add(serviceShrinkShortcut, "0, 4");
-        operationBar.add(servicePanel, "0, 5");
-        operationBar.add(serviceToolBar, "0, 6");
+        operationBar.add(orchestrationShrinkShortcut, "0, 4");
+        operationBar.add(orchestrationPanel, "0, 5");
+        operationBar.add(orchestrationToolBar, "0, 6");
         operationBar.add(parameterShrinkShortcut, "0, 8");
         operationBar.add(parameterPanel, "0, 9");
         operationBar.add(parameterToolBar, "0, 10");
