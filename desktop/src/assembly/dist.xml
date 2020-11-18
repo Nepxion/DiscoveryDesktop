@@ -19,6 +19,7 @@
             <outputDirectory>/</outputDirectory>
             <includes>
                 <include>*.bat</include>
+                <include>*.sh</include>
             </includes>
             <fileMode>0744</fileMode>
         </fileSet>
