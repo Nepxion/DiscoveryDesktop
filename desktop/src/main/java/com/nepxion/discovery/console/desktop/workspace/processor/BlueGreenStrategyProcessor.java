@@ -20,7 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.nepxion.cots.twaver.element.TElementManager;
 import com.nepxion.cots.twaver.element.TLink;
 import com.nepxion.cots.twaver.element.TNode;
-import com.nepxion.discovery.console.desktop.workspace.type.EscapeType;
+import com.nepxion.discovery.common.entity.EscapeType;
 import com.nepxion.discovery.console.desktop.workspace.type.LinkType;
 import com.nepxion.discovery.console.desktop.workspace.type.NodeType;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
