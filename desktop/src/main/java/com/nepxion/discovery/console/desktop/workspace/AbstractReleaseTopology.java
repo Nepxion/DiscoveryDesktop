@@ -241,6 +241,8 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
                 return;
             }
+        } else {
+            gatewayId = group;
         }
 
         Instance gateway = new Instance();
