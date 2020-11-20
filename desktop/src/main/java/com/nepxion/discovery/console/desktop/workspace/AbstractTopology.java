@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import com.nepxion.cots.twaver.graph.TGraphBackground;
 import com.nepxion.cots.twaver.graph.TLayoutType;
+import com.nepxion.discovery.common.entity.RuleEntity;
 import com.nepxion.discovery.common.entity.SubscriptionType;
 import com.nepxion.discovery.console.controller.ConsoleController;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
@@ -65,6 +66,8 @@ public abstract class AbstractTopology extends BasicTopology {
     protected String group;
 
     protected String configType;
+
+    protected RuleEntity ruleEntity;
 
     public AbstractTopology(ReleaseType releaseType) {
         this.releaseType = releaseType;
@@ -146,7 +149,7 @@ public abstract class AbstractTopology extends BasicTopology {
     }
 
     public JSecurityAction createCreateAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("create_text"), ConsoleIconFactory.getSwingIcon("theme/tree/plastic/tree_leaf.png"), ConsoleLocaleFactory.getString("create_tooltip")) {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("create_text"), ConsoleIconFactory.getSwingIcon("theme/folder/deploy.png"), ConsoleLocaleFactory.getString("create_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
@@ -162,7 +165,7 @@ public abstract class AbstractTopology extends BasicTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                String config = getStrategyProcessor().toConfig(strategyType, dataBox);
+                String config = getStrategyProcessor().toConfig(ruleEntity, strategyType, dataBox);
                 if (StringUtils.isEmpty(config)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractTopology.this), ConsoleLocaleFactory.getString("strategy_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
@@ -210,7 +213,7 @@ public abstract class AbstractTopology extends BasicTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                String config = getStrategyProcessor().toConfig(strategyType, dataBox);
+                String config = getStrategyProcessor().toConfig(ruleEntity, strategyType, dataBox);
                 if (StringUtils.isEmpty(config)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractTopology.this), ConsoleLocaleFactory.getString("strategy_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 

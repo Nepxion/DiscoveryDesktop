@@ -59,7 +59,7 @@ public class CreatePanel extends JPanel {
     protected ButtonGroup deployButtonGroup;
 
     public CreatePanel() {
-        newRadioButton = new JBasicRadioButton(ConsoleLocaleFactory.getString("create_tooltip"), ConsoleLocaleFactory.getString("create_tooltip"));
+        newRadioButton = new JBasicRadioButton(ConsoleLocaleFactory.getString("new_tooltip"), ConsoleLocaleFactory.getString("new_tooltip"));
         newRadioButton.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (newRadioButton.isSelected()) {

@@ -37,13 +37,13 @@ import com.nepxion.discovery.plugin.framework.parser.xml.XmlConfigConstant;
 
 public class GrayStrategyProcessor extends AbstractStrategyProcessor {
     @Override
-    public TDataBox fromConfig() {
-        return null;
+    public void fromConfig(RuleEntity ruleEntity, StrategyType strategyType, TDataBox dataBox) throws Exception {
+
     }
 
     @SuppressWarnings({ "unchecked", "incomplete-switch" })
     @Override
-    public String toConfig(StrategyType strategyType, TDataBox dataBox) {
+    public String toConfig(RuleEntity ruleEntity, StrategyType strategyType, TDataBox dataBox) {
         if (strategyType == null) {
             return StringUtils.EMPTY;
         }
@@ -135,7 +135,6 @@ public class GrayStrategyProcessor extends AbstractStrategyProcessor {
             strategyCustomizationEntity.setStrategyRouteEntityList(strategyRouteEntityList);
         }
 
-        RuleEntity ruleEntity = new RuleEntity();
         ruleEntity.setStrategyEntity(strategyEntity);
         ruleEntity.setStrategyCustomizationEntity(strategyCustomizationEntity);
 

@@ -37,6 +37,7 @@ import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.CreatePanel;
+import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessorFactory;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeLocation;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeSizeType;
@@ -71,9 +72,6 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
     protected Instance gateway;
     protected Object[] serviceIds;
-
-    protected XmlConfigParser xmlConfigParser = new XmlConfigParser();
-    protected XmlConfigDeparser xmlConfigDeparser = new XmlConfigDeparser();
 
     public AbstractReleaseTopology(ReleaseType releaseType) {
         super(releaseType);
@@ -215,7 +213,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     @Override
     public void create() {
         CreatePanel createPanel = getCreatePanel();
-        createPanel.setPreferredSize(new Dimension(createPanel.getPreferredSize().width, createPanel.getPreferredSize().height));
+        createPanel.setPreferredSize(new Dimension(createPanel.getPreferredSize().width + 80, createPanel.getPreferredSize().height));
 
         int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractReleaseTopology.this), createPanel, ConsoleLocaleFactory.getString("create_tooltip") + " [ " + TypeLocale.getDescription(releaseType) + " ]", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
         if (selectedOption != 0) {
@@ -246,15 +244,19 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         }
 
         Instance gateway = new Instance();
-        gateway.setServiceId(gatewayId != null ? gatewayId : ConsoleLocaleFactory.getString("portal_service_text"));
+        gateway.setServiceId(subscriptionType == SubscriptionType.PARTIAL ? gatewayId : ConsoleLocaleFactory.getString("portal_service"));
         Map<String, String> metadataMap = new HashMap<String, String>();
         gateway.setMetadata(metadataMap);
 
         String config = ConsoleController.remoteConfigView(group, gatewayId);
+        RuleEntity ruleEntity = null;
         try {
-            RuleEntity ruleEntity = xmlConfigParser.parse(config);
+            ruleEntity = StrategyProcessorFactory.getXmlConfigParser().parse(config);
         } catch (Exception e) {
-            e.printStackTrace();
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), "解析策略出错", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+            // 是否继续创建？
+            return;
         }
 
         initializeData(group, gateway, strategyType, subscriptionType, deployType);

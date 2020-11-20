@@ -11,16 +11,17 @@ package com.nepxion.discovery.console.desktop.workspace.processor;
 
 import twaver.TDataBox;
 
+import com.nepxion.discovery.common.entity.RuleEntity;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
 
 public class BlacklistStrategyProcessor extends AbstractStrategyProcessor {
     @Override
-    public TDataBox fromConfig() {
-        return null;
+    public void fromConfig(RuleEntity ruleEntity, StrategyType strategyType, TDataBox dataBox) throws Exception {
+
     }
 
     @Override
-    public String toConfig(StrategyType strategyType, TDataBox dataBox) {
+    public String toConfig(RuleEntity ruleEntity, StrategyType strategyType, TDataBox dataBox) {
         return null;
     }
 }

@@ -11,12 +11,13 @@ package com.nepxion.discovery.console.desktop.workspace.processor;
 
 import twaver.TDataBox;
 
+import com.nepxion.discovery.common.entity.RuleEntity;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
 
 public interface StrategyProcessor {
-    TDataBox fromConfig();
+    void fromConfig(RuleEntity ruleEntity, StrategyType strategyType, TDataBox dataBox) throws Exception;
 
-    String toConfig(StrategyType strategyType, TDataBox dataBox);
+    String toConfig(RuleEntity ruleEntity, StrategyType strategyType, TDataBox dataBox);
 
     void saveConfig(String group, String serviceId, String config);
 }
