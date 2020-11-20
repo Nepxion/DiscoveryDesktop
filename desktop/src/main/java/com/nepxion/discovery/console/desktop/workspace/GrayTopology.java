@@ -88,9 +88,9 @@ public class GrayTopology extends AbstractReleaseTopology {
     @Override
     public void initializeOperationBar() {
         JShrinkShortcut conditionShrinkShortcut = new JShrinkShortcut();
-        conditionShrinkShortcut.setTitle(ConsoleLocaleFactory.getString(releaseType + "_condition"));
+        conditionShrinkShortcut.setTitle(TypeLocale.getDescription(releaseType, "_condition"));
         conditionShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
-        conditionShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString(releaseType + "_condition"));
+        conditionShrinkShortcut.setToolTipText(TypeLocale.getDescription(releaseType, "_condition"));
 
         String[] conditions = { "0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100" };
         grayConditionComboBox = new JBasicComboBox(conditions);
@@ -142,9 +142,9 @@ public class GrayTopology extends AbstractReleaseTopology {
         conditionToolBar.add(new JClassicButton(createModifyConditionAction()));
 
         JShrinkShortcut orchestrationShrinkShortcut = new JShrinkShortcut();
-        orchestrationShrinkShortcut.setTitle(ConsoleLocaleFactory.getString(releaseType + "_orchestration"));
+        orchestrationShrinkShortcut.setTitle(TypeLocale.getDescription(releaseType, "_orchestration"));
         orchestrationShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
-        orchestrationShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString(releaseType + "_orchestration"));
+        orchestrationShrinkShortcut.setToolTipText(TypeLocale.getDescription(releaseType, "_orchestration"));
 
         serviceIdComboBox = new JBasicComboBox();
         serviceIdComboBox.setEditable(true);

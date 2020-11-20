@@ -113,9 +113,9 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
     @Override
     public void initializeOperationBar() {
         JShrinkShortcut conditionShrinkShortcut = new JShrinkShortcut();
-        conditionShrinkShortcut.setTitle(ConsoleLocaleFactory.getString(releaseType + "_condition"));
+        conditionShrinkShortcut.setTitle(TypeLocale.getDescription(releaseType, "_condition"));
         conditionShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
-        conditionShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString(releaseType + "_condition"));
+        conditionShrinkShortcut.setToolTipText(TypeLocale.getDescription(releaseType, "_condition"));
 
         conditionPanel = new BlueGreenConditionPanel();
 
@@ -124,9 +124,9 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         conditionToolBar.add(new JClassicButton(createModifyConditionAction()));
 
         JShrinkShortcut orchestrationShrinkShortcut = new JShrinkShortcut();
-        orchestrationShrinkShortcut.setTitle(ConsoleLocaleFactory.getString(releaseType + "_orchestration"));
+        orchestrationShrinkShortcut.setTitle(TypeLocale.getDescription(releaseType, "_orchestration"));
         orchestrationShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
-        orchestrationShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString(releaseType + "_orchestration"));
+        orchestrationShrinkShortcut.setToolTipText(TypeLocale.getDescription(releaseType, "_orchestration"));
 
         serviceIdComboBox = new JBasicComboBox();
         serviceIdComboBox.setEditable(true);

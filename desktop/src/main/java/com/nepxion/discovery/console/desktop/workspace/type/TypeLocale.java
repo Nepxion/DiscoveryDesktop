@@ -15,31 +15,35 @@ import com.nepxion.discovery.common.entity.SubscriptionType;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 
 public class TypeLocale {
-    public static String getName(StrategyType strategyType) {
-        return ConsoleLocaleFactory.getString(strategyType.toString());
-    }
-
     public static String getDescription(ReleaseType releaseType) {
-        return ConsoleLocaleFactory.getString(releaseType + "_release");
+        return getDescription(releaseType, "_release");
     }
 
     public static String getDescription(StrategyType strategyType) {
-        return ConsoleLocaleFactory.getString(strategyType + "_strategy");
+        return getDescription(strategyType, "_strategy");
     }
 
     public static String getDescription(SubscriptionType subscriptionType) {
-        return ConsoleLocaleFactory.getString(subscriptionType + "_subscription");
+        return getDescription(subscriptionType, "_subscription");
     }
 
     public static String getDescription(DeployType deployType) {
-        return ConsoleLocaleFactory.getString(deployType + "_deploy");
+        return getDescription(deployType, "_deploy");
     }
 
     public static String getDescription(BlueGreenRouteType blueGreenRouteType) {
-        return ConsoleLocaleFactory.getString(blueGreenRouteType + "_route");
+        return getDescription(blueGreenRouteType, "_route");
     }
 
     public static String getDescription(ElementType elementType) {
-        return ConsoleLocaleFactory.getString(elementType + "_type");
+        return getDescription(elementType, "_type");
+    }
+
+    public static String getName(Object type) {
+        return ConsoleLocaleFactory.getString(type.toString());
+    }
+
+    public static String getDescription(Object type, String suffix) {
+        return ConsoleLocaleFactory.getString(type + suffix);
     }
 }
