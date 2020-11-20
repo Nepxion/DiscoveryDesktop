@@ -49,41 +49,47 @@ public class CreatePanel extends JPanel {
 
     protected JBasicRadioButton newRadioButton;
     protected JBasicRadioButton openRadioButton;
+    protected ButtonGroup createModeButtonGroup;
+    protected JPanel createModePanel;
 
     protected ButtonGroup subscriptionButtonGroup;
+    protected JPanel subscriptionPanel;
+
     protected JBasicComboBox groupComboBox;
     protected JBasicComboBox gatewayIdComboBox;
     protected JBasicCheckBox showOnlyGatewayCheckBox;
+    protected JPanel gatewayPanel;
+
+    protected ButtonGroup deployButtonGroup;
+    protected JPanel deployPanel;
 
     protected ButtonGroup strategyButtonGroup;
-    protected ButtonGroup deployButtonGroup;
+    protected JPanel strategyPanel;
 
     public CreatePanel() {
         newRadioButton = new JBasicRadioButton(ConsoleLocaleFactory.getString("new_tooltip"), ConsoleLocaleFactory.getString("new_tooltip"));
         newRadioButton.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
-                if (newRadioButton.isSelected()) {
-
-                }
+                setNewMode(newRadioButton.isSelected());
             }
         });
         newRadioButton.setSelected(true);
         openRadioButton = new JBasicRadioButton(ConsoleLocaleFactory.getString("open_tooltip"), ConsoleLocaleFactory.getString("open_tooltip"));
-        ButtonGroup createModeButtonGroup = new ButtonGroup();
+        createModeButtonGroup = new ButtonGroup();
         createModeButtonGroup.add(newRadioButton);
         createModeButtonGroup.add(openRadioButton);
 
-        JPanel createModePanel = new JPanel();
+        createModePanel = new JPanel();
         createModePanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
         createModePanel.add(newRadioButton);
         createModePanel.add(openRadioButton);
 
-        JShrinkShortcut subscriptionShrinkShortcut = new JShrinkShortcut();
-        subscriptionShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("subscription_parameter_text"));
-        subscriptionShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
-        subscriptionShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString("subscription_parameter_text"));
+        JShrinkShortcut subscriptionParameterShrinkShortcut = new JShrinkShortcut();
+        subscriptionParameterShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("subscription_parameter_text"));
+        subscriptionParameterShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
+        subscriptionParameterShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString("subscription_parameter_text"));
 
-        JPanel subscriptionPanel = new JPanel();
+        subscriptionPanel = new JPanel();
         subscriptionPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
         subscriptionButtonGroup = new ButtonGroup();
         SubscriptionType[] subscriptionTypes = SubscriptionType.values();
@@ -140,12 +146,48 @@ public class CreatePanel extends JPanel {
             }
         });
 
-        JShrinkShortcut newShrinkShortcut = new JShrinkShortcut();
-        newShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("new_parameter_text"));
-        newShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
-        newShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString("new_parameter_text"));
+        double[][] gatewaySize = {
+                { TableLayout.FILL, TableLayout.PREFERRED },
+                { TableLayout.PREFERRED }
+        };
 
-        JPanel strategyPanel = new JPanel();
+        TableLayout gatewayTableLayout = new TableLayout(gatewaySize);
+        gatewayTableLayout.setHGap(5);
+        gatewayTableLayout.setVGap(5);
+
+        gatewayPanel = new JPanel();
+        gatewayPanel.setLayout(gatewayTableLayout);
+        gatewayPanel.add(gatewayIdComboBox, "0, 0");
+        gatewayPanel.add(showOnlyGatewayCheckBox, "1, 0");
+
+        JShrinkShortcut deployParameterShrinkShortcut = new JShrinkShortcut();
+        deployParameterShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("deploy_parameter_text"));
+        deployParameterShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
+        deployParameterShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString("deploy_parameter_text"));
+
+        deployPanel = new JPanel();
+        deployPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
+        deployButtonGroup = new ButtonGroup();
+        DeployType[] deployTypes = DeployType.values();
+        for (int i = 0; i < deployTypes.length; i++) {
+            DeployType deployType = deployTypes[i];
+
+            JBasicRadioButton deployRadioButton = new JBasicRadioButton(TypeLocale.getDescription(deployType), TypeLocale.getDescription(deployType));
+            deployRadioButton.setName(deployType.toString());
+            deployPanel.add(deployRadioButton);
+            deployButtonGroup.add(deployRadioButton);
+
+            if (i == 0) {
+                deployRadioButton.setSelected(true);
+            }
+        }
+
+        JShrinkShortcut releaseShrinkShortcut = new JShrinkShortcut();
+        releaseShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("release_parameter_text"));
+        releaseShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
+        releaseShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString("release_parameter_text"));
+
+        strategyPanel = new JPanel();
         strategyPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
         strategyButtonGroup = new ButtonGroup();
         StrategyType[] strategyTypes = StrategyType.values();
@@ -163,37 +205,6 @@ public class CreatePanel extends JPanel {
             }
         }
 
-        JPanel deployPanel = new JPanel();
-        deployPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
-        deployButtonGroup = new ButtonGroup();
-        DeployType[] deployTypes = DeployType.values();
-        for (int i = 0; i < deployTypes.length; i++) {
-            DeployType deployType = deployTypes[i];
-
-            JBasicRadioButton deployRadioButton = new JBasicRadioButton(TypeLocale.getDescription(deployType), TypeLocale.getDescription(deployType));
-            deployRadioButton.setName(deployType.toString());
-            deployPanel.add(deployRadioButton);
-            deployButtonGroup.add(deployRadioButton);
-
-            if (i == 0) {
-                deployRadioButton.setSelected(true);
-            }
-        }
-
-        double[][] gatewaySize = {
-                { TableLayout.FILL, TableLayout.PREFERRED },
-                { TableLayout.PREFERRED }
-        };
-
-        TableLayout gatewayTableLayout = new TableLayout(gatewaySize);
-        gatewayTableLayout.setHGap(5);
-        gatewayTableLayout.setVGap(5);
-
-        JPanel gatewayPanel = new JPanel();
-        gatewayPanel.setLayout(gatewayTableLayout);
-        gatewayPanel.add(gatewayIdComboBox, "0, 0");
-        gatewayPanel.add(showOnlyGatewayCheckBox, "1, 0");
-
         double[][] size = {
                 { TableLayout.PREFERRED, TableLayout.FILL },
                 getLayoutRow()
@@ -204,27 +215,40 @@ public class CreatePanel extends JPanel {
         tableLayout.setVGap(10);
 
         setLayout(tableLayout);
-        add(new JBasicLabel("创建方式"), "0, 0");
+        add(new JBasicLabel(ConsoleLocaleFactory.getString("create_mode_text")), "0, 0");
         add(createModePanel, "1, 0");
-        add(subscriptionShrinkShortcut, "0, 2, 1, 2");
+        add(subscriptionParameterShrinkShortcut, "0, 2, 1, 2");
         add(new JBasicLabel(ConsoleLocaleFactory.getString("subscription_text")), "0, 3");
         add(subscriptionPanel, "1, 3");
         add(new JBasicLabel(ConsoleLocaleFactory.getString("group_name_text")), "0, 4");
         add(groupComboBox, "1, 4");
         add(new JBasicLabel(ConsoleLocaleFactory.getString("service_name_text")), "0, 5");
         add(gatewayPanel, "1, 5");
-        add(newShrinkShortcut, "0, 7, 1, 7");
-        add(new JBasicLabel(ConsoleLocaleFactory.getString("strategy_text")), "0, 8");
-        add(strategyPanel, "1, 8");
-        add(new JBasicLabel(ConsoleLocaleFactory.getString("deploy_text")), "0, 9");
-        add(deployPanel, "1, 9");
+        add(deployParameterShrinkShortcut, "0, 7, 1, 7");
+        add(new JBasicLabel(ConsoleLocaleFactory.getString("deploy_text")), "0, 8");
+        add(deployPanel, "1, 8");
+        add(releaseShrinkShortcut, "0, 10, 1, 10");
+        add(new JBasicLabel(ConsoleLocaleFactory.getString("strategy_text")), "0, 11");
+        add(strategyPanel, "1, 11");
 
         setGroups();
         setGatewayIds();
     }
 
     public double[] getLayoutRow() {
-        return new double[] { TableLayout.PREFERRED, 0, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, 0, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED };
+        return new double[] { TableLayout.PREFERRED, 0, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, 0, TableLayout.PREFERRED, TableLayout.PREFERRED, 0, TableLayout.PREFERRED, TableLayout.PREFERRED };
+    }
+
+    public void setNewMode(boolean isNewMode) {
+        if (strategyPanel != null) {
+            for (int i = 0; i < strategyPanel.getComponentCount(); i++) {
+                strategyPanel.getComponent(i).setEnabled(isNewMode);
+            }
+        }
+    }
+
+    public boolean isNewMode() {
+        return newRadioButton.isSelected();
     }
 
     @SuppressWarnings("unchecked")

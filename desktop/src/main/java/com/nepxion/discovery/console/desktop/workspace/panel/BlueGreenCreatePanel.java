@@ -24,9 +24,10 @@ public class BlueGreenCreatePanel extends CreatePanel {
     private static final long serialVersionUID = 1L;
 
     protected ButtonGroup blueGreenRouteButtonGroup;
+    protected JPanel blueGreenRoutePanel;
 
     public BlueGreenCreatePanel() {
-        JPanel blueGreenRoutePanel = new JPanel();
+        blueGreenRoutePanel = new JPanel();
         blueGreenRoutePanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
         blueGreenRouteButtonGroup = new ButtonGroup();
         BlueGreenRouteType[] blueGreenRouteTypes = BlueGreenRouteType.values();
@@ -43,8 +44,8 @@ public class BlueGreenCreatePanel extends CreatePanel {
             }
         }
 
-        add(new JBasicLabel(ConsoleLocaleFactory.getString("route_text")), "0, 10");
-        add(blueGreenRoutePanel, "1, 10");
+        add(new JBasicLabel(ConsoleLocaleFactory.getString("route_text")), "0, 12");
+        add(blueGreenRoutePanel, "1, 12");
     }
 
     public BlueGreenRouteType getBlueGreenRouteType() {
@@ -65,5 +66,16 @@ public class BlueGreenCreatePanel extends CreatePanel {
         newLayoutRow[layoutRow.length] = TableLayout.PREFERRED;
 
         return newLayoutRow;
+    }
+
+    @Override
+    public void setNewMode(boolean isNewMode) {
+        super.setNewMode(isNewMode);
+
+        if (blueGreenRoutePanel != null) {
+            for (int i = 0; i < blueGreenRoutePanel.getComponentCount(); i++) {
+                blueGreenRoutePanel.getComponent(i).setEnabled(isNewMode);
+            }
+        }
     }
 }

@@ -46,8 +46,6 @@ import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
 import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.discovery.console.entity.Instance;
-import com.nepxion.discovery.plugin.framework.parser.xml.XmlConfigDeparser;
-import com.nepxion.discovery.plugin.framework.parser.xml.XmlConfigParser;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.ButtonManager;
 import com.nepxion.swing.combobox.JBasicComboBox;
@@ -213,16 +211,14 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     @Override
     public void create() {
         CreatePanel createPanel = getCreatePanel();
-        createPanel.setPreferredSize(new Dimension(createPanel.getPreferredSize().width + 80, createPanel.getPreferredSize().height));
+        createPanel.setPreferredSize(new Dimension(createPanel.getPreferredSize().width + 100, createPanel.getPreferredSize().height));
 
         int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractReleaseTopology.this), createPanel, ConsoleLocaleFactory.getString("create_tooltip") + " [ " + TypeLocale.getDescription(releaseType) + " ]", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
         if (selectedOption != 0) {
             return;
         }
 
-        StrategyType strategyType = createPanel.getStrategyType();
         SubscriptionType subscriptionType = createPanel.getSubscriptionType();
-        DeployType deployType = createPanel.getDeployType();
 
         String group = createPanel.getGroup();
         if (StringUtils.isBlank(group)) {
@@ -243,21 +239,29 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
             gatewayId = group;
         }
 
+        StrategyType strategyType = null;
+        DeployType deployType = null;
+        boolean isNewMode = createPanel.isNewMode();
+        if (isNewMode) {
+            strategyType = createPanel.getStrategyType();
+            deployType = createPanel.getDeployType();
+        } else {
+            String config = ConsoleController.remoteConfigView(group, gatewayId);
+            RuleEntity ruleEntity = null;
+            try {
+                ruleEntity = StrategyProcessorFactory.getXmlConfigParser().parse(config);
+            } catch (Exception e) {
+                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("parse_failure"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+                return;
+            }
+
+        }
+
         Instance gateway = new Instance();
         gateway.setServiceId(subscriptionType == SubscriptionType.PARTIAL ? gatewayId : ConsoleLocaleFactory.getString("portal_service"));
         Map<String, String> metadataMap = new HashMap<String, String>();
         gateway.setMetadata(metadataMap);
-
-        String config = ConsoleController.remoteConfigView(group, gatewayId);
-        RuleEntity ruleEntity = null;
-        try {
-            ruleEntity = StrategyProcessorFactory.getXmlConfigParser().parse(config);
-        } catch (Exception e) {
-            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), "解析策略出错", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
-
-            // 是否继续创建？
-            return;
-        }
 
         initializeData(group, gateway, strategyType, subscriptionType, deployType);
         initializeUI(createPanel);
