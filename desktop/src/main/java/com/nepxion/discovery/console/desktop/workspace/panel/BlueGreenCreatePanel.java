@@ -9,40 +9,48 @@ package com.nepxion.discovery.console.desktop.workspace.panel;
  * @version 1.0
  */
 
+import javax.swing.ButtonGroup;
+import javax.swing.JPanel;
+
 import com.nepxion.discovery.common.entity.BlueGreenRouteType;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
-import com.nepxion.swing.combobox.JBasicComboBox;
-import com.nepxion.swing.element.ElementNode;
 import com.nepxion.swing.label.JBasicLabel;
+import com.nepxion.swing.layout.filed.FiledLayout;
 import com.nepxion.swing.layout.table.TableLayout;
+import com.nepxion.swing.radiobutton.JBasicRadioButton;
 
 public class BlueGreenCreatePanel extends CreatePanel {
     private static final long serialVersionUID = 1L;
 
-    protected JBasicComboBox blueGreenRouteComboBox;
+    protected ButtonGroup blueGreenRouteButtonGroup;
 
     public BlueGreenCreatePanel() {
+        JPanel blueGreenRoutePanel = new JPanel();
+        blueGreenRoutePanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
+        blueGreenRouteButtonGroup = new ButtonGroup();
         BlueGreenRouteType[] blueGreenRouteTypes = BlueGreenRouteType.values();
-        ElementNode[] blueGreenRouteElementNodes = new ElementNode[blueGreenRouteTypes.length];
         for (int i = 0; i < blueGreenRouteTypes.length; i++) {
             BlueGreenRouteType blueGreenRouteType = blueGreenRouteTypes[i];
-            blueGreenRouteElementNodes[i] = new ElementNode();
-            blueGreenRouteElementNodes[i].setName(blueGreenRouteType.toString());
-            blueGreenRouteElementNodes[i].setText(TypeLocale.getDescription(blueGreenRouteType));
-            blueGreenRouteElementNodes[i].setUserObject(blueGreenRouteType);
+
+            JBasicRadioButton blueGreenRouteRadioButton = new JBasicRadioButton(TypeLocale.getDescription(blueGreenRouteType), TypeLocale.getDescription(blueGreenRouteType));
+            blueGreenRouteRadioButton.setName(blueGreenRouteType.toString());
+            blueGreenRoutePanel.add(blueGreenRouteRadioButton);
+            blueGreenRouteButtonGroup.add(blueGreenRouteRadioButton);
+
+            if (i == 0) {
+                blueGreenRouteRadioButton.setSelected(true);
+            }
         }
-        blueGreenRouteComboBox = new JBasicComboBox(blueGreenRouteElementNodes);
 
         add(new JBasicLabel(ConsoleLocaleFactory.getString("route_text")), "0, 5");
-        add(blueGreenRouteComboBox, "1, 5");
+        add(blueGreenRoutePanel, "1, 5");
     }
 
     public BlueGreenRouteType getBlueGreenRouteType() {
-        ElementNode blueGreenRouteElementNode = (ElementNode) blueGreenRouteComboBox.getSelectedItem();
-        BlueGreenRouteType blueGreenRouteType = (BlueGreenRouteType) blueGreenRouteElementNode.getUserObject();
+        String rationButtonName = getRationButtonName(blueGreenRouteButtonGroup);
 
-        return blueGreenRouteType;
+        return BlueGreenRouteType.fromString(rationButtonName);
     }
 
     @Override
