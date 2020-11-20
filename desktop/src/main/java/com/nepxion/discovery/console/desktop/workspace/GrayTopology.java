@@ -130,10 +130,10 @@ public class GrayTopology extends AbstractReleaseTopology {
 
         conditionPanel = new JPanel();
         conditionPanel.setLayout(conditionTableLayout);
-        conditionPanel.add(DimensionUtil.addWidth(new JBasicLabel(ElementType.GRAY.getDescription()), 5), "0, 0");
+        conditionPanel.add(DimensionUtil.addWidth(new JBasicLabel(TypeLocale.getDescription(ElementType.GRAY)), 5), "0, 0");
         conditionPanel.add(grayConditionComboBox, "1, 0");
         conditionPanel.add(new JBasicLabel("%"), "2, 0");
-        conditionPanel.add(DimensionUtil.addWidth(new JBasicLabel(ElementType.STABLE.getDescription()), 5), "0, 1");
+        conditionPanel.add(DimensionUtil.addWidth(new JBasicLabel(TypeLocale.getDescription(ElementType.STABLE)), 5), "0, 1");
         conditionPanel.add(stableConditionComboBox, "1, 1");
         conditionPanel.add(new JBasicLabel("%"), "2, 1");
 
@@ -182,10 +182,10 @@ public class GrayTopology extends AbstractReleaseTopology {
         orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("service")), 5), "0, 0");
         orchestrationPanel.add(serviceIdComboBox, "1, 0");
         orchestrationPanel.add(refreshServiceIdButton, "2, 0");
-        orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(ElementType.GRAY.getDescription()), 5), "0, 1");
+        orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(TypeLocale.getDescription(ElementType.GRAY)), 5), "0, 1");
         orchestrationPanel.add(grayMetadataComboBox, "1, 1");
         orchestrationPanel.add(grayMetadataButton, "2, 1");
-        orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(ElementType.STABLE.getDescription()), 5), "0, 2");
+        orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(TypeLocale.getDescription(ElementType.STABLE)), 5), "0, 2");
         orchestrationPanel.add(stableMetadataComboBox, "1, 2");
         orchestrationPanel.add(stableMetadataButton, "2, 2");
 

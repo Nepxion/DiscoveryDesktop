@@ -169,13 +169,13 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("service")), 5), "0, 0");
         orchestrationPanel.add(serviceIdComboBox, "1, 0");
         orchestrationPanel.add(refreshServiceIdButton, "2, 0");
-        orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(ElementType.BLUE.getDescription()), 5), "0, 1");
+        orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(TypeLocale.getDescription(ElementType.BLUE)), 5), "0, 1");
         orchestrationPanel.add(blueMetadataComboBox, "1, 1");
         orchestrationPanel.add(blueMetadataButton, "2, 1");
-        orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(ElementType.GREEN.getDescription()), 5), "0, 2");
+        orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(TypeLocale.getDescription(ElementType.GREEN)), 5), "0, 2");
         orchestrationPanel.add(greenMetadataComboBox, "1, 2");
         orchestrationPanel.add(greenMetadataButton, "2, 2");
-        orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(ElementType.BASIC.getDescription()), 5), "0, 3");
+        orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(TypeLocale.getDescription(ElementType.BASIC)), 5), "0, 3");
         orchestrationPanel.add(basicMetadataComboBox, "1, 3");
         orchestrationPanel.add(basicMetadataButton, "2, 3");
 

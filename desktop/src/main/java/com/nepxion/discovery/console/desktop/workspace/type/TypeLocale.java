@@ -38,4 +38,8 @@ public class TypeLocale {
     public static String getDescription(BlueGreenRouteType blueGreenRouteType) {
         return ConsoleLocaleFactory.getString(blueGreenRouteType.toString() + "_route");
     }
+
+    public static String getDescription(ElementType elementType) {
+        return ConsoleLocaleFactory.getString(elementType.toString() + "_type");
+    }
 }

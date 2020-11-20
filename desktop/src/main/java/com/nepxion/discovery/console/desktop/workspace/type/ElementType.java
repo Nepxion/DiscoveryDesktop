@@ -10,7 +10,6 @@ package com.nepxion.discovery.console.desktop.workspace.type;
  */
 
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
-import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 
 public enum ElementType {
     PORTAL(DiscoveryConstant.PORTAL),
@@ -29,10 +28,6 @@ public enum ElementType {
 
     public String getValue() {
         return value;
-    }
-
-    public String getDescription() {
-        return ConsoleLocaleFactory.getString(value + "_type");
     }
 
     public static ElementType fromString(String value) {

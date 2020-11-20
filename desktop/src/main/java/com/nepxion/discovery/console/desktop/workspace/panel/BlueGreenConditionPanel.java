@@ -36,6 +36,7 @@ import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.common.util.TextFieldUtil;
 import com.nepxion.discovery.console.desktop.workspace.type.ElementType;
+import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.JClassicButton;
 import com.nepxion.swing.combobox.JBasicComboBox;
@@ -65,8 +66,8 @@ public class BlueGreenConditionPanel extends JPanel {
         greenConditionBar = new ConditionBar(ElementType.GREEN);
 
         conditionTabbedPane = new JBasicTabbedPane();
-        conditionTabbedPane.addTab(" " + ElementType.BLUE.getDescription() + " ", blueConditionBar, ElementType.BLUE.getDescription());
-        conditionTabbedPane.addTab(" " + ElementType.GREEN.getDescription() + " ", greenConditionBar, ElementType.GREEN.getDescription());
+        conditionTabbedPane.addTab(" " + TypeLocale.getDescription(ElementType.BLUE) + " ", blueConditionBar, TypeLocale.getDescription(ElementType.BLUE));
+        conditionTabbedPane.addTab(" " + TypeLocale.getDescription(ElementType.GREEN) + " ", greenConditionBar, TypeLocale.getDescription(ElementType.GREEN));
 
         setLayout(new FiledLayout(FiledLayout.COLUMN, FiledLayout.FULL, 10));
         add(conditionTabbedPane);
@@ -131,9 +132,9 @@ public class BlueGreenConditionPanel extends JPanel {
 
         public ConditionBar(ElementType nodeType) {
             JShrinkShortcut shrinkShortcut = new JShrinkShortcut();
-            shrinkShortcut.setTitle(nodeType.getDescription());
+            shrinkShortcut.setTitle(TypeLocale.getDescription(nodeType));
             shrinkShortcut.setIcon(nodeType == ElementType.BLUE ? ConsoleIconFactory.getSwingIcon("circle_blue.png") : ConsoleIconFactory.getSwingIcon("circle_green.png"));
-            shrinkShortcut.setToolTipText(nodeType.getDescription());
+            shrinkShortcut.setToolTipText(TypeLocale.getDescription(nodeType));
 
             conditionItemBar = new JPanel();
             conditionTextField = new JBasicTextField();
