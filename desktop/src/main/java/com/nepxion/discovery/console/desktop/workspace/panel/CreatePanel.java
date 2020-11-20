@@ -59,7 +59,7 @@ public class CreatePanel extends JPanel {
     protected ButtonGroup deployButtonGroup;
 
     public CreatePanel() {
-        newRadioButton = new JBasicRadioButton("新增策略", "新增策略");
+        newRadioButton = new JBasicRadioButton(ConsoleLocaleFactory.getString("create_tooltip"), ConsoleLocaleFactory.getString("create_tooltip"));
         newRadioButton.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (newRadioButton.isSelected()) {
@@ -68,7 +68,7 @@ public class CreatePanel extends JPanel {
             }
         });
         newRadioButton.setSelected(true);
-        openRadioButton = new JBasicRadioButton("打开策略", "打开策略");
+        openRadioButton = new JBasicRadioButton(ConsoleLocaleFactory.getString("open_tooltip"), ConsoleLocaleFactory.getString("open_tooltip"));
         ButtonGroup createModeButtonGroup = new ButtonGroup();
         createModeButtonGroup.add(newRadioButton);
         createModeButtonGroup.add(openRadioButton);
@@ -79,9 +79,9 @@ public class CreatePanel extends JPanel {
         createModePanel.add(openRadioButton);
 
         JShrinkShortcut subscriptionShrinkShortcut = new JShrinkShortcut();
-        subscriptionShrinkShortcut.setTitle("策略订阅参数");
+        subscriptionShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("subscription_parameter_text"));
         subscriptionShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
-        subscriptionShrinkShortcut.setToolTipText("策略订阅参数");
+        subscriptionShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString("subscription_parameter_text"));
 
         JPanel subscriptionPanel = new JPanel();
         subscriptionPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
@@ -141,9 +141,9 @@ public class CreatePanel extends JPanel {
         });
 
         JShrinkShortcut newShrinkShortcut = new JShrinkShortcut();
-        newShrinkShortcut.setTitle("策略新增参数");
+        newShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("new_parameter_text"));
         newShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
-        newShrinkShortcut.setToolTipText("策略新增参数");
+        newShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString("new_parameter_text"));
 
         JPanel strategyPanel = new JPanel();
         strategyPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
