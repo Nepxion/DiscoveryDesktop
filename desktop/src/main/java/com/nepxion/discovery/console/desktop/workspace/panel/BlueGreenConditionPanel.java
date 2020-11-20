@@ -28,6 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.expression.TypeComparator;
 
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
+import com.nepxion.discovery.common.entity.ElementType;
 import com.nepxion.discovery.common.expression.DiscoveryExpressionResolver;
 import com.nepxion.discovery.common.expression.DiscoveryTypeComparor;
 import com.nepxion.discovery.common.util.StringUtil;
@@ -35,7 +36,6 @@ import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.common.util.TextFieldUtil;
-import com.nepxion.discovery.console.desktop.workspace.type.ElementType;
 import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.JClassicButton;

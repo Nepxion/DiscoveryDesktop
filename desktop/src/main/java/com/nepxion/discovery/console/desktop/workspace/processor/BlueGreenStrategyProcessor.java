@@ -11,20 +11,28 @@ package com.nepxion.discovery.console.desktop.workspace.processor;
 
 import twaver.TDataBox;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.nepxion.cots.twaver.element.TElementManager;
 import com.nepxion.cots.twaver.element.TLink;
 import com.nepxion.cots.twaver.element.TNode;
-import com.nepxion.discovery.common.entity.EscapeType;
-import com.nepxion.discovery.console.desktop.workspace.type.ElementType;
-import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
+import com.nepxion.discovery.common.entity.ElementType;
+import com.nepxion.discovery.common.entity.RuleEntity;
+import com.nepxion.discovery.common.entity.StrategyConditionBlueGreenEntity;
+import com.nepxion.discovery.common.entity.StrategyCustomizationEntity;
+import com.nepxion.discovery.common.entity.StrategyEntity;
+import com.nepxion.discovery.common.entity.StrategyHeaderEntity;
+import com.nepxion.discovery.common.entity.StrategyRouteEntity;
+import com.nepxion.discovery.common.entity.StrategyRouteType;
+import com.nepxion.discovery.common.util.JsonUtil;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
 import com.nepxion.discovery.console.entity.Instance;
+import com.nepxion.discovery.plugin.framework.parser.xml.XmlConfigConstant;
 
 public class BlueGreenStrategyProcessor extends AbstractStrategyProcessor {
     @Override
@@ -39,44 +47,35 @@ public class BlueGreenStrategyProcessor extends AbstractStrategyProcessor {
             return StringUtils.EMPTY;
         }
 
-        String strategyValue = strategyType.toString();
-        String basicStrategy = null;
-        String blueStrategy = null;
-        String greenStrategy = null;
-        String blueCondition = null;
-        String greenCondition = null;
+        StrategyEntity strategyEntity = new StrategyEntity();
+        StrategyCustomizationEntity strategyCustomizationEntity = new StrategyCustomizationEntity();
 
         if (TElementManager.getNodes(dataBox).size() > 1) {
-            StringBuilder blueStrategyStringBuilder = new StringBuilder();
-            StringBuilder greenStrategyStringBuilder = new StringBuilder();
-            StringBuilder basicStrategyStringBuilder = new StringBuilder();
+            Map<String, String> blueStrategyMap = new LinkedHashMap<String, String>();
+            Map<String, String> greenStrategyMap = new LinkedHashMap<String, String>();
+            Map<String, String> basicStrategyMap = new LinkedHashMap<String, String>();
+            String blueCondition = null;
+            String greenCondition = null;
+
             List<TNode> nodes = TElementManager.getNodes(dataBox);
             for (int i = nodes.size() - 1; i >= 0; i--) {
                 TNode node = nodes.get(i);
                 Instance instance = (Instance) node.getUserObject();
                 ElementType nodeType = (ElementType) node.getBusinessObject();
                 String serviceId = instance.getServiceId();
-                String metadata = instance.getMetadata().get(strategyValue);
+                String metadata = instance.getMetadata().get(strategyType.toString());
                 switch (nodeType) {
                     case BLUE:
-                        blueStrategyStringBuilder.append("\"" + serviceId + "\":\"" + metadata + "\", ");
+                        blueStrategyMap.put(serviceId, metadata);
                         break;
                     case GREEN:
-                        greenStrategyStringBuilder.append("\"" + serviceId + "\":\"" + metadata + "\", ");
+                        greenStrategyMap.put(serviceId, metadata);
                         break;
                     case BASIC:
-                        basicStrategyStringBuilder.append("\"" + serviceId + "\":\"" + metadata + "\", ");
+                        basicStrategyMap.put(serviceId, metadata);
                         break;
                 }
             }
-            blueStrategy = blueStrategyStringBuilder.toString();
-            blueStrategy = blueStrategy.substring(0, blueStrategy.length() - 2);
-            greenStrategy = greenStrategyStringBuilder.toString();
-            if (StringUtils.isNotEmpty(greenStrategy)) {
-                greenStrategy = greenStrategy.substring(0, greenStrategy.length() - 2);
-            }
-            basicStrategy = basicStrategyStringBuilder.toString();
-            basicStrategy = basicStrategy.substring(0, basicStrategy.length() - 2);
 
             List<TLink> links = TElementManager.getLinks(dataBox);
             for (int i = links.size() - 1; i >= 0; i--) {
@@ -91,42 +90,66 @@ public class BlueGreenStrategyProcessor extends AbstractStrategyProcessor {
                         break;
                 }
             }
+
+            String blueConditionId = ElementType.BLUE + "-" + XmlConfigConstant.CONDITION_ELEMENT_NAME;
+            String greenConditionId = ElementType.GREEN + "-" + XmlConfigConstant.CONDITION_ELEMENT_NAME;
+            String blueId = ElementType.BLUE + "-" + strategyType + "-" + XmlConfigConstant.ROUTE_ELEMENT_NAME;
+            String greenId = ElementType.GREEN + "-" + strategyType + "-" + XmlConfigConstant.ROUTE_ELEMENT_NAME;
+
+            StrategyConditionBlueGreenEntity strategyConditionBlueEntity = new StrategyConditionBlueGreenEntity();
+            strategyConditionBlueEntity.setId(blueConditionId);
+            strategyConditionBlueEntity.setConditionHeader(blueCondition);
+
+            StrategyConditionBlueGreenEntity strategyConditionGreenEntity = new StrategyConditionBlueGreenEntity();
+            strategyConditionGreenEntity.setId(greenConditionId);
+            strategyConditionGreenEntity.setConditionHeader(greenCondition);
+
+            StrategyRouteEntity blueStrategyRouteEntity = new StrategyRouteEntity();
+            blueStrategyRouteEntity.setId(blueId);
+            blueStrategyRouteEntity.setValue(JsonUtil.toJson(blueStrategyMap));
+
+            StrategyRouteEntity greenStrategyRouteEntity = new StrategyRouteEntity();
+            greenStrategyRouteEntity.setId(greenId);
+            greenStrategyRouteEntity.setValue(JsonUtil.toJson(greenStrategyMap));
+
+            switch (strategyType) {
+                case VERSION:
+                    strategyEntity.setVersionValue(JsonUtil.toJson(basicStrategyMap));
+                    strategyConditionBlueEntity.setVersionId(blueId);
+                    strategyConditionGreenEntity.setVersionId(greenId);
+                    blueStrategyRouteEntity.setType(StrategyRouteType.VERSION);
+                    greenStrategyRouteEntity.setType(StrategyRouteType.VERSION);
+                    break;
+                case REGION:
+                    strategyEntity.setRegionValue(JsonUtil.toJson(basicStrategyMap));
+                    strategyConditionBlueEntity.setRegionId(blueId);
+                    strategyConditionGreenEntity.setRegionId(greenId);
+                    blueStrategyRouteEntity.setType(StrategyRouteType.REGION);
+                    greenStrategyRouteEntity.setType(StrategyRouteType.REGION);
+                    break;
+            }
+
+            List<StrategyConditionBlueGreenEntity> strategyConditionBlueGreenEntityList = new ArrayList<StrategyConditionBlueGreenEntity>();
+            strategyConditionBlueGreenEntityList.add(strategyConditionBlueEntity);
+            strategyConditionBlueGreenEntityList.add(strategyConditionGreenEntity);
+
+            List<StrategyRouteEntity> strategyRouteEntityList = new ArrayList<StrategyRouteEntity>();
+            strategyRouteEntityList.add(blueStrategyRouteEntity);
+            strategyRouteEntityList.add(greenStrategyRouteEntity);
+
+            Map<String, String> strategyHeaderMap = (Map<String, String>) dataBox.getID();
+            StrategyHeaderEntity strategyHeaderEntity = new StrategyHeaderEntity();
+            strategyHeaderEntity.setHeaderMap(strategyHeaderMap);
+
+            strategyCustomizationEntity.setStrategyConditionBlueGreenEntityList(strategyConditionBlueGreenEntityList);
+            strategyCustomizationEntity.setStrategyRouteEntityList(strategyRouteEntityList);
+            strategyCustomizationEntity.setStrategyHeaderEntity(strategyHeaderEntity);
         }
 
-        Map<String, String> parameterMap = (Map<String, String>) dataBox.getID();
+        RuleEntity ruleEntity = new RuleEntity();
+        ruleEntity.setStrategyEntity(strategyEntity);
+        ruleEntity.setStrategyCustomizationEntity(strategyCustomizationEntity);
 
-        StringBuilder strategyStringBuilder = new StringBuilder();
-        strategyStringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-        strategyStringBuilder.append("<rule>\n");
-        if (TElementManager.getNodes(dataBox).size() > 1) {
-            strategyStringBuilder.append("    <strategy>\n");
-            strategyStringBuilder.append("        <" + strategyValue + ">{" + basicStrategy + "}</" + strategyValue + ">\n");
-            strategyStringBuilder.append("    </strategy>\n\n");
-            strategyStringBuilder.append("    <strategy-customization>\n");
-            strategyStringBuilder.append("        <conditions type=\"" + ReleaseType.BLUE_GREEN + "\">\n");
-            strategyStringBuilder.append("            <condition id=\"blue-condition\" header=\"" + EscapeType.escape(blueCondition, true) + "\" " + strategyValue + "-id=\"blue-" + strategyValue + "-route\"/>\n");
-            if (StringUtils.isNotEmpty(greenCondition)) {
-                strategyStringBuilder.append("            <condition id=\"green-condition\" header=\"" + EscapeType.escape(greenCondition, true) + "\" " + strategyValue + "-id=\"green-" + strategyValue + "-route\"/>\n");
-            }
-            strategyStringBuilder.append("        </conditions>\n\n");
-            strategyStringBuilder.append("        <routes>\n");
-            strategyStringBuilder.append("            <route id=\"blue-" + strategyValue + "-route\" type=\"" + strategyValue + "\">{" + blueStrategy + "}</route>\n");
-            if (StringUtils.isNotEmpty(greenStrategy)) {
-                strategyStringBuilder.append("            <route id=\"green-" + strategyValue + "-route\" type=\"" + strategyValue + "\">{" + greenStrategy + "}</route>\n");
-            }
-            strategyStringBuilder.append("        </routes>\n");
-            if (MapUtils.isNotEmpty(parameterMap)) {
-                strategyStringBuilder.append("\n");
-                strategyStringBuilder.append("        <headers>\n");
-                for (Map.Entry<String, String> entry : parameterMap.entrySet()) {
-                    strategyStringBuilder.append("            <header key=\"" + entry.getKey() + "\" value=\"" + entry.getValue() + "\"/>\n");
-                }
-                strategyStringBuilder.append("        </headers>\n");
-            }
-            strategyStringBuilder.append("    </strategy-customization>\n");
-        }
-        strategyStringBuilder.append("</rule>");
-
-        return strategyStringBuilder.toString();
+        return StrategyProcessorFactory.getXmlConfigDeparser().deparse(ruleEntity);
     }
 }

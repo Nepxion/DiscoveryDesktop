@@ -18,7 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.nepxion.cots.twaver.element.TElementManager;
 import com.nepxion.cots.twaver.element.TLink;
 import com.nepxion.cots.twaver.element.TNode;
-import com.nepxion.discovery.console.desktop.workspace.type.ElementType;
+import com.nepxion.discovery.common.entity.ElementType;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
 import com.nepxion.discovery.console.entity.Instance;
