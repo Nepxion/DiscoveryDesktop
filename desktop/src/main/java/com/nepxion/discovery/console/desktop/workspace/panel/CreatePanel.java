@@ -24,13 +24,14 @@ import javax.swing.JPanel;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.nepxion.discovery.common.entity.ConfigType;
+import com.nepxion.discovery.common.entity.DeployType;
 import com.nepxion.discovery.common.entity.ServiceType;
 import com.nepxion.discovery.console.controller.ConsoleController;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
-import com.nepxion.discovery.console.desktop.workspace.type.ConfigType;
-import com.nepxion.discovery.console.desktop.workspace.type.DeployType;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
+import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.discovery.console.entity.Instance;
 import com.nepxion.swing.checkbox.JBasicCheckBox;
 import com.nepxion.swing.combobox.JBasicComboBox;
@@ -60,7 +61,7 @@ public class CreatePanel extends JPanel {
         for (int i = 0; i < strategyTypes.length; i++) {
             StrategyType strategyType = strategyTypes[i];
             if (strategyType.getCategory() == 0) {
-                JBasicRadioButton strategyRadioButton = new JBasicRadioButton(strategyType.getDescription(), strategyType.getDescription());
+                JBasicRadioButton strategyRadioButton = new JBasicRadioButton(TypeLocale.getDescription(strategyType), TypeLocale.getDescription(strategyType));
                 strategyRadioButton.setName(strategyType.toString());
                 strategyPanel.add(strategyRadioButton);
                 strategyButtonGroup.add(strategyRadioButton);
@@ -78,7 +79,7 @@ public class CreatePanel extends JPanel {
         for (int i = 0; i < configTypes.length; i++) {
             ConfigType configType = configTypes[i];
 
-            JBasicRadioButton configRadioButton = new JBasicRadioButton(configType.getDescription(), configType.getDescription());
+            JBasicRadioButton configRadioButton = new JBasicRadioButton(TypeLocale.getDescription(configType), TypeLocale.getDescription(configType));
             configRadioButton.setName(configType.toString());
             configRadioButton.addItemListener(new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
@@ -113,7 +114,7 @@ public class CreatePanel extends JPanel {
         for (int i = 0; i < deployTypes.length; i++) {
             DeployType deployType = deployTypes[i];
 
-            JBasicRadioButton deployRadioButton = new JBasicRadioButton(deployType.getDescription(), deployType.getDescription());
+            JBasicRadioButton deployRadioButton = new JBasicRadioButton(TypeLocale.getDescription(deployType), TypeLocale.getDescription(deployType));
             deployRadioButton.setName(deployType.toString());
             deployPanel.add(deployRadioButton);
             deployButtonGroup.add(deployRadioButton);

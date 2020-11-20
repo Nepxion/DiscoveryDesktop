@@ -12,7 +12,6 @@ package com.nepxion.discovery.console.desktop.workspace.type;
 import org.apache.commons.lang3.StringUtils;
 
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
-import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 
 public enum StrategyType {
     VERSION(DiscoveryConstant.VERSION, 0),
@@ -38,14 +37,6 @@ public enum StrategyType {
 
     public int getCategory() {
         return category;
-    }
-
-    public String getName() {
-        return ConsoleLocaleFactory.getString(value);
-    }
-
-    public String getDescription() {
-        return ConsoleLocaleFactory.getString(value + "_strategy");
     }
 
     public static StrategyType fromString(String value) {

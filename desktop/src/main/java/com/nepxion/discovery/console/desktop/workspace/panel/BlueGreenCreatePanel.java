@@ -9,8 +9,9 @@ package com.nepxion.discovery.console.desktop.workspace.panel;
  * @version 1.0
  */
 
+import com.nepxion.discovery.common.entity.BlueGreenRouteType;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
-import com.nepxion.discovery.console.desktop.workspace.type.BlueGreenRouteType;
+import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.swing.combobox.JBasicComboBox;
 import com.nepxion.swing.element.ElementNode;
 import com.nepxion.swing.label.JBasicLabel;
@@ -25,11 +26,11 @@ public class BlueGreenCreatePanel extends CreatePanel {
         BlueGreenRouteType[] blueGreenRouteTypes = BlueGreenRouteType.values();
         ElementNode[] blueGreenRouteElementNodes = new ElementNode[blueGreenRouteTypes.length];
         for (int i = 0; i < blueGreenRouteTypes.length; i++) {
-            BlueGreenRouteType rlueGreenRouteType = blueGreenRouteTypes[i];
+            BlueGreenRouteType blueGreenRouteType = blueGreenRouteTypes[i];
             blueGreenRouteElementNodes[i] = new ElementNode();
-            blueGreenRouteElementNodes[i].setName(rlueGreenRouteType.toString());
-            blueGreenRouteElementNodes[i].setText(rlueGreenRouteType.getDescription());
-            blueGreenRouteElementNodes[i].setUserObject(rlueGreenRouteType);
+            blueGreenRouteElementNodes[i].setName(blueGreenRouteType.toString());
+            blueGreenRouteElementNodes[i].setText(TypeLocale.getDescription(blueGreenRouteType));
+            blueGreenRouteElementNodes[i].setUserObject(blueGreenRouteType);
         }
         blueGreenRouteComboBox = new JBasicComboBox(blueGreenRouteElementNodes);
 

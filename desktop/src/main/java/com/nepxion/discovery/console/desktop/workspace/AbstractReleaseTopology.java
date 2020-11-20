@@ -28,6 +28,9 @@ import com.nepxion.cots.twaver.element.TElementManager;
 import com.nepxion.cots.twaver.element.TLink;
 import com.nepxion.cots.twaver.element.TNode;
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
+import com.nepxion.discovery.common.entity.ConfigType;
+import com.nepxion.discovery.common.entity.DeployType;
+import com.nepxion.discovery.common.entity.RuleEntity;
 import com.nepxion.discovery.console.controller.ConsoleController;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
@@ -37,12 +40,13 @@ import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeLocation;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeSizeType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeUI;
-import com.nepxion.discovery.console.desktop.workspace.type.ConfigType;
-import com.nepxion.discovery.console.desktop.workspace.type.DeployType;
 import com.nepxion.discovery.console.desktop.workspace.type.NodeType;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
+import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.discovery.console.entity.Instance;
+import com.nepxion.discovery.plugin.framework.parser.xml.XmlConfigDeparser;
+import com.nepxion.discovery.plugin.framework.parser.xml.XmlConfigParser;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.ButtonManager;
 import com.nepxion.swing.combobox.JBasicComboBox;
@@ -67,6 +71,9 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
     protected Instance gateway;
     protected Object[] serviceIds;
+
+    protected XmlConfigParser xmlConfigParser = new XmlConfigParser();
+    protected XmlConfigDeparser xmlConfigDeparser = new XmlConfigDeparser();
 
     public AbstractReleaseTopology(ReleaseType releaseType) {
         super(releaseType);
@@ -121,7 +128,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     }
 
     public void setTitle() {
-        background.setTitle(releaseType.getDescription() + " | " + strategyType.getDescription() + " | " + configType.getDescription() + " | " + deployType.getDescription());
+        background.setTitle(TypeLocale.getDescription(releaseType) + " | " + TypeLocale.getDescription(strategyType) + " | " + TypeLocale.getDescription(configType) + " | " + TypeLocale.getDescription(deployType));
     }
 
     public void setGatewayNode() {
@@ -210,7 +217,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         CreatePanel createPanel = getCreatePanel();
         createPanel.setPreferredSize(new Dimension(createPanel.getPreferredSize().width, createPanel.getPreferredSize().height));
 
-        int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractReleaseTopology.this), createPanel, ConsoleLocaleFactory.getString("create_tooltip") + " [ " + releaseType.getDescription() + " ]", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
+        int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractReleaseTopology.this), createPanel, ConsoleLocaleFactory.getString("create_tooltip") + " [ " + TypeLocale.getDescription(releaseType) + " ]", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
         if (selectedOption != 0) {
             return;
         }
@@ -240,6 +247,13 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         gateway.setServiceId(gatewayId != null ? gatewayId : ConsoleLocaleFactory.getString("portal_service_text"));
         Map<String, String> metadataMap = new HashMap<String, String>();
         gateway.setMetadata(metadataMap);
+
+        String config = ConsoleController.remoteConfigView(group, gatewayId);
+        try {
+            RuleEntity ruleEntity = xmlConfigParser.parse(config);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         initializeData(group, gateway, strategyType, configType, deployType);
         initializeUI(createPanel);

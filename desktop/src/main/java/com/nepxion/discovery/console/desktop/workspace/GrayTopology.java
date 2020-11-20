@@ -43,6 +43,7 @@ import com.nepxion.discovery.console.desktop.workspace.topology.NodeUI;
 import com.nepxion.discovery.console.desktop.workspace.type.LinkType;
 import com.nepxion.discovery.console.desktop.workspace.type.NodeType;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
+import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.discovery.console.entity.Instance;
 import com.nepxion.swing.button.ButtonManager;
 import com.nepxion.swing.button.JClassicButton;
@@ -370,7 +371,7 @@ public class GrayTopology extends AbstractReleaseTopology {
         String stableCondition = ComboBoxUtil.getSelectedValue(stableConditionComboBox);
 
         if (StringUtils.isBlank(grayMetadata) || StringUtils.isBlank(stableMetadata)) {
-            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(GrayTopology.this), strategyType.getName() + " " + ConsoleLocaleFactory.getString("not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(GrayTopology.this), TypeLocale.getName(strategyType) + " " + ConsoleLocaleFactory.getString("not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
             return;
         }
@@ -392,7 +393,7 @@ public class GrayTopology extends AbstractReleaseTopology {
         String stableMetadata = ComboBoxUtil.getSelectedValue(stableMetadataComboBox);
 
         if (StringUtils.isBlank(grayMetadata) || StringUtils.isBlank(stableMetadata)) {
-            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(GrayTopology.this), strategyType.getName() + " " + ConsoleLocaleFactory.getString("not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(GrayTopology.this), TypeLocale.getName(strategyType) + " " + ConsoleLocaleFactory.getString("not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
             return;
         }

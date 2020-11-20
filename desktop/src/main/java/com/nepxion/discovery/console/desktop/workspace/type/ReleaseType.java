@@ -10,13 +10,12 @@ package com.nepxion.discovery.console.desktop.workspace.type;
  */
 
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
-import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 
 public enum ReleaseType {
     BLUE_GREEN(DiscoveryConstant.BLUE_GREEN),
     GRAY(DiscoveryConstant.GRAY),
     BLACKLIST(DiscoveryConstant.BLACKLIST),
-    MIDDLEWARE_GRAY("middleware_gray");
+    MIDDLEWARE_GRAY(DiscoveryConstant.MIDDLEWARE_GRAY);
 
     private String value;
 
@@ -26,10 +25,6 @@ public enum ReleaseType {
 
     public String getValue() {
         return value;
-    }
-
-    public String getDescription() {
-        return ConsoleLocaleFactory.getString(value + "_release");
     }
 
     public static ReleaseType fromString(String value) {
