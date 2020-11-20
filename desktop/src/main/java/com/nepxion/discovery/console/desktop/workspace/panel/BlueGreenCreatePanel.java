@@ -43,8 +43,8 @@ public class BlueGreenCreatePanel extends CreatePanel {
             }
         }
 
-        add(new JBasicLabel(ConsoleLocaleFactory.getString("route_text")), "0, 5");
-        add(blueGreenRoutePanel, "1, 5");
+        add(new JBasicLabel(ConsoleLocaleFactory.getString("route_text")), "0, 10");
+        add(blueGreenRoutePanel, "1, 10");
     }
 
     public BlueGreenRouteType getBlueGreenRouteType() {
@@ -55,6 +55,15 @@ public class BlueGreenCreatePanel extends CreatePanel {
 
     @Override
     public double[] getLayoutRow() {
-        return new double[] { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED };
+        double[] layoutRow = super.getLayoutRow();
+
+        double[] newLayoutRow = new double[layoutRow.length + 1];
+        for (int i = 0; i < layoutRow.length; i++) {
+            newLayoutRow[i] = layoutRow[i];
+        }
+
+        newLayoutRow[layoutRow.length] = TableLayout.PREFERRED;
+
+        return newLayoutRow;
     }
 }

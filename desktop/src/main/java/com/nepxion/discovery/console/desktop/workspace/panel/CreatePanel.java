@@ -28,6 +28,7 @@ import com.nepxion.discovery.common.entity.DeployType;
 import com.nepxion.discovery.common.entity.ServiceType;
 import com.nepxion.discovery.common.entity.SubscriptionType;
 import com.nepxion.discovery.console.controller.ConsoleController;
+import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
@@ -41,36 +42,46 @@ import com.nepxion.swing.label.JBasicLabel;
 import com.nepxion.swing.layout.filed.FiledLayout;
 import com.nepxion.swing.layout.table.TableLayout;
 import com.nepxion.swing.radiobutton.JBasicRadioButton;
+import com.nepxion.swing.shrinkbar.JShrinkShortcut;
 
 public class CreatePanel extends JPanel {
     private static final long serialVersionUID = 1L;
 
-    protected ButtonGroup strategyButtonGroup;
-    protected ButtonGroup subscriptionButtonGroup;
-    protected ButtonGroup deployButtonGroup;
+    protected JBasicRadioButton newRadioButton;
+    protected JBasicRadioButton openRadioButton;
 
+    protected ButtonGroup subscriptionButtonGroup;
     protected JBasicComboBox groupComboBox;
     protected JBasicComboBox gatewayIdComboBox;
     protected JBasicCheckBox showOnlyGatewayCheckBox;
 
-    public CreatePanel() {
-        JPanel strategyPanel = new JPanel();
-        strategyPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
-        strategyButtonGroup = new ButtonGroup();
-        StrategyType[] strategyTypes = StrategyType.values();
-        for (int i = 0; i < strategyTypes.length; i++) {
-            StrategyType strategyType = strategyTypes[i];
-            if (strategyType.getCategory() == 0) {
-                JBasicRadioButton strategyRadioButton = new JBasicRadioButton(TypeLocale.getDescription(strategyType), TypeLocale.getDescription(strategyType));
-                strategyRadioButton.setName(strategyType.toString());
-                strategyPanel.add(strategyRadioButton);
-                strategyButtonGroup.add(strategyRadioButton);
+    protected ButtonGroup strategyButtonGroup;
+    protected ButtonGroup deployButtonGroup;
 
-                if (i == 0) {
-                    strategyRadioButton.setSelected(true);
+    public CreatePanel() {
+        newRadioButton = new JBasicRadioButton("新增策略", "新增策略");
+        newRadioButton.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (newRadioButton.isSelected()) {
+
                 }
             }
-        }
+        });
+        newRadioButton.setSelected(true);
+        openRadioButton = new JBasicRadioButton("打开策略", "打开策略");
+        ButtonGroup createModeButtonGroup = new ButtonGroup();
+        createModeButtonGroup.add(newRadioButton);
+        createModeButtonGroup.add(openRadioButton);
+
+        JPanel createModePanel = new JPanel();
+        createModePanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
+        createModePanel.add(newRadioButton);
+        createModePanel.add(openRadioButton);
+
+        JShrinkShortcut subscriptionShrinkShortcut = new JShrinkShortcut();
+        subscriptionShrinkShortcut.setTitle("策略订阅参数");
+        subscriptionShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
+        subscriptionShrinkShortcut.setToolTipText("策略订阅参数");
 
         JPanel subscriptionPanel = new JPanel();
         subscriptionPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
@@ -107,23 +118,6 @@ public class CreatePanel extends JPanel {
             }
         }
 
-        JPanel deployPanel = new JPanel();
-        deployPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
-        deployButtonGroup = new ButtonGroup();
-        DeployType[] deployTypes = DeployType.values();
-        for (int i = 0; i < deployTypes.length; i++) {
-            DeployType deployType = deployTypes[i];
-
-            JBasicRadioButton deployRadioButton = new JBasicRadioButton(TypeLocale.getDescription(deployType), TypeLocale.getDescription(deployType));
-            deployRadioButton.setName(deployType.toString());
-            deployPanel.add(deployRadioButton);
-            deployButtonGroup.add(deployRadioButton);
-
-            if (i == 0) {
-                deployRadioButton.setSelected(true);
-            }
-        }
-
         groupComboBox = new JBasicComboBox();
         groupComboBox.setEditable(true);
         groupComboBox.addItemListener(new ItemListener() {
@@ -145,6 +139,46 @@ public class CreatePanel extends JPanel {
                 setGatewayIds();
             }
         });
+
+        JShrinkShortcut newShrinkShortcut = new JShrinkShortcut();
+        newShrinkShortcut.setTitle("策略新增参数");
+        newShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
+        newShrinkShortcut.setToolTipText("策略新增参数");
+
+        JPanel strategyPanel = new JPanel();
+        strategyPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
+        strategyButtonGroup = new ButtonGroup();
+        StrategyType[] strategyTypes = StrategyType.values();
+        for (int i = 0; i < strategyTypes.length; i++) {
+            StrategyType strategyType = strategyTypes[i];
+            if (strategyType.getCategory() == 0) {
+                JBasicRadioButton strategyRadioButton = new JBasicRadioButton(TypeLocale.getDescription(strategyType), TypeLocale.getDescription(strategyType));
+                strategyRadioButton.setName(strategyType.toString());
+                strategyPanel.add(strategyRadioButton);
+                strategyButtonGroup.add(strategyRadioButton);
+
+                if (i == 0) {
+                    strategyRadioButton.setSelected(true);
+                }
+            }
+        }
+
+        JPanel deployPanel = new JPanel();
+        deployPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
+        deployButtonGroup = new ButtonGroup();
+        DeployType[] deployTypes = DeployType.values();
+        for (int i = 0; i < deployTypes.length; i++) {
+            DeployType deployType = deployTypes[i];
+
+            JBasicRadioButton deployRadioButton = new JBasicRadioButton(TypeLocale.getDescription(deployType), TypeLocale.getDescription(deployType));
+            deployRadioButton.setName(deployType.toString());
+            deployPanel.add(deployRadioButton);
+            deployButtonGroup.add(deployRadioButton);
+
+            if (i == 0) {
+                deployRadioButton.setSelected(true);
+            }
+        }
 
         double[][] gatewaySize = {
                 { TableLayout.FILL, TableLayout.PREFERRED },
@@ -170,23 +204,27 @@ public class CreatePanel extends JPanel {
         tableLayout.setVGap(10);
 
         setLayout(tableLayout);
-        add(new JBasicLabel(ConsoleLocaleFactory.getString("strategy_text")), "0, 0");
-        add(strategyPanel, "1, 0");
-        add(new JBasicLabel(ConsoleLocaleFactory.getString("subscription_text")), "0, 1");
-        add(subscriptionPanel, "1, 1");
-        add(new JBasicLabel(ConsoleLocaleFactory.getString("deploy_text")), "0, 2");
-        add(deployPanel, "1, 2");
-        add(new JBasicLabel(ConsoleLocaleFactory.getString("belong_group_text")), "0, 3");
-        add(groupComboBox, "1, 3");
-        add(new JBasicLabel(ConsoleLocaleFactory.getString("portal_service_text")), "0, 4");
-        add(gatewayPanel, "1, 4");
+        add(new JBasicLabel("创建方式"), "0, 0");
+        add(createModePanel, "1, 0");
+        add(subscriptionShrinkShortcut, "0, 2, 1, 2");
+        add(new JBasicLabel(ConsoleLocaleFactory.getString("subscription_text")), "0, 3");
+        add(subscriptionPanel, "1, 3");
+        add(new JBasicLabel(ConsoleLocaleFactory.getString("group_name_text")), "0, 4");
+        add(groupComboBox, "1, 4");
+        add(new JBasicLabel(ConsoleLocaleFactory.getString("service_name_text")), "0, 5");
+        add(gatewayPanel, "1, 5");
+        add(newShrinkShortcut, "0, 7, 1, 7");
+        add(new JBasicLabel(ConsoleLocaleFactory.getString("strategy_text")), "0, 8");
+        add(strategyPanel, "1, 8");
+        add(new JBasicLabel(ConsoleLocaleFactory.getString("deploy_text")), "0, 9");
+        add(deployPanel, "1, 9");
 
         setGroups();
         setGatewayIds();
     }
 
     public double[] getLayoutRow() {
-        return new double[] { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED };
+        return new double[] { TableLayout.PREFERRED, 0, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, 0, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED };
     }
 
     @SuppressWarnings("unchecked")
