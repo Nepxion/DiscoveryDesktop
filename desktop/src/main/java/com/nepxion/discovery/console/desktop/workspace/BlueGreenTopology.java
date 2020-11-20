@@ -113,9 +113,9 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
     @Override
     public void initializeOperationBar() {
         JShrinkShortcut conditionShrinkShortcut = new JShrinkShortcut();
-        conditionShrinkShortcut.setTitle(ConsoleLocaleFactory.getString(releaseType.toString() + "_condition"));
+        conditionShrinkShortcut.setTitle(ConsoleLocaleFactory.getString(releaseType + "_condition"));
         conditionShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
-        conditionShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString(releaseType.toString() + "_condition"));
+        conditionShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString(releaseType + "_condition"));
 
         conditionPanel = new BlueGreenConditionPanel();
 
@@ -124,9 +124,9 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         conditionToolBar.add(new JClassicButton(createModifyConditionAction()));
 
         JShrinkShortcut orchestrationShrinkShortcut = new JShrinkShortcut();
-        orchestrationShrinkShortcut.setTitle(ConsoleLocaleFactory.getString(releaseType.toString() + "_orchestration"));
+        orchestrationShrinkShortcut.setTitle(ConsoleLocaleFactory.getString(releaseType + "_orchestration"));
         orchestrationShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
-        orchestrationShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString(releaseType.toString() + "_orchestration"));
+        orchestrationShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString(releaseType + "_orchestration"));
 
         serviceIdComboBox = new JBasicComboBox();
         serviceIdComboBox.setEditable(true);
@@ -231,7 +231,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
     }
 
     public void addNodes(String serviceId, String blueMetadata, String greenMetadata, String basicMetadata, String blueCondition, String greenCondition) {
-        TNode newBlueNode = addNode(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.toString() + "=" + blueMetadata), serviceBlueNodeUI);
+        TNode newBlueNode = addNode(ButtonManager.getHtmlText(serviceId + "\n" + strategyType + "=" + blueMetadata), serviceBlueNodeUI);
         Instance newBlueInstance = new Instance();
         newBlueInstance.setServiceId(serviceId);
         Map<String, String> newBlueMetadataMap = new HashMap<String, String>();
@@ -252,7 +252,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         blueNode = newBlueNode;
 
         if (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC) {
-            TNode newGreenNode = addNode(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.toString() + "=" + greenMetadata), serviceGreenNodeUI);
+            TNode newGreenNode = addNode(ButtonManager.getHtmlText(serviceId + "\n" + strategyType + "=" + greenMetadata), serviceGreenNodeUI);
             Instance newGreenInstance = new Instance();
             newGreenInstance.setServiceId(serviceId);
             Map<String, String> newGreenMetadataMap = new HashMap<String, String>();
@@ -273,7 +273,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
             greenNode = newGreenNode;
         }
 
-        TNode newBasicNode = addNode(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.toString() + "=" + basicMetadata), serviceBasicNodeUI);
+        TNode newBasicNode = addNode(ButtonManager.getHtmlText(serviceId + "\n" + strategyType + "=" + basicMetadata), serviceBasicNodeUI);
         Instance newBasicInstance = new Instance();
         newBasicInstance.setServiceId(serviceId);
         Map<String, String> newBasicMetadataMap = new HashMap<String, String>();
@@ -349,15 +349,15 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
                 ElementType nodeType = (ElementType) node.getBusinessObject();
                 switch (nodeType) {
                     case BLUE:
-                        node.setName(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.toString() + "=" + blueMetadata));
+                        node.setName(ButtonManager.getHtmlText(serviceId + "\n" + strategyType + "=" + blueMetadata));
                         instance.getMetadata().put(strategyType.toString(), blueMetadata);
                         break;
                     case GREEN:
-                        node.setName(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.toString() + "=" + greenMetadata));
+                        node.setName(ButtonManager.getHtmlText(serviceId + "\n" + strategyType + "=" + greenMetadata));
                         instance.getMetadata().put(strategyType.toString(), greenMetadata);
                         break;
                     case BASIC:
-                        node.setName(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.toString() + "=" + basicMetadata));
+                        node.setName(ButtonManager.getHtmlText(serviceId + "\n" + strategyType + "=" + basicMetadata));
                         instance.getMetadata().put(strategyType.toString(), basicMetadata);
                         break;
                 }

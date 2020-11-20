@@ -86,7 +86,7 @@ public class GrayStrategyProcessor extends AbstractStrategyProcessor {
         strategyStringBuilder.append("<rule>\n");
         if (TElementManager.getNodes(dataBox).size() > 1) {
             strategyStringBuilder.append("    <strategy-customization>\n");
-            strategyStringBuilder.append("        <conditions type=\"" + ReleaseType.GRAY.toString() + "\">\n");
+            strategyStringBuilder.append("        <conditions type=\"" + ReleaseType.GRAY + "\">\n");
             strategyStringBuilder.append("            <condition id=\"gray-condition\" " + strategyValue + "-id=\"gray-" + strategyValue + "-route=" + grayCondition + ";stable-" + strategyValue + "-route=" + stableCondition + "\"/>\n");
             strategyStringBuilder.append("        </conditions>\n\n");
             strategyStringBuilder.append("        <routes>\n");

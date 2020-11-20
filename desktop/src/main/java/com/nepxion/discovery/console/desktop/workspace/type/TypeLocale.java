@@ -20,26 +20,26 @@ public class TypeLocale {
     }
 
     public static String getDescription(ReleaseType releaseType) {
-        return ConsoleLocaleFactory.getString(releaseType.toString() + "_release");
+        return ConsoleLocaleFactory.getString(releaseType + "_release");
     }
 
     public static String getDescription(StrategyType strategyType) {
-        return ConsoleLocaleFactory.getString(strategyType.toString() + "_strategy");
+        return ConsoleLocaleFactory.getString(strategyType + "_strategy");
     }
 
     public static String getDescription(SubscriptionType subscriptionType) {
-        return ConsoleLocaleFactory.getString(subscriptionType.toString() + "_subscription");
+        return ConsoleLocaleFactory.getString(subscriptionType + "_subscription");
     }
 
     public static String getDescription(DeployType deployType) {
-        return ConsoleLocaleFactory.getString(deployType.toString() + "_deploy");
+        return ConsoleLocaleFactory.getString(deployType + "_deploy");
     }
 
     public static String getDescription(BlueGreenRouteType blueGreenRouteType) {
-        return ConsoleLocaleFactory.getString(blueGreenRouteType.toString() + "_route");
+        return ConsoleLocaleFactory.getString(blueGreenRouteType + "_route");
     }
 
     public static String getDescription(ElementType elementType) {
-        return ConsoleLocaleFactory.getString(elementType.toString() + "_type");
+        return ConsoleLocaleFactory.getString(elementType + "_type");
     }
 }

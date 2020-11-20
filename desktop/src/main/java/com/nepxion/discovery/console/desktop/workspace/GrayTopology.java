@@ -88,9 +88,9 @@ public class GrayTopology extends AbstractReleaseTopology {
     @Override
     public void initializeOperationBar() {
         JShrinkShortcut conditionShrinkShortcut = new JShrinkShortcut();
-        conditionShrinkShortcut.setTitle(ConsoleLocaleFactory.getString(releaseType.toString() + "_condition"));
+        conditionShrinkShortcut.setTitle(ConsoleLocaleFactory.getString(releaseType + "_condition"));
         conditionShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
-        conditionShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString(releaseType.toString() + "_condition"));
+        conditionShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString(releaseType + "_condition"));
 
         String[] conditions = { "0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100" };
         grayConditionComboBox = new JBasicComboBox(conditions);
@@ -142,9 +142,9 @@ public class GrayTopology extends AbstractReleaseTopology {
         conditionToolBar.add(new JClassicButton(createModifyConditionAction()));
 
         JShrinkShortcut orchestrationShrinkShortcut = new JShrinkShortcut();
-        orchestrationShrinkShortcut.setTitle(ConsoleLocaleFactory.getString(releaseType.toString() + "_orchestration"));
+        orchestrationShrinkShortcut.setTitle(ConsoleLocaleFactory.getString(releaseType + "_orchestration"));
         orchestrationShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
-        orchestrationShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString(releaseType.toString() + "_orchestration"));
+        orchestrationShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString(releaseType + "_orchestration"));
 
         serviceIdComboBox = new JBasicComboBox();
         serviceIdComboBox.setEditable(true);
@@ -224,7 +224,7 @@ public class GrayTopology extends AbstractReleaseTopology {
     }
 
     public void addNodes(String serviceId, String grayMetadata, String stableMetadata, String grayCondition, String stableCondition) {
-        TNode newGrayNode = addNode(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.toString() + "=" + grayMetadata), serviceGrayNodeUI);
+        TNode newGrayNode = addNode(ButtonManager.getHtmlText(serviceId + "\n" + strategyType + "=" + grayMetadata), serviceGrayNodeUI);
         Instance newGrayInstance = new Instance();
         newGrayInstance.setServiceId(serviceId);
         Map<String, String> newGrayMetadataMap = new HashMap<String, String>();
@@ -244,7 +244,7 @@ public class GrayTopology extends AbstractReleaseTopology {
         }
         grayNode = newGrayNode;
 
-        TNode newStableNode = addNode(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.toString() + "=" + stableMetadata), serviceStableNodeUI);
+        TNode newStableNode = addNode(ButtonManager.getHtmlText(serviceId + "\n" + strategyType + "=" + stableMetadata), serviceStableNodeUI);
         Instance newStableInstance = new Instance();
         newStableInstance.setServiceId(serviceId);
         Map<String, String> newStableMetadataMap = new HashMap<String, String>();
@@ -308,11 +308,11 @@ public class GrayTopology extends AbstractReleaseTopology {
                 ElementType nodeType = (ElementType) node.getBusinessObject();
                 switch (nodeType) {
                     case GRAY:
-                        node.setName(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.toString() + "=" + grayMetadata));
+                        node.setName(ButtonManager.getHtmlText(serviceId + "\n" + strategyType + "=" + grayMetadata));
                         instance.getMetadata().put(strategyType.toString(), grayMetadata);
                         break;
                     case STABLE:
-                        node.setName(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.toString() + "=" + stableMetadata));
+                        node.setName(ButtonManager.getHtmlText(serviceId + "\n" + strategyType + "=" + stableMetadata));
                         instance.getMetadata().put(strategyType.toString(), stableMetadata);
                         break;
                 }

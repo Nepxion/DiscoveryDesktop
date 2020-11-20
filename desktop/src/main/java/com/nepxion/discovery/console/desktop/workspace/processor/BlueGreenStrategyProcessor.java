@@ -103,7 +103,7 @@ public class BlueGreenStrategyProcessor extends AbstractStrategyProcessor {
             strategyStringBuilder.append("        <" + strategyValue + ">{" + basicStrategy + "}</" + strategyValue + ">\n");
             strategyStringBuilder.append("    </strategy>\n\n");
             strategyStringBuilder.append("    <strategy-customization>\n");
-            strategyStringBuilder.append("        <conditions type=\"" + ReleaseType.BLUE_GREEN.toString() + "\">\n");
+            strategyStringBuilder.append("        <conditions type=\"" + ReleaseType.BLUE_GREEN + "\">\n");
             strategyStringBuilder.append("            <condition id=\"blue-condition\" header=\"" + EscapeType.escape(blueCondition) + "\" " + strategyValue + "-id=\"blue-" + strategyValue + "-route\"/>\n");
             if (StringUtils.isNotEmpty(greenCondition)) {
                 strategyStringBuilder.append("            <condition id=\"green-condition\" header=\"" + EscapeType.escape(greenCondition) + "\" " + strategyValue + "-id=\"green-" + strategyValue + "-route\"/>\n");
