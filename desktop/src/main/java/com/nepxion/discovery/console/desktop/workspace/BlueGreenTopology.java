@@ -45,8 +45,7 @@ import com.nepxion.discovery.console.desktop.workspace.topology.LinkUI;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeSizeType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeUI;
-import com.nepxion.discovery.console.desktop.workspace.type.LinkType;
-import com.nepxion.discovery.console.desktop.workspace.type.NodeType;
+import com.nepxion.discovery.console.desktop.workspace.type.ElementType;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.discovery.console.entity.Instance;
@@ -170,13 +169,13 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("service")), 5), "0, 0");
         orchestrationPanel.add(serviceIdComboBox, "1, 0");
         orchestrationPanel.add(refreshServiceIdButton, "2, 0");
-        orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(NodeType.BLUE.getDescription()), 5), "0, 1");
+        orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(ElementType.BLUE.getDescription()), 5), "0, 1");
         orchestrationPanel.add(blueMetadataComboBox, "1, 1");
         orchestrationPanel.add(blueMetadataButton, "2, 1");
-        orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(NodeType.GREEN.getDescription()), 5), "0, 2");
+        orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(ElementType.GREEN.getDescription()), 5), "0, 2");
         orchestrationPanel.add(greenMetadataComboBox, "1, 2");
         orchestrationPanel.add(greenMetadataButton, "2, 2");
-        orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(NodeType.BASIC.getDescription()), 5), "0, 3");
+        orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(ElementType.BASIC.getDescription()), 5), "0, 3");
         orchestrationPanel.add(basicMetadataComboBox, "1, 3");
         orchestrationPanel.add(basicMetadataButton, "2, 3");
 
@@ -239,16 +238,16 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         newBlueMetadataMap.put(strategyType.toString(), blueMetadata);
         newBlueInstance.setMetadata(newBlueMetadataMap);
         newBlueNode.setUserObject(newBlueInstance);
-        newBlueNode.setBusinessObject(NodeType.BLUE);
+        newBlueNode.setBusinessObject(ElementType.BLUE);
         if (blueNode == null) {
             TLink blueLink = addLink(gatewayNode, newBlueNode, blueLinkUI);
             blueLink.setName(ConsoleLocaleFactory.getString("blue_route"));
             blueLink.setToolTipText(blueCondition);
             blueLink.setUserObject(blueCondition);
-            blueLink.setBusinessObject(LinkType.BLUE);
+            blueLink.setBusinessObject(ElementType.BLUE);
         } else {
             TLink link = addLink(blueNode, newBlueNode, null);
-            link.setBusinessObject(LinkType.UNDEFINED);
+            link.setBusinessObject(ElementType.UNDEFINED);
         }
         blueNode = newBlueNode;
 
@@ -260,16 +259,16 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
             newGreenMetadataMap.put(strategyType.toString(), greenMetadata);
             newGreenInstance.setMetadata(newGreenMetadataMap);
             newGreenNode.setUserObject(newGreenInstance);
-            newGreenNode.setBusinessObject(NodeType.GREEN);
+            newGreenNode.setBusinessObject(ElementType.GREEN);
             if (greenNode == null) {
                 TLink greenLink = addLink(gatewayNode, newGreenNode, greenLinkUI);
                 greenLink.setName(ConsoleLocaleFactory.getString("green_route"));
                 greenLink.setToolTipText(greenCondition);
                 greenLink.setUserObject(greenCondition);
-                greenLink.setBusinessObject(LinkType.GREEN);
+                greenLink.setBusinessObject(ElementType.GREEN);
             } else {
                 TLink link = addLink(greenNode, newGreenNode, null);
-                link.setBusinessObject(LinkType.UNDEFINED);
+                link.setBusinessObject(ElementType.UNDEFINED);
             }
             greenNode = newGreenNode;
         }
@@ -281,14 +280,14 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         newBasicMetadataMap.put(strategyType.toString(), basicMetadata);
         newBasicInstance.setMetadata(newBasicMetadataMap);
         newBasicNode.setUserObject(newBasicInstance);
-        newBasicNode.setBusinessObject(NodeType.BASIC);
+        newBasicNode.setBusinessObject(ElementType.BASIC);
         if (basicNode == null) {
             TLink basicLink = addLink(gatewayNode, newBasicNode, basicLinkUI);
             basicLink.setName(ConsoleLocaleFactory.getString("basic_route"));
-            basicLink.setBusinessObject(LinkType.BASIC);
+            basicLink.setBusinessObject(ElementType.BASIC);
         } else {
             TLink link = addLink(basicNode, newBasicNode, null);
-            link.setBusinessObject(LinkType.UNDEFINED);
+            link.setBusinessObject(ElementType.UNDEFINED);
         }
         basicNode = newBasicNode;
     }
@@ -347,7 +346,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         for (TNode node : nodes) {
             Instance instance = (Instance) node.getUserObject();
             if (StringUtils.equalsIgnoreCase(instance.getServiceId(), serviceId)) {
-                NodeType nodeType = (NodeType) node.getBusinessObject();
+                ElementType nodeType = (ElementType) node.getBusinessObject();
                 switch (nodeType) {
                     case BLUE:
                         node.setName(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.toString() + "=" + blueMetadata));
@@ -370,7 +369,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
     public void modifyLinks(String blueCondition, String greenCondition) {
         List<TLink> links = TElementManager.getLinks(dataBox);
         for (TLink link : links) {
-            LinkType linkType = (LinkType) link.getBusinessObject();
+            ElementType linkType = (ElementType) link.getBusinessObject();
             switch (linkType) {
                 case BLUE:
                     link.setToolTipText(blueCondition);

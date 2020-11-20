@@ -9,20 +9,21 @@ package com.nepxion.discovery.console.desktop.workspace.type;
  * @version 1.0
  */
 
+import com.nepxion.discovery.common.constant.DiscoveryConstant;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 
-public enum NodeType {
-    PORTAL("portal"),
-    BLUE("blue"),
-    GREEN("green"),
-    BASIC("basic"),
-    GRAY("gray"),
-    STABLE("stable"),
-    UNDEFINED("undefined");
+public enum ElementType {
+    PORTAL(DiscoveryConstant.PORTAL),
+    BLUE(DiscoveryConstant.BLUE),
+    GREEN(DiscoveryConstant.GREEN),
+    BASIC(DiscoveryConstant.BASIC),
+    GRAY(DiscoveryConstant.GRAY),
+    STABLE(DiscoveryConstant.STABLE),
+    UNDEFINED(DiscoveryConstant.UNDEFINED);
 
     private String value;
 
-    private NodeType(String value) {
+    private ElementType(String value) {
         this.value = value;
     }
 
@@ -34,8 +35,8 @@ public enum NodeType {
         return ConsoleLocaleFactory.getString(value + "_type");
     }
 
-    public static NodeType fromString(String value) {
-        for (NodeType type : NodeType.values()) {
+    public static ElementType fromString(String value) {
+        for (ElementType type : ElementType.values()) {
             if (type.getValue().equalsIgnoreCase(value)) {
                 return type;
             }

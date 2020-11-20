@@ -35,7 +35,7 @@ import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.common.util.TextFieldUtil;
-import com.nepxion.discovery.console.desktop.workspace.type.NodeType;
+import com.nepxion.discovery.console.desktop.workspace.type.ElementType;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.JClassicButton;
 import com.nepxion.swing.combobox.JBasicComboBox;
@@ -61,12 +61,12 @@ public class BlueGreenConditionPanel extends JPanel {
     protected TypeComparator typeComparator = new DiscoveryTypeComparor();
 
     public BlueGreenConditionPanel() {
-        blueConditionBar = new ConditionBar(NodeType.BLUE);
-        greenConditionBar = new ConditionBar(NodeType.GREEN);
+        blueConditionBar = new ConditionBar(ElementType.BLUE);
+        greenConditionBar = new ConditionBar(ElementType.GREEN);
 
         conditionTabbedPane = new JBasicTabbedPane();
-        conditionTabbedPane.addTab(" " + NodeType.BLUE.getDescription() + " ", blueConditionBar, NodeType.BLUE.getDescription());
-        conditionTabbedPane.addTab(" " + NodeType.GREEN.getDescription() + " ", greenConditionBar, NodeType.GREEN.getDescription());
+        conditionTabbedPane.addTab(" " + ElementType.BLUE.getDescription() + " ", blueConditionBar, ElementType.BLUE.getDescription());
+        conditionTabbedPane.addTab(" " + ElementType.GREEN.getDescription() + " ", greenConditionBar, ElementType.GREEN.getDescription());
 
         setLayout(new FiledLayout(FiledLayout.COLUMN, FiledLayout.FULL, 10));
         add(conditionTabbedPane);
@@ -129,10 +129,10 @@ public class BlueGreenConditionPanel extends JPanel {
         protected JBasicTextField validateTextField;
         protected JClassicButton validateButton;
 
-        public ConditionBar(NodeType nodeType) {
+        public ConditionBar(ElementType nodeType) {
             JShrinkShortcut shrinkShortcut = new JShrinkShortcut();
             shrinkShortcut.setTitle(nodeType.getDescription());
-            shrinkShortcut.setIcon(nodeType == NodeType.BLUE ? ConsoleIconFactory.getSwingIcon("circle_blue.png") : ConsoleIconFactory.getSwingIcon("circle_green.png"));
+            shrinkShortcut.setIcon(nodeType == ElementType.BLUE ? ConsoleIconFactory.getSwingIcon("circle_blue.png") : ConsoleIconFactory.getSwingIcon("circle_green.png"));
             shrinkShortcut.setToolTipText(nodeType.getDescription());
 
             conditionItemBar = new JPanel();

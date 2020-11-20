@@ -40,8 +40,7 @@ import com.nepxion.discovery.console.desktop.workspace.topology.LinkUI;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeSizeType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeUI;
-import com.nepxion.discovery.console.desktop.workspace.type.LinkType;
-import com.nepxion.discovery.console.desktop.workspace.type.NodeType;
+import com.nepxion.discovery.console.desktop.workspace.type.ElementType;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.discovery.console.entity.Instance;
@@ -131,10 +130,10 @@ public class GrayTopology extends AbstractReleaseTopology {
 
         conditionPanel = new JPanel();
         conditionPanel.setLayout(conditionTableLayout);
-        conditionPanel.add(DimensionUtil.addWidth(new JBasicLabel(NodeType.GRAY.getDescription()), 5), "0, 0");
+        conditionPanel.add(DimensionUtil.addWidth(new JBasicLabel(ElementType.GRAY.getDescription()), 5), "0, 0");
         conditionPanel.add(grayConditionComboBox, "1, 0");
         conditionPanel.add(new JBasicLabel("%"), "2, 0");
-        conditionPanel.add(DimensionUtil.addWidth(new JBasicLabel(NodeType.STABLE.getDescription()), 5), "0, 1");
+        conditionPanel.add(DimensionUtil.addWidth(new JBasicLabel(ElementType.STABLE.getDescription()), 5), "0, 1");
         conditionPanel.add(stableConditionComboBox, "1, 1");
         conditionPanel.add(new JBasicLabel("%"), "2, 1");
 
@@ -183,10 +182,10 @@ public class GrayTopology extends AbstractReleaseTopology {
         orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("service")), 5), "0, 0");
         orchestrationPanel.add(serviceIdComboBox, "1, 0");
         orchestrationPanel.add(refreshServiceIdButton, "2, 0");
-        orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(NodeType.GRAY.getDescription()), 5), "0, 1");
+        orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(ElementType.GRAY.getDescription()), 5), "0, 1");
         orchestrationPanel.add(grayMetadataComboBox, "1, 1");
         orchestrationPanel.add(grayMetadataButton, "2, 1");
-        orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(NodeType.STABLE.getDescription()), 5), "0, 2");
+        orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(ElementType.STABLE.getDescription()), 5), "0, 2");
         orchestrationPanel.add(stableMetadataComboBox, "1, 2");
         orchestrationPanel.add(stableMetadataButton, "2, 2");
 
@@ -232,16 +231,16 @@ public class GrayTopology extends AbstractReleaseTopology {
         newGrayMetadataMap.put(strategyType.toString(), grayMetadata);
         newGrayInstance.setMetadata(newGrayMetadataMap);
         newGrayNode.setUserObject(newGrayInstance);
-        newGrayNode.setBusinessObject(NodeType.GRAY);
+        newGrayNode.setBusinessObject(ElementType.GRAY);
         if (grayNode == null) {
             TLink grayLink = addLink(gatewayNode, newGrayNode, grayLinkUI);
             grayLink.setName(ButtonManager.getHtmlText(ConsoleLocaleFactory.getString("gray_route") + "\n" + grayCondition + "%"));
             grayLink.setToolTipText(grayCondition + "%");
             grayLink.setUserObject(grayCondition);
-            grayLink.setBusinessObject(LinkType.GRAY);
+            grayLink.setBusinessObject(ElementType.GRAY);
         } else {
             TLink link = addLink(grayNode, newGrayNode, null);
-            link.setBusinessObject(LinkType.UNDEFINED);
+            link.setBusinessObject(ElementType.UNDEFINED);
         }
         grayNode = newGrayNode;
 
@@ -252,16 +251,16 @@ public class GrayTopology extends AbstractReleaseTopology {
         newStableMetadataMap.put(strategyType.toString(), stableMetadata);
         newStableInstance.setMetadata(newStableMetadataMap);
         newStableNode.setUserObject(newStableInstance);
-        newStableNode.setBusinessObject(NodeType.STABLE);
+        newStableNode.setBusinessObject(ElementType.STABLE);
         if (stableNode == null) {
             TLink stableLink = addLink(gatewayNode, newStableNode, stableLinkUI);
             stableLink.setName(ButtonManager.getHtmlText(ConsoleLocaleFactory.getString("stable_route") + "\n" + stableCondition + "%"));
             stableLink.setToolTipText(stableCondition + "%");
             stableLink.setUserObject(stableCondition);
-            stableLink.setBusinessObject(LinkType.STABLE);
+            stableLink.setBusinessObject(ElementType.STABLE);
         } else {
             TLink link = addLink(stableNode, newStableNode, null);
-            link.setBusinessObject(LinkType.UNDEFINED);
+            link.setBusinessObject(ElementType.UNDEFINED);
         }
         stableNode = newStableNode;
     }
@@ -306,7 +305,7 @@ public class GrayTopology extends AbstractReleaseTopology {
         for (TNode node : nodes) {
             Instance instance = (Instance) node.getUserObject();
             if (StringUtils.equalsIgnoreCase(instance.getServiceId(), serviceId)) {
-                NodeType nodeType = (NodeType) node.getBusinessObject();
+                ElementType nodeType = (ElementType) node.getBusinessObject();
                 switch (nodeType) {
                     case GRAY:
                         node.setName(ButtonManager.getHtmlText(serviceId + "\n" + strategyType.toString() + "=" + grayMetadata));
@@ -325,7 +324,7 @@ public class GrayTopology extends AbstractReleaseTopology {
     public void modifyLinks(String grayCondition, String stableCondition) {
         List<TLink> links = TElementManager.getLinks(dataBox);
         for (TLink link : links) {
-            LinkType linkType = (LinkType) link.getBusinessObject();
+            ElementType linkType = (ElementType) link.getBusinessObject();
             switch (linkType) {
                 case GRAY:
                     link.setName(ButtonManager.getHtmlText(ConsoleLocaleFactory.getString("gray_route") + "\n" + grayCondition + "%"));

@@ -40,7 +40,7 @@ import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeLocation;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeSizeType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeUI;
-import com.nepxion.discovery.console.desktop.workspace.type.NodeType;
+import com.nepxion.discovery.console.desktop.workspace.type.ElementType;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
 import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
@@ -138,7 +138,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
         gatewayNode = addNode(ButtonManager.getHtmlText(gateway.getServiceId() + "\n" + group), gatewayBlackNodeUI);
         gatewayNode.setUserObject(gateway);
-        gatewayNode.setBusinessObject(NodeType.PORTAL);
+        gatewayNode.setBusinessObject(ElementType.PORTAL);
 
         setNodeTopBottom(gatewayNode, false);
     }

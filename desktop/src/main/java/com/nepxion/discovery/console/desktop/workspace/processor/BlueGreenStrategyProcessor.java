@@ -21,8 +21,7 @@ import com.nepxion.cots.twaver.element.TElementManager;
 import com.nepxion.cots.twaver.element.TLink;
 import com.nepxion.cots.twaver.element.TNode;
 import com.nepxion.discovery.common.entity.EscapeType;
-import com.nepxion.discovery.console.desktop.workspace.type.LinkType;
-import com.nepxion.discovery.console.desktop.workspace.type.NodeType;
+import com.nepxion.discovery.console.desktop.workspace.type.ElementType;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
 import com.nepxion.discovery.console.entity.Instance;
@@ -55,7 +54,7 @@ public class BlueGreenStrategyProcessor extends AbstractStrategyProcessor {
             for (int i = nodes.size() - 1; i >= 0; i--) {
                 TNode node = nodes.get(i);
                 Instance instance = (Instance) node.getUserObject();
-                NodeType nodeType = (NodeType) node.getBusinessObject();
+                ElementType nodeType = (ElementType) node.getBusinessObject();
                 String serviceId = instance.getServiceId();
                 String metadata = instance.getMetadata().get(strategyValue);
                 switch (nodeType) {
@@ -82,7 +81,7 @@ public class BlueGreenStrategyProcessor extends AbstractStrategyProcessor {
             List<TLink> links = TElementManager.getLinks(dataBox);
             for (int i = links.size() - 1; i >= 0; i--) {
                 TLink link = links.get(i);
-                LinkType linkType = (LinkType) link.getBusinessObject();
+                ElementType linkType = (ElementType) link.getBusinessObject();
                 switch (linkType) {
                     case BLUE:
                         blueCondition = link.getUserObject().toString();
