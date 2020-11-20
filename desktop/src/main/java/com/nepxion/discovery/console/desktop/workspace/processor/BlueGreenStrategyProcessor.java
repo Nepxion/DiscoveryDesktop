@@ -16,6 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.nepxion.cots.twaver.element.TElementManager;
@@ -93,8 +94,8 @@ public class BlueGreenStrategyProcessor extends AbstractStrategyProcessor {
 
             String blueConditionId = ElementType.BLUE + "-" + XmlConfigConstant.CONDITION_ELEMENT_NAME;
             String greenConditionId = ElementType.GREEN + "-" + XmlConfigConstant.CONDITION_ELEMENT_NAME;
-            String blueId = ElementType.BLUE + "-" + strategyType + "-" + XmlConfigConstant.ROUTE_ELEMENT_NAME;
-            String greenId = ElementType.GREEN + "-" + strategyType + "-" + XmlConfigConstant.ROUTE_ELEMENT_NAME;
+            String blueRouteId = ElementType.BLUE + "-" + strategyType + "-" + XmlConfigConstant.ROUTE_ELEMENT_NAME;
+            String greenRouteId = ElementType.GREEN + "-" + strategyType + "-" + XmlConfigConstant.ROUTE_ELEMENT_NAME;
 
             StrategyConditionBlueGreenEntity strategyConditionBlueEntity = new StrategyConditionBlueGreenEntity();
             strategyConditionBlueEntity.setId(blueConditionId);
@@ -105,25 +106,25 @@ public class BlueGreenStrategyProcessor extends AbstractStrategyProcessor {
             strategyConditionGreenEntity.setConditionHeader(greenCondition);
 
             StrategyRouteEntity blueStrategyRouteEntity = new StrategyRouteEntity();
-            blueStrategyRouteEntity.setId(blueId);
+            blueStrategyRouteEntity.setId(blueRouteId);
             blueStrategyRouteEntity.setValue(JsonUtil.toJson(blueStrategyMap));
 
             StrategyRouteEntity greenStrategyRouteEntity = new StrategyRouteEntity();
-            greenStrategyRouteEntity.setId(greenId);
+            greenStrategyRouteEntity.setId(greenRouteId);
             greenStrategyRouteEntity.setValue(JsonUtil.toJson(greenStrategyMap));
 
             switch (strategyType) {
                 case VERSION:
                     strategyEntity.setVersionValue(JsonUtil.toJson(basicStrategyMap));
-                    strategyConditionBlueEntity.setVersionId(blueId);
-                    strategyConditionGreenEntity.setVersionId(greenId);
+                    strategyConditionBlueEntity.setVersionId(blueRouteId);
+                    strategyConditionGreenEntity.setVersionId(greenRouteId);
                     blueStrategyRouteEntity.setType(StrategyRouteType.VERSION);
                     greenStrategyRouteEntity.setType(StrategyRouteType.VERSION);
                     break;
                 case REGION:
                     strategyEntity.setRegionValue(JsonUtil.toJson(basicStrategyMap));
-                    strategyConditionBlueEntity.setRegionId(blueId);
-                    strategyConditionGreenEntity.setRegionId(greenId);
+                    strategyConditionBlueEntity.setRegionId(blueRouteId);
+                    strategyConditionGreenEntity.setRegionId(greenRouteId);
                     blueStrategyRouteEntity.setType(StrategyRouteType.REGION);
                     greenStrategyRouteEntity.setType(StrategyRouteType.REGION);
                     break;
@@ -131,11 +132,15 @@ public class BlueGreenStrategyProcessor extends AbstractStrategyProcessor {
 
             List<StrategyConditionBlueGreenEntity> strategyConditionBlueGreenEntityList = new ArrayList<StrategyConditionBlueGreenEntity>();
             strategyConditionBlueGreenEntityList.add(strategyConditionBlueEntity);
-            strategyConditionBlueGreenEntityList.add(strategyConditionGreenEntity);
+            if (StringUtils.isNotEmpty(greenCondition)) {
+                strategyConditionBlueGreenEntityList.add(strategyConditionGreenEntity);
+            }
 
             List<StrategyRouteEntity> strategyRouteEntityList = new ArrayList<StrategyRouteEntity>();
             strategyRouteEntityList.add(blueStrategyRouteEntity);
-            strategyRouteEntityList.add(greenStrategyRouteEntity);
+            if (MapUtils.isNotEmpty(greenStrategyMap)) {
+                strategyRouteEntityList.add(greenStrategyRouteEntity);
+            }
 
             Map<String, String> strategyHeaderMap = (Map<String, String>) dataBox.getID();
             StrategyHeaderEntity strategyHeaderEntity = new StrategyHeaderEntity();

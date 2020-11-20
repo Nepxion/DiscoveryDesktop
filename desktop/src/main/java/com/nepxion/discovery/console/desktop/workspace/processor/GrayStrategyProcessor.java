@@ -11,7 +11,10 @@ package com.nepxion.discovery.console.desktop.workspace.processor;
 
 import twaver.TDataBox;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -19,9 +22,18 @@ import com.nepxion.cots.twaver.element.TElementManager;
 import com.nepxion.cots.twaver.element.TLink;
 import com.nepxion.cots.twaver.element.TNode;
 import com.nepxion.discovery.common.entity.ElementType;
-import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
+import com.nepxion.discovery.common.entity.RegionWeightEntity;
+import com.nepxion.discovery.common.entity.RuleEntity;
+import com.nepxion.discovery.common.entity.StrategyConditionGrayEntity;
+import com.nepxion.discovery.common.entity.StrategyCustomizationEntity;
+import com.nepxion.discovery.common.entity.StrategyEntity;
+import com.nepxion.discovery.common.entity.StrategyRouteEntity;
+import com.nepxion.discovery.common.entity.StrategyRouteType;
+import com.nepxion.discovery.common.entity.VersionWeightEntity;
+import com.nepxion.discovery.common.util.JsonUtil;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
 import com.nepxion.discovery.console.entity.Instance;
+import com.nepxion.discovery.plugin.framework.parser.xml.XmlConfigConstant;
 
 public class GrayStrategyProcessor extends AbstractStrategyProcessor {
     @Override
@@ -36,35 +48,31 @@ public class GrayStrategyProcessor extends AbstractStrategyProcessor {
             return StringUtils.EMPTY;
         }
 
-        String strategyValue = strategyType.toString();
-        String grayCondition = null;
-        String stableCondition = null;
-        String grayStrategy = null;
-        String stableStrategy = null;
+        StrategyEntity strategyEntity = new StrategyEntity();
+        StrategyCustomizationEntity strategyCustomizationEntity = new StrategyCustomizationEntity();
 
         if (TElementManager.getNodes(dataBox).size() > 1) {
-            StringBuilder grayStrategyStringBuilder = new StringBuilder();
-            StringBuilder stableStrategyStringBuilder = new StringBuilder();
+            Map<String, String> grayStrategyMap = new LinkedHashMap<String, String>();
+            Map<String, String> stableStrategyMap = new LinkedHashMap<String, String>();
+            String grayCondition = null;
+            String stableCondition = null;
+
             List<TNode> nodes = TElementManager.getNodes(dataBox);
             for (int i = nodes.size() - 1; i >= 0; i--) {
                 TNode node = nodes.get(i);
                 Instance instance = (Instance) node.getUserObject();
                 ElementType nodeType = (ElementType) node.getBusinessObject();
                 String serviceId = instance.getServiceId();
-                String metadata = instance.getMetadata().get(strategyValue);
+                String metadata = instance.getMetadata().get(strategyType.toString());
                 switch (nodeType) {
                     case GRAY:
-                        grayStrategyStringBuilder.append("\"" + serviceId + "\":\"" + metadata + "\", ");
+                        grayStrategyMap.put(serviceId, metadata);
                         break;
                     case STABLE:
-                        stableStrategyStringBuilder.append("\"" + serviceId + "\":\"" + metadata + "\", ");
+                        stableStrategyMap.put(serviceId, metadata);
                         break;
                 }
             }
-            grayStrategy = grayStrategyStringBuilder.toString();
-            grayStrategy = grayStrategy.substring(0, grayStrategy.length() - 2);
-            stableStrategy = stableStrategyStringBuilder.toString();
-            stableStrategy = stableStrategy.substring(0, stableStrategy.length() - 2);
 
             List<TLink> links = TElementManager.getLinks(dataBox);
             for (int i = links.size() - 1; i >= 0; i--) {
@@ -79,24 +87,58 @@ public class GrayStrategyProcessor extends AbstractStrategyProcessor {
                         break;
                 }
             }
+
+            String grayConditionId = ElementType.GRAY + "-" + XmlConfigConstant.CONDITION_ELEMENT_NAME;
+            String grayRouteId = ElementType.GRAY + "-" + strategyType + "-" + XmlConfigConstant.ROUTE_ELEMENT_NAME;
+            String stableRouteId = ElementType.STABLE + "-" + strategyType + "-" + XmlConfigConstant.ROUTE_ELEMENT_NAME;
+
+            Map<String, Integer> weightMap = new LinkedHashMap<String, Integer>();
+            weightMap.put(grayRouteId, Integer.valueOf(grayCondition));
+            weightMap.put(stableRouteId, Integer.valueOf(stableCondition));
+
+            StrategyConditionGrayEntity strategyConditionGrayEntity = new StrategyConditionGrayEntity();
+            strategyConditionGrayEntity.setId(grayConditionId);
+
+            StrategyRouteEntity grayStrategyRouteEntity = new StrategyRouteEntity();
+            grayStrategyRouteEntity.setId(grayRouteId);
+            grayStrategyRouteEntity.setValue(JsonUtil.toJson(grayStrategyMap));
+
+            StrategyRouteEntity stableStrategyRouteEntity = new StrategyRouteEntity();
+            stableStrategyRouteEntity.setId(stableRouteId);
+            stableStrategyRouteEntity.setValue(JsonUtil.toJson(stableStrategyMap));
+
+            switch (strategyType) {
+                case VERSION:
+                    VersionWeightEntity versionWeightEntity = new VersionWeightEntity();
+                    versionWeightEntity.setWeightMap(weightMap);
+                    strategyConditionGrayEntity.setVersionWeightEntity(versionWeightEntity);
+                    grayStrategyRouteEntity.setType(StrategyRouteType.VERSION);
+                    stableStrategyRouteEntity.setType(StrategyRouteType.VERSION);
+                    break;
+                case REGION:
+                    RegionWeightEntity regionWeightEntity = new RegionWeightEntity();
+                    regionWeightEntity.setWeightMap(weightMap);
+                    strategyConditionGrayEntity.setRegionWeightEntity(regionWeightEntity);
+                    grayStrategyRouteEntity.setType(StrategyRouteType.REGION);
+                    stableStrategyRouteEntity.setType(StrategyRouteType.REGION);
+                    break;
+            }
+
+            List<StrategyConditionGrayEntity> strategyConditionGrayEntityList = new ArrayList<StrategyConditionGrayEntity>();
+            strategyConditionGrayEntityList.add(strategyConditionGrayEntity);
+
+            List<StrategyRouteEntity> strategyRouteEntityList = new ArrayList<StrategyRouteEntity>();
+            strategyRouteEntityList.add(grayStrategyRouteEntity);
+            strategyRouteEntityList.add(stableStrategyRouteEntity);
+
+            strategyCustomizationEntity.setStrategyConditionGrayEntityList(strategyConditionGrayEntityList);
+            strategyCustomizationEntity.setStrategyRouteEntityList(strategyRouteEntityList);
         }
 
-        StringBuilder strategyStringBuilder = new StringBuilder();
-        strategyStringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-        strategyStringBuilder.append("<rule>\n");
-        if (TElementManager.getNodes(dataBox).size() > 1) {
-            strategyStringBuilder.append("    <strategy-customization>\n");
-            strategyStringBuilder.append("        <conditions type=\"" + ReleaseType.GRAY + "\">\n");
-            strategyStringBuilder.append("            <condition id=\"gray-condition\" " + strategyValue + "-id=\"gray-" + strategyValue + "-route=" + grayCondition + ";stable-" + strategyValue + "-route=" + stableCondition + "\"/>\n");
-            strategyStringBuilder.append("        </conditions>\n\n");
-            strategyStringBuilder.append("        <routes>\n");
-            strategyStringBuilder.append("            <route id=\"gray-" + strategyValue + "-route\" type=\"" + strategyValue + "\">{" + grayStrategy + "}</route>\n");
-            strategyStringBuilder.append("            <route id=\"stable-" + strategyValue + "-route\" type=\"" + strategyValue + "\">{" + stableStrategy + "}</route>\n");
-            strategyStringBuilder.append("        </routes>\n");
-            strategyStringBuilder.append("    </strategy-customization>\n");
-        }
-        strategyStringBuilder.append("</rule>");
+        RuleEntity ruleEntity = new RuleEntity();
+        ruleEntity.setStrategyEntity(strategyEntity);
+        ruleEntity.setStrategyCustomizationEntity(strategyCustomizationEntity);
 
-        return strategyStringBuilder.toString();
+        return StrategyProcessorFactory.getXmlConfigDeparser().deparse(ruleEntity);
     }
 }
