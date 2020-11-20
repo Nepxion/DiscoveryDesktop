@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import com.nepxion.cots.twaver.graph.TGraphBackground;
 import com.nepxion.cots.twaver.graph.TLayoutType;
-import com.nepxion.discovery.common.entity.ConfigType;
+import com.nepxion.discovery.common.entity.SubscriptionType;
 import com.nepxion.discovery.console.controller.ConsoleController;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
@@ -60,11 +60,11 @@ public abstract class AbstractTopology extends BasicTopology {
 
     protected ReleaseType releaseType;
     protected StrategyType strategyType;
-    protected ConfigType configType;
+    protected SubscriptionType subscriptionType;
 
     protected String group;
 
-    protected String configCenterType;
+    protected String configType;
 
     public AbstractTopology(ReleaseType releaseType) {
         this.releaseType = releaseType;
@@ -106,7 +106,7 @@ public abstract class AbstractTopology extends BasicTopology {
 
     public void initializeData() {
         try {
-            configCenterType = ConsoleController.getConfigType();
+            configType = ConsoleController.getConfigType();
         } catch (Exception ex) {
             JExceptionDialog.traceException(HandleManager.getFrame(AbstractTopology.this), ConsoleLocaleFactory.getString("operation_failure"), ex);
         }
@@ -272,7 +272,7 @@ public abstract class AbstractTopology extends BasicTopology {
 
     public String getKey() {
         String key = null;
-        if (StringUtils.equals(configCenterType, APOLLO)) {
+        if (StringUtils.equals(configType, APOLLO)) {
             key = group + "-" + getServiceId();
         } else {
             key = "Data ID=" + getServiceId() + " | Group=" + group;

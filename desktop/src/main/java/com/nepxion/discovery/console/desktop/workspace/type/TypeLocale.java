@@ -10,8 +10,8 @@ package com.nepxion.discovery.console.desktop.workspace.type;
  */
 
 import com.nepxion.discovery.common.entity.BlueGreenRouteType;
-import com.nepxion.discovery.common.entity.ConfigType;
 import com.nepxion.discovery.common.entity.DeployType;
+import com.nepxion.discovery.common.entity.SubscriptionType;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 
 public class TypeLocale {
@@ -27,8 +27,8 @@ public class TypeLocale {
         return ConsoleLocaleFactory.getString(strategyType.toString() + "_strategy");
     }
 
-    public static String getDescription(ConfigType configType) {
-        return ConsoleLocaleFactory.getString(configType.toString() + "_config");
+    public static String getDescription(SubscriptionType subscriptionType) {
+        return ConsoleLocaleFactory.getString(subscriptionType.toString() + "_subscription");
     }
 
     public static String getDescription(DeployType deployType) {

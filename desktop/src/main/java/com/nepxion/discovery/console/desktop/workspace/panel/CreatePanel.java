@@ -24,9 +24,9 @@ import javax.swing.JPanel;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.nepxion.discovery.common.entity.ConfigType;
 import com.nepxion.discovery.common.entity.DeployType;
 import com.nepxion.discovery.common.entity.ServiceType;
+import com.nepxion.discovery.common.entity.SubscriptionType;
 import com.nepxion.discovery.console.controller.ConsoleController;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
@@ -46,7 +46,7 @@ public class CreatePanel extends JPanel {
     private static final long serialVersionUID = 1L;
 
     protected ButtonGroup strategyButtonGroup;
-    protected ButtonGroup configButtonGroup;
+    protected ButtonGroup subscriptionButtonGroup;
     protected ButtonGroup deployButtonGroup;
 
     protected JBasicComboBox groupComboBox;
@@ -72,19 +72,19 @@ public class CreatePanel extends JPanel {
             }
         }
 
-        JPanel configPanel = new JPanel();
-        configPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
-        configButtonGroup = new ButtonGroup();
-        ConfigType[] configTypes = ConfigType.values();
-        for (int i = 0; i < configTypes.length; i++) {
-            ConfigType configType = configTypes[i];
+        JPanel subscriptionPanel = new JPanel();
+        subscriptionPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
+        subscriptionButtonGroup = new ButtonGroup();
+        SubscriptionType[] subscriptionTypes = SubscriptionType.values();
+        for (int i = 0; i < subscriptionTypes.length; i++) {
+            SubscriptionType subscriptionType = subscriptionTypes[i];
 
-            JBasicRadioButton configRadioButton = new JBasicRadioButton(TypeLocale.getDescription(configType), TypeLocale.getDescription(configType));
-            configRadioButton.setName(configType.toString());
-            configRadioButton.addItemListener(new ItemListener() {
+            JBasicRadioButton subscriptionRadioButton = new JBasicRadioButton(TypeLocale.getDescription(subscriptionType), TypeLocale.getDescription(subscriptionType));
+            subscriptionRadioButton.setName(subscriptionType.toString());
+            subscriptionRadioButton.addItemListener(new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
                     JBasicRadioButton radioButton = (JBasicRadioButton) e.getItem();
-                    if (deployButtonGroup != null && StringUtils.equals(radioButton.getName(), ConfigType.GLOBAL.toString())) {
+                    if (deployButtonGroup != null && StringUtils.equals(radioButton.getName(), SubscriptionType.GLOBAL.toString())) {
                         for (Enumeration<AbstractButton> enumeration = deployButtonGroup.getElements(); enumeration.hasMoreElements();) {
                             AbstractButton button = enumeration.nextElement();
                             button.setEnabled(!radioButton.isSelected());
@@ -99,11 +99,11 @@ public class CreatePanel extends JPanel {
                     }
                 }
             });
-            configPanel.add(configRadioButton);
-            configButtonGroup.add(configRadioButton);
+            subscriptionPanel.add(subscriptionRadioButton);
+            subscriptionButtonGroup.add(subscriptionRadioButton);
 
             if (i == 0) {
-                configRadioButton.setSelected(true);
+                subscriptionRadioButton.setSelected(true);
             }
         }
 
@@ -172,8 +172,8 @@ public class CreatePanel extends JPanel {
         setLayout(tableLayout);
         add(new JBasicLabel(ConsoleLocaleFactory.getString("strategy_text")), "0, 0");
         add(strategyPanel, "1, 0");
-        add(new JBasicLabel(ConsoleLocaleFactory.getString("config_text")), "0, 1");
-        add(configPanel, "1, 1");
+        add(new JBasicLabel(ConsoleLocaleFactory.getString("subscription_text")), "0, 1");
+        add(subscriptionPanel, "1, 1");
         add(new JBasicLabel(ConsoleLocaleFactory.getString("deploy_text")), "0, 2");
         add(deployPanel, "1, 2");
         add(new JBasicLabel(ConsoleLocaleFactory.getString("belong_group_text")), "0, 3");
@@ -225,10 +225,10 @@ public class CreatePanel extends JPanel {
         return StrategyType.fromString(rationButtonName);
     }
 
-    public ConfigType getConfigType() {
-        String rationButtonName = getRationButtonName(configButtonGroup);
+    public SubscriptionType getSubscriptionType() {
+        String rationButtonName = getRationButtonName(subscriptionButtonGroup);
 
-        return ConfigType.fromString(rationButtonName);
+        return SubscriptionType.fromString(rationButtonName);
     }
 
     public DeployType getDeployType() {

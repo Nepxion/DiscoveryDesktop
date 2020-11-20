@@ -28,9 +28,9 @@ import com.nepxion.cots.twaver.element.TElementManager;
 import com.nepxion.cots.twaver.element.TLink;
 import com.nepxion.cots.twaver.element.TNode;
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
-import com.nepxion.discovery.common.entity.ConfigType;
 import com.nepxion.discovery.common.entity.DeployType;
 import com.nepxion.discovery.common.entity.RuleEntity;
+import com.nepxion.discovery.common.entity.SubscriptionType;
 import com.nepxion.discovery.console.controller.ConsoleController;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
@@ -79,11 +79,11 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         super(releaseType);
     }
 
-    public void initializeData(String group, Instance gateway, StrategyType strategyType, ConfigType configType, DeployType deployType) {
+    public void initializeData(String group, Instance gateway, StrategyType strategyType, SubscriptionType subscriptionType, DeployType deployType) {
         this.group = group;
         this.gateway = gateway;
         this.strategyType = strategyType;
-        this.configType = configType;
+        this.subscriptionType = subscriptionType;
         this.deployType = deployType;
 
         refreshData();
@@ -128,7 +128,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     }
 
     public void setTitle() {
-        background.setTitle(TypeLocale.getDescription(releaseType) + " | " + TypeLocale.getDescription(strategyType) + " | " + TypeLocale.getDescription(configType) + " | " + TypeLocale.getDescription(deployType));
+        background.setTitle(TypeLocale.getDescription(releaseType) + " | " + TypeLocale.getDescription(strategyType) + " | " + TypeLocale.getDescription(subscriptionType) + " | " + TypeLocale.getDescription(deployType));
     }
 
     public void setGatewayNode() {
@@ -223,7 +223,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         }
 
         StrategyType strategyType = createPanel.getStrategyType();
-        ConfigType configType = createPanel.getConfigType();
+        SubscriptionType subscriptionType = createPanel.getSubscriptionType();
         DeployType deployType = createPanel.getDeployType();
 
         String group = createPanel.getGroup();
@@ -234,7 +234,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         }
 
         String gatewayId = null;
-        if (configType == ConfigType.PARTIAL) {
+        if (subscriptionType == SubscriptionType.PARTIAL) {
             gatewayId = createPanel.getGatewayId();
             if (StringUtils.isBlank(gatewayId)) {
                 JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("service_id_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
@@ -255,13 +255,13 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
             e.printStackTrace();
         }
 
-        initializeData(group, gateway, strategyType, configType, deployType);
+        initializeData(group, gateway, strategyType, subscriptionType, deployType);
         initializeUI(createPanel);
     }
 
     @Override
     public String getServiceId() {
-        if (configType == ConfigType.PARTIAL) {
+        if (subscriptionType == SubscriptionType.PARTIAL) {
             return gateway.getServiceId();
         } else {
             return group;
