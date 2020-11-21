@@ -75,9 +75,10 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         super(releaseType);
     }
 
-    public void initializeData(String group, Instance gateway, StrategyType strategyType, SubscriptionType subscriptionType, DeployType deployType) {
+    public void initializeData(String group, Instance gateway, RuleEntity ruleEntity, StrategyType strategyType, SubscriptionType subscriptionType, DeployType deployType) {
         this.group = group;
         this.gateway = gateway;
+        this.ruleEntity = ruleEntity;
         this.strategyType = strategyType;
         this.subscriptionType = subscriptionType;
         this.deployType = deployType;
@@ -282,7 +283,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         Map<String, String> metadataMap = new HashMap<String, String>();
         gateway.setMetadata(metadataMap);
 
-        initializeData(group, gateway, strategyType, subscriptionType, deployType);
+        initializeData(group, gateway, ruleEntity, strategyType, subscriptionType, deployType);
         initializeUI(createPanel);
     }
 
