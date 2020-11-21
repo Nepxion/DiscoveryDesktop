@@ -176,7 +176,7 @@ public abstract class AbstractTopology extends BasicTopology {
                     return;
                 }
 
-                int selectedValue = JBasicOptionPane.showConfirmDialog(HandleManager.getFrame(AbstractTopology.this), "确认保存策略？\n" + getKey(), SwingLocale.getString("confirm"), JBasicOptionPane.YES_NO_OPTION);
+                int selectedValue = JBasicOptionPane.showConfirmDialog(HandleManager.getFrame(AbstractTopology.this), ConsoleLocaleFactory.getString("save_confirm") + "\n" + getKey(), SwingLocale.getString("confirm"), JBasicOptionPane.YES_NO_OPTION);
                 if (selectedValue != JBasicOptionPane.OK_OPTION) {
                     return;
                 }

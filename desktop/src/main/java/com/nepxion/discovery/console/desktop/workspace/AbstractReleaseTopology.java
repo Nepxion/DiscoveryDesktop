@@ -213,7 +213,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         CreatePanel createPanel = getCreatePanel();
         createPanel.setPreferredSize(new Dimension(createPanel.getPreferredSize().width + 100, createPanel.getPreferredSize().height + 10));
 
-        int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractReleaseTopology.this), createPanel, ConsoleLocaleFactory.getString("create_tooltip") + " 【" + TypeLocale.getDescription(releaseType) + "】", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
+        int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractReleaseTopology.this), createPanel, ConsoleLocaleFactory.getString("create_tooltip") + "【" + TypeLocale.getDescription(releaseType) + "】", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
         if (selectedOption != 0) {
             return;
         }
@@ -250,27 +250,27 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
             try {
                 ruleEntity = getStrategyProcessor().parseConfig(config);
             } catch (Exception e) {
-                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("parse_failure"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("strategy_not_existed_or_invalid"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                 return;
             }
 
             if (ruleEntity == null) {
-                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), "策略不存在或者不符合规范，请从 【新增策略】 选项进行创建", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("strategy_not_existed_or_invalid"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                 return;
             }
 
             strategyType = StrategyProcessorUtil.getStrategyType(ruleEntity);
             if (strategyType == null) {
-                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), "策略不存在或者不符合规范，请从 【新增策略】 选项进行创建", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("strategy_not_existed_or_invalid"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                 return;
             }
 
             ReleaseType releaseType = StrategyProcessorUtil.getReleaseType(ruleEntity);
             if (releaseType != null && getReleaseType() != releaseType) {
-                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), "策略不符合规范，打开的为 【" + releaseType + "】", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("strategy_not_matched") + "【" + TypeLocale.getDescription(releaseType) + "】", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                 return;
             }
@@ -388,7 +388,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
                 }
 
                 if (hasNodes(serviceId)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), serviceId + " " + ConsoleLocaleFactory.getString("existed"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), "【" + serviceId + "】" + ConsoleLocaleFactory.getString("existed"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
                 }
