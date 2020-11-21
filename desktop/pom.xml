@@ -23,6 +23,7 @@
         <nepxion.util.version>1.0.0</nepxion.util.version>
         <nepxion.cots.version>1.0.0</nepxion.cots.version>
         <twaver.version>3.7</twaver.version>
+        <alloy.version>1.4.4</alloy.version>
 
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -148,6 +149,14 @@
             <version>${twaver.version}</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/twaver-layouter-${twaver.version}.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>com.incors</groupId>
+            <artifactId>alloy-skin</artifactId>
+            <version>${alloy.version}</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/alloy-skin-${alloy.version}.jar</systemPath>
         </dependency>
     </dependencies>
 

@@ -11,6 +11,8 @@ package com.nepxion.discovery.console.desktop.common.context;
 
 import java.awt.Font;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.nepxion.swing.font.FontContext;
 import com.nepxion.swing.lookandfeel.LookAndFeelManager;
 import com.nepxion.util.locale.LocaleContext;
@@ -26,12 +28,31 @@ public class ConsoleUIContext {
     private static final int FONT_MIDDLE_SIZE_EN_US = FONT_SMALL_SIZE_EN_US + 1;
     private static final int FONT_LARGE_SIZE_EN_US = FONT_SMALL_SIZE_EN_US + 2;
 
-    public static void initialize() {
-        FontContext.registerFont(getFontName(), Font.PLAIN, getDefaultFontSize());
+    private static final String THEME = "NimbusLookAndFeel";
 
-        if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-            LookAndFeelManager.setNimbusLookAndFeel();
+    public static void initialize() {
+        String theme = ConsolePropertiesContext.getProperties().getString("theme", THEME);
+        if (StringUtils.equals(theme, THEME)) {
+            setFont();
+            setLookAndFeel(theme);
+        } else {
+            setLookAndFeel(theme);
+            setFont();
         }
+    }
+
+    public static void setFont() {
+        FontContext.registerFont(getFontName(), Font.PLAIN, getDefaultFontSize());
+    }
+
+    public static void setLookAndFeel(String theme) {
+        // theme=NimbusLookAndFeel
+        // theme=AcidLookAndFeel
+        // theme=AlloyLookAndFeel
+        // theme=BedouinLookAndFeel
+        // theme=GlassLookAndFeel
+
+        LookAndFeelManager.invokeLookAndFeel(theme);
     }
 
     public static String getFontName() {

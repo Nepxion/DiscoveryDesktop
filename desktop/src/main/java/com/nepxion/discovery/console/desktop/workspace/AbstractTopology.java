@@ -30,6 +30,7 @@ import com.nepxion.discovery.common.entity.SubscriptionType;
 import com.nepxion.discovery.console.controller.ConsoleController;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
+import com.nepxion.discovery.console.desktop.common.util.ButtonUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.PreviewPanel;
 import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessor;
 import com.nepxion.discovery.console.desktop.workspace.topology.BasicTopology;
@@ -37,7 +38,6 @@ import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.ButtonManager;
-import com.nepxion.swing.button.JClassicButton;
 import com.nepxion.swing.dialog.JExceptionDialog;
 import com.nepxion.swing.handle.HandleManager;
 import com.nepxion.swing.listener.DisplayAbilityListener;
@@ -84,16 +84,16 @@ public abstract class AbstractTopology extends BasicTopology {
     public void initializeToolBar() {
         JToolBar toolBar = getGraph().getToolbar();
         toolBar.addSeparator();
-        toolBar.add(new JClassicButton(createCreateAction()));
-        toolBar.add(new JClassicButton(createSaveAction()));
+        toolBar.add(ButtonUtil.createButton(createCreateAction()));
+        toolBar.add(ButtonUtil.createButton(createSaveAction()));
         toolBar.addSeparator();
-        toolBar.add(new JClassicButton(createRemoveAction()));
-        toolBar.add(new JClassicButton(createClearAction()));
+        toolBar.add(ButtonUtil.createButton(createRemoveAction()));
+        toolBar.add(ButtonUtil.createButton(createClearAction()));
         toolBar.addSeparator();
-        toolBar.add(new JClassicButton(createPreviewAction()));
-        toolBar.add(new JClassicButton(createInspectAction()));
+        toolBar.add(ButtonUtil.createButton(createPreviewAction()));
+        toolBar.add(ButtonUtil.createButton(createInspectAction()));
         toolBar.addSeparator();
-        toolBar.add(new JClassicButton(createLayoutAction()));
+        toolBar.add(ButtonUtil.createButton(createLayoutAction()));
 
         ButtonManager.updateUI(toolBar);
     }
@@ -222,7 +222,7 @@ public abstract class AbstractTopology extends BasicTopology {
 
                 if (previewPanel == null) {
                     previewPanel = new PreviewPanel();
-                    previewPanel.setPreferredSize(new Dimension(900, 500));
+                    previewPanel.setPreferredSize(new Dimension(800, 400));
                 }
 
                 String key = getKey();
