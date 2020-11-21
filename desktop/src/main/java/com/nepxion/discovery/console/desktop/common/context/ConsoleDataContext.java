@@ -9,7 +9,6 @@ package com.nepxion.discovery.console.desktop.common.context;
  * @version 1.0
  */
 
-import com.nepxion.swing.exception.ExceptionTracerContext;
 import com.nepxion.util.encoder.EncoderContext;
 import com.nepxion.util.locale.LocaleContext;
 
@@ -32,6 +31,6 @@ public class ConsoleDataContext {
     }
 
     private static void initializeTracer() {
-        ExceptionTracerContext.register(true);
+        // ExceptionTracerContext.register(true);
     }
 }
