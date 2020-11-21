@@ -384,6 +384,11 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
     }
 
     @Override
+    public ReleaseType getReleaseType() {
+        return ReleaseType.BLUE_GREEN;
+    }
+
+    @Override
     public CreatePanel getCreatePanel() {
         return new BlueGreenCreatePanel();
     }

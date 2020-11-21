@@ -38,11 +38,11 @@ public class ConsoleFrame extends JBasicFrame {
 
     private static String getSubTitle() {
         try {
-            return "[" + ConsoleController.getDiscoveryType() + " " + ConsoleLocaleFactory.getString("discovery_center") + "] [" + ConsoleController.getConfigType() + " " + ConsoleLocaleFactory.getString("config_center") + "]";
+            return "【" + ConsoleController.getDiscoveryType() + " " + ConsoleLocaleFactory.getString("discovery_center") + "】【" + ConsoleController.getConfigType() + " " + ConsoleLocaleFactory.getString("config_center") + "】";
         } catch (Exception e) {
             LOG.error("Not connnect to Discovery Console", e);
 
-            return "[" + ConsoleLocaleFactory.getString("not_connnect_to_console") + "]";
+            return "【" + ConsoleLocaleFactory.getString("not_connnect_to_console") + "】";
         }
     }
 }

@@ -341,6 +341,11 @@ public class GrayTopology extends AbstractReleaseTopology {
     }
 
     @Override
+    public ReleaseType getReleaseType() {
+        return ReleaseType.GRAY;
+    }
+
+    @Override
     public CreatePanel getCreatePanel() {
         return new GrayCreatePanel();
     }

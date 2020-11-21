@@ -155,6 +155,6 @@ public class BlueGreenStrategyProcessor extends AbstractStrategyProcessor {
         ruleEntity.setStrategyEntity(strategyEntity);
         ruleEntity.setStrategyCustomizationEntity(strategyCustomizationEntity);
 
-        return StrategyProcessorFactory.getXmlConfigDeparser().deparse(ruleEntity);
+        return deparseConfig(ruleEntity);
     }
 }

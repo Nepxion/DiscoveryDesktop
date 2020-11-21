@@ -19,5 +19,9 @@ public interface StrategyProcessor {
 
     String toConfig(RuleEntity ruleEntity, StrategyType strategyType, TDataBox dataBox);
 
+    RuleEntity parseConfig(String config);
+
+    String deparseConfig(RuleEntity ruleEntity);
+
     void saveConfig(String group, String serviceId, String config);
 }

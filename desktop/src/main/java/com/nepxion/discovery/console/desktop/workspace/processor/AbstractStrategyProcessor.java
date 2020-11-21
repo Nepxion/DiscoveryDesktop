@@ -9,7 +9,19 @@ package com.nepxion.discovery.console.desktop.workspace.processor;
  * @version 1.0
  */
 
+import com.nepxion.discovery.common.entity.RuleEntity;
+
 public abstract class AbstractStrategyProcessor implements StrategyProcessor {
+    @Override
+    public RuleEntity parseConfig(String config) {
+        return StrategyProcessorFactory.getXmlConfigParser().parse(config);
+    }
+
+    @Override
+    public String deparseConfig(RuleEntity ruleEntity) {
+        return StrategyProcessorFactory.getXmlConfigDeparser().deparse(ruleEntity);
+    }
+
     @Override
     public void saveConfig(String group, String serviceId, String config) {
 
