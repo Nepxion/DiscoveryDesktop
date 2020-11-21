@@ -165,10 +165,6 @@ public abstract class AbstractTopology extends BasicTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                if (ruleEntity == null) {
-                    ruleEntity = new RuleEntity();
-                }
-
                 String config = getStrategyProcessor().toConfig(ruleEntity, strategyType, dataBox);
                 if (StringUtils.isEmpty(config)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractTopology.this), ConsoleLocaleFactory.getString("strategy_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
@@ -217,10 +213,6 @@ public abstract class AbstractTopology extends BasicTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                if (ruleEntity == null) {
-                    ruleEntity = new RuleEntity();
-                }
-
                 String config = getStrategyProcessor().toConfig(ruleEntity, strategyType, dataBox);
                 if (StringUtils.isEmpty(config)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractTopology.this), ConsoleLocaleFactory.getString("strategy_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);

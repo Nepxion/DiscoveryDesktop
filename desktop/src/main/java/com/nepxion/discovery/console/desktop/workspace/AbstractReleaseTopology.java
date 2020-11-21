@@ -119,6 +119,8 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         refreshUI();
     }
 
+    public abstract void initializeView();
+
     public void refreshUI() {
         setServiceUI();
         setMetadataUI();
@@ -241,13 +243,14 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         }
 
         DeployType deployType = createPanel.getDeployType();
+        RuleEntity ruleEntity = null;
         StrategyType strategyType = null;
         boolean isNewMode = createPanel.isNewMode();
         if (isNewMode) {
+            ruleEntity = new RuleEntity();
             strategyType = createPanel.getStrategyType();
         } else {
             String config = getStrategyProcessor().getConfig(group, gatewayId);
-            RuleEntity ruleEntity = null;
             try {
                 ruleEntity = getStrategyProcessor().parseConfig(config);
             } catch (Exception e) {
@@ -275,7 +278,6 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
                 return;
             }
-
         }
 
         Instance gateway = new Instance();
@@ -285,6 +287,9 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
         initializeData(group, gateway, ruleEntity, strategyType, subscriptionType, deployType);
         initializeUI(createPanel);
+        if (!isNewMode) {
+            initializeView();
+        }
     }
 
     @Override
