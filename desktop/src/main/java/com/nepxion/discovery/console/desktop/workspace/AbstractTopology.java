@@ -115,6 +115,16 @@ public abstract class AbstractTopology extends BasicTopology {
         }
     }
 
+    public void initializeView() {
+        try {
+            getStrategyProcessor().fromConfig(ruleEntity, strategyType, dataBox);
+        } catch (Exception e) {
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(this), e.getMessage(), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+        }
+
+        executeLayout();
+    }
+
     public void initializeListener() {
         addHierarchyListener(new DisplayAbilityListener() {
             public void displayAbilityChanged(HierarchyEvent e) {

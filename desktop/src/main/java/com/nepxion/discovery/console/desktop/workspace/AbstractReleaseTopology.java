@@ -119,8 +119,6 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         refreshUI();
     }
 
-    public abstract void initializeView();
-
     public void refreshUI() {
         setServiceUI();
         setMetadataUI();

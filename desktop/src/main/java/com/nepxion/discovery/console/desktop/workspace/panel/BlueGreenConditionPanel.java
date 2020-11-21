@@ -94,8 +94,16 @@ public class BlueGreenConditionPanel extends JPanel {
         return blueConditionBar.getCondition();
     }
 
+    public void setBlueCondition(String blueCondition) {
+        blueConditionBar.setCondition(blueCondition);
+    }
+
     public String getGreenCondition() {
         return greenConditionBar.getCondition();
+    }
+
+    public void setGreenCondition(String greenCondition) {
+        greenConditionBar.setCondition(greenCondition);
     }
 
     public void showBlueConditionNotNullTip() {
@@ -227,6 +235,10 @@ public class BlueGreenConditionPanel extends JPanel {
 
         public String getCondition() {
             return conditionTextField.getText().trim();
+        }
+
+        public void setCondition(String condition) {
+            conditionTextField.setText(condition);
         }
 
         public void showConditionNotNullTip() {
