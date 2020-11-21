@@ -10,6 +10,7 @@ package com.nepxion.discovery.console.desktop.workspace.processor;
  */
 
 import com.nepxion.discovery.common.entity.RuleEntity;
+import com.nepxion.discovery.console.controller.ConsoleController;
 
 public abstract class AbstractStrategyProcessor implements StrategyProcessor {
     @Override
@@ -23,7 +24,12 @@ public abstract class AbstractStrategyProcessor implements StrategyProcessor {
     }
 
     @Override
-    public void saveConfig(String group, String serviceId, String config) {
+    public String getConfig(String group, String serviceId) {
+        return ConsoleController.remoteConfigView(group, serviceId);
+    }
 
+    @Override
+    public String saveConfig(String group, String serviceId, String config) {
+        return ConsoleController.remoteConfigUpdate(group, serviceId, config);
     }
 }

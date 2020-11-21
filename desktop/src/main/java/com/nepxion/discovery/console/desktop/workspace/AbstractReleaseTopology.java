@@ -245,7 +245,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         if (isNewMode) {
             strategyType = createPanel.getStrategyType();
         } else {
-            String config = ConsoleController.remoteConfigView(group, gatewayId);
+            String config = getStrategyProcessor().getConfig(group, gatewayId);
             RuleEntity ruleEntity = null;
             try {
                 ruleEntity = getStrategyProcessor().parseConfig(config);

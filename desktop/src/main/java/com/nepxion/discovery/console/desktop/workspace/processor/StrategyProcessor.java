@@ -23,5 +23,7 @@ public interface StrategyProcessor {
 
     String deparseConfig(RuleEntity ruleEntity);
 
-    void saveConfig(String group, String serviceId, String config);
+    String getConfig(String group, String serviceId);
+
+    String saveConfig(String group, String serviceId, String config);
 }

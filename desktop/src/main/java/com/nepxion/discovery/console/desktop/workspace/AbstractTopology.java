@@ -303,7 +303,7 @@ public abstract class AbstractTopology extends BasicTopology {
 
         LOG.info("Save Config, key={}, config=\n{}", key, config);
 
-        String result = ConsoleController.remoteConfigUpdate(group, serviceId, config);
+        String result = getStrategyProcessor().saveConfig(group, serviceId, config);
         showResult(result);
     }
 
