@@ -8,14 +8,9 @@ package com.nepxion.discovery.console.desktop.workspace;
  * @author Haojun Ren
  * @version 1.0
  */
-
-import twaver.Generator;
-
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.HierarchyEvent;
 
-import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
@@ -23,8 +18,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.nepxion.cots.twaver.graph.TGraphBackground;
-import com.nepxion.cots.twaver.graph.TLayoutType;
 import com.nepxion.discovery.common.entity.RuleEntity;
 import com.nepxion.discovery.common.entity.SubscriptionType;
 import com.nepxion.discovery.console.cache.ConsoleCache;
@@ -35,26 +28,22 @@ import com.nepxion.discovery.console.desktop.common.util.ButtonUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.ConfigPanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.PreviewPanel;
 import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessor;
-import com.nepxion.discovery.console.desktop.workspace.topology.BasicTopology;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.ButtonManager;
 import com.nepxion.swing.handle.HandleManager;
-import com.nepxion.swing.listener.DisplayAbilityListener;
 import com.nepxion.swing.locale.SwingLocale;
 import com.nepxion.swing.optionpane.JBasicOptionPane;
 import com.nepxion.swing.scrollpane.JBasicScrollPane;
 import com.nepxion.swing.textarea.JBasicTextArea;
 
-public abstract class AbstractReleaseTopology extends BasicTopology {
+public abstract class AbstractReleaseTopology extends AbstractTopology {
     private static final long serialVersionUID = 1L;
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractReleaseTopology.class);
 
     public static final String APOLLO = "Apollo";
-
-    protected TGraphBackground background;
 
     protected JPanel operationBar = new JPanel();
 
@@ -72,12 +61,8 @@ public abstract class AbstractReleaseTopology extends BasicTopology {
         this.releaseType = releaseType;
 
         initializeToolBar();
-        initializeTopology();
         initializeOperationBar();
-        // initializeListener();
         initializeData();
-
-        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
     }
 
     public void initializeToolBar() {
@@ -98,15 +83,6 @@ public abstract class AbstractReleaseTopology extends BasicTopology {
         ButtonManager.updateUI(toolBar);
     }
 
-    public void initializeTopology() {
-        background = graph.getGraphBackground();
-        graph.setElementStateOutlineColorGenerator(new Generator() {
-            public Object generate(Object object) {
-                return null;
-            }
-        });
-    }
-
     public void initializeData() {
         try {
             configType = ConsoleCache.getConfigType();
@@ -125,25 +101,10 @@ public abstract class AbstractReleaseTopology extends BasicTopology {
         executeLayout();
     }
 
-    public void initializeListener() {
-        addHierarchyListener(new DisplayAbilityListener() {
-            public void displayAbilityChanged(HierarchyEvent e) {
-                showLayoutBar(150, 100, 200, 60);
-                toggleLayoutBar();
-
-                removeHierarchyListener(this);
-            }
-        });
-    }
-
     public abstract void initializeOperationBar();
 
     public JPanel getOperationBar() {
         return operationBar;
-    }
-
-    public void executeLayout() {
-        layouter.doLayout(TLayoutType.HIERARCHIC_LAYOUT_TYPE, 150, 100, 200, 60);
     }
 
     public void showResult(Object result) {
