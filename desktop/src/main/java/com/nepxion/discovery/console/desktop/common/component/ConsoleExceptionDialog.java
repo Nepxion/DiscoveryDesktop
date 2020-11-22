@@ -22,11 +22,9 @@ import java.awt.event.ComponentListener;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.nepxion.discovery.console.desktop.ConsoleInitializer;
 import com.nepxion.swing.button.JClassicButton;
 import com.nepxion.swing.dialog.DialogResizer;
 import com.nepxion.swing.dialog.JBasicDialog;
@@ -209,11 +207,5 @@ public class ConsoleExceptionDialog extends JBasicDialog {
 
     public String getExceptionText() {
         return detailTextArea.getText();
-    }
-
-    public static void main(String[] args) {
-        ConsoleInitializer.initialize();
-
-        ConsoleExceptionDialog.traceException(new JFrame(), "abc", new java.lang.IllegalArgumentException("abc"));
     }
 }
