@@ -28,6 +28,7 @@ import com.nepxion.discovery.common.entity.DeployType;
 import com.nepxion.discovery.common.entity.ServiceType;
 import com.nepxion.discovery.common.entity.SubscriptionType;
 import com.nepxion.discovery.console.controller.ConsoleController;
+import com.nepxion.discovery.console.desktop.common.component.ConsoleExceptionDialog;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
@@ -36,7 +37,6 @@ import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.discovery.console.entity.Instance;
 import com.nepxion.swing.checkbox.JBasicCheckBox;
 import com.nepxion.swing.combobox.JBasicComboBox;
-import com.nepxion.swing.dialog.JExceptionDialog;
 import com.nepxion.swing.handle.HandleManager;
 import com.nepxion.swing.label.JBasicLabel;
 import com.nepxion.swing.layout.filed.FiledLayout;
@@ -311,7 +311,7 @@ public class CreatePanel extends JPanel {
         try {
             return ConsoleController.getGroups().toArray();
         } catch (Exception e) {
-            JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
+            ConsoleExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
         }
 
         return null;
@@ -335,7 +335,7 @@ public class CreatePanel extends JPanel {
                 return instanceMap.keySet().toArray();
             }
         } catch (Exception e) {
-            JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
+            ConsoleExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
         }
 
         return null;

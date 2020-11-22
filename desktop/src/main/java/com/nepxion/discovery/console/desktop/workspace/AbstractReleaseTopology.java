@@ -33,6 +33,7 @@ import com.nepxion.discovery.common.entity.ElementType;
 import com.nepxion.discovery.common.entity.RuleEntity;
 import com.nepxion.discovery.common.entity.SubscriptionType;
 import com.nepxion.discovery.console.controller.ConsoleController;
+import com.nepxion.discovery.console.desktop.common.component.ConsoleExceptionDialog;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
@@ -49,7 +50,6 @@ import com.nepxion.discovery.console.entity.Instance;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.ButtonManager;
 import com.nepxion.swing.combobox.JBasicComboBox;
-import com.nepxion.swing.dialog.JExceptionDialog;
 import com.nepxion.swing.element.ElementNode;
 import com.nepxion.swing.handle.HandleManager;
 import com.nepxion.swing.locale.SwingLocale;
@@ -94,7 +94,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
                 this.serviceIds = ConsoleController.getServices().toArray();
             }
         } catch (Exception e) {
-            JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
+            ConsoleExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
         }
     }
 
@@ -106,7 +106,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         try {
             return ConsoleController.getInstanceList(serviceId);
         } catch (Exception e) {
-            JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
+            ConsoleExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
         }
 
         return null;
