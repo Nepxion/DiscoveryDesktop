@@ -40,9 +40,9 @@ public class ConsoleHierarchy extends AbstractConsoleHierarchy {
 
     private JShrinkOutlook createServiceReleaseManageShrinkOutlook() {
         List<ElementNode> elementNodes = new ArrayList<ElementNode>();
-        elementNodes.add(new ElementNode(ReleaseType.BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.BLUE_GREEN), ConsoleIconFactory.getSwingIcon("component/ui_16.png"), TypeLocale.getDescription(ReleaseType.BLUE_GREEN), new BlueGreenTopology()));
-        elementNodes.add(new ElementNode(ReleaseType.GRAY.toString(), TypeLocale.getDescription(ReleaseType.GRAY), ConsoleIconFactory.getSwingIcon("component/ui_16.png"), TypeLocale.getDescription(ReleaseType.GRAY), new GrayTopology()));
-        elementNodes.add(new ElementNode(FeatureType.INSPECT.toString(), TypeLocale.getDescription(FeatureType.INSPECT), ConsoleIconFactory.getSwingIcon("component/ui_16.png"), TypeLocale.getDescription(FeatureType.INSPECT), new InspectorTopology()));
+        elementNodes.add(new ElementNode(ReleaseType.BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.BLUE_GREEN), ConsoleIconFactory.getContextIcon("blue_green.png"), TypeLocale.getDescription(ReleaseType.BLUE_GREEN), new BlueGreenTopology()));
+        elementNodes.add(new ElementNode(ReleaseType.GRAY.toString(), TypeLocale.getDescription(ReleaseType.GRAY), ConsoleIconFactory.getContextIcon("gray.png"), TypeLocale.getDescription(ReleaseType.GRAY), new GrayTopology()));
+        elementNodes.add(new ElementNode(FeatureType.INSPECT.toString(), TypeLocale.getDescription(FeatureType.INSPECT), ConsoleIconFactory.getContextIcon("inspect.png"), TypeLocale.getDescription(FeatureType.INSPECT), new InspectorTopology()));
 
         JBasicList toggleList = createToggleList(elementNodes);
         toggleList.setSelectedIndex(0);
@@ -56,7 +56,7 @@ public class ConsoleHierarchy extends AbstractConsoleHierarchy {
 
     private JShrinkOutlook createInstanceBlacklistManageShrinkOutlook() {
         List<ElementNode> elementNodes = new ArrayList<ElementNode>();
-        elementNodes.add(new ElementNode(ReleaseType.BLACKLIST.toString(), TypeLocale.getDescription(ReleaseType.BLACKLIST), ConsoleIconFactory.getSwingIcon("component/ui_16.png"), TypeLocale.getDescription(ReleaseType.BLACKLIST), null));
+        elementNodes.add(new ElementNode(ReleaseType.BLACKLIST.toString(), TypeLocale.getDescription(ReleaseType.BLACKLIST), ConsoleIconFactory.getContextIcon("blacklist.png"), TypeLocale.getDescription(ReleaseType.BLACKLIST), null));
 
         JBasicList toggleList = createToggleList(elementNodes);
 
@@ -69,7 +69,7 @@ public class ConsoleHierarchy extends AbstractConsoleHierarchy {
 
     private JShrinkOutlook createMiddleWareReleaseManageShrinkOutlook() {
         List<ElementNode> elementNodes = new ArrayList<ElementNode>();
-        elementNodes.add(new ElementNode(ReleaseType.MIDDLEWARE_BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.MIDDLEWARE_BLUE_GREEN), ConsoleIconFactory.getSwingIcon("component/ui_16.png"), TypeLocale.getDescription(ReleaseType.MIDDLEWARE_BLUE_GREEN), null));
+        elementNodes.add(new ElementNode(ReleaseType.MIDDLEWARE_BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.MIDDLEWARE_BLUE_GREEN), ConsoleIconFactory.getContextIcon("middleware.png"), TypeLocale.getDescription(ReleaseType.MIDDLEWARE_BLUE_GREEN), null));
 
         JBasicList toggleList = createToggleList(elementNodes);
 
