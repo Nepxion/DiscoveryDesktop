@@ -32,6 +32,7 @@ import com.nepxion.discovery.console.desktop.common.component.ConsoleExceptionDi
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.ButtonUtil;
+import com.nepxion.discovery.console.desktop.workspace.panel.ConfigPanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.PreviewPanel;
 import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessor;
 import com.nepxion.discovery.console.desktop.workspace.topology.BasicTopology;
@@ -54,8 +55,6 @@ public abstract class AbstractTopology extends BasicTopology {
     public static final String APOLLO = "Apollo";
 
     protected TGraphBackground background;
-
-    protected PreviewPanel previewPanel;
 
     protected JPanel operationBar = new JPanel();
 
@@ -92,6 +91,7 @@ public abstract class AbstractTopology extends BasicTopology {
         toolBar.addSeparator();
         toolBar.add(ButtonUtil.createButton(createPreviewAction()));
         toolBar.add(ButtonUtil.createButton(createInspectAction()));
+        toolBar.add(ButtonUtil.createButton(createConfigAction()));
         toolBar.addSeparator();
         toolBar.add(ButtonUtil.createButton(createLayoutAction()));
 
@@ -230,10 +230,7 @@ public abstract class AbstractTopology extends BasicTopology {
                     return;
                 }
 
-                if (previewPanel == null) {
-                    previewPanel = new PreviewPanel();
-                    previewPanel.setPreferredSize(new Dimension(800, 400));
-                }
+                PreviewPanel previewPanel = PreviewPanel.getInstance();
 
                 String key = getKey();
 
@@ -265,6 +262,18 @@ public abstract class AbstractTopology extends BasicTopology {
 
             public void execute(ActionEvent e) {
 
+            }
+        };
+
+        return action;
+    }
+
+    public JSecurityAction createConfigAction() {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("config_text"), ConsoleIconFactory.getSwingIcon("config.png"), ConsoleLocaleFactory.getString("config_tooltip")) {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+                JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractTopology.this), ConfigPanel.getInstance(), ConsoleLocaleFactory.getString("config_text"), JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/deploy.png"), new Object[] { SwingLocale.getString("close") }, null, true);
             }
         };
 

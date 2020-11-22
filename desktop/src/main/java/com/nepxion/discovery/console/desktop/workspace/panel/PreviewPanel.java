@@ -10,6 +10,7 @@ package com.nepxion.discovery.console.desktop.workspace.panel;
  */
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 import javax.swing.JPanel;
 
@@ -22,10 +23,20 @@ import com.nepxion.swing.textfield.JBasicTextField;
 public class PreviewPanel extends JPanel {
     private static final long serialVersionUID = 1L;
 
+    protected static PreviewPanel previewPanel;
+
+    public static PreviewPanel getInstance() {
+        if (previewPanel == null) {
+            previewPanel = new PreviewPanel();
+        }
+
+        return previewPanel;
+    }
+
     protected JBasicTextField keyTextField;
     protected JBasicTextArea configTextArea;
 
-    public PreviewPanel() {
+    private PreviewPanel() {
         keyTextField = new JBasicTextField();
         JPanel keyPanel = new JPanel();
         keyPanel.setLayout(new BorderLayout(10, 0));
@@ -39,6 +50,7 @@ public class PreviewPanel extends JPanel {
         configPanel.add(new JBasicScrollPane(configTextArea), BorderLayout.CENTER);
 
         setLayout(new BorderLayout());
+        setPreferredSize(new Dimension(800, 400));
         add(keyPanel, BorderLayout.NORTH);
         add(configPanel, BorderLayout.CENTER);
     }

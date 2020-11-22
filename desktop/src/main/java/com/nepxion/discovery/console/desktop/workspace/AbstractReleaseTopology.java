@@ -31,6 +31,7 @@ import com.nepxion.discovery.common.entity.DeployType;
 import com.nepxion.discovery.common.entity.ElementType;
 import com.nepxion.discovery.common.entity.RuleEntity;
 import com.nepxion.discovery.common.entity.SubscriptionType;
+import com.nepxion.discovery.console.cache.ConsoleCache;
 import com.nepxion.discovery.console.controller.ConsoleController;
 import com.nepxion.discovery.console.desktop.common.component.ConsoleExceptionDialog;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
@@ -90,7 +91,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
             if (deployType == DeployType.DOMAIN_GATEWAY) {
                 this.serviceIds = new ArrayList<String>(ConsoleController.getInstanceMap(Arrays.asList(group)).keySet());
             } else {
-                this.serviceIds = ConsoleController.getServices();
+                this.serviceIds = ConsoleCache.getServices();
             }
         } catch (Exception e) {
             ConsoleExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
