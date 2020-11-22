@@ -9,23 +9,35 @@ package com.nepxion.discovery.console.desktop.common.util;
  * @version 1.0
  */
 
+import java.util.Collections;
+import java.util.List;
+
+import javax.swing.DefaultComboBoxModel;
+
 import com.nepxion.swing.combobox.JBasicComboBox;
 import com.nepxion.swing.completion.JAutoCompletion;
 import com.nepxion.swing.searchable.JSearchableFactory;
 
 public class ComboBoxUtil {
-    public static void installSearchable(JBasicComboBox comoboBox) {
-        JSearchableFactory.installSearchable(comoboBox);
+    public static void installSearchable(JBasicComboBox comboBox) {
+        JSearchableFactory.installSearchable(comboBox);
     }
 
-    public static JAutoCompletion installlAutoCompletion(JBasicComboBox comoboBox) {
-        JAutoCompletion autoCompletion = new JAutoCompletion(comoboBox);
+    public static JAutoCompletion installlAutoCompletion(JBasicComboBox comboBox) {
+        JAutoCompletion autoCompletion = new JAutoCompletion(comboBox);
         autoCompletion.setStrict(false);
 
         return autoCompletion;
     }
 
-    public static String getSelectedValue(JBasicComboBox comoboBox) {
-        return comoboBox.getSelectedItem() != null ? comoboBox.getSelectedItem().toString().trim() : null;
+    @SuppressWarnings("unchecked")
+    public static void setSortableModel(JBasicComboBox comboBox, List<String> list) {
+        Collections.sort(list);
+
+        comboBox.setModel(new DefaultComboBoxModel<>(list.toArray()));
+    }
+
+    public static String getSelectedValue(JBasicComboBox comboBox) {
+        return comboBox.getSelectedItem() != null ? comboBox.getSelectedItem().toString().trim() : null;
     }
 }

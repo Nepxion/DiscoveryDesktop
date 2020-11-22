@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -69,7 +68,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     protected DeployType deployType;
 
     protected Instance gateway;
-    protected Object[] serviceIds;
+    protected List<String> serviceIds;
 
     public AbstractReleaseTopology(ReleaseType releaseType) {
         super(releaseType);
@@ -89,9 +88,9 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     public void refreshData() {
         try {
             if (deployType == DeployType.DOMAIN_GATEWAY) {
-                this.serviceIds = ConsoleController.getInstanceMap(Arrays.asList(group)).keySet().toArray();
+                this.serviceIds = new ArrayList<String>(ConsoleController.getInstanceMap(Arrays.asList(group)).keySet());
             } else {
-                this.serviceIds = ConsoleController.getServices().toArray();
+                this.serviceIds = ConsoleController.getServices();
             }
         } catch (Exception e) {
             ConsoleExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
@@ -140,9 +139,8 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         setNodeTopBottom(gatewayNode, false);
     }
 
-    @SuppressWarnings("unchecked")
     public void setServiceUI() {
-        serviceIdComboBox.setModel(new DefaultComboBoxModel<>(serviceIds));
+        ComboBoxUtil.setSortableModel(serviceIdComboBox, serviceIds);
     }
 
     public void setMetadataUI() {
@@ -163,7 +161,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
             metadatas.add(DiscoveryConstant.DEFAULT);
         }
 
-        setMetadataUI(metadatas.toArray());
+        setMetadataUI(metadatas);
     }
 
     @SuppressWarnings("unchecked")
@@ -445,7 +443,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
     public abstract void reset();
 
-    public abstract void setMetadataUI(Object[] metadatas);
+    public abstract void setMetadataUI(List<String> metadatas);
 
     public abstract void addServiceStrategy(String serviceId);
 

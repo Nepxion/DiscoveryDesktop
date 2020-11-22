@@ -19,7 +19,6 @@ import java.util.Map;
 
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 
 import org.apache.commons.lang3.StringUtils;
@@ -251,21 +250,19 @@ public class CreatePanel extends JPanel {
         return newRadioButton.isSelected();
     }
 
-    @SuppressWarnings("unchecked")
     public void setGroups() {
-        Object[] groups = getGroups();
+        List<String> groups = getGroups();
         if (groups != null) {
-            groupComboBox.setModel(new DefaultComboBoxModel<>(groups));
+            ComboBoxUtil.setSortableModel(groupComboBox, groups);
         }
     }
 
-    @SuppressWarnings("unchecked")
     public void setGatewayIds() {
         String group = ComboBoxUtil.getSelectedValue(groupComboBox);
         if (StringUtils.isNotBlank(group)) {
-            Object[] gatewayIds = geServiceIds(group, showOnlyGatewayCheckBox.isSelected());
+            List<String> gatewayIds = geServiceIds(group, showOnlyGatewayCheckBox.isSelected());
             if (gatewayIds != null) {
-                gatewayIdComboBox.setModel(new DefaultComboBoxModel<>(gatewayIds));
+                ComboBoxUtil.setSortableModel(gatewayIdComboBox, gatewayIds);
             }
         }
     }
@@ -307,9 +304,9 @@ public class CreatePanel extends JPanel {
         return ComboBoxUtil.getSelectedValue(gatewayIdComboBox);
     }
 
-    public Object[] getGroups() {
+    public List<String> getGroups() {
         try {
-            return ConsoleController.getGroups().toArray();
+            return ConsoleController.getGroups();
         } catch (Exception e) {
             ConsoleExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
         }
@@ -317,7 +314,7 @@ public class CreatePanel extends JPanel {
         return null;
     }
 
-    public Object[] geServiceIds(String group, boolean onlyGateway) {
+    public List<String> geServiceIds(String group, boolean onlyGateway) {
         try {
             Map<String, List<Instance>> instanceMap = ConsoleController.getInstanceMap(Arrays.asList(group));
             if (onlyGateway) {
@@ -330,9 +327,9 @@ public class CreatePanel extends JPanel {
                     }
                 }
 
-                return gatewayIds.toArray();
+                return gatewayIds;
             } else {
-                return instanceMap.keySet().toArray();
+                return new ArrayList<String>(instanceMap.keySet());
             }
         } catch (Exception e) {
             ConsoleExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);

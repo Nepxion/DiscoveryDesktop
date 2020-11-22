@@ -15,9 +15,6 @@ public class ConsoleCache {
     private static String discoveryType;
     private static String configType;
 
-    private static Object[] groups;
-    private static Object[] services;
-
     public static String getDiscoveryType() {
         if (discoveryType == null) {
             discoveryType = ConsoleController.getDiscoveryType();
@@ -32,33 +29,5 @@ public class ConsoleCache {
         }
 
         return configType;
-    }
-
-    public static Object[] getGroups() {
-        if (groups == null) {
-            groups = ConsoleController.getGroups().toArray();
-        }
-
-        return groups;
-    }
-
-    public static Object[] refreshGroups() {
-        groups = null;
-
-        return getGroups();
-    }
-    
-    public static Object[] getServices() {
-        if (services == null) {
-            services = ConsoleController.getServices().toArray();
-        }
-
-        return services;
-    }
-
-    public static Object[] refreshServices() {
-        services = null;
-
-        return getServices();
     }
 }

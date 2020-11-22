@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -453,12 +452,11 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         resetNodes();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public void setMetadataUI(Object[] metadatas) {
-        blueMetadataComboBox.setModel(new DefaultComboBoxModel<>(metadatas));
-        greenMetadataComboBox.setModel(new DefaultComboBoxModel<>(metadatas));
-        basicMetadataComboBox.setModel(new DefaultComboBoxModel<>(metadatas));
+    public void setMetadataUI(List<String> metadatas) {
+        ComboBoxUtil.setSortableModel(blueMetadataComboBox, metadatas);
+        ComboBoxUtil.setSortableModel(greenMetadataComboBox, metadatas);
+        ComboBoxUtil.setSortableModel(basicMetadataComboBox, metadatas);
     }
 
     @Override

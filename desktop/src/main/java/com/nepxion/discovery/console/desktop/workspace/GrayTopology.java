@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -394,11 +393,10 @@ public class GrayTopology extends AbstractReleaseTopology {
         resetNodes();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public void setMetadataUI(Object[] metadatas) {
-        grayMetadataComboBox.setModel(new DefaultComboBoxModel<>(metadatas));
-        stableMetadataComboBox.setModel(new DefaultComboBoxModel<>(metadatas));
+    public void setMetadataUI(List<String> metadatas) {
+        ComboBoxUtil.setSortableModel(grayMetadataComboBox, metadatas);
+        ComboBoxUtil.setSortableModel(stableMetadataComboBox, metadatas);
     }
 
     @Override
