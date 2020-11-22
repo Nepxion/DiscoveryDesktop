@@ -150,10 +150,8 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
 
         if (strategyHeaderEntity != null) {
             Map<String, String> parameterMap = strategyHeaderEntity.getHeaderMap();
-            if (parameterMap != null) {
-                String parameter = StringUtil.convertToString(parameterMap);
-                parameterTextField.setText(parameter);
-            }
+            String parameter = StringUtil.convertToString(parameterMap);
+            parameterTextField.setText(parameter);
         }
     }
 

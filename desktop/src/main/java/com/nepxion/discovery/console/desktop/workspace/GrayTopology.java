@@ -109,12 +109,11 @@ public class GrayTopology extends AbstractReleaseTopology {
                     mapWeightEntity = strategyConditionGrayEntity.getRegionWeightEntity();
                     break;
             }
+
             if (mapWeightEntity != null) {
                 Map<String, Integer> weightMap = mapWeightEntity.getWeightMap();
-                if (weightMap != null) {
-                    String grayWeight = String.valueOf(weightMap.get(grayRouteId));
-                    grayConditionComboBox.setSelectedItem(grayWeight);
-                }
+                String grayWeight = String.valueOf(weightMap.get(grayRouteId));
+                grayConditionComboBox.setSelectedItem(grayWeight);
             }
         }
     }

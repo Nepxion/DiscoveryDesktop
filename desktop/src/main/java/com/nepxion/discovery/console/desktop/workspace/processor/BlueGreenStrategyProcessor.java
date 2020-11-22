@@ -22,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.nepxion.cots.twaver.element.TElementManager;
 import com.nepxion.cots.twaver.element.TLink;
 import com.nepxion.cots.twaver.element.TNode;
+import com.nepxion.discovery.common.entity.BlueGreenRouteType;
 import com.nepxion.discovery.common.entity.ElementType;
 import com.nepxion.discovery.common.entity.RuleEntity;
 import com.nepxion.discovery.common.entity.StrategyConditionBlueGreenEntity;
@@ -30,16 +31,130 @@ import com.nepxion.discovery.common.entity.StrategyEntity;
 import com.nepxion.discovery.common.entity.StrategyHeaderEntity;
 import com.nepxion.discovery.common.entity.StrategyRouteEntity;
 import com.nepxion.discovery.common.entity.StrategyRouteType;
+import com.nepxion.discovery.common.exception.DiscoveryException;
 import com.nepxion.discovery.common.util.JsonUtil;
+import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
+import com.nepxion.discovery.console.desktop.workspace.BlueGreenTopology;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
+import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.discovery.console.entity.Instance;
-import com.nepxion.discovery.plugin.framework.parser.xml.XmlConfigConstant;
 
 public class BlueGreenStrategyProcessor extends AbstractStrategyProcessor {
+    private BlueGreenTopology blueGreenTopology;
+
+    @SuppressWarnings({ "incomplete-switch", "unchecked" })
     @Override
     public void fromConfig(RuleEntity ruleEntity, StrategyType strategyType, TDataBox dataBox) throws Exception {
-        ruleEntity.getStrategyEntity();
-        ruleEntity.getStrategyCustomizationEntity();
+        StrategyEntity strategyEntity = ruleEntity.getStrategyEntity();
+
+        BlueGreenRouteType blueGreenRouteType = blueGreenTopology.getBlueGreenRouteType();
+
+        String blueConditionId = StrategyProcessorUtil.getStrategyBlueConditionId();
+        String greenConditionId = StrategyProcessorUtil.getStrategyGreenConditionId();
+        String blueRouteId = StrategyProcessorUtil.getStrategyBlueRouteId(strategyType);
+        String greenRouteId = StrategyProcessorUtil.getStrategyGreenRouteId(strategyType);
+
+        String basicStrategy = null;
+        switch (strategyType) {
+            case VERSION:
+                basicStrategy = strategyEntity.getVersionValue();
+                break;
+            case REGION:
+                basicStrategy = strategyEntity.getRegionValue();
+                break;
+        }
+
+        if (StringUtils.isBlank(basicStrategy)) {
+            throw new DiscoveryException(ConsoleLocaleFactory.getString("basic_route_services_missing"));
+        }
+
+        Map<String, String> basicStrategyMap = JsonUtil.fromJson(basicStrategy, Map.class);
+
+        StrategyConditionBlueGreenEntity strategyConditionBlueEntity = StrategyProcessorUtil.getStrategyConditionBlueGreenEntity(ruleEntity, blueConditionId);
+        if (strategyConditionBlueEntity == null) {
+            throw new DiscoveryException(ConsoleLocaleFactory.getString("blue_condition_missing"));
+        }
+
+        StrategyConditionBlueGreenEntity strategyConditionGreenEntity = StrategyProcessorUtil.getStrategyConditionBlueGreenEntity(ruleEntity, greenConditionId);
+        if (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && strategyConditionGreenEntity == null) {
+            throw new DiscoveryException(ConsoleLocaleFactory.getString("green_condition_missing"));
+        }
+
+        String blueCondition = strategyConditionBlueEntity.getConditionHeader();
+        if (StringUtils.isBlank(blueCondition)) {
+            throw new DiscoveryException(ConsoleLocaleFactory.getString("blue_condition_expression_missing"));
+        }
+
+        String greenCondition = null;
+        if (strategyConditionGreenEntity != null) {
+            greenCondition = strategyConditionGreenEntity.getConditionHeader();
+            if (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && StringUtils.isBlank(greenCondition)) {
+                throw new DiscoveryException(ConsoleLocaleFactory.getString("green_condition_expression_missing"));
+            }
+        }
+
+        StrategyRouteEntity strategyRouteBlueEntity = StrategyProcessorUtil.getStrategyRouteEntity(ruleEntity, blueRouteId);
+        if (strategyRouteBlueEntity == null) {
+            throw new DiscoveryException(ConsoleLocaleFactory.getString("blue_route_missing"));
+        }
+
+        StrategyRouteEntity strategyRouteGreenEntity = StrategyProcessorUtil.getStrategyRouteEntity(ruleEntity, greenRouteId);
+        if (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && strategyRouteGreenEntity == null) {
+            throw new DiscoveryException(ConsoleLocaleFactory.getString("green_route_missing"));
+        }
+
+        String blueStrategy = strategyRouteBlueEntity.getValue();
+        if (StringUtils.isBlank(blueStrategy)) {
+            throw new DiscoveryException(ConsoleLocaleFactory.getString("blue_route_services_missing"));
+        }
+
+        String greenStrategy = null;
+        if (strategyRouteGreenEntity != null) {
+            greenStrategy = strategyRouteGreenEntity.getValue();
+            if (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && StringUtils.isBlank(greenStrategy)) {
+                throw new DiscoveryException(ConsoleLocaleFactory.getString("green_route_services_missing"));
+            }
+        }
+
+        Map<String, String> blueStrategyMap = JsonUtil.fromJson(blueStrategy, Map.class);
+
+        Map<String, String> greenStrategyMap = null;
+        if (greenStrategy != null) {
+            greenStrategyMap = JsonUtil.fromJson(greenStrategy, Map.class);
+        }
+
+        if (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && blueStrategyMap.size() != greenStrategyMap.size()) {
+            throw new DiscoveryException(ConsoleLocaleFactory.getString("blue_services_not_equals_green_services"));
+        }
+
+        if (blueStrategyMap.size() != basicStrategyMap.size()) {
+            throw new DiscoveryException(ConsoleLocaleFactory.getString("blue_services_not_equals_basic_services"));
+        }
+
+        if (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && greenStrategyMap.size() != basicStrategyMap.size()) {
+            throw new DiscoveryException(ConsoleLocaleFactory.getString("green_services_not_equals_basic_services"));
+        }
+
+        for (Map.Entry<String, String> entry : basicStrategyMap.entrySet()) {
+            String serviceId = entry.getKey();
+            String basicMetadata = entry.getValue();
+            String blueMetadata = blueStrategyMap.get(serviceId);
+
+            String greenMetadata = null;
+            if (greenStrategyMap != null) {
+                greenMetadata = greenStrategyMap.get(serviceId);
+            }
+
+            if (StringUtils.isBlank(blueMetadata)) {
+                throw new DiscoveryException(ConsoleLocaleFactory.getString("service") + "【" + serviceId + "】" + TypeLocale.getDescription(ElementType.BLUE) + "【" + TypeLocale.getName(strategyType) + "】" + ConsoleLocaleFactory.getString("missing"));
+            }
+
+            if (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && StringUtils.isBlank(greenMetadata)) {
+                throw new DiscoveryException(ConsoleLocaleFactory.getString("service") + "【" + serviceId + "】" + TypeLocale.getDescription(ElementType.GREEN) + "【" + TypeLocale.getName(strategyType) + "】" + ConsoleLocaleFactory.getString("missing"));
+            }
+
+            blueGreenTopology.addNodes(serviceId, blueMetadata, greenMetadata, basicMetadata, blueCondition, greenCondition);
+        }
     }
 
     @SuppressWarnings({ "unchecked", "incomplete-switch" })
@@ -93,10 +208,10 @@ public class BlueGreenStrategyProcessor extends AbstractStrategyProcessor {
                 }
             }
 
-            String blueConditionId = ElementType.BLUE + "-" + XmlConfigConstant.CONDITION_ELEMENT_NAME;
-            String greenConditionId = ElementType.GREEN + "-" + XmlConfigConstant.CONDITION_ELEMENT_NAME;
-            String blueRouteId = ElementType.BLUE + "-" + strategyType + "-" + XmlConfigConstant.ROUTE_ELEMENT_NAME;
-            String greenRouteId = ElementType.GREEN + "-" + strategyType + "-" + XmlConfigConstant.ROUTE_ELEMENT_NAME;
+            String blueConditionId = StrategyProcessorUtil.getStrategyBlueConditionId();
+            String greenConditionId = StrategyProcessorUtil.getStrategyGreenConditionId();
+            String blueRouteId = StrategyProcessorUtil.getStrategyBlueRouteId(strategyType);
+            String greenRouteId = StrategyProcessorUtil.getStrategyGreenRouteId(strategyType);
 
             StrategyConditionBlueGreenEntity strategyConditionBlueEntity = new StrategyConditionBlueGreenEntity();
             strategyConditionBlueEntity.setId(blueConditionId);
@@ -156,5 +271,9 @@ public class BlueGreenStrategyProcessor extends AbstractStrategyProcessor {
         ruleEntity.setStrategyCustomizationEntity(strategyCustomizationEntity);
 
         return deparseConfig(ruleEntity);
+    }
+
+    public void setBlueGreenTopology(BlueGreenTopology blueGreenTopology) {
+        this.blueGreenTopology = blueGreenTopology;
     }
 }
