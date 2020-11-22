@@ -19,7 +19,10 @@ public class ComboBoxUtil {
     }
 
     public static JAutoCompletion installlAutoCompletion(JBasicComboBox comoboBox) {
-        return new JAutoCompletion(comoboBox);
+        JAutoCompletion autoCompletion = new JAutoCompletion(comoboBox);
+        autoCompletion.setStrict(false);
+
+        return autoCompletion;
     }
 
     public static String getSelectedValue(JBasicComboBox comoboBox) {
