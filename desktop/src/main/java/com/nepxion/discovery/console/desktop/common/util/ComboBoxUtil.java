@@ -31,10 +31,10 @@ public class ComboBoxUtil {
     }
 
     @SuppressWarnings("unchecked")
-    public static void setSortableModel(JBasicComboBox comboBox, List<String> list) {
-        Collections.sort(list);
+    public static void setSortableModel(JBasicComboBox comboBox, List<String> value) {
+        Collections.sort(value);
 
-        comboBox.setModel(new DefaultComboBoxModel<>(list.toArray()));
+        comboBox.setModel(new DefaultComboBoxModel<>(value.toArray()));
     }
 
     public static String getSelectedValue(JBasicComboBox comboBox) {
