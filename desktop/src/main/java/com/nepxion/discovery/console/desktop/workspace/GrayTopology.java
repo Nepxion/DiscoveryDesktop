@@ -57,7 +57,7 @@ import com.nepxion.swing.locale.SwingLocale;
 import com.nepxion.swing.optionpane.JBasicOptionPane;
 import com.nepxion.swing.shrinkbar.JShrinkShortcut;
 
-public class GrayTopology extends AbstractReleaseTopology {
+public class GrayTopology extends AbstractStrategyTopology {
     private static final long serialVersionUID = 1L;
 
     protected NodeUI serviceGrayNodeUI = new NodeUI(NodeImageType.SERVICE_GRAY, NodeSizeType.MIDDLE, true);

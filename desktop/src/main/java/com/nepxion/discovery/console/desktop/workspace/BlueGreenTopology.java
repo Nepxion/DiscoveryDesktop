@@ -64,7 +64,7 @@ import com.nepxion.swing.optionpane.JBasicOptionPane;
 import com.nepxion.swing.shrinkbar.JShrinkShortcut;
 import com.nepxion.swing.textfield.JBasicTextField;
 
-public class BlueGreenTopology extends AbstractReleaseTopology {
+public class BlueGreenTopology extends AbstractStrategyTopology {
     private static final long serialVersionUID = 1L;
 
     protected NodeUI serviceBlueNodeUI = new NodeUI(NodeImageType.SERVICE_BLUE, NodeSizeType.MIDDLE, true);

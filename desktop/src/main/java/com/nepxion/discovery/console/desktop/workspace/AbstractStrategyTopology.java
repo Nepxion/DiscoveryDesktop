@@ -56,7 +56,7 @@ import com.nepxion.swing.locale.SwingLocale;
 import com.nepxion.swing.optionpane.JBasicOptionPane;
 import com.nepxion.swing.selector.checkbox.JCheckBoxSelector;
 
-public abstract class AbstractReleaseTopology extends AbstractTopology {
+public abstract class AbstractStrategyTopology extends AbstractTopology {
     private static final long serialVersionUID = 1L;
 
     protected NodeLocation nodeLocation = new NodeLocation(440, 100, 200, 0);
@@ -71,7 +71,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     protected Instance gateway;
     protected List<String> serviceIds;
 
-    public AbstractReleaseTopology(ReleaseType releaseType) {
+    public AbstractStrategyTopology(ReleaseType releaseType) {
         super(releaseType);
     }
 
@@ -213,7 +213,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         CreatePanel createPanel = getCreatePanel();
         createPanel.setPreferredSize(new Dimension(createPanel.getPreferredSize().width + 100, createPanel.getPreferredSize().height + 10));
 
-        int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractReleaseTopology.this), createPanel, ConsoleLocaleFactory.getString("create_tooltip") + "【" + TypeLocale.getDescription(releaseType) + "】", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
+        int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractStrategyTopology.this), createPanel, ConsoleLocaleFactory.getString("create_tooltip") + "【" + TypeLocale.getDescription(releaseType) + "】", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
         if (selectedOption != 0) {
             return;
         }
@@ -222,7 +222,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
         String group = createPanel.getGroup();
         if (StringUtils.isBlank(group)) {
-            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("group_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("group_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
             return;
         }
@@ -231,7 +231,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         if (subscriptionType == SubscriptionType.PARTIAL) {
             gatewayId = createPanel.getGatewayId();
             if (StringUtils.isBlank(gatewayId)) {
-                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("service_id_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("service_id_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                 return;
             }
@@ -251,27 +251,27 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
             try {
                 ruleEntity = getStrategyProcessor().parseConfig(config);
             } catch (Exception e) {
-                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("strategy_not_existed_or_invalid"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("strategy_not_existed_or_invalid"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                 return;
             }
 
             if (ruleEntity == null) {
-                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("strategy_not_existed_or_invalid"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("strategy_not_existed_or_invalid"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                 return;
             }
 
             strategyType = StrategyProcessorUtil.getStrategyType(ruleEntity);
             if (strategyType == null) {
-                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("strategy_not_existed_or_invalid"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("strategy_not_existed_or_invalid"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                 return;
             }
 
             ReleaseType releaseType = StrategyProcessorUtil.getReleaseType(ruleEntity);
             if (releaseType != null && getReleaseType() != releaseType) {
-                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("strategy_not_matched") + "【" + TypeLocale.getDescription(releaseType) + "】", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("strategy_not_matched") + "【" + TypeLocale.getDescription(releaseType) + "】", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                 return;
             }
@@ -341,7 +341,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
                     metadataElementNodes.add(new ElementNode(metadata, ConsoleIconFactory.getSwingIcon("component/file_chooser_16.png"), metadata, metadata));
                 }
 
-                JCheckBoxSelector checkBoxSelector = new JCheckBoxSelector(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("metadata_selector_tooltip"), new Dimension(400, 350), metadataElementNodes);
+                JCheckBoxSelector checkBoxSelector = new JCheckBoxSelector(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("metadata_selector_tooltip"), new Dimension(400, 350), metadataElementNodes);
                 checkBoxSelector.setVisible(true);
                 checkBoxSelector.dispose();
 
@@ -378,20 +378,20 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
             public void execute(ActionEvent e) {
                 if (strategyType == null) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("portal_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("portal_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
                 }
 
                 String serviceId = ComboBoxUtil.getSelectedValue(serviceIdComboBox);
                 if (StringUtils.isBlank(serviceId)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("service_id_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("service_id_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
                 }
 
                 if (hasNodes(serviceId)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), "【" + serviceId + "】" + ConsoleLocaleFactory.getString("existed"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), "【" + serviceId + "】" + ConsoleLocaleFactory.getString("existed"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
                 }
@@ -409,14 +409,14 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
             public void execute(ActionEvent e) {
                 if (strategyType == null) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("portal_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("portal_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
                 }
 
                 String serviceId = ComboBoxUtil.getSelectedValue(serviceIdComboBox);
                 if (StringUtils.isBlank(serviceId)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("service_id_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("service_id_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
                 }
