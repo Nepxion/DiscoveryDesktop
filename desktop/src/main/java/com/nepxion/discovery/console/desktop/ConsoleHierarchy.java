@@ -17,7 +17,7 @@ import com.nepxion.discovery.console.desktop.common.component.AbstractConsoleHie
 import com.nepxion.discovery.console.desktop.common.context.ConsoleUIContext;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
-import com.nepxion.discovery.console.desktop.workspace.AbstractTopology;
+import com.nepxion.discovery.console.desktop.workspace.AbstractReleaseTopology;
 import com.nepxion.discovery.console.desktop.workspace.BlueGreenTopology;
 import com.nepxion.discovery.console.desktop.workspace.GrayTopology;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
@@ -84,8 +84,8 @@ public class ConsoleHierarchy extends AbstractConsoleHierarchy {
             return;
         }
 
-        if (userObject instanceof AbstractTopology) {
-            AbstractTopology topology = (AbstractTopology) userObject;
+        if (userObject instanceof AbstractReleaseTopology) {
+            AbstractReleaseTopology topology = (AbstractReleaseTopology) userObject;
 
             shrinkContentBar.setContentPane(topology);
             shrinkOperationBar.setContentPane(topology.getOperationBar());

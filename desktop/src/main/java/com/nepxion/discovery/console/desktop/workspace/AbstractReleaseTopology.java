@@ -47,10 +47,10 @@ import com.nepxion.swing.optionpane.JBasicOptionPane;
 import com.nepxion.swing.scrollpane.JBasicScrollPane;
 import com.nepxion.swing.textarea.JBasicTextArea;
 
-public abstract class AbstractTopology extends BasicTopology {
+public abstract class AbstractReleaseTopology extends BasicTopology {
     private static final long serialVersionUID = 1L;
 
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractTopology.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractReleaseTopology.class);
 
     public static final String APOLLO = "Apollo";
 
@@ -68,7 +68,7 @@ public abstract class AbstractTopology extends BasicTopology {
 
     protected RuleEntity ruleEntity;
 
-    public AbstractTopology(ReleaseType releaseType) {
+    public AbstractReleaseTopology(ReleaseType releaseType) {
         this.releaseType = releaseType;
 
         initializeToolBar();
@@ -111,7 +111,7 @@ public abstract class AbstractTopology extends BasicTopology {
         try {
             configType = ConsoleCache.getConfigType();
         } catch (Exception ex) {
-            ConsoleExceptionDialog.traceException(HandleManager.getFrame(AbstractTopology.this), ConsoleLocaleFactory.getString("operation_failure"), ex);
+            ConsoleExceptionDialog.traceException(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("operation_failure"), ex);
         }
     }
 
@@ -177,12 +177,12 @@ public abstract class AbstractTopology extends BasicTopology {
             public void execute(ActionEvent e) {
                 String config = getStrategyProcessor().toConfig(ruleEntity, strategyType, dataBox);
                 if (StringUtils.isEmpty(config)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractTopology.this), ConsoleLocaleFactory.getString("strategy_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("strategy_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
                 }
 
-                int selectedValue = JBasicOptionPane.showConfirmDialog(HandleManager.getFrame(AbstractTopology.this), ConsoleLocaleFactory.getString("save_confirm") + "\n" + getKey(), SwingLocale.getString("confirm"), JBasicOptionPane.YES_NO_OPTION);
+                int selectedValue = JBasicOptionPane.showConfirmDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("save_confirm") + "\n" + getKey(), SwingLocale.getString("confirm"), JBasicOptionPane.YES_NO_OPTION);
                 if (selectedValue != JBasicOptionPane.OK_OPTION) {
                     return;
                 }
@@ -225,7 +225,7 @@ public abstract class AbstractTopology extends BasicTopology {
             public void execute(ActionEvent e) {
                 String config = getStrategyProcessor().toConfig(ruleEntity, strategyType, dataBox);
                 if (StringUtils.isEmpty(config)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractTopology.this), ConsoleLocaleFactory.getString("strategy_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("strategy_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
                 }
@@ -237,14 +237,14 @@ public abstract class AbstractTopology extends BasicTopology {
                 previewPanel.setKey(key);
                 previewPanel.setConfig(config);
 
-                int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractTopology.this), previewPanel, ConsoleLocaleFactory.getString("preview_tooltip"), JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/property.png"), new Object[] { ConsoleLocaleFactory.getString("save_config_text"), ConsoleLocaleFactory.getString("close_preview_text") }, null, true);
+                int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractReleaseTopology.this), previewPanel, ConsoleLocaleFactory.getString("preview_tooltip"), JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/property.png"), new Object[] { ConsoleLocaleFactory.getString("save_config_text"), ConsoleLocaleFactory.getString("close_preview_text") }, null, true);
                 if (selectedOption != 0) {
                     return;
                 }
 
                 config = previewPanel.getConfig();
                 if (StringUtils.isEmpty(config)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractTopology.this), ConsoleLocaleFactory.getString("strategy_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("strategy_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
                 }
@@ -273,7 +273,7 @@ public abstract class AbstractTopology extends BasicTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractTopology.this), ConfigPanel.getInstance(), ConsoleLocaleFactory.getString("config_text"), JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/deploy.png"), new Object[] { SwingLocale.getString("close") }, null, true);
+                JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConfigPanel.getInstance(), ConsoleLocaleFactory.getString("config_text"), JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/deploy.png"), new Object[] { SwingLocale.getString("close") }, null, true);
             }
         };
 

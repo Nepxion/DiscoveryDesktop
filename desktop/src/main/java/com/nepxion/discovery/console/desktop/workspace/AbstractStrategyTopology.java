@@ -56,7 +56,7 @@ import com.nepxion.swing.locale.SwingLocale;
 import com.nepxion.swing.optionpane.JBasicOptionPane;
 import com.nepxion.swing.selector.checkbox.JCheckBoxSelector;
 
-public abstract class AbstractStrategyTopology extends AbstractTopology {
+public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
     private static final long serialVersionUID = 1L;
 
     protected NodeLocation nodeLocation = new NodeLocation(440, 100, 200, 0);
