@@ -27,7 +27,7 @@ import com.nepxion.cots.twaver.graph.TGraphBackground;
 import com.nepxion.cots.twaver.graph.TLayoutType;
 import com.nepxion.discovery.common.entity.RuleEntity;
 import com.nepxion.discovery.common.entity.SubscriptionType;
-import com.nepxion.discovery.console.controller.ConsoleController;
+import com.nepxion.discovery.console.cache.ConsoleCache;
 import com.nepxion.discovery.console.desktop.common.component.ConsoleExceptionDialog;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
@@ -109,7 +109,7 @@ public abstract class AbstractTopology extends BasicTopology {
 
     public void initializeData() {
         try {
-            configType = ConsoleController.getConfigType();
+            configType = ConsoleCache.getConfigType();
         } catch (Exception ex) {
             ConsoleExceptionDialog.traceException(HandleManager.getFrame(AbstractTopology.this), ConsoleLocaleFactory.getString("operation_failure"), ex);
         }
