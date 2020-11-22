@@ -10,8 +10,18 @@ package com.nepxion.discovery.console.desktop.common.util;
  */
 
 import com.nepxion.swing.combobox.JBasicComboBox;
+import com.nepxion.swing.completion.JAutoCompletion;
+import com.nepxion.swing.searchable.JSearchableFactory;
 
 public class ComboBoxUtil {
+    public static void installSearchable(JBasicComboBox comoboBox) {
+        JSearchableFactory.installSearchable(comoboBox);
+    }
+
+    public static JAutoCompletion installlAutoCompletion(JBasicComboBox comoboBox) {
+        return new JAutoCompletion(comoboBox);
+    }
+
     public static String getSelectedValue(JBasicComboBox comoboBox) {
         return comoboBox.getSelectedItem() != null ? comoboBox.getSelectedItem().toString().trim() : null;
     }
