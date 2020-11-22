@@ -44,7 +44,7 @@ import com.nepxion.swing.layout.table.TableLayout;
 import com.nepxion.swing.radiobutton.JBasicRadioButton;
 import com.nepxion.swing.shrinkbar.JShrinkShortcut;
 
-public class CreatePanel extends JPanel {
+public class StrategyCreatePanel extends JPanel {
     private static final long serialVersionUID = 1L;
 
     protected JBasicRadioButton newRadioButton;
@@ -66,7 +66,7 @@ public class CreatePanel extends JPanel {
     protected ButtonGroup strategyButtonGroup;
     protected JPanel strategyPanel;
 
-    public CreatePanel() {
+    public StrategyCreatePanel() {
         newRadioButton = new JBasicRadioButton(ConsoleLocaleFactory.getString("new_tooltip"), ConsoleLocaleFactory.getString("new_tooltip"));
         newRadioButton.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {

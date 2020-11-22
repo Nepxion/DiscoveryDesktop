@@ -20,7 +20,7 @@ import com.nepxion.swing.layout.filed.FiledLayout;
 import com.nepxion.swing.layout.table.TableLayout;
 import com.nepxion.swing.radiobutton.JBasicRadioButton;
 
-public class BlueGreenCreatePanel extends CreatePanel {
+public class BlueGreenCreatePanel extends StrategyCreatePanel {
     private static final long serialVersionUID = 1L;
 
     protected ButtonGroup blueGreenRouteButtonGroup;

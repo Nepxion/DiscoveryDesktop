@@ -9,7 +9,7 @@ package com.nepxion.discovery.console.desktop.workspace.panel;
  * @version 1.0
  */
 
-public class GrayCreatePanel extends CreatePanel {
+public class GrayCreatePanel extends StrategyCreatePanel {
     private static final long serialVersionUID = 1L;
 
     public GrayCreatePanel() {

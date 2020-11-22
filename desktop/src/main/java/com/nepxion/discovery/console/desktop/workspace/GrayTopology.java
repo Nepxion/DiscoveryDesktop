@@ -34,7 +34,7 @@ import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
-import com.nepxion.discovery.console.desktop.workspace.panel.CreatePanel;
+import com.nepxion.discovery.console.desktop.workspace.panel.StrategyCreatePanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.GrayCreatePanel;
 import com.nepxion.discovery.console.desktop.workspace.processor.GrayStrategyProcessor;
 import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessor;
@@ -379,7 +379,7 @@ public class GrayTopology extends AbstractStrategyTopology {
     }
 
     @Override
-    public CreatePanel getCreatePanel() {
+    public StrategyCreatePanel getCreatePanel() {
         return new GrayCreatePanel();
     }
 

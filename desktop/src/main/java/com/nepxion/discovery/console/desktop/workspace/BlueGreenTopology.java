@@ -40,7 +40,7 @@ import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.common.util.TextFieldUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.BlueGreenConditionPanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.BlueGreenCreatePanel;
-import com.nepxion.discovery.console.desktop.workspace.panel.CreatePanel;
+import com.nepxion.discovery.console.desktop.workspace.panel.StrategyCreatePanel;
 import com.nepxion.discovery.console.desktop.workspace.processor.BlueGreenStrategyProcessor;
 import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessor;
 import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessorUtil;
@@ -109,7 +109,7 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
     }
 
     @Override
-    public void initializeUI(CreatePanel createPanel) {
+    public void initializeUI(StrategyCreatePanel createPanel) {
         BlueGreenCreatePanel blueGreenCreatePanel = (BlueGreenCreatePanel) createPanel;
         blueGreenRouteType = blueGreenCreatePanel.getBlueGreenRouteType();
 
@@ -438,7 +438,7 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
     }
 
     @Override
-    public CreatePanel getCreatePanel() {
+    public StrategyCreatePanel getCreatePanel() {
         return new BlueGreenCreatePanel();
     }
 

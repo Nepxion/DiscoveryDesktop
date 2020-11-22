@@ -37,7 +37,7 @@ import com.nepxion.discovery.console.desktop.common.component.ConsoleExceptionDi
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
-import com.nepxion.discovery.console.desktop.workspace.panel.CreatePanel;
+import com.nepxion.discovery.console.desktop.workspace.panel.StrategyCreatePanel;
 import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessorUtil;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeLocation;
@@ -112,7 +112,7 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
         return null;
     }
 
-    public void initializeUI(CreatePanel createPanel) {
+    public void initializeUI(StrategyCreatePanel createPanel) {
         setTitle();
         setGatewayNode();
 
@@ -210,7 +210,7 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
 
     @Override
     public void create() {
-        CreatePanel createPanel = getCreatePanel();
+        StrategyCreatePanel createPanel = getCreatePanel();
         createPanel.setPreferredSize(new Dimension(createPanel.getPreferredSize().width + 100, createPanel.getPreferredSize().height + 10));
 
         int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractStrategyTopology.this), createPanel, ConsoleLocaleFactory.getString("create_tooltip") + "【" + TypeLocale.getDescription(releaseType) + "】", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
@@ -440,7 +440,7 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
         return action;
     }
 
-    public abstract CreatePanel getCreatePanel();
+    public abstract StrategyCreatePanel getCreatePanel();
 
     public abstract void reset();
 
