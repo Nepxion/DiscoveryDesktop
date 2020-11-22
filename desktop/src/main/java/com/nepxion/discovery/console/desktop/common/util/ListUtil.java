@@ -19,8 +19,13 @@ import javax.swing.ImageIcon;
 import com.nepxion.swing.list.BasicListModel;
 import com.nepxion.swing.list.JBasicList;
 import com.nepxion.swing.renderer.list.ElementListCellRenderer;
+import com.nepxion.swing.searchable.JSearchableFactory;
 
 public class ListUtil {
+    public static void installSearchable(JBasicList list) {
+        JSearchableFactory.installSearchable(list);
+    }
+
     @SuppressWarnings("unchecked")
     public static void setSortableModel(JBasicList list, List<String> value, ImageIcon imageIcon) {
         Collections.sort(value);
