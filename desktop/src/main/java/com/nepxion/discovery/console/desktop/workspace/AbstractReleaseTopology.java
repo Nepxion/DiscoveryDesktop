@@ -8,10 +8,10 @@ package com.nepxion.discovery.console.desktop.workspace;
  * @author Haojun Ren
  * @version 1.0
  */
+
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
-import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
 import org.apache.commons.lang3.StringUtils;
@@ -45,16 +45,12 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
     public static final String APOLLO = "Apollo";
 
-    protected JPanel operationBar = new JPanel();
-
     protected ReleaseType releaseType;
     protected StrategyType strategyType;
     protected SubscriptionType subscriptionType;
 
     protected String group;
-
     protected String configType;
-
     protected RuleEntity ruleEntity;
 
     public AbstractReleaseTopology(ReleaseType releaseType) {
@@ -75,7 +71,6 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         toolBar.add(ButtonUtil.createButton(createClearAction()));
         toolBar.addSeparator();
         toolBar.add(ButtonUtil.createButton(createPreviewAction()));
-        toolBar.add(ButtonUtil.createButton(createInspectAction()));
         toolBar.add(ButtonUtil.createButton(createConfigAction()));
         toolBar.addSeparator();
         toolBar.add(ButtonUtil.createButton(createLayoutAction()));
@@ -99,12 +94,6 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         }
 
         executeLayout();
-    }
-
-    public abstract void initializeOperationBar();
-
-    public JPanel getOperationBar() {
-        return operationBar;
     }
 
     public void showResult(Object result) {
@@ -211,18 +200,6 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
                 }
 
                 save(config);
-            }
-        };
-
-        return action;
-    }
-
-    public JSecurityAction createInspectAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("inspect_text"), ConsoleIconFactory.getSwingIcon("relation.png"), ConsoleLocaleFactory.getString("inspect_tooltip")) {
-            private static final long serialVersionUID = 1L;
-
-            public void execute(ActionEvent e) {
-
             }
         };
 

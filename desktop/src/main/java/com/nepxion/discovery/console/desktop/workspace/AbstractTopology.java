@@ -14,6 +14,7 @@ import twaver.Generator;
 import java.awt.event.HierarchyEvent;
 
 import javax.swing.BorderFactory;
+import javax.swing.JPanel;
 
 import com.nepxion.cots.twaver.graph.TGraphBackground;
 import com.nepxion.cots.twaver.graph.TLayoutType;
@@ -24,6 +25,8 @@ public abstract class AbstractTopology extends BasicTopology {
     private static final long serialVersionUID = 1L;
 
     protected TGraphBackground background;
+
+    protected JPanel operationBar = new JPanel();
 
     public AbstractTopology() {
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -55,4 +58,10 @@ public abstract class AbstractTopology extends BasicTopology {
     public void executeLayout() {
         layouter.doLayout(TLayoutType.HIERARCHIC_LAYOUT_TYPE, 150, 100, 200, 60);
     }
+
+    public JPanel getOperationBar() {
+        return operationBar;
+    }
+
+    public abstract void initializeOperationBar();
 }

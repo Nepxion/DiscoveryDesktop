@@ -40,6 +40,10 @@ public class TypeLocale {
         return getDescription(elementType, "_type");
     }
 
+    public static String getDescription(FeatureType featureType) {
+        return getDescription(featureType, "_feature");
+    }
+
     public static String getName(Object type) {
         return ConsoleLocaleFactory.getString(type.toString());
     }

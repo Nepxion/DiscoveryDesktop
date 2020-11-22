@@ -17,9 +17,11 @@ import com.nepxion.discovery.console.desktop.common.component.AbstractConsoleHie
 import com.nepxion.discovery.console.desktop.common.context.ConsoleUIContext;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
-import com.nepxion.discovery.console.desktop.workspace.AbstractReleaseTopology;
+import com.nepxion.discovery.console.desktop.workspace.AbstractTopology;
 import com.nepxion.discovery.console.desktop.workspace.BlueGreenTopology;
 import com.nepxion.discovery.console.desktop.workspace.GrayTopology;
+import com.nepxion.discovery.console.desktop.workspace.InspectorTopology;
+import com.nepxion.discovery.console.desktop.workspace.type.FeatureType;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.swing.element.ElementNode;
@@ -40,6 +42,7 @@ public class ConsoleHierarchy extends AbstractConsoleHierarchy {
         List<ElementNode> elementNodes = new ArrayList<ElementNode>();
         elementNodes.add(new ElementNode(ReleaseType.BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.BLUE_GREEN), ConsoleIconFactory.getSwingIcon("component/ui_16.png"), TypeLocale.getDescription(ReleaseType.BLUE_GREEN), new BlueGreenTopology()));
         elementNodes.add(new ElementNode(ReleaseType.GRAY.toString(), TypeLocale.getDescription(ReleaseType.GRAY), ConsoleIconFactory.getSwingIcon("component/ui_16.png"), TypeLocale.getDescription(ReleaseType.GRAY), new GrayTopology()));
+        elementNodes.add(new ElementNode(FeatureType.INSPECT.toString(), TypeLocale.getDescription(FeatureType.INSPECT), ConsoleIconFactory.getSwingIcon("component/ui_16.png"), TypeLocale.getDescription(FeatureType.INSPECT), new InspectorTopology()));
 
         JBasicList toggleList = createToggleList(elementNodes);
         toggleList.setSelectedIndex(0);
@@ -84,8 +87,8 @@ public class ConsoleHierarchy extends AbstractConsoleHierarchy {
             return;
         }
 
-        if (userObject instanceof AbstractReleaseTopology) {
-            AbstractReleaseTopology topology = (AbstractReleaseTopology) userObject;
+        if (userObject instanceof AbstractTopology) {
+            AbstractTopology topology = (AbstractTopology) userObject;
 
             shrinkContentBar.setContentPane(topology);
             shrinkOperationBar.setContentPane(topology.getOperationBar());
