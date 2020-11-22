@@ -29,6 +29,8 @@ import com.nepxion.cots.twaver.element.TElementManager;
 import com.nepxion.cots.twaver.element.TLink;
 import com.nepxion.cots.twaver.element.TNode;
 import com.nepxion.discovery.common.entity.ElementType;
+import com.nepxion.discovery.common.entity.MapWeightEntity;
+import com.nepxion.discovery.common.entity.StrategyConditionGrayEntity;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
@@ -37,6 +39,7 @@ import com.nepxion.discovery.console.desktop.workspace.panel.CreatePanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.GrayCreatePanel;
 import com.nepxion.discovery.console.desktop.workspace.processor.GrayStrategyProcessor;
 import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessor;
+import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessorUtil;
 import com.nepxion.discovery.console.desktop.workspace.topology.LinkUI;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeSizeType;
@@ -79,10 +82,41 @@ public class GrayTopology extends AbstractReleaseTopology {
     protected boolean isGrayConditionTriggered = false;
     protected boolean isStableConditionTriggered = false;
 
-    protected StrategyProcessor strategyProcessor = new GrayStrategyProcessor();
+    protected GrayStrategyProcessor strategyProcessor = new GrayStrategyProcessor();
 
     public GrayTopology() {
         super(ReleaseType.GRAY);
+
+        strategyProcessor.setGrayTopology(this);
+    }
+
+    @SuppressWarnings("incomplete-switch")
+    @Override
+    public void initializeView() {
+        super.initializeView();
+
+        String grayConditionId = StrategyProcessorUtil.getStrategyGrayConditionId();
+        String grayRouteId = StrategyProcessorUtil.getStrategyGrayRouteId(strategyType);
+        StrategyConditionGrayEntity strategyConditionGrayEntity = StrategyProcessorUtil.getStrategyConditionGrayEntity(ruleEntity, grayConditionId);
+
+        if (strategyConditionGrayEntity != null) {
+            MapWeightEntity mapWeightEntity = null;
+            switch (strategyType) {
+                case VERSION:
+                    mapWeightEntity = strategyConditionGrayEntity.getVersionWeightEntity();
+                    break;
+                case REGION:
+                    mapWeightEntity = strategyConditionGrayEntity.getRegionWeightEntity();
+                    break;
+            }
+            if (mapWeightEntity != null) {
+                Map<String, Integer> weightMap = mapWeightEntity.getWeightMap();
+                if (weightMap != null) {
+                    String grayWeight = String.valueOf(weightMap.get(grayRouteId));
+                    grayConditionComboBox.setSelectedItem(grayWeight);
+                }
+            }
+        }
     }
 
     @Override
@@ -155,6 +189,7 @@ public class GrayTopology extends AbstractReleaseTopology {
                 }
             }
         });
+        ComboBoxUtil.installlAutoCompletion(serviceIdComboBox);
         JClassicButton refreshServiceIdButton = new JClassicButton(createRefreshServiceIdAction());
         DimensionUtil.setWidth(refreshServiceIdButton, 30);
 

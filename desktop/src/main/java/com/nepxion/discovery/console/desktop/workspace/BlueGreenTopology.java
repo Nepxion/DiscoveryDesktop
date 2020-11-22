@@ -31,6 +31,8 @@ import com.nepxion.cots.twaver.element.TLink;
 import com.nepxion.cots.twaver.element.TNode;
 import com.nepxion.discovery.common.entity.BlueGreenRouteType;
 import com.nepxion.discovery.common.entity.ElementType;
+import com.nepxion.discovery.common.entity.StrategyConditionBlueGreenEntity;
+import com.nepxion.discovery.common.entity.StrategyHeaderEntity;
 import com.nepxion.discovery.common.util.StringUtil;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
@@ -42,6 +44,7 @@ import com.nepxion.discovery.console.desktop.workspace.panel.BlueGreenCreatePane
 import com.nepxion.discovery.console.desktop.workspace.panel.CreatePanel;
 import com.nepxion.discovery.console.desktop.workspace.processor.BlueGreenStrategyProcessor;
 import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessor;
+import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessorUtil;
 import com.nepxion.discovery.console.desktop.workspace.topology.LinkUI;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeSizeType;
@@ -90,10 +93,20 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
 
     protected BlueGreenRouteType blueGreenRouteType;
 
-    protected StrategyProcessor strategyProcessor = new BlueGreenStrategyProcessor();
+    protected BlueGreenStrategyProcessor strategyProcessor = new BlueGreenStrategyProcessor();
 
     public BlueGreenTopology() {
         super(ReleaseType.BLUE_GREEN);
+
+        strategyProcessor.setBlueGreenTopology(this);
+    }
+
+    public void initializeBlueGreenRouteType(BlueGreenRouteType blueGreenRouteType) {
+        boolean enabled = blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC;
+        orchestrationPanel.getComponent(6).setEnabled(enabled);
+        orchestrationPanel.getComponent(7).setEnabled(enabled);
+        orchestrationPanel.getComponent(8).setEnabled(enabled);
+        conditionPanel.setGreenConditionBarEnabled(enabled);
     }
 
     @Override
@@ -101,13 +114,47 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
         BlueGreenCreatePanel blueGreenCreatePanel = (BlueGreenCreatePanel) createPanel;
         blueGreenRouteType = blueGreenCreatePanel.getBlueGreenRouteType();
 
-        boolean enabled = blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC;
-        orchestrationPanel.getComponent(6).setEnabled(enabled);
-        orchestrationPanel.getComponent(7).setEnabled(enabled);
-        orchestrationPanel.getComponent(8).setEnabled(enabled);
-        conditionPanel.setGreenConditionBarEnabled(enabled);
+        initializeBlueGreenRouteType(blueGreenRouteType);
 
         super.initializeUI(createPanel);
+    }
+
+    @Override
+    public void initializeView() {
+        blueGreenRouteType = StrategyProcessorUtil.getBlueGreenRouteType(ruleEntity, strategyType);
+
+        initializeBlueGreenRouteType(blueGreenRouteType);
+
+        super.initializeView();
+
+        String blueConditionId = StrategyProcessorUtil.getStrategyBlueConditionId();
+        String greenConditionId = StrategyProcessorUtil.getStrategyGreenConditionId();
+        StrategyConditionBlueGreenEntity strategyConditionBlueEntity = StrategyProcessorUtil.getStrategyConditionBlueGreenEntity(ruleEntity, blueConditionId);
+        StrategyConditionBlueGreenEntity strategyConditionGreenEntity = StrategyProcessorUtil.getStrategyConditionBlueGreenEntity(ruleEntity, greenConditionId);
+
+        StrategyHeaderEntity strategyHeaderEntity = ruleEntity.getStrategyCustomizationEntity().getStrategyHeaderEntity();
+
+        if (strategyConditionBlueEntity != null) {
+            String blueCondition = strategyConditionBlueEntity.getConditionHeader();
+            if (blueCondition != null) {
+                conditionPanel.setBlueCondition(blueCondition);
+            }
+        }
+
+        if (strategyConditionGreenEntity != null) {
+            String greenCondition = strategyConditionGreenEntity.getConditionHeader();
+            if (greenCondition != null) {
+                conditionPanel.setGreenCondition(greenCondition);
+            }
+        }
+
+        if (strategyHeaderEntity != null) {
+            Map<String, String> parameterMap = strategyHeaderEntity.getHeaderMap();
+            if (parameterMap != null) {
+                String parameter = StringUtil.convertToString(parameterMap);
+                parameterTextField.setText(parameter);
+            }
+        }
     }
 
     @Override
@@ -137,6 +184,7 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
                 }
             }
         });
+        ComboBoxUtil.installlAutoCompletion(serviceIdComboBox);
         JClassicButton refreshServiceIdButton = new JClassicButton(createRefreshServiceIdAction());
         DimensionUtil.setWidth(refreshServiceIdButton, 30);
 
@@ -381,6 +429,10 @@ public class BlueGreenTopology extends AbstractReleaseTopology {
                     break;
             }
         }
+    }
+
+    public BlueGreenRouteType getBlueGreenRouteType() {
+        return blueGreenRouteType;
     }
 
     @Override
