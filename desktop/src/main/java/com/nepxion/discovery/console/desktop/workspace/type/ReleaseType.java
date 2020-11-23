@@ -15,7 +15,8 @@ public enum ReleaseType {
     BLUE_GREEN(DiscoveryConstant.BLUE_GREEN),
     GRAY(DiscoveryConstant.GRAY),
     BLACKLIST(DiscoveryConstant.BLACKLIST),
-    MIDDLEWARE_BLUE_GREEN(DiscoveryConstant.MIDDLEWARE_BLUE_GREEN);
+    DATABASE_BLUE_GREEN("database-blue-green"),
+    MESSAGE_QUEUE_BLUE_GREEN("message-queue-blue-green");
 
     private String value;
 
