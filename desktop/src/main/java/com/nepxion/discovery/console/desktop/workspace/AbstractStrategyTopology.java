@@ -172,8 +172,8 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
         return false;
     }
 
-    public TNode addNode(String name, NodeUI topologyEntity) {
-        TNode node = createNode(name, topologyEntity, nodeLocation, 0);
+    public TNode addNode(String name, NodeUI nodeUI) {
+        TNode node = createNode(name, nodeUI, nodeLocation, 0);
 
         dataBox.addElement(node);
 
