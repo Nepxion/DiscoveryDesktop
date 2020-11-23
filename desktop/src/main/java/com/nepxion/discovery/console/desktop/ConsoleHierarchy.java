@@ -56,8 +56,8 @@ public class ConsoleHierarchy extends AbstractConsoleHierarchy {
 
     private JShrinkOutlook createMiddleWareReleaseManageShrinkOutlook() {
         List<ElementNode> elementNodes = new ArrayList<ElementNode>();
-        elementNodes.add(new ElementNode(ReleaseType.DATABASE_BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.DATABASE_BLUE_GREEN), ConsoleIconFactory.getContextIcon("middleware.png"), TypeLocale.getDescription(ReleaseType.DATABASE_BLUE_GREEN), null));
-        elementNodes.add(new ElementNode(ReleaseType.MESSAGE_QUEUE_BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.MESSAGE_QUEUE_BLUE_GREEN), ConsoleIconFactory.getContextIcon("middleware.png"), TypeLocale.getDescription(ReleaseType.MESSAGE_QUEUE_BLUE_GREEN), null));
+        elementNodes.add(new ElementNode(ReleaseType.DATABASE_BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.DATABASE_BLUE_GREEN), ConsoleIconFactory.getContextIcon("database.png"), TypeLocale.getDescription(ReleaseType.DATABASE_BLUE_GREEN), null));
+        elementNodes.add(new ElementNode(ReleaseType.MESSAGE_QUEUE_BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.MESSAGE_QUEUE_BLUE_GREEN), ConsoleIconFactory.getContextIcon("message_queue.png"), TypeLocale.getDescription(ReleaseType.MESSAGE_QUEUE_BLUE_GREEN), null));
 
         JBasicList toggleList = createToggleList(elementNodes);
 
