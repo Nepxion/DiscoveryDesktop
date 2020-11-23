@@ -29,7 +29,6 @@ import javax.swing.JPanel;
 import com.nepxion.swing.button.JClassicButton;
 import com.nepxion.swing.dialog.DialogResizer;
 import com.nepxion.swing.dialog.JBasicDialog;
-import com.nepxion.swing.dimension.DimensionManager;
 import com.nepxion.swing.handle.HandleManager;
 import com.nepxion.swing.icon.IconFactory;
 import com.nepxion.swing.keystroke.KeyStrokeManager;
