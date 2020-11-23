@@ -97,7 +97,7 @@ public class ConsoleHierarchy extends AbstractConsoleHierarchy {
 
     @Override
     public int getOutlookBarWidth() {
-        return 200;
+        return 250;
     }
 
     @Override

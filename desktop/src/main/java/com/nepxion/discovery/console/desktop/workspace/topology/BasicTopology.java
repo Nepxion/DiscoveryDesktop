@@ -303,12 +303,12 @@ public class BasicTopology extends JPanel {
         node.putLabelFont(new Font(ConsoleUIContext.getFontName(), Font.PLAIN, ConsoleUIContext.getSmallFontSize()));
         node.setLocation(location);
 
-        setNodeTopBottom(node, true);
+        setNodeLabelBottom(node, true);
 
         return node;
     }
 
-    protected void setNodeTopBottom(TNode node, boolean bottom) {
+    protected void setNodeLabelBottom(TNode node, boolean bottom) {
         if (bottom) {
             node.putLabelPosition(TWaverConst.POSITION_BOTTOM);
             node.putLabelYOffset(6);

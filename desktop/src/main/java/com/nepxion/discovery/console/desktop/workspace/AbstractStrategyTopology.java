@@ -39,9 +39,6 @@ import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.StrategyCreatePanel;
 import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessorUtil;
-import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
-import com.nepxion.discovery.console.desktop.workspace.topology.NodeLocation;
-import com.nepxion.discovery.console.desktop.workspace.topology.NodeSizeType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeUI;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
@@ -58,9 +55,6 @@ import com.nepxion.swing.selector.checkbox.JCheckBoxSelector;
 
 public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
     private static final long serialVersionUID = 1L;
-
-    protected NodeLocation nodeLocation = new NodeLocation(440, 100, 200, 0);
-    protected NodeUI gatewayBlackNodeUI = new NodeUI(NodeImageType.GATEWAY_BLACK, NodeSizeType.LARGE, true);
 
     protected JBasicComboBox serviceIdComboBox;
 
@@ -137,7 +131,7 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
         gatewayNode.setUserObject(gateway);
         gatewayNode.setBusinessObject(ElementType.PORTAL);
 
-        setNodeTopBottom(gatewayNode, false);
+        setNodeLabelBottom(gatewayNode, false);
     }
 
     public void setServiceUI() {

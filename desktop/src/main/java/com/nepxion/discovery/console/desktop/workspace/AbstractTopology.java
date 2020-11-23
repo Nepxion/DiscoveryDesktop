@@ -19,10 +19,17 @@ import javax.swing.JPanel;
 import com.nepxion.cots.twaver.graph.TGraphBackground;
 import com.nepxion.cots.twaver.graph.TLayoutType;
 import com.nepxion.discovery.console.desktop.workspace.topology.BasicTopology;
+import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
+import com.nepxion.discovery.console.desktop.workspace.topology.NodeLocation;
+import com.nepxion.discovery.console.desktop.workspace.topology.NodeSizeType;
+import com.nepxion.discovery.console.desktop.workspace.topology.NodeUI;
 import com.nepxion.swing.listener.DisplayAbilityListener;
 
 public abstract class AbstractTopology extends BasicTopology {
     private static final long serialVersionUID = 1L;
+
+    protected NodeLocation nodeLocation = new NodeLocation(415, 100, 200, 0);
+    protected NodeUI gatewayBlackNodeUI = new NodeUI(NodeImageType.GATEWAY_BLACK, NodeSizeType.LARGE, true);
 
     protected TGraphBackground background;
 
@@ -47,7 +54,7 @@ public abstract class AbstractTopology extends BasicTopology {
     public void initializeListener() {
         addHierarchyListener(new DisplayAbilityListener() {
             public void displayAbilityChanged(HierarchyEvent e) {
-                showLayoutBar(150, 100, 200, 60);
+                showLayoutBar(125, 100, 200, 60);
                 toggleLayoutBar();
 
                 removeHierarchyListener(this);
@@ -56,7 +63,7 @@ public abstract class AbstractTopology extends BasicTopology {
     }
 
     public void executeLayout() {
-        layouter.doLayout(TLayoutType.HIERARCHIC_LAYOUT_TYPE, 150, 100, 200, 60);
+        layouter.doLayout(TLayoutType.HIERARCHIC_LAYOUT_TYPE, 125, 100, 200, 60);
     }
 
     public JPanel getOperationBar() {
