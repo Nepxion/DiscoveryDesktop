@@ -14,20 +14,24 @@ import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 
+import org.apache.commons.lang3.SystemUtils;
+
 import com.nepxion.swing.combobox.JBasicComboBox;
 import com.nepxion.swing.completion.JAutoCompletion;
 import com.nepxion.swing.searchable.JSearchableFactory;
 
 public class ComboBoxUtil {
     public static void installSearchable(JBasicComboBox comboBox) {
-        JSearchableFactory.installSearchable(comboBox);
+        if (SystemUtils.IS_OS_WINDOWS) {
+            JSearchableFactory.installSearchable(comboBox);
+        }
     }
 
-    public static JAutoCompletion installlAutoCompletion(JBasicComboBox comboBox) {
-        JAutoCompletion autoCompletion = new JAutoCompletion(comboBox);
-        autoCompletion.setStrict(false);
-
-        return autoCompletion;
+    public static void installlAutoCompletion(JBasicComboBox comboBox) {
+        if (SystemUtils.IS_OS_WINDOWS) {
+            JAutoCompletion autoCompletion = new JAutoCompletion(comboBox);
+            autoCompletion.setStrict(false);
+        }
     }
 
     @SuppressWarnings("unchecked")
