@@ -16,8 +16,6 @@ import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 
-import org.apache.commons.lang3.SystemUtils;
-
 import com.nepxion.swing.list.BasicListModel;
 import com.nepxion.swing.list.JBasicList;
 import com.nepxion.swing.renderer.list.ElementListCellRenderer;
@@ -25,9 +23,7 @@ import com.nepxion.swing.searchable.JSearchableFactory;
 
 public class ListUtil {
     public static void installSearchable(JBasicList list) {
-        if (SystemUtils.IS_OS_WINDOWS) {
-            JSearchableFactory.installSearchable(list);
-        }
+        JSearchableFactory.installSearchable(list);
     }
 
     @SuppressWarnings("unchecked")

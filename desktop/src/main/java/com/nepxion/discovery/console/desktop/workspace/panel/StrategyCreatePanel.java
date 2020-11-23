@@ -28,9 +28,9 @@ import com.nepxion.discovery.common.entity.ServiceType;
 import com.nepxion.discovery.common.entity.SubscriptionType;
 import com.nepxion.discovery.console.cache.ConsoleCache;
 import com.nepxion.discovery.console.controller.ConsoleController;
-import com.nepxion.discovery.console.desktop.common.component.ConsoleExceptionDialog;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
+import com.nepxion.discovery.console.desktop.common.swing.dialog.JExceptionDialog;
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
 import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
@@ -309,7 +309,7 @@ public class StrategyCreatePanel extends JPanel {
         try {
             return ConsoleCache.getGroups();
         } catch (Exception e) {
-            ConsoleExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
+            JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
         }
 
         return null;
@@ -333,7 +333,7 @@ public class StrategyCreatePanel extends JPanel {
                 return new ArrayList<String>(instanceMap.keySet());
             }
         } catch (Exception e) {
-            ConsoleExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
+            JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
         }
 
         return null;

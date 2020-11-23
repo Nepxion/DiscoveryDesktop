@@ -21,9 +21,9 @@ import org.slf4j.LoggerFactory;
 import com.nepxion.discovery.common.entity.RuleEntity;
 import com.nepxion.discovery.common.entity.SubscriptionType;
 import com.nepxion.discovery.console.cache.ConsoleCache;
-import com.nepxion.discovery.console.desktop.common.component.ConsoleExceptionDialog;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
+import com.nepxion.discovery.console.desktop.common.swing.dialog.JExceptionDialog;
 import com.nepxion.discovery.console.desktop.common.util.ButtonUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.ConfigPanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.PreviewPanel;
@@ -82,7 +82,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         try {
             configType = ConsoleCache.getConfigType();
         } catch (Exception ex) {
-            ConsoleExceptionDialog.traceException(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("operation_failure"), ex);
+            JExceptionDialog.traceException(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("operation_failure"), ex);
         }
     }
 

@@ -21,9 +21,9 @@ import com.nepxion.discovery.common.entity.RuleEntity;
 import com.nepxion.discovery.common.entity.SubscriptionType;
 import com.nepxion.discovery.console.cache.ConsoleCache;
 import com.nepxion.discovery.console.controller.ConsoleController;
-import com.nepxion.discovery.console.desktop.common.component.ConsoleExceptionDialog;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
+import com.nepxion.discovery.console.desktop.common.swing.dialog.JExceptionDialog;
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.StrategyCreatePanel;
 import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessorUtil;
@@ -75,7 +75,7 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
                 this.serviceIds = ConsoleCache.getServices();
             }
         } catch (Exception e) {
-            ConsoleExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
+            JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
         }
     }
 
@@ -87,7 +87,7 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
         try {
             return ConsoleController.getInstanceList(serviceId);
         } catch (Exception e) {
-            ConsoleExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
+            JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
         }
 
         return null;

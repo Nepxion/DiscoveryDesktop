@@ -13,8 +13,8 @@ import java.awt.Font;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.nepxion.discovery.console.desktop.common.swing.lookandfeel.LookAndFeelManager;
 import com.nepxion.swing.font.FontContext;
-import com.nepxion.swing.lookandfeel.LookAndFeelManager;
 import com.nepxion.util.locale.LocaleContext;
 
 public class ConsoleUIContext {
