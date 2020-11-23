@@ -506,6 +506,18 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
         executeLayout();
     }
 
+    public JSecurityAction createModifyParameterAction() {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("modify_text"), ConsoleIconFactory.getSwingIcon("netbean/canvas_16.png"), ConsoleLocaleFactory.getString("modify_parameter_tooltip")) {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+                modifyParameter();
+            }
+        };
+
+        return action;
+    }
+
     @Override
     public void modifyServiceStrategy(String serviceId) {
         String blueMetadata = ComboBoxUtil.getSelectedValue(blueMetadataComboBox);
@@ -584,17 +596,5 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
     @Override
     public StrategyProcessor getStrategyProcessor() {
         return strategyProcessor;
-    }
-
-    public JSecurityAction createModifyParameterAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("modify_text"), ConsoleIconFactory.getSwingIcon("netbean/canvas_16.png"), ConsoleLocaleFactory.getString("modify_parameter_tooltip")) {
-            private static final long serialVersionUID = 1L;
-
-            public void execute(ActionEvent e) {
-                modifyParameter();
-            }
-        };
-
-        return action;
     }
 }
