@@ -15,7 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+
+import org.apache.commons.lang3.SystemUtils;
 
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
@@ -30,7 +34,7 @@ import com.nepxion.swing.list.JBasicList;
 import com.nepxion.swing.query.JQueryHierarchy;
 import com.nepxion.swing.scrollpane.JBasicScrollPane;
 
-public class ConfigPanel extends JQueryHierarchy {
+public class ConfigPanel extends JPanel {
     private static final long serialVersionUID = 1L;
 
     protected static ConfigPanel configPanel;
@@ -81,21 +85,38 @@ public class ConfigPanel extends JQueryHierarchy {
         configListPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         configListPanel.add(new JBasicScrollPane(configList), BorderLayout.CENTER);
 
-        JDockable dockable = (JDockable) getDockableContainer().getContentPane();
-        dockable.setDividerLocation(0, 200);
+        JComponent contentPane = null;
+        if (SystemUtils.IS_OS_WINDOWS) {
+            contentPane = new JQueryHierarchy();
+            JQueryHierarchy queryHierarchy = (JQueryHierarchy) contentPane;
 
-        JDockableView filterView = (JDockableView) dockable.getPaneAt(0);
-        filterView.setTitle(ConsoleLocaleFactory.getString("config_list"));
-        filterView.setIcon(ConsoleIconFactory.getSwingIcon("netbean/stack_16.png"));
-        filterView.setToolTipText(ConsoleLocaleFactory.getString("config_list"));
-        filterView.add(configListPanel);
+            JDockable dockable = (JDockable) queryHierarchy.getDockableContainer().getContentPane();
+            dockable.setDividerLocation(0, 180);
 
-        JDockableView ruleView = (JDockableView) dockable.getPaneAt(1);
-        ruleView.setTitle(ConsoleLocaleFactory.getString("config_content"));
-        ruleView.setIcon(ConsoleIconFactory.getSwingIcon("component/internal_frame_16.png"));
-        ruleView.setToolTipText(ConsoleLocaleFactory.getString("config_content"));
-        ruleView.add(container);
+            JDockableView filterView = (JDockableView) dockable.getPaneAt(0);
+            filterView.setTitle(ConsoleLocaleFactory.getString("config_list"));
+            filterView.setIcon(ConsoleIconFactory.getSwingIcon("netbean/stack_16.png"));
+            filterView.setToolTipText(ConsoleLocaleFactory.getString("config_list"));
+            filterView.add(configListPanel);
 
-        setPreferredSize(new Dimension(800, 600));
+            JDockableView ruleView = (JDockableView) dockable.getPaneAt(1);
+            ruleView.setTitle(ConsoleLocaleFactory.getString("config_content"));
+            ruleView.setIcon(ConsoleIconFactory.getSwingIcon("component/internal_frame_16.png"));
+            ruleView.setToolTipText(ConsoleLocaleFactory.getString("config_content"));
+            ruleView.add(container);
+        } else {
+            contentPane = new JSplitPane();
+
+            JSplitPane splitPane = (JSplitPane) contentPane;
+            splitPane.setDividerLocation(180);
+            splitPane.setLeftComponent(configListPanel);
+            splitPane.setRightComponent(container);
+
+            setBorder(BorderFactory.createTitledBorder(""));
+        }
+
+        setLayout(new BorderLayout());
+        add(contentPane, BorderLayout.CENTER);
+        setPreferredSize(new Dimension(660, 560));
     }
 }
