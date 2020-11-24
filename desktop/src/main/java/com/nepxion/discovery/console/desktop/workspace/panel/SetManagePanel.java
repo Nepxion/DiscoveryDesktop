@@ -16,6 +16,7 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
@@ -95,13 +96,18 @@ public class SetManagePanel extends JPanel {
             index++;
         }
 
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BorderLayout());
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+        buttonPanel.add(new JBasicScrollPane(buttonBar), BorderLayout.CENTER);
+
         JSplitPane splitPane = new JSplitPane();
-        splitPane.setDividerLocation(130);
-        splitPane.setLeftComponent(new JBasicScrollPane(buttonBar));
+        splitPane.setDividerLocation(120);
+        splitPane.setLeftComponent(buttonPanel);
         splitPane.setRightComponent(container);
 
         setLayout(new BorderLayout());
-        setPreferredSize(new Dimension(660, 560));
+        setPreferredSize(new Dimension(600, 500));
         add(splitPane, BorderLayout.CENTER);
     }
 }

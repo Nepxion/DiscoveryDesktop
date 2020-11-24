@@ -103,7 +103,7 @@ public class CacheSetPanel extends SetPanel {
         cacheTabbedPane.addTab(ConsoleLocaleFactory.getString("service_list_cache"), serviceCacheListPanel, ConsoleLocaleFactory.getString("service_list_cache"));
 
         setLayout(new BorderLayout(0, 5));
-        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
         add(cacheTabbedPane, BorderLayout.CENTER);
         add(cacheToolBar, BorderLayout.SOUTH);
     }
