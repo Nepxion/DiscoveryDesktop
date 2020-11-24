@@ -74,8 +74,8 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
     protected Color greenLinkUI = LinkUI.GREEN;
     protected Color basicLinkUI = LinkUI.YELLOW;
 
-    protected JPanel conditionToolBar;
     protected BlueGreenConditionPanel conditionPanel;
+    protected JPanel conditionToolBar;
     protected JPanel orchestrationPanel;
     protected JPanel orchestrationToolBar;
     protected JPanel parameterPanel;

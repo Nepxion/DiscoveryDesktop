@@ -65,8 +65,8 @@ public class GrayTopology extends AbstractStrategyTopology {
     protected Color grayLinkUI = LinkUI.GRAY;
     protected Color stableLinkUI = LinkUI.GREEN;
 
-    protected JPanel conditionToolBar;
     protected JPanel conditionPanel;
+    protected JPanel conditionToolBar;
     protected JPanel orchestrationPanel;
     protected JPanel orchestrationToolBar;
 
