@@ -28,6 +28,8 @@ import com.nepxion.cots.twaver.graph.TGraphBackground;
 import com.nepxion.cots.twaver.graph.TLayoutType;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
+import com.nepxion.discovery.console.desktop.workspace.panel.CacheSetPanel;
+import com.nepxion.discovery.console.desktop.workspace.panel.LayouterSetPanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.SetManagePanel;
 import com.nepxion.discovery.console.desktop.workspace.topology.BasicTopology;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
@@ -70,10 +72,12 @@ public abstract class AbstractTopology extends BasicTopology {
     public void initializeListener() {
         addHierarchyListener(new DisplayAbilityListener() {
             public void displayAbilityChanged(HierarchyEvent e) {
-                int xOffset = SetManagePanel.getInstance().getLayouterSetPanel().getXOffset();
-                int yOffset = SetManagePanel.getInstance().getLayouterSetPanel().getYOffset();
-                int xGap = SetManagePanel.getInstance().getLayouterSetPanel().getXGap();
-                int yGap = SetManagePanel.getInstance().getLayouterSetPanel().getYGap();
+                SetManagePanel setManagePanel = SetManagePanel.getInstance();
+                LayouterSetPanel layouterSetPanel = setManagePanel.getLayouterSetPanel();
+                int xOffset = layouterSetPanel.getXOffset();
+                int yOffset = layouterSetPanel.getYOffset();
+                int xGap = layouterSetPanel.getXGap();
+                int yGap = layouterSetPanel.getYGap();
 
                 showLayoutBar(xOffset, yOffset, xGap, yGap);
                 toggleLayoutBar();
@@ -133,10 +137,12 @@ public abstract class AbstractTopology extends BasicTopology {
     }
 
     public void executeLayout() {
-        int xOffset = SetManagePanel.getInstance().getLayouterSetPanel().getXOffset();
-        int yOffset = SetManagePanel.getInstance().getLayouterSetPanel().getYOffset();
-        int xGap = SetManagePanel.getInstance().getLayouterSetPanel().getXGap();
-        int yGap = SetManagePanel.getInstance().getLayouterSetPanel().getYGap();
+        SetManagePanel setManagePanel = SetManagePanel.getInstance();
+        LayouterSetPanel layouterSetPanel = setManagePanel.getLayouterSetPanel();
+        int xOffset = layouterSetPanel.getXOffset();
+        int yOffset = layouterSetPanel.getYOffset();
+        int xGap = layouterSetPanel.getXGap();
+        int yGap = layouterSetPanel.getYGap();
 
         layouter.doLayout(TLayoutType.HIERARCHIC_LAYOUT_TYPE, xOffset, yOffset, xGap, yGap);
     }
@@ -146,7 +152,11 @@ public abstract class AbstractTopology extends BasicTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractTopology.this), SetManagePanel.getInstance(), ConsoleLocaleFactory.getString("set_text"), JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/deploy.png"), new Object[] { SwingLocale.getString("close") }, null, true);
+                SetManagePanel setManagePanel = SetManagePanel.getInstance();
+                CacheSetPanel cacheSetPanel = setManagePanel.getCacheSetPanel();
+                cacheSetPanel.setInitialModel();
+
+                JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractTopology.this), setManagePanel, ConsoleLocaleFactory.getString("set_text"), JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/deploy.png"), new Object[] { SwingLocale.getString("close") }, null, true);
 
                 executeLayout();
             }

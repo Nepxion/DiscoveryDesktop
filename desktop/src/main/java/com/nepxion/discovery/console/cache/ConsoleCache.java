@@ -47,6 +47,10 @@ public class ConsoleCache {
         return groups;
     }
 
+    public static List<String> getCachedGroups() {
+        return groups;
+    }
+
     public static List<String> refreshGroups() {
         groups = ConsoleController.getGroups();
 
@@ -61,6 +65,10 @@ public class ConsoleCache {
         return gateways;
     }
 
+    public static List<String> getCachedGateways() {
+        return gateways;
+    }
+
     public static List<String> refreshGateways() {
         gateways = ConsoleController.getGateways();
 
@@ -72,6 +80,10 @@ public class ConsoleCache {
             services = ConsoleController.getServices();
         }
 
+        return services;
+    }
+
+    public static List<String> getCachedServices() {
         return services;
     }
 

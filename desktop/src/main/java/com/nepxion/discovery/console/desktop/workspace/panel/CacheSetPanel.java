@@ -13,6 +13,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -47,7 +48,7 @@ public class CacheSetPanel extends SetPanel {
 
             @Override
             public List<String> getInitialValue() {
-                return ConsoleCache.getGroups();
+                return ConsoleCache.getCachedGroups();
             }
 
             @Override
@@ -61,7 +62,7 @@ public class CacheSetPanel extends SetPanel {
 
             @Override
             public List<String> getInitialValue() {
-                return ConsoleCache.getGateways();
+                return ConsoleCache.getCachedGateways();
             }
 
             @Override
@@ -75,7 +76,7 @@ public class CacheSetPanel extends SetPanel {
 
             @Override
             public List<String> getInitialValue() {
-                return ConsoleCache.getServices();
+                return ConsoleCache.getCachedServices();
             }
 
             @Override
@@ -140,7 +141,11 @@ public class CacheSetPanel extends SetPanel {
         }
 
         public void setModel(List<String> value) {
-            ListUtil.setSortableModel(cacheList, value, IconFactory.getSwingIcon("component/view.png"));
+            if (value != null) {
+                ListUtil.setSortableModel(cacheList, value, IconFactory.getSwingIcon("component/view.png"));
+            } else {
+                ListUtil.setSortableModel(cacheList, new ArrayList<String>(), IconFactory.getSwingIcon("component/view.png"));
+            }
         }
 
         public abstract List<String> getInitialValue();
@@ -148,14 +153,24 @@ public class CacheSetPanel extends SetPanel {
         public abstract List<String> getRefreshValue();
     }
 
+    public void setInitialModel() {
+        groupCacheListPanel.setInitialModel();
+        gatewayCacheListPanel.setInitialModel();
+        serviceCacheListPanel.setInitialModel();
+    }
+
+    public void setRefreshModel() {
+        groupCacheListPanel.setRefreshModel();
+        gatewayCacheListPanel.setRefreshModel();
+        serviceCacheListPanel.setRefreshModel();
+    }
+
     public JSecurityAction createRefreshCacheAction() {
         JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("refresh_cache"), ConsoleIconFactory.getSwingIcon("netbean/rotate_16.png"), ConsoleLocaleFactory.getString("refresh_cache")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                groupCacheListPanel.setRefreshModel();
-                gatewayCacheListPanel.setRefreshModel();
-                serviceCacheListPanel.setRefreshModel();
+                setRefreshModel();
             }
         };
 
