@@ -38,6 +38,7 @@ public class ConfigPanel extends JPanel {
     protected static ConfigPanel configPanel;
 
     protected CachePanel groupCachePanel;
+    protected CachePanel gatewayCachePanel;
     protected CachePanel serviceCachePanel;
 
     public static ConfigPanel getInstance() {
@@ -60,6 +61,20 @@ public class ConfigPanel extends JPanel {
             @Override
             public List<String> getRefreshValue() {
                 return ConsoleCache.refreshGroups();
+            }
+        };
+
+        gatewayCachePanel = new CachePanel() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public List<String> getInitialValue() {
+                return ConsoleCache.getGateways();
+            }
+
+            @Override
+            public List<String> getRefreshValue() {
+                return ConsoleCache.refreshGateways();
             }
         };
 
@@ -92,6 +107,7 @@ public class ConfigPanel extends JPanel {
 
         JBasicTabbedPane configTabbedPane = new JBasicTabbedPane();
         configTabbedPane.addTab(ConsoleLocaleFactory.getString("group_list_cache"), groupCachePanel, ConsoleLocaleFactory.getString("group_list_cache"));
+        configTabbedPane.addTab(ConsoleLocaleFactory.getString("gateway_list_cache"), gatewayCachePanel, ConsoleLocaleFactory.getString("gateway_list_cache"));
         configTabbedPane.addTab(ConsoleLocaleFactory.getString("service_list_cache"), serviceCachePanel, ConsoleLocaleFactory.getString("service_list_cache"));
 
         setLayout(new BorderLayout(0, 5));
@@ -146,6 +162,7 @@ public class ConfigPanel extends JPanel {
 
             public void execute(ActionEvent e) {
                 groupCachePanel.setRefreshModel();
+                gatewayCachePanel.setRefreshModel();
                 serviceCachePanel.setRefreshModel();
             }
         };

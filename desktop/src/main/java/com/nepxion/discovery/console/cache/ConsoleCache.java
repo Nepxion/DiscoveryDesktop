@@ -18,6 +18,7 @@ public class ConsoleCache {
     private static String configType;
 
     private static List<String> groups;
+    private static List<String> gateways;
     private static List<String> services;
 
     private static boolean cacheEnabled = false;
@@ -50,6 +51,20 @@ public class ConsoleCache {
         groups = ConsoleController.getGroups();
 
         return groups;
+    }
+
+    public static List<String> getGateways() {
+        if (gateways == null || !cacheEnabled) {
+            gateways = ConsoleController.getGateways();
+        }
+
+        return gateways;
+    }
+
+    public static List<String> refreshGateways() {
+        gateways = ConsoleController.getGateways();
+
+        return gateways;
     }
 
     public static List<String> getServices() {
