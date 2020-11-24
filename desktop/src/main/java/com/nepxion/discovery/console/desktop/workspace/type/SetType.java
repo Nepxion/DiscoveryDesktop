@@ -9,12 +9,13 @@ package com.nepxion.discovery.console.desktop.workspace.type;
  * @version 1.0
  */
 
-public enum ConfigType {
-    CACHE("cache");
+public enum SetType {
+    CACHE("cache"),
+    LAYOUTER("layouter");
 
     private String value;
 
-    private ConfigType(String value) {
+    private SetType(String value) {
         this.value = value;
     }
 
@@ -22,8 +23,8 @@ public enum ConfigType {
         return value;
     }
 
-    public static ConfigType fromString(String value) {
-        for (ConfigType type : ConfigType.values()) {
+    public static SetType fromString(String value) {
+        for (SetType type : SetType.values()) {
             if (type.getValue().equalsIgnoreCase(value)) {
                 return type;
             }

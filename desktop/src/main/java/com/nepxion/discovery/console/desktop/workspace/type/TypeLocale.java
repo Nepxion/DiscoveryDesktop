@@ -44,8 +44,8 @@ public class TypeLocale {
         return getDescription(featureType, "_feature");
     }
 
-    public static String getDescription(ConfigType configType) {
-        return getDescription(configType, "_config");
+    public static String getDescription(SetType setType) {
+        return getDescription(setType, "_set");
     }
 
     public static String getName(Object type) {

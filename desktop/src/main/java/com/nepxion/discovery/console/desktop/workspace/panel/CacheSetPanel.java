@@ -23,7 +23,7 @@ import com.nepxion.discovery.console.cache.ConsoleCache;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.ListUtil;
-import com.nepxion.discovery.console.desktop.workspace.type.ConfigType;
+import com.nepxion.discovery.console.desktop.workspace.type.SetType;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.JClassicButton;
 import com.nepxion.swing.checkbox.JBasicCheckBox;
@@ -32,15 +32,15 @@ import com.nepxion.swing.list.JBasicList;
 import com.nepxion.swing.scrollpane.JBasicScrollPane;
 import com.nepxion.swing.tabbedpane.JBasicTabbedPane;
 
-public class CachePanel extends ConfigItemPanel {
+public class CacheSetPanel extends SetPanel {
     private static final long serialVersionUID = 1L;
 
     protected CacheListPanel groupCacheListPanel;
     protected CacheListPanel gatewayCacheListPanel;
     protected CacheListPanel serviceCacheListPanel;
 
-    public CachePanel() {
-        super(ConfigType.CACHE);
+    public CacheSetPanel() {
+        super(SetType.CACHE);
 
         groupCacheListPanel = new CacheListPanel() {
             private static final long serialVersionUID = 1L;
