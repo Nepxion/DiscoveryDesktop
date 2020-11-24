@@ -52,10 +52,10 @@ public abstract class AbstractTopology extends BasicTopology {
     protected JPanel operationBar = new JPanel();
 
     public AbstractTopology() {
-        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-
         initializeTopology();
         // initializeListener();
+
+        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
     }
 
     public void initializeTopology() {
@@ -70,7 +70,12 @@ public abstract class AbstractTopology extends BasicTopology {
     public void initializeListener() {
         addHierarchyListener(new DisplayAbilityListener() {
             public void displayAbilityChanged(HierarchyEvent e) {
-                showLayoutBar(125, 100, 200, 60);
+                int xOffset = SetManagePanel.getInstance().getLayouterSetPanel().getXOffset();
+                int yOffset = SetManagePanel.getInstance().getLayouterSetPanel().getYOffset();
+                int xGap = SetManagePanel.getInstance().getLayouterSetPanel().getXGap();
+                int yGap = SetManagePanel.getInstance().getLayouterSetPanel().getYGap();
+
+                showLayoutBar(xOffset, yOffset, xGap, yGap);
                 toggleLayoutBar();
 
                 removeHierarchyListener(this);
@@ -128,7 +133,12 @@ public abstract class AbstractTopology extends BasicTopology {
     }
 
     public void executeLayout() {
-        layouter.doLayout(TLayoutType.HIERARCHIC_LAYOUT_TYPE, 125, 100, 200, 60);
+        int xOffset = SetManagePanel.getInstance().getLayouterSetPanel().getXOffset();
+        int yOffset = SetManagePanel.getInstance().getLayouterSetPanel().getYOffset();
+        int xGap = SetManagePanel.getInstance().getLayouterSetPanel().getXGap();
+        int yGap = SetManagePanel.getInstance().getLayouterSetPanel().getYGap();
+
+        layouter.doLayout(TLayoutType.HIERARCHIC_LAYOUT_TYPE, xOffset, yOffset, xGap, yGap);
     }
 
     public JSecurityAction createSetAction() {
@@ -137,6 +147,8 @@ public abstract class AbstractTopology extends BasicTopology {
 
             public void execute(ActionEvent e) {
                 JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractTopology.this), SetManagePanel.getInstance(), ConsoleLocaleFactory.getString("set_text"), JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/deploy.png"), new Object[] { SwingLocale.getString("close") }, null, true);
+
+                executeLayout();
             }
         };
 
