@@ -10,17 +10,23 @@ package com.nepxion.discovery.console.desktop.workspace.type;
  */
 
 public enum SetType {
-    CACHE("cache"),
-    LAYOUTER("layouter");
+    CACHE("cache", "stereo/network_32.png"),
+    LAYOUTER("layouter", "stereo/movie_32.png");
 
     private String value;
+    private String icon;
 
-    private SetType(String value) {
+    private SetType(String value, String icon) {
         this.value = value;
+        this.icon = icon;
     }
 
     public String getValue() {
         return value;
+    }
+
+    public String getIcon() {
+        return icon;
     }
 
     public static SetType fromString(String value) {

@@ -21,12 +21,12 @@ import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.workspace.type.SetType;
 import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.swing.button.JBasicToggleButton;
 import com.nepxion.swing.buttonbar.JBasicButtonBar;
 import com.nepxion.swing.container.ContainerManager;
-import com.nepxion.swing.icon.IconFactory;
 import com.nepxion.swing.scrollpane.JBasicScrollPane;
 import com.nepxion.swing.style.button.lite.JGlassLiteButtonStyle;
 import com.nepxion.swing.style.button.lite.LiteButtonUI;
@@ -66,7 +66,7 @@ public class SetManagePanel extends JPanel {
 
         int index = 0;
         for (SetType setType : SetType.values()) {
-            JBasicToggleButton toggleButton = new JBasicToggleButton(TypeLocale.getDescription(setType), IconFactory.getIcon("com/l2fprod/common/demo/icons/welcome32x32.png"), TypeLocale.getDescription(setType));
+            JBasicToggleButton toggleButton = new JBasicToggleButton(TypeLocale.getDescription(setType), ConsoleIconFactory.getSwingIcon(setType.getIcon()), TypeLocale.getDescription(setType));
             toggleButton.setName(setType.toString());
             toggleButton.addItemListener(new ItemListener() {
                 @Override
