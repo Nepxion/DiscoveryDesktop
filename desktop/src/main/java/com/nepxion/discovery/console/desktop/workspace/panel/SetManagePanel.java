@@ -110,4 +110,12 @@ public class SetManagePanel extends JPanel {
         setPreferredSize(new Dimension(600, 500));
         add(splitPane, BorderLayout.CENTER);
     }
+
+    public CacheSetPanel getCacheSetPanel() {
+        return cacheSetPanel;
+    }
+
+    public LayouterSetPanel getLayouterSetPanel() {
+        return layouterSetPanel;
+    }
 }
