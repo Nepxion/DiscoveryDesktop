@@ -21,7 +21,7 @@ public class ConsoleCache {
     private static List<String> gateways;
     private static List<String> services;
 
-    private static boolean cacheEnabled = false;
+    private static boolean cacheEnabled = true;
 
     public static String getDiscoveryType() {
         if (discoveryType == null) {
