@@ -11,35 +11,29 @@ package com.nepxion.discovery.console.desktop.workspace.panel;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.JPanel;
 
-import com.nepxion.discovery.console.cache.ConsoleCache;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.ListUtil;
-import com.nepxion.swing.action.JSecurityAction;
-import com.nepxion.swing.button.JClassicButton;
-import com.nepxion.swing.checkbox.JBasicCheckBox;
-import com.nepxion.swing.icon.IconFactory;
+import com.nepxion.discovery.console.desktop.workspace.type.ConfigType;
+import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
+import com.nepxion.swing.container.ContainerManager;
+import com.nepxion.swing.element.ElementNode;
+import com.nepxion.swing.framework.dockable.JDockable;
+import com.nepxion.swing.framework.dockable.JDockableView;
 import com.nepxion.swing.list.JBasicList;
+import com.nepxion.swing.query.JQueryHierarchy;
 import com.nepxion.swing.scrollpane.JBasicScrollPane;
-import com.nepxion.swing.tabbedpane.JBasicTabbedPane;
 
-public class ConfigPanel extends JPanel {
+public class ConfigPanel extends JQueryHierarchy {
     private static final long serialVersionUID = 1L;
 
     protected static ConfigPanel configPanel;
-
-    protected CachePanel groupCachePanel;
-    protected CachePanel gatewayCachePanel;
-    protected CachePanel serviceCachePanel;
 
     public static ConfigPanel getInstance() {
         if (configPanel == null) {
@@ -50,123 +44,58 @@ public class ConfigPanel extends JPanel {
     }
 
     private ConfigPanel() {
-        groupCachePanel = new CachePanel() {
+        CachePanel cachePanel = new CachePanel();
+
+        JPanel container = new JPanel();
+        container.setLayout(new BorderLayout());
+
+        JBasicList configList = new JBasicList() {
             private static final long serialVersionUID = 1L;
 
             @Override
-            public List<String> getInitialValue() {
-                return ConsoleCache.getGroups();
-            }
+            public void executeSelection(int oldSelectedRow, int newSelectedRow) {
+                if (newSelectedRow < 0) {
+                    return;
+                }
 
-            @Override
-            public List<String> getRefreshValue() {
-                return ConsoleCache.refreshGroups();
-            }
-        };
+                ElementNode configElementNode = (ElementNode) getListData().get(newSelectedRow);
+                ConfigItemPanel configItemPanel = (ConfigItemPanel) configElementNode.getUserObject();
 
-        gatewayCachePanel = new CachePanel() {
-            private static final long serialVersionUID = 1L;
+                container.removeAll();
+                container.add(configItemPanel, BorderLayout.CENTER);
 
-            @Override
-            public List<String> getInitialValue() {
-                return ConsoleCache.getGateways();
-            }
-
-            @Override
-            public List<String> getRefreshValue() {
-                return ConsoleCache.refreshGateways();
+                ContainerManager.update(container);
             }
         };
+        configList.setSelectionMode(JBasicList.SINGLE_SELECTION);
 
-        serviceCachePanel = new CachePanel() {
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public List<String> getInitialValue() {
-                return ConsoleCache.getServices();
-            }
-
-            @Override
-            public List<String> getRefreshValue() {
-                return ConsoleCache.refreshServices();
-            }
-        };
-
-        JBasicCheckBox enableCacheCheckBox = new JBasicCheckBox(ConsoleLocaleFactory.getString("cache_enable"), ConsoleCache.isCacheEnabled());
-        enableCacheCheckBox.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                ConsoleCache.setCacheEnabled(enableCacheCheckBox.isSelected());
-            }
-        });
-
-        JPanel cacheBottonBar = new JPanel();
-        cacheBottonBar.setLayout(new BorderLayout());
-        cacheBottonBar.add(new JClassicButton(createRefreshCacheAction()), BorderLayout.WEST);
-        cacheBottonBar.add(Box.createHorizontalGlue(), BorderLayout.CENTER);
-        cacheBottonBar.add(enableCacheCheckBox, BorderLayout.EAST);
-
-        JBasicTabbedPane configTabbedPane = new JBasicTabbedPane();
-        configTabbedPane.addTab(ConsoleLocaleFactory.getString("group_list_cache"), groupCachePanel, ConsoleLocaleFactory.getString("group_list_cache"));
-        configTabbedPane.addTab(ConsoleLocaleFactory.getString("gateway_list_cache"), gatewayCachePanel, ConsoleLocaleFactory.getString("gateway_list_cache"));
-        configTabbedPane.addTab(ConsoleLocaleFactory.getString("service_list_cache"), serviceCachePanel, ConsoleLocaleFactory.getString("service_list_cache"));
-
-        setLayout(new BorderLayout(0, 5));
-        setPreferredSize(new Dimension(500, 500));
-        add(configTabbedPane, BorderLayout.CENTER);
-        add(cacheBottonBar, BorderLayout.SOUTH);
-    }
-
-    public abstract class CachePanel extends JPanel {
-        private static final long serialVersionUID = 1L;
-
-        protected JBasicList cacheList;
-
-        public CachePanel() {
-            cacheList = new JBasicList();
-
-            setLayout(new BorderLayout());
-            setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
-            add(new JBasicScrollPane(cacheList), BorderLayout.CENTER);
-
-            setInitialModel();
+        List<ElementNode> configElementNodeList = new ArrayList<ElementNode>();
+        for (ConfigType configType : ConfigType.values()) {
+            configElementNodeList.add(new ElementNode(TypeLocale.getDescription(configType), null, TypeLocale.getDescription(configType), cachePanel));
         }
+        ListUtil.setModel(configList, configElementNodeList, ConsoleIconFactory.getSwingIcon("netbean/stack_16.png"));
+        configList.setSelectedIndex(0);
 
-        public JBasicList getCacheList() {
-            return cacheList;
-        }
+        JPanel configListPanel = new JPanel();
+        configListPanel.setLayout(new BorderLayout());
+        configListPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        configListPanel.add(new JBasicScrollPane(configList), BorderLayout.CENTER);
 
-        public void setInitialModel() {
-            List<String> initialValue = getInitialValue();
+        JDockable dockable = (JDockable) getDockableContainer().getContentPane();
+        dockable.setDividerLocation(0, 200);
 
-            setModel(initialValue);
-        }
+        JDockableView filterView = (JDockableView) dockable.getPaneAt(0);
+        filterView.setTitle(ConsoleLocaleFactory.getString("config_list"));
+        filterView.setIcon(ConsoleIconFactory.getSwingIcon("netbean/stack_16.png"));
+        filterView.setToolTipText(ConsoleLocaleFactory.getString("config_list"));
+        filterView.add(configListPanel);
 
-        public void setRefreshModel() {
-            List<String> refreshValue = getRefreshValue();
+        JDockableView ruleView = (JDockableView) dockable.getPaneAt(1);
+        ruleView.setTitle(ConsoleLocaleFactory.getString("config_content"));
+        ruleView.setIcon(ConsoleIconFactory.getSwingIcon("component/internal_frame_16.png"));
+        ruleView.setToolTipText(ConsoleLocaleFactory.getString("config_content"));
+        ruleView.add(container);
 
-            setModel(refreshValue);
-        }
-
-        public void setModel(List<String> value) {
-            ListUtil.setSortableModel(cacheList, value, IconFactory.getSwingIcon("component/view.png"));
-        }
-
-        public abstract List<String> getInitialValue();
-
-        public abstract List<String> getRefreshValue();
-    }
-
-    public JSecurityAction createRefreshCacheAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("refresh_cache"), ConsoleIconFactory.getSwingIcon("netbean/rotate_16.png"), ConsoleLocaleFactory.getString("refresh_cache")) {
-            private static final long serialVersionUID = 1L;
-
-            public void execute(ActionEvent e) {
-                groupCachePanel.setRefreshModel();
-                gatewayCachePanel.setRefreshModel();
-                serviceCachePanel.setRefreshModel();
-            }
-        };
-
-        return action;
+        setPreferredSize(new Dimension(800, 600));
     }
 }

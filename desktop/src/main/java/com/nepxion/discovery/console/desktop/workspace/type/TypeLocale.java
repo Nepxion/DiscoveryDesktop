@@ -44,6 +44,10 @@ public class TypeLocale {
         return getDescription(featureType, "_feature");
     }
 
+    public static String getDescription(ConfigType configType) {
+        return getDescription(configType, "_config");
+    }
+
     public static String getName(Object type) {
         return ConsoleLocaleFactory.getString(type.toString());
     }

@@ -31,13 +31,16 @@ public class ListUtil {
     }
 
     @SuppressWarnings("unchecked")
+    public static void setModel(JBasicList list, List<?> value, ImageIcon imageIcon) {
+        Vector<?> vector = new Vector<Object>(value);
+
+        list.setModel(new BasicListModel(vector));
+        list.setCellRenderer(new ElementListCellRenderer(list, BorderFactory.createEmptyBorder(0, 5, 0, 0), imageIcon, 22));
+    }
+
     public static void setSortableModel(JBasicList list, List<String> value, ImageIcon imageIcon) {
         Collections.sort(value);
 
-        Vector<String> vector = new Vector<String>(value);
-
-        list.setListData(value.toArray());
-        list.setModel(new BasicListModel(vector));
-        list.setCellRenderer(new ElementListCellRenderer(list, BorderFactory.createEmptyBorder(0, 5, 0, 0), imageIcon, 22));
+        setModel(list, value, imageIcon);
     }
 }
