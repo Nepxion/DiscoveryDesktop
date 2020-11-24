@@ -12,6 +12,7 @@ package com.nepxion.discovery.console.desktop.workspace;
 import twaver.Generator;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
 import java.awt.event.HierarchyEvent;
 import java.util.List;
 
@@ -25,13 +26,20 @@ import com.nepxion.cots.twaver.element.TLink;
 import com.nepxion.cots.twaver.element.TNode;
 import com.nepxion.cots.twaver.graph.TGraphBackground;
 import com.nepxion.cots.twaver.graph.TLayoutType;
+import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
+import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
+import com.nepxion.discovery.console.desktop.workspace.panel.SetManagePanel;
 import com.nepxion.discovery.console.desktop.workspace.topology.BasicTopology;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeLocation;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeSizeType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeUI;
 import com.nepxion.discovery.console.entity.Instance;
+import com.nepxion.swing.action.JSecurityAction;
+import com.nepxion.swing.handle.HandleManager;
 import com.nepxion.swing.listener.DisplayAbilityListener;
+import com.nepxion.swing.locale.SwingLocale;
+import com.nepxion.swing.optionpane.JBasicOptionPane;
 
 public abstract class AbstractTopology extends BasicTopology {
     private static final long serialVersionUID = 1L;
@@ -121,5 +129,29 @@ public abstract class AbstractTopology extends BasicTopology {
 
     public void executeLayout() {
         layouter.doLayout(TLayoutType.HIERARCHIC_LAYOUT_TYPE, 125, 100, 200, 60);
+    }
+
+    public JSecurityAction createSetAction() {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("set_text"), ConsoleIconFactory.getSwingIcon("config.png"), ConsoleLocaleFactory.getString("set_tooltip")) {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+                JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractTopology.this), SetManagePanel.getInstance(), ConsoleLocaleFactory.getString("set_text"), JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/deploy.png"), new Object[] { SwingLocale.getString("close") }, null, true);
+            }
+        };
+
+        return action;
+    }
+
+    public JSecurityAction createLayoutAction() {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("layout_text"), ConsoleIconFactory.getSwingIcon("layout.png"), ConsoleLocaleFactory.getString("layout_tooltip")) {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+                executeLayout();
+            }
+        };
+
+        return action;
     }
 }

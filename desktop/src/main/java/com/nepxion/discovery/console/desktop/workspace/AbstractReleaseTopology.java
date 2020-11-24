@@ -25,7 +25,6 @@ import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.swing.dialog.JExceptionDialog;
 import com.nepxion.discovery.console.desktop.common.util.ButtonUtil;
-import com.nepxion.discovery.console.desktop.workspace.panel.ConfigPanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.PreviewPanel;
 import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessor;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
@@ -71,7 +70,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         toolBar.add(ButtonUtil.createButton(createClearAction()));
         toolBar.addSeparator();
         toolBar.add(ButtonUtil.createButton(createPreviewAction()));
-        toolBar.add(ButtonUtil.createButton(createConfigAction()));
+        toolBar.add(ButtonUtil.createButton(createSetAction()));
         toolBar.addSeparator();
         toolBar.add(ButtonUtil.createButton(createLayoutAction()));
 
@@ -200,30 +199,6 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
                 }
 
                 save(config);
-            }
-        };
-
-        return action;
-    }
-
-    public JSecurityAction createConfigAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("config_text"), ConsoleIconFactory.getSwingIcon("config.png"), ConsoleLocaleFactory.getString("config_tooltip")) {
-            private static final long serialVersionUID = 1L;
-
-            public void execute(ActionEvent e) {
-                JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConfigPanel.getInstance(), ConsoleLocaleFactory.getString("config_text"), JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/deploy.png"), new Object[] { SwingLocale.getString("close") }, null, true);
-            }
-        };
-
-        return action;
-    }
-
-    public JSecurityAction createLayoutAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("layout_text"), ConsoleIconFactory.getSwingIcon("layout.png"), ConsoleLocaleFactory.getString("layout_tooltip")) {
-            private static final long serialVersionUID = 1L;
-
-            public void execute(ActionEvent e) {
-                executeLayout();
             }
         };
 
