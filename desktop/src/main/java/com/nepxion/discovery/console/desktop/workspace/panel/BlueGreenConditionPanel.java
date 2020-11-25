@@ -305,16 +305,16 @@ public class BlueGreenConditionPanel extends JPanel {
             }
 
             public void showParameterNotNullTip() {
-                parameterTextField.showTip(ConsoleLocaleFactory.getString("condition_item_parameter_not_null"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
+                parameterTextField.showTip(ConsoleLocaleFactory.getString("expression_item_parameter_not_null"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
             }
 
             public void showValueNotNullTip() {
-                valueTextField.showTip(ConsoleLocaleFactory.getString("condition_item_value_not_null"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
+                valueTextField.showTip(ConsoleLocaleFactory.getString("expression_item_value_not_null"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
             }
         }
 
         public JSecurityAction createAddConditionItemAction() {
-            JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("add.png"), ConsoleLocaleFactory.getString("add_condition_item")) {
+            JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("add.png"), ConsoleLocaleFactory.getString("add_expression_item")) {
                 private static final long serialVersionUID = 1L;
 
                 public void execute(ActionEvent e) {
@@ -337,12 +337,12 @@ public class BlueGreenConditionPanel extends JPanel {
         }
 
         public JSecurityAction createRemoveConditionItemAction() {
-            JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("delete.png"), ConsoleLocaleFactory.getString("remove_condition_item")) {
+            JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("delete.png"), ConsoleLocaleFactory.getString("remove_expression_item")) {
                 private static final long serialVersionUID = 1L;
 
                 public void execute(ActionEvent e) {
                     if (conditionItems.size() < 2) {
-                        JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenConditionPanel.this), ConsoleLocaleFactory.getString("condition_item_one_at_least"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                        JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenConditionPanel.this), ConsoleLocaleFactory.getString("expression_item_one_at_least"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                         return;
                     }
