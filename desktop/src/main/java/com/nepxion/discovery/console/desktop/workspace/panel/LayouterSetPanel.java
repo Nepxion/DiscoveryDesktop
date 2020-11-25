@@ -70,7 +70,7 @@ public class LayouterSetPanel extends SetPanel {
         layouterPanel.add(yGapTextField, "1, 3");
 
         JBasicTabbedPane layouterTabbedPane = new JBasicTabbedPane();
-        layouterTabbedPane.addTab(ConsoleLocaleFactory.getString("group_list_cache"), layouterPanel, ConsoleLocaleFactory.getString("group_list_cache"));
+        layouterTabbedPane.addTab(ConsoleLocaleFactory.getString("layouter_parameter"), layouterPanel, ConsoleLocaleFactory.getString("layouter_parameter"));
 
         setLayout(new BorderLayout(0, 5));
         setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
