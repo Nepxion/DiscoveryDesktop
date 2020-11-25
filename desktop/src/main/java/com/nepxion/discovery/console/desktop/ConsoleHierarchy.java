@@ -41,7 +41,7 @@ public class ConsoleHierarchy extends AbstractConsoleHierarchy {
         List<ElementNode> elementNodes = new ArrayList<ElementNode>();
         elementNodes.add(new ElementNode(ReleaseType.BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.BLUE_GREEN), ConsoleIconFactory.getContextIcon("blue_green.png"), TypeLocale.getDescription(ReleaseType.BLUE_GREEN), new BlueGreenTopology()));
         elementNodes.add(new ElementNode(ReleaseType.GRAY.toString(), TypeLocale.getDescription(ReleaseType.GRAY), ConsoleIconFactory.getContextIcon("gray.png"), TypeLocale.getDescription(ReleaseType.GRAY), new GrayTopology()));
-        elementNodes.add(new ElementNode(FeatureType.INSPECT.toString(), TypeLocale.getDescription(FeatureType.INSPECT), ConsoleIconFactory.getContextIcon("inspect.png"), TypeLocale.getDescription(FeatureType.INSPECT), new InspectorTopology()));
+        elementNodes.add(new ElementNode(FeatureType.INSPECTOR.toString(), TypeLocale.getDescription(FeatureType.INSPECTOR), ConsoleIconFactory.getContextIcon("inspector.png"), TypeLocale.getDescription(FeatureType.INSPECTOR), new InspectorTopology()));
         elementNodes.add(new ElementNode(ReleaseType.BLACKLIST.toString(), TypeLocale.getDescription(ReleaseType.BLACKLIST), ConsoleIconFactory.getContextIcon("blacklist.png"), TypeLocale.getDescription(ReleaseType.BLACKLIST), null));
 
         JBasicList toggleList = createToggleList(elementNodes);

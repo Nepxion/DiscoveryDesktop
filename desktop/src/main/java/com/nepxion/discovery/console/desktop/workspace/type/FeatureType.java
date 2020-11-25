@@ -10,7 +10,7 @@ package com.nepxion.discovery.console.desktop.workspace.type;
  */
 
 public enum FeatureType {
-    INSPECT("inspect");
+    INSPECTOR("inspector");
 
     private String value;
 
