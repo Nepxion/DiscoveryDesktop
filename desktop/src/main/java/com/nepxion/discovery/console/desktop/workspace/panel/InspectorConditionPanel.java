@@ -175,7 +175,7 @@ public class InspectorConditionPanel extends JPanel {
                 private static final long serialVersionUID = 1L;
 
                 public void execute(ActionEvent e) {
-                    if (conditionItems.size() < 3) {
+                    if (conditionItems.size() < 2) {
                         JBasicOptionPane.showMessageDialog(HandleManager.getFrame(InspectorConditionPanel.this), ConsoleLocaleFactory.getString("service_one_at_least"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                         return;

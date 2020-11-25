@@ -9,24 +9,31 @@ package com.nepxion.discovery.console.desktop.workspace;
  * @version 1.0
  */
 
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import javax.swing.JToolBar;
 
+import com.nepxion.cots.twaver.icon.TIconFactory;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
+import com.nepxion.discovery.console.desktop.common.util.ButtonUtil;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.InspectorConditionPanel;
 import com.nepxion.discovery.console.desktop.workspace.type.PortalType;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
 import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
+import com.nepxion.swing.action.JSecurityAction;
+import com.nepxion.swing.button.ButtonManager;
 import com.nepxion.swing.combobox.JBasicComboBox;
 import com.nepxion.swing.element.ElementNode;
 import com.nepxion.swing.label.JBasicLabel;
 import com.nepxion.swing.layout.table.TableLayout;
 import com.nepxion.swing.shrinkbar.JShrinkShortcut;
+import com.nepxion.swing.textfield.JBasicTextField;
 import com.nepxion.swing.timer.JTimerProgressBar;
 
 public class InspectorTopology extends AbstractTopology {
@@ -35,7 +42,22 @@ public class InspectorTopology extends AbstractTopology {
     protected InspectorConditionPanel conditionPanel;
 
     public InspectorTopology() {
+        initializeToolBar();
         initializeOperationBar();
+    }
+
+    public void initializeToolBar() {
+        JToolBar toolBar = getGraph().getToolbar();
+        toolBar.addSeparator();
+        toolBar.add(ButtonUtil.createButton(createStartAction()));
+        toolBar.add(ButtonUtil.createButton(createStopAction()));
+        toolBar.addSeparator();
+        toolBar.add(ButtonUtil.createButton(createViewAction()));
+        toolBar.add(ButtonUtil.createButton(createSetAction()));
+        toolBar.addSeparator();
+        toolBar.add(ButtonUtil.createButton(createLayoutAction()));
+
+        ButtonManager.updateUI(toolBar);
     }
 
     @Override
@@ -70,7 +92,7 @@ public class InspectorTopology extends AbstractTopology {
         portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("address")), 5), "0, 2");
         portalPanel.add(new JBasicComboBox(new String[] { "192.68.0.1:8080", "192.68.0.2:8080" }), "1, 2");
         portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("parameter")), 5), "0, 3");
-        portalPanel.add(new JBasicComboBox(new String[] { "192.68.0.1:8080", "192.68.0.2:8080" }), "1, 3");
+        portalPanel.add(new JBasicTextField("a=1&b=1"), "1, 3");
 
         JShrinkShortcut conditionShrinkShortcut = new JShrinkShortcut();
         conditionShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("inspector_link"));
@@ -130,5 +152,41 @@ public class InspectorTopology extends AbstractTopology {
         operationBar.add(conditionPanel, "0, 4");
         operationBar.add(parameterShrinkShortcut, "0, 6");
         operationBar.add(parameterPanel, "0, 7");
+    }
+
+    public JSecurityAction createStartAction() {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("start_text"), TIconFactory.getContextIcon("run.png"), ConsoleLocaleFactory.getString("start_inspector_tooltip")) {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+
+            }
+        };
+
+        return action;
+    }
+
+    public JSecurityAction createStopAction() {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("stop_text"), TIconFactory.getContextIcon("stop.png"), ConsoleLocaleFactory.getString("stop_inspector_tooltip")) {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+
+            }
+        };
+
+        return action;
+    }
+
+    public JSecurityAction createViewAction() {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("view_text"), ConsoleIconFactory.getSwingIcon("ticket.png"), ConsoleLocaleFactory.getString("view_metadata_tooltip")) {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+
+            }
+        };
+
+        return action;
     }
 }
