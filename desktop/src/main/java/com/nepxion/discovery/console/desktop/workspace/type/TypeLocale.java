@@ -48,6 +48,10 @@ public class TypeLocale {
         return getDescription(setType, "_set");
     }
 
+    public static String getDescription(PortalType portalType) {
+        return getDescription(portalType, "_portal");
+    }
+
     public static String getName(Object type) {
         return ConsoleLocaleFactory.getString(type.toString());
     }

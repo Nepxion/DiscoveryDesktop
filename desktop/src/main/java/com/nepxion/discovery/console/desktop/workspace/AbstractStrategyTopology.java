@@ -225,7 +225,7 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
         }
 
         Instance gateway = new Instance();
-        gateway.setServiceId(subscriptionType == SubscriptionType.PARTIAL ? gatewayId : ConsoleLocaleFactory.getString("portal_service"));
+        gateway.setServiceId(subscriptionType == SubscriptionType.PARTIAL ? gatewayId : ConsoleLocaleFactory.getString("portal_type"));
         Map<String, String> metadataMap = new HashMap<String, String>();
         gateway.setMetadata(metadataMap);
 
