@@ -10,6 +10,8 @@ package com.nepxion.discovery.console.desktop.workspace;
  */
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,18 +20,24 @@ import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
 import com.nepxion.cots.twaver.icon.TIconFactory;
+import com.nepxion.discovery.console.cache.ConsoleCache;
+import com.nepxion.discovery.console.controller.ConsoleController;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
+import com.nepxion.discovery.console.desktop.common.swing.dialog.JExceptionDialog;
 import com.nepxion.discovery.console.desktop.common.util.ButtonUtil;
+import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.InspectorConditionPanel;
 import com.nepxion.discovery.console.desktop.workspace.type.PortalType;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
 import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
+import com.nepxion.discovery.console.entity.Instance;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.ButtonManager;
 import com.nepxion.swing.combobox.JBasicComboBox;
 import com.nepxion.swing.element.ElementNode;
+import com.nepxion.swing.handle.HandleManager;
 import com.nepxion.swing.label.JBasicLabel;
 import com.nepxion.swing.layout.table.TableLayout;
 import com.nepxion.swing.shrinkbar.JShrinkShortcut;
@@ -38,6 +46,10 @@ import com.nepxion.swing.timer.JTimerProgressBar;
 
 public class InspectorTopology extends AbstractTopology {
     private static final long serialVersionUID = 1L;
+
+    protected JBasicComboBox portalComboBox;
+    protected JBasicComboBox serviceIdComboBox;
+    protected JBasicComboBox instanceComboBox;
 
     protected InspectorConditionPanel conditionPanel;
 
@@ -83,14 +95,42 @@ public class InspectorTopology extends AbstractTopology {
             portalElementNodes.add(new ElementNode(portalType.toString(), TypeLocale.getDescription(portalType), null, TypeLocale.getDescription(portalType), portalType));
         }
 
+        portalComboBox = new JBasicComboBox(portalElementNodes.toArray());
+        portalComboBox.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (portalComboBox.getSelectedItem() != e.getItem()) {
+                    setServiceIds();
+                    setInstances();
+                }
+            }
+        });
+
+        serviceIdComboBox = new JBasicComboBox();
+        serviceIdComboBox.setEditable(true);
+        serviceIdComboBox.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (serviceIdComboBox.getSelectedItem() != e.getItem()) {
+                    setInstances();
+                }
+            }
+        });
+        ComboBoxUtil.installlAutoCompletion(serviceIdComboBox);
+
+        instanceComboBox = new JBasicComboBox();
+        instanceComboBox.setEditable(true);
+        ComboBoxUtil.installlAutoCompletion(instanceComboBox);
+
+        setServiceIds();
+        setInstances();
+
         JPanel portalPanel = new JPanel();
         portalPanel.setLayout(portalTableLayout);
         portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("type")), 5), "0, 0");
-        portalPanel.add(new JBasicComboBox(portalElementNodes.toArray()), "1, 0");
+        portalPanel.add(portalComboBox, "1, 0");
         portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("name")), 5), "0, 1");
-        portalPanel.add(new JBasicComboBox(new String[] { "service-a", "service-b" }), "1, 1");
+        portalPanel.add(serviceIdComboBox, "1, 1");
         portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("address")), 5), "0, 2");
-        portalPanel.add(new JBasicComboBox(new String[] { "192.68.0.1:8080", "192.68.0.2:8080" }), "1, 2");
+        portalPanel.add(instanceComboBox, "1, 2");
         portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("parameter")), 5), "0, 3");
         portalPanel.add(new JBasicTextField("a=1&b=1"), "1, 3");
 
@@ -152,6 +192,62 @@ public class InspectorTopology extends AbstractTopology {
         operationBar.add(conditionPanel, "0, 4");
         operationBar.add(parameterShrinkShortcut, "0, 6");
         operationBar.add(parameterPanel, "0, 7");
+    }
+
+    public void setServiceIds() {
+        List<String> serviceIds = null;
+
+        ElementNode portalElementNode = (ElementNode) portalComboBox.getSelectedItem();
+        PortalType portalType = (PortalType) portalElementNode.getUserObject();
+        switch (portalType) {
+            case GATEWAY:
+                serviceIds = getServiceIds(true);
+                break;
+            case SERVICE:
+                serviceIds = getServiceIds(false);
+                break;
+        }
+
+        if (serviceIds != null) {
+            ComboBoxUtil.setSortableModel(serviceIdComboBox, serviceIds);
+        }
+    }
+
+    public void setInstances() {
+        String serviceId = ComboBoxUtil.getSelectedValue(serviceIdComboBox);
+
+        List<Instance> instances = getInstances(serviceId);
+        if (instances != null) {
+            List<String> addresses = new ArrayList<String>();
+            for (Instance instance : instances) {
+                addresses.add(instance.getHost() + ":" + instance.getPort());
+            }
+            ComboBoxUtil.setSortableModel(instanceComboBox, addresses);
+        }
+    }
+
+    public List<String> getServiceIds(boolean isGateway) {
+        try {
+            if (isGateway) {
+                return ConsoleCache.getGateways();
+            } else {
+                return ConsoleCache.getRealServices();
+            }
+        } catch (Exception e) {
+            JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
+        }
+
+        return null;
+    }
+
+    public List<Instance> getInstances(String serviceId) {
+        try {
+            return ConsoleController.getInstanceList(serviceId);
+        } catch (Exception e) {
+            JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
+        }
+
+        return null;
     }
 
     public JSecurityAction createStartAction() {

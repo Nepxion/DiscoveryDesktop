@@ -261,7 +261,7 @@ public class StrategyCreatePanel extends JPanel {
     public void setGatewayIds() {
         String group = ComboBoxUtil.getSelectedValue(groupComboBox);
         if (StringUtils.isNotBlank(group)) {
-            List<String> gatewayIds = geServiceIds(group, showOnlyGatewayCheckBox.isSelected());
+            List<String> gatewayIds = getServiceIds(group, showOnlyGatewayCheckBox.isSelected());
             if (gatewayIds != null) {
                 ComboBoxUtil.setSortableModel(gatewayIdComboBox, gatewayIds);
             }
@@ -315,7 +315,7 @@ public class StrategyCreatePanel extends JPanel {
         return null;
     }
 
-    public List<String> geServiceIds(String group, boolean onlyGateway) {
+    public List<String> getServiceIds(String group, boolean onlyGateway) {
         try {
             Map<String, List<Instance>> instanceMap = ConsoleController.getInstanceMap(Arrays.asList(group));
             if (onlyGateway) {

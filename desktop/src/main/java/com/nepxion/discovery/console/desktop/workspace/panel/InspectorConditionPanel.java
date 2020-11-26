@@ -20,8 +20,10 @@ import javax.swing.JPanel;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.nepxion.discovery.console.cache.ConsoleCache;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
+import com.nepxion.discovery.console.desktop.common.swing.dialog.JExceptionDialog;
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.swing.action.JSecurityAction;
@@ -61,7 +63,11 @@ public class InspectorConditionPanel extends JPanel {
 
         protected JPanel conditionItemBar;
 
+        protected List<String> serviceIds;
+
         public ConditionBar() {
+            serviceIds = getServiceIds();
+
             conditionItemBar = new JPanel();
 
             double[][] size = {
@@ -128,8 +134,18 @@ public class InspectorConditionPanel extends JPanel {
             return null;
         }
 
+        public List<String> getServiceIds() {
+            try {
+                return ConsoleCache.getRealServices();
+            } catch (Exception e) {
+                JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
+            }
+
+            return null;
+        }
+
         public class ConditionItem {
-            protected JBasicComboBox serviceIdComboBox = new JBasicComboBox(new String[] { "==", "!=", ">", ">=", "<", "<=", "matches" });
+            protected JBasicComboBox serviceIdComboBox = new JBasicComboBox();
             protected JClassicButton addButton = new JClassicButton(createAddConditionItemAction());
             protected JClassicButton removeButton = new JClassicButton(createRemoveConditionItemAction());
 
@@ -140,6 +156,9 @@ public class InspectorConditionPanel extends JPanel {
 
                 serviceIdComboBox.setEditable(true);
                 ComboBoxUtil.installlAutoCompletion(serviceIdComboBox);
+                if (serviceIds != null) {
+                    ComboBoxUtil.setSortableModel(serviceIdComboBox, serviceIds);
+                }
 
                 addButton.setName(uuid);
                 removeButton.setName(uuid);

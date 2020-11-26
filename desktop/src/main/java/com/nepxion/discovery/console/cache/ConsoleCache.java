@@ -9,7 +9,10 @@ package com.nepxion.discovery.console.cache;
  * @version 1.0
  */
 
+import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.collections4.CollectionUtils;
 
 import com.nepxion.discovery.console.controller.ConsoleController;
 
@@ -91,6 +94,28 @@ public class ConsoleCache {
         services = ConsoleController.getServices();
 
         return services;
+    }
+
+    public static List<String> getRealServices() {
+        List<String> services = getServices();
+        if (CollectionUtils.isEmpty(services)) {
+            return null;
+        }
+
+        List<String> gateways = getGateways();
+
+        List<String> realServices = new ArrayList<String>();
+        for (String service : services) {
+            if (CollectionUtils.isNotEmpty(gateways)) {
+                if (!gateways.contains(service)) {
+                    realServices.add(service);
+                }
+            } else {
+                realServices.add(service);
+            }
+        }
+
+        return realServices;
     }
 
     public static boolean isCacheEnabled() {
