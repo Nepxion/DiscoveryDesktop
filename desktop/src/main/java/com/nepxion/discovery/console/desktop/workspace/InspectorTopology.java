@@ -35,10 +35,12 @@ import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.discovery.console.entity.Instance;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.ButtonManager;
+import com.nepxion.swing.button.JClassicButton;
 import com.nepxion.swing.combobox.JBasicComboBox;
 import com.nepxion.swing.element.ElementNode;
 import com.nepxion.swing.handle.HandleManager;
 import com.nepxion.swing.label.JBasicLabel;
+import com.nepxion.swing.layout.filed.FiledLayout;
 import com.nepxion.swing.layout.table.TableLayout;
 import com.nepxion.swing.shrinkbar.JShrinkShortcut;
 import com.nepxion.swing.textfield.JBasicTextField;
@@ -175,9 +177,13 @@ public class InspectorTopology extends AbstractTopology {
         parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("progress")), 5), "0, 2");
         parameterPanel.add(DimensionUtil.addHeight(new JTimerProgressBar(), 3), "1, 2");
 
+        JPanel toolBar = new JPanel();
+        toolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
+        toolBar.add(new JClassicButton(createRefreshServiceIdAction()));
+
         double[][] size = {
                 { TableLayout.FILL },
-                { TableLayout.PREFERRED, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, TableLayout.PREFERRED }
+                { TableLayout.PREFERRED, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, TableLayout.PREFERRED, 10, TableLayout.PREFERRED }
         };
 
         TableLayout tableLayout = new TableLayout(size);
@@ -192,6 +198,7 @@ public class InspectorTopology extends AbstractTopology {
         operationBar.add(conditionPanel, "0, 4");
         operationBar.add(parameterShrinkShortcut, "0, 6");
         operationBar.add(parameterPanel, "0, 7");
+        operationBar.add(toolBar, "0, 9");
     }
 
     public void setServiceIds() {
@@ -280,6 +287,21 @@ public class InspectorTopology extends AbstractTopology {
 
             public void execute(ActionEvent e) {
 
+            }
+        };
+
+        return action;
+    }
+
+    public JSecurityAction createRefreshServiceIdAction() {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("refresh_service_list_tooltip"), ConsoleIconFactory.getSwingIcon("netbean/rotate_16.png"), ConsoleLocaleFactory.getString("refresh_service_list_tooltip")) {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+                setServiceIds();
+                setInstances();
+
+                conditionPanel.setServiceIds();
             }
         };
 

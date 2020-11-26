@@ -42,11 +42,31 @@ public class InspectorConditionPanel extends JPanel {
 
     protected ConditionBar conditionBar;
 
+    protected List<String> serviceIds;
+
     public InspectorConditionPanel() {
         conditionBar = new ConditionBar();
 
         setLayout(new FiledLayout(FiledLayout.COLUMN, FiledLayout.FULL, 10));
         add(conditionBar);
+
+        setServiceIds();
+    }
+
+    public void setServiceIds() {
+        serviceIds = getServiceIds();
+
+        conditionBar.setServiceIds();
+    }
+
+    public List<String> getServiceIds() {
+        try {
+            return ConsoleCache.getRealServices();
+        } catch (Exception e) {
+            JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
+        }
+
+        return null;
     }
 
     public String getCondition() {
@@ -63,11 +83,7 @@ public class InspectorConditionPanel extends JPanel {
 
         protected JPanel conditionItemBar;
 
-        protected List<String> serviceIds;
-
         public ConditionBar() {
-            serviceIds = getServiceIds();
-
             conditionItemBar = new JPanel();
 
             double[][] size = {
@@ -134,14 +150,14 @@ public class InspectorConditionPanel extends JPanel {
             return null;
         }
 
-        public List<String> getServiceIds() {
-            try {
-                return ConsoleCache.getRealServices();
-            } catch (Exception e) {
-                JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
+        public void setServiceIds() {
+            if (serviceIds == null) {
+                return;
             }
 
-            return null;
+            for (ConditionItem conditionItem : conditionItems) {
+                conditionItem.setServiceIdComboBoxModel();
+            }
         }
 
         public class ConditionItem {
@@ -156,15 +172,20 @@ public class InspectorConditionPanel extends JPanel {
 
                 serviceIdComboBox.setEditable(true);
                 ComboBoxUtil.installlAutoCompletion(serviceIdComboBox);
-                if (serviceIds != null) {
-                    ComboBoxUtil.setSortableModel(serviceIdComboBox, serviceIds);
-                }
+
+                setServiceIdComboBoxModel();
 
                 addButton.setName(uuid);
                 removeButton.setName(uuid);
 
                 DimensionUtil.setWidth(addButton, 30);
                 DimensionUtil.setWidth(removeButton, 30);
+            }
+
+            public void setServiceIdComboBoxModel() {
+                if (serviceIds != null) {
+                    ComboBoxUtil.setSortableModel(serviceIdComboBox, serviceIds);
+                }
             }
         }
 
