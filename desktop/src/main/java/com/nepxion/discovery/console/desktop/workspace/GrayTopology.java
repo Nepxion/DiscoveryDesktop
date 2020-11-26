@@ -61,9 +61,9 @@ public class GrayTopology extends AbstractStrategyTopology {
     private static final long serialVersionUID = 1L;
 
     protected NodeUI serviceGrayNodeUI = new NodeUI(NodeImageType.SERVICE_GRAY, NodeSizeType.MIDDLE, true);
-    protected NodeUI serviceStableNodeUI = new NodeUI(NodeImageType.SERVICE_GREEN, NodeSizeType.MIDDLE, true);
+    protected NodeUI serviceStableNodeUI = new NodeUI(NodeImageType.SERVICE_YELLOW, NodeSizeType.MIDDLE, true);
     protected Color grayLinkUI = LinkUI.GRAY;
-    protected Color stableLinkUI = LinkUI.GREEN;
+    protected Color stableLinkUI = LinkUI.YELLOW;
 
     protected JPanel conditionPanel;
     protected JPanel conditionToolBar;
