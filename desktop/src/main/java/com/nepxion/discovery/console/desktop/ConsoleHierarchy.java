@@ -31,6 +31,9 @@ import com.nepxion.swing.shrinkbar.JShrinkOutlook;
 public class ConsoleHierarchy extends AbstractConsoleHierarchy {
     private static final long serialVersionUID = 1L;
 
+    public static final String STYLE = "outlook/stereo/";
+    // public static final String STYLE = "outlook/flat/";
+
     @Override
     public void initializeUI() {
         createServiceReleaseManageShrinkOutlook();
@@ -39,10 +42,10 @@ public class ConsoleHierarchy extends AbstractConsoleHierarchy {
 
     private JShrinkOutlook createServiceReleaseManageShrinkOutlook() {
         List<ElementNode> elementNodes = new ArrayList<ElementNode>();
-        elementNodes.add(new ElementNode(ReleaseType.BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.BLUE_GREEN), ConsoleIconFactory.getContextIcon("blue_green.png"), TypeLocale.getDescription(ReleaseType.BLUE_GREEN), new BlueGreenTopology()));
-        elementNodes.add(new ElementNode(ReleaseType.GRAY.toString(), TypeLocale.getDescription(ReleaseType.GRAY), ConsoleIconFactory.getContextIcon("gray.png"), TypeLocale.getDescription(ReleaseType.GRAY), new GrayTopology()));
-        elementNodes.add(new ElementNode(FeatureType.INSPECTOR.toString(), TypeLocale.getDescription(FeatureType.INSPECTOR), ConsoleIconFactory.getContextIcon("inspector.png"), TypeLocale.getDescription(FeatureType.INSPECTOR), new InspectorTopology()));
-        elementNodes.add(new ElementNode(ReleaseType.BLACKLIST.toString(), TypeLocale.getDescription(ReleaseType.BLACKLIST), ConsoleIconFactory.getContextIcon("blacklist.png"), TypeLocale.getDescription(ReleaseType.BLACKLIST), null));
+        elementNodes.add(new ElementNode(ReleaseType.BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.BLUE_GREEN), ConsoleIconFactory.getContextIcon(STYLE + "blue_green.png"), TypeLocale.getDescription(ReleaseType.BLUE_GREEN), new BlueGreenTopology()));
+        elementNodes.add(new ElementNode(ReleaseType.GRAY.toString(), TypeLocale.getDescription(ReleaseType.GRAY), ConsoleIconFactory.getContextIcon(STYLE + "gray.png"), TypeLocale.getDescription(ReleaseType.GRAY), new GrayTopology()));
+        elementNodes.add(new ElementNode(FeatureType.INSPECTOR.toString(), TypeLocale.getDescription(FeatureType.INSPECTOR), ConsoleIconFactory.getContextIcon(STYLE + "inspector.png"), TypeLocale.getDescription(FeatureType.INSPECTOR), new InspectorTopology()));
+        elementNodes.add(new ElementNode(ReleaseType.BLACKLIST.toString(), TypeLocale.getDescription(ReleaseType.BLACKLIST), ConsoleIconFactory.getContextIcon(STYLE + "blacklist.png"), TypeLocale.getDescription(ReleaseType.BLACKLIST), null));
 
         JBasicList toggleList = createToggleList(elementNodes);
         toggleList.setSelectedIndex(0);
@@ -56,8 +59,8 @@ public class ConsoleHierarchy extends AbstractConsoleHierarchy {
 
     private JShrinkOutlook createMiddleWareReleaseManageShrinkOutlook() {
         List<ElementNode> elementNodes = new ArrayList<ElementNode>();
-        elementNodes.add(new ElementNode(ReleaseType.DATABASE_BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.DATABASE_BLUE_GREEN), ConsoleIconFactory.getContextIcon("database.png"), TypeLocale.getDescription(ReleaseType.DATABASE_BLUE_GREEN), null));
-        elementNodes.add(new ElementNode(ReleaseType.MESSAGE_QUEUE_BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.MESSAGE_QUEUE_BLUE_GREEN), ConsoleIconFactory.getContextIcon("message_queue.png"), TypeLocale.getDescription(ReleaseType.MESSAGE_QUEUE_BLUE_GREEN), null));
+        elementNodes.add(new ElementNode(ReleaseType.DATABASE_BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.DATABASE_BLUE_GREEN), ConsoleIconFactory.getContextIcon(STYLE + "database.png"), TypeLocale.getDescription(ReleaseType.DATABASE_BLUE_GREEN), null));
+        elementNodes.add(new ElementNode(ReleaseType.MESSAGE_QUEUE_BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.MESSAGE_QUEUE_BLUE_GREEN), ConsoleIconFactory.getContextIcon(STYLE + "message_queue.png"), TypeLocale.getDescription(ReleaseType.MESSAGE_QUEUE_BLUE_GREEN), null));
 
         JBasicList toggleList = createToggleList(elementNodes);
 

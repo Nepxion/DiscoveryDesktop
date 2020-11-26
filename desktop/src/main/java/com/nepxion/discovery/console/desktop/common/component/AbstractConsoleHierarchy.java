@@ -131,7 +131,7 @@ public abstract class AbstractConsoleHierarchy extends JReflectionHierarchy {
         };
         toggleList.setSelectionMode(JBasicList.SINGLE_SELECTION);
         toggleList.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
-        toggleList.setCellRenderer(new ShrinkListCellRenderer(toggleList, BorderFactory.createEmptyBorder(0, 10, 0, 0), 36));
+        toggleList.setCellRenderer(new ShrinkListCellRenderer(toggleList, BorderFactory.createEmptyBorder(0, 10, 0, 0), 40));
 
         return toggleList;
     }
