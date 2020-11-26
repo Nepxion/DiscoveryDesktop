@@ -28,11 +28,9 @@ public class ConsoleUIContext {
     private static final int FONT_MIDDLE_SIZE_EN_US = FONT_SMALL_SIZE_EN_US + 1;
     private static final int FONT_LARGE_SIZE_EN_US = FONT_SMALL_SIZE_EN_US + 2;
 
-    private static final String THEME = "NimbusLookAndFeel";
-
     public static void initialize() {
-        String theme = ConsolePropertiesContext.getProperties().getString("theme", THEME);
-        if (StringUtils.equals(theme, THEME)) {
+        String theme = ConsolePropertiesContext.getProperties().getTheme();
+        if (StringUtils.equals(theme, ConsoleConstant.DEFAULT_THEME)) {
             setFont();
             setLookAndFeel(theme);
         } else {
