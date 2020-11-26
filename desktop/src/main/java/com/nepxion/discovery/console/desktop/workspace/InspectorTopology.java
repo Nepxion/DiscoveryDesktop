@@ -9,6 +9,7 @@ package com.nepxion.discovery.console.desktop.workspace;
  * @version 1.0
  */
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -29,6 +30,7 @@ import com.nepxion.discovery.console.desktop.common.util.ButtonUtil;
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.InspectorConditionPanel;
+import com.nepxion.discovery.console.desktop.workspace.panel.StrategyOpenPanel;
 import com.nepxion.discovery.console.desktop.workspace.type.PortalType;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
 import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
@@ -42,6 +44,8 @@ import com.nepxion.swing.handle.HandleManager;
 import com.nepxion.swing.label.JBasicLabel;
 import com.nepxion.swing.layout.filed.FiledLayout;
 import com.nepxion.swing.layout.table.TableLayout;
+import com.nepxion.swing.locale.SwingLocale;
+import com.nepxion.swing.optionpane.JBasicOptionPane;
 import com.nepxion.swing.shrinkbar.JShrinkShortcut;
 import com.nepxion.swing.textfield.JBasicTextField;
 import com.nepxion.swing.timer.JTimerProgressBar;
@@ -263,7 +267,13 @@ public class InspectorTopology extends AbstractTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
+                StrategyOpenPanel openPanel = new StrategyOpenPanel();
+                openPanel.setPreferredSize(new Dimension(openPanel.getPreferredSize().width + 100, openPanel.getPreferredSize().height + 10));
 
+                int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(InspectorTopology.this), openPanel, ConsoleLocaleFactory.getString("open_strategy_tooltip"), JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
+                if (selectedOption != 0) {
+                    return;
+                }
             }
         };
 
