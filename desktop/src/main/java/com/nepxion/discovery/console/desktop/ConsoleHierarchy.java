@@ -31,8 +31,11 @@ import com.nepxion.swing.shrinkbar.JShrinkOutlook;
 public class ConsoleHierarchy extends AbstractConsoleHierarchy {
     private static final long serialVersionUID = 1L;
 
-    public static final String STYLE = "outlook/stereo/";
-    // public static final String STYLE = "outlook/flat/";
+    public static final String OUTLOOK_STYLE = "outlook/stereo/";
+    // public static final String OUTLOOK_STYLE = "outlook/flat/";
+
+    public static final String NAVIGATOR_STYLE = "navigator/stereo/";
+    // public static final String NAVIGATOR_STYLE = "navigator/flat/";
 
     @Override
     public void initializeUI() {
@@ -42,15 +45,15 @@ public class ConsoleHierarchy extends AbstractConsoleHierarchy {
 
     private JShrinkOutlook createServiceReleaseManageShrinkOutlook() {
         List<ElementNode> elementNodes = new ArrayList<ElementNode>();
-        elementNodes.add(new ElementNode(ReleaseType.BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.BLUE_GREEN), ConsoleIconFactory.getContextIcon(STYLE + "blue_green.png"), TypeLocale.getDescription(ReleaseType.BLUE_GREEN), new BlueGreenTopology()));
-        elementNodes.add(new ElementNode(ReleaseType.GRAY.toString(), TypeLocale.getDescription(ReleaseType.GRAY), ConsoleIconFactory.getContextIcon(STYLE + "gray.png"), TypeLocale.getDescription(ReleaseType.GRAY), new GrayTopology()));
-        elementNodes.add(new ElementNode(FeatureType.INSPECTOR.toString(), TypeLocale.getDescription(FeatureType.INSPECTOR), ConsoleIconFactory.getContextIcon(STYLE + "inspector.png"), TypeLocale.getDescription(FeatureType.INSPECTOR), new InspectorTopology()));
-        elementNodes.add(new ElementNode(ReleaseType.BLACKLIST.toString(), TypeLocale.getDescription(ReleaseType.BLACKLIST), ConsoleIconFactory.getContextIcon(STYLE + "blacklist.png"), TypeLocale.getDescription(ReleaseType.BLACKLIST), null));
+        elementNodes.add(new ElementNode(ReleaseType.BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.BLUE_GREEN), ConsoleIconFactory.getContextIcon(OUTLOOK_STYLE + "blue_green.png"), TypeLocale.getDescription(ReleaseType.BLUE_GREEN), new BlueGreenTopology()));
+        elementNodes.add(new ElementNode(ReleaseType.GRAY.toString(), TypeLocale.getDescription(ReleaseType.GRAY), ConsoleIconFactory.getContextIcon(OUTLOOK_STYLE + "gray.png"), TypeLocale.getDescription(ReleaseType.GRAY), new GrayTopology()));
+        elementNodes.add(new ElementNode(FeatureType.INSPECTOR.toString(), TypeLocale.getDescription(FeatureType.INSPECTOR), ConsoleIconFactory.getContextIcon(OUTLOOK_STYLE + "inspector.png"), TypeLocale.getDescription(FeatureType.INSPECTOR), new InspectorTopology()));
+        elementNodes.add(new ElementNode(ReleaseType.BLACKLIST.toString(), TypeLocale.getDescription(ReleaseType.BLACKLIST), ConsoleIconFactory.getContextIcon(OUTLOOK_STYLE + "blacklist.png"), TypeLocale.getDescription(ReleaseType.BLACKLIST), null));
 
         JBasicList toggleList = createToggleList(elementNodes);
         toggleList.setSelectedIndex(0);
 
-        JShrinkOutlook shrinkOutlook = shrinkOutlookBar.addShrinkOutlook(ConsoleLocaleFactory.getString("service_release_manage"), ConsoleIconFactory.getSwingIcon("stereo/favorite_16.png"), ConsoleIconFactory.getSwingIcon("stereo/favorite_add_16.png"), ConsoleLocaleFactory.getString("service_release_manage"), new Font(ConsoleUIContext.getFontName(), Font.BOLD, ConsoleUIContext.getMiddleFontSize()));
+        JShrinkOutlook shrinkOutlook = shrinkOutlookBar.addShrinkOutlook(ConsoleLocaleFactory.getString("service_release_manage"), ConsoleIconFactory.getContextIcon(NAVIGATOR_STYLE + "close_16.png"), ConsoleIconFactory.getContextIcon(NAVIGATOR_STYLE + "open_favorite_16.png"), ConsoleLocaleFactory.getString("service_release_manage"), new Font(ConsoleUIContext.getFontName(), Font.BOLD, ConsoleUIContext.getMiddleFontSize()));
         shrinkOutlook.setContentPane(toggleList);
         shrinkOutlook.addPropertyChangeListener(new OutlookSelectionListener());
 
@@ -59,12 +62,12 @@ public class ConsoleHierarchy extends AbstractConsoleHierarchy {
 
     private JShrinkOutlook createMiddleWareReleaseManageShrinkOutlook() {
         List<ElementNode> elementNodes = new ArrayList<ElementNode>();
-        elementNodes.add(new ElementNode(ReleaseType.DATABASE_BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.DATABASE_BLUE_GREEN), ConsoleIconFactory.getContextIcon(STYLE + "database.png"), TypeLocale.getDescription(ReleaseType.DATABASE_BLUE_GREEN), null));
-        elementNodes.add(new ElementNode(ReleaseType.MESSAGE_QUEUE_BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.MESSAGE_QUEUE_BLUE_GREEN), ConsoleIconFactory.getContextIcon(STYLE + "message_queue.png"), TypeLocale.getDescription(ReleaseType.MESSAGE_QUEUE_BLUE_GREEN), null));
+        elementNodes.add(new ElementNode(ReleaseType.DATABASE_BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.DATABASE_BLUE_GREEN), ConsoleIconFactory.getContextIcon(OUTLOOK_STYLE + "database.png"), TypeLocale.getDescription(ReleaseType.DATABASE_BLUE_GREEN), null));
+        elementNodes.add(new ElementNode(ReleaseType.MESSAGE_QUEUE_BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.MESSAGE_QUEUE_BLUE_GREEN), ConsoleIconFactory.getContextIcon(OUTLOOK_STYLE + "message_queue.png"), TypeLocale.getDescription(ReleaseType.MESSAGE_QUEUE_BLUE_GREEN), null));
 
         JBasicList toggleList = createToggleList(elementNodes);
 
-        JShrinkOutlook shrinkOutlook = shrinkOutlookBar.addShrinkOutlook(ConsoleLocaleFactory.getString("middleware_release_manage"), ConsoleIconFactory.getSwingIcon("stereo/favorite_16.png"), ConsoleIconFactory.getSwingIcon("stereo/favorite_add_16.png"), ConsoleLocaleFactory.getString("middleware_release_manage"), new Font(ConsoleUIContext.getFontName(), Font.BOLD, ConsoleUIContext.getMiddleFontSize()));
+        JShrinkOutlook shrinkOutlook = shrinkOutlookBar.addShrinkOutlook(ConsoleLocaleFactory.getString("middleware_release_manage"), ConsoleIconFactory.getContextIcon(NAVIGATOR_STYLE + "close_16.png"), ConsoleIconFactory.getContextIcon(NAVIGATOR_STYLE + "open_favorite_16.png"), ConsoleLocaleFactory.getString("middleware_release_manage"), new Font(ConsoleUIContext.getFontName(), Font.BOLD, ConsoleUIContext.getMiddleFontSize()));
         shrinkOutlook.setContentPane(toggleList);
         shrinkOutlook.addPropertyChangeListener(new OutlookSelectionListener());
 
