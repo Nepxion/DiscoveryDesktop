@@ -67,7 +67,7 @@ public class InspectorTopology extends AbstractTopology {
     public void initializeToolBar() {
         JToolBar toolBar = getGraph().getToolbar();
         toolBar.addSeparator();
-        toolBar.add(ButtonUtil.createButton(createOpenAction()));
+        // toolBar.add(ButtonUtil.createButton(createOpenAction()));
         toolBar.add(ButtonUtil.createButton(createStartAction()));
         toolBar.add(ButtonUtil.createButton(createStopAction()));
         toolBar.addSeparator();
