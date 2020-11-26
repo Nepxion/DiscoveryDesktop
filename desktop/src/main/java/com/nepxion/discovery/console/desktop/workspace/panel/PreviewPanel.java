@@ -40,13 +40,13 @@ public class PreviewPanel extends JPanel {
         keyTextField = new JBasicTextField();
         JPanel keyPanel = new JPanel();
         keyPanel.setLayout(new BorderLayout(10, 0));
-        keyPanel.add(new JBasicLabel(ConsoleLocaleFactory.getString("preview_key_text")), BorderLayout.WEST);
+        keyPanel.add(new JBasicLabel(ConsoleLocaleFactory.getString("config_key_text")), BorderLayout.WEST);
         keyPanel.add(keyTextField, BorderLayout.CENTER);
 
         configTextArea = new JBasicTextArea();
         JPanel configPanel = new JPanel();
         configPanel.setLayout(new BorderLayout());
-        configPanel.add(new JBasicLabel(ConsoleLocaleFactory.getString("preview_config_text")), BorderLayout.NORTH);
+        configPanel.add(new JBasicLabel(ConsoleLocaleFactory.getString("config_content_text")), BorderLayout.NORTH);
         configPanel.add(new JBasicScrollPane(configTextArea), BorderLayout.CENTER);
 
         setLayout(new BorderLayout());

@@ -63,6 +63,7 @@ public class InspectorTopology extends AbstractTopology {
     public void initializeToolBar() {
         JToolBar toolBar = getGraph().getToolbar();
         toolBar.addSeparator();
+        toolBar.add(ButtonUtil.createButton(createOpenAction()));
         toolBar.add(ButtonUtil.createButton(createStartAction()));
         toolBar.add(ButtonUtil.createButton(createStopAction()));
         toolBar.addSeparator();
@@ -255,6 +256,18 @@ public class InspectorTopology extends AbstractTopology {
         }
 
         return null;
+    }
+
+    public JSecurityAction createOpenAction() {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("open_text"), ConsoleIconFactory.getSwingIcon("theme/tree/plastic/tree_open.png"), ConsoleLocaleFactory.getString("open_strategy_tooltip")) {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+
+            }
+        };
+
+        return action;
     }
 
     public JSecurityAction createStartAction() {

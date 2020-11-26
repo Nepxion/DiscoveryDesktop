@@ -67,14 +67,14 @@ public class StrategyCreatePanel extends JPanel {
     protected JPanel strategyPanel;
 
     public StrategyCreatePanel() {
-        newRadioButton = new JBasicRadioButton(ConsoleLocaleFactory.getString("new_tooltip"), ConsoleLocaleFactory.getString("new_tooltip"));
+        newRadioButton = new JBasicRadioButton(ConsoleLocaleFactory.getString("new_strategy_tooltip"), ConsoleLocaleFactory.getString("new_strategy_tooltip"));
         newRadioButton.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 setNewMode(newRadioButton.isSelected());
             }
         });
         newRadioButton.setSelected(true);
-        openRadioButton = new JBasicRadioButton(ConsoleLocaleFactory.getString("open_tooltip"), ConsoleLocaleFactory.getString("open_tooltip"));
+        openRadioButton = new JBasicRadioButton(ConsoleLocaleFactory.getString("open_strategy_tooltip"), ConsoleLocaleFactory.getString("open_strategy_tooltip"));
         createModeButtonGroup = new ButtonGroup();
         createModeButtonGroup.add(newRadioButton);
         createModeButtonGroup.add(openRadioButton);
