@@ -20,7 +20,11 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.nepxion.cots.twaver.icon.TIconFactory;
+import com.nepxion.discovery.common.entity.InspectorEntity;
 import com.nepxion.discovery.console.cache.ConsoleCache;
 import com.nepxion.discovery.console.controller.ConsoleController;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
@@ -31,6 +35,7 @@ import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.InspectorConditionPanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.StrategyOpenPanel;
+import com.nepxion.discovery.console.desktop.workspace.type.FeatureType;
 import com.nepxion.discovery.console.desktop.workspace.type.PortalType;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
 import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
@@ -53,15 +58,29 @@ import com.nepxion.swing.timer.JTimerProgressBar;
 public class InspectorTopology extends AbstractTopology {
     private static final long serialVersionUID = 1L;
 
+    private static final Logger LOG = LoggerFactory.getLogger(InspectorTopology.class);
+
     protected JBasicComboBox portalComboBox;
     protected JBasicComboBox serviceIdComboBox;
     protected JBasicComboBox instanceComboBox;
+    protected JBasicTextField parameterTextField;
 
     protected InspectorConditionPanel conditionPanel;
+
+    protected JBasicComboBox strategyComboBox;
+    protected JBasicComboBox timesComboBox;
+    protected JTimerProgressBar progressBar;
 
     public InspectorTopology() {
         initializeToolBar();
         initializeOperationBar();
+    }
+
+    @Override
+    public void initializeTopology() {
+        super.initializeTopology();
+
+        background.setTitle(TypeLocale.getDescription(FeatureType.INSPECTOR));
     }
 
     public void initializeToolBar() {
@@ -127,6 +146,8 @@ public class InspectorTopology extends AbstractTopology {
         instanceComboBox.setEditable(true);
         ComboBoxUtil.installlAutoCompletion(instanceComboBox);
 
+        parameterTextField = new JBasicTextField("a=1&b=1");
+
         setServiceIds();
         setInstances();
 
@@ -139,7 +160,7 @@ public class InspectorTopology extends AbstractTopology {
         portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("address")), 5), "0, 2");
         portalPanel.add(instanceComboBox, "1, 2");
         portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("parameter")), 5), "0, 3");
-        portalPanel.add(new JBasicTextField("a=1&b=1"), "1, 3");
+        portalPanel.add(parameterTextField, "1, 3");
 
         JShrinkShortcut conditionShrinkShortcut = new JShrinkShortcut();
         conditionShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("inspector_link"));
@@ -171,16 +192,21 @@ public class InspectorTopology extends AbstractTopology {
             }
         }
 
+        strategyComboBox = new JBasicComboBox(strategyElementNodes.toArray());
+
         Integer[] times = new Integer[] { 10, 20, 50, 100, 200, 500, 1000, 2000 };
+        timesComboBox = new JBasicComboBox(times);
+
+        progressBar = new JTimerProgressBar();
 
         JPanel parameterPanel = new JPanel();
         parameterPanel.setLayout(parameterTableLayout);
         parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("strategy")), 5), "0, 0");
-        parameterPanel.add(new JBasicComboBox(strategyElementNodes.toArray()), "1, 0");
+        parameterPanel.add(strategyComboBox, "1, 0");
         parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("times")), 5), "0, 1");
-        parameterPanel.add(new JBasicComboBox(times), "1, 1");
+        parameterPanel.add(timesComboBox, "1, 1");
         parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("progress")), 5), "0, 2");
-        parameterPanel.add(DimensionUtil.addHeight(new JTimerProgressBar(), 3), "1, 2");
+        parameterPanel.add(DimensionUtil.addHeight(progressBar, 3), "1, 2");
 
         JPanel toolBar = new JPanel();
         toolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
@@ -232,7 +258,7 @@ public class InspectorTopology extends AbstractTopology {
         if (instances != null) {
             List<String> addresses = new ArrayList<String>();
             for (Instance instance : instances) {
-                addresses.add(instance.getHost() + ":" + instance.getPort());
+                addresses.add("http://" + instance.getHost() + ":" + instance.getPort());
             }
             ComboBoxUtil.setSortableModel(instanceComboBox, addresses);
         }
@@ -285,7 +311,39 @@ public class InspectorTopology extends AbstractTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
+                String address = ComboBoxUtil.getSelectedValue(instanceComboBox);
+                String parameter = parameterTextField.getText().trim();
 
+                ElementNode portalElementNode = (ElementNode) portalComboBox.getSelectedItem();
+                PortalType portalType = (PortalType) portalElementNode.getUserObject();
+
+                if (portalType == PortalType.GATEWAY) {
+                    String firstServiceId = conditionPanel.getFirstServiceId();
+
+                    address += "/" + firstServiceId + "/inspector/inspect?" + parameter;
+                } else {
+                    address += "/inspector/inspect?" + parameter;
+                }
+
+                LOG.info("Inspection URL={}", address);
+
+                List<String> allServiceIds = conditionPanel.getServiceIds(true);
+                List<String> serviceIds = conditionPanel.getServiceIds(false);
+
+                LOG.info("Inspection Services={}", allServiceIds);
+
+                InspectorEntity inspectorEntity = new InspectorEntity();
+                inspectorEntity.setServiceIdList(serviceIds);
+
+                int times = Integer.valueOf(timesComboBox.getSelectedItem().toString());
+                try {
+                    for (int i = 0; i < times; i++) {
+                        InspectorEntity resultInspectorEntity = ConsoleController.inspect(address, inspectorEntity);
+                        System.out.println(resultInspectorEntity.getResult());
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
         };
 

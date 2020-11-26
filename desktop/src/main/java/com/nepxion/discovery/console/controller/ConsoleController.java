@@ -20,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
+import com.nepxion.discovery.common.entity.InspectorEntity;
 import com.nepxion.discovery.common.entity.InstanceEntityWrapper;
 import com.nepxion.discovery.common.entity.ResultEntity;
 import com.nepxion.discovery.common.entity.RouterEntity;
@@ -143,6 +144,12 @@ public class ConsoleController {
 
         return RestUtil.fromJson(restTemplate, result, new TypeReference<RouterEntity>() {
         });
+    }
+
+    public static InspectorEntity inspect(String url, InspectorEntity inspectorEntity) {
+        InspectorEntity resultInspectorEntity = restTemplate.postForEntity(url, inspectorEntity, InspectorEntity.class).getBody();
+
+        return resultInspectorEntity;
     }
 
     public static String remoteConfigUpdate(String group, String serviceId, String config) {

@@ -69,10 +69,12 @@ public class InspectorConditionPanel extends JPanel {
         return null;
     }
 
-    public String getCondition() {
-        //return conditionBar.getCondition();
+    public String getFirstServiceId() {
+        return conditionBar.getFirstServiceId();
+    }
 
-        return "";
+    public List<String> getServiceIds(boolean isAll) {
+        return conditionBar.getServiceIds(isAll);
     }
 
     public class ConditionBar extends JPanel {
@@ -158,6 +160,22 @@ public class InspectorConditionPanel extends JPanel {
             for (ConditionItem conditionItem : conditionItems) {
                 conditionItem.setServiceIdComboBoxModel();
             }
+        }
+
+        public String getFirstServiceId() {
+            return ComboBoxUtil.getSelectedValue(conditionItems.get(0).serviceIdComboBox);
+        }
+
+        public List<String> getServiceIds(boolean isAll) {
+            List<String> serviceIds = new ArrayList<String>();
+
+            for (int i = isAll ? 0 : 1; i < conditionItems.size(); i++) {
+                String serviceId = ComboBoxUtil.getSelectedValue(conditionItems.get(i).serviceIdComboBox);
+
+                serviceIds.add(serviceId);
+            }
+
+            return serviceIds;
         }
 
         public class ConditionItem {
