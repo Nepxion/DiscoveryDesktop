@@ -10,6 +10,8 @@ package com.nepxion.discovery.console.desktop.common.context;
  */
 
 public class ConsoleConstant {
+    public static final String URL = "url";
+
     public static final String THEME = "theme";
     public static final String DEFAULT_THEME = "NimbusLookAndFeel";
 }
