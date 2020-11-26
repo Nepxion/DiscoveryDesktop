@@ -119,7 +119,7 @@ public abstract class AbstractTopology extends BasicTopology {
         List<TLink> links = TElementManager.getLinks(dataBox);
         for (TLink link : links) {
             if (link.getFrom() == fromNode && link.getTo() == toNode) {
-                return null;
+                return link;
             }
         }
 

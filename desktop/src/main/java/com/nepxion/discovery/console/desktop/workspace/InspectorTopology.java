@@ -9,22 +9,33 @@ package com.nepxion.discovery.console.desktop.workspace;
  * @version 1.0
  */
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.nepxion.cots.twaver.element.TElementManager;
+import com.nepxion.cots.twaver.element.TLink;
+import com.nepxion.cots.twaver.element.TNode;
 import com.nepxion.cots.twaver.icon.TIconFactory;
 import com.nepxion.discovery.common.entity.InspectorEntity;
+import com.nepxion.discovery.common.exception.DiscoveryException;
+import com.nepxion.discovery.common.util.StringUtil;
 import com.nepxion.discovery.console.cache.ConsoleCache;
 import com.nepxion.discovery.console.controller.ConsoleController;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
@@ -35,6 +46,10 @@ import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.InspectorConditionPanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.StrategyOpenPanel;
+import com.nepxion.discovery.console.desktop.workspace.topology.LinkUI;
+import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
+import com.nepxion.discovery.console.desktop.workspace.topology.NodeSizeType;
+import com.nepxion.discovery.console.desktop.workspace.topology.NodeUI;
 import com.nepxion.discovery.console.desktop.workspace.type.FeatureType;
 import com.nepxion.discovery.console.desktop.workspace.type.PortalType;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
@@ -60,6 +75,9 @@ public class InspectorTopology extends AbstractTopology {
 
     private static final Logger LOG = LoggerFactory.getLogger(InspectorTopology.class);
 
+    protected NodeUI serviceBasicNodeUI = new NodeUI(NodeImageType.SERVICE_YELLOW, NodeSizeType.MIDDLE, true);
+    protected Color basicLinkUI = LinkUI.YELLOW;
+
     protected JBasicComboBox portalComboBox;
     protected JBasicComboBox serviceIdComboBox;
     protected JBasicComboBox instanceComboBox;
@@ -70,6 +88,8 @@ public class InspectorTopology extends AbstractTopology {
     protected JBasicComboBox strategyComboBox;
     protected JBasicComboBox timesComboBox;
     protected JTimerProgressBar progressBar;
+
+    protected Pattern pattern = Pattern.compile("\\[\\S+\\]");
 
     public InspectorTopology() {
         initializeToolBar();
@@ -288,6 +308,37 @@ public class InspectorTopology extends AbstractTopology {
         return null;
     }
 
+    public List<Map<String, String>> convertToMetadataList(InspectorEntity inspectorEntity) {
+        if (inspectorEntity == null) {
+            throw new DiscoveryException("Inspector Entity is null");
+        }
+
+        String result = inspectorEntity.getResult();
+        if (StringUtils.isEmpty(result)) {
+            throw new DiscoveryException("Inspector Result is null or empty");
+        }
+
+        List<Map<String, String>> metadataList = new ArrayList<Map<String, String>>();
+
+        List<String> expressionList = StringUtil.splitToList(result, " -> ");
+        for (String expression : expressionList) {
+            expression = StringUtils.replace(expression, "][", "] [");
+            Matcher matcher = pattern.matcher(expression);
+
+            Map<String, String> metadataMap = new LinkedHashMap<String, String>();
+            while (matcher.find()) {
+                String group = matcher.group();
+                String value = StringUtils.substringBetween(group, "[", "]");
+                String[] expressionArray = StringUtils.split(value, "=");
+                metadataMap.put(expressionArray[0], expressionArray[1]);
+            }
+
+            metadataList.add(metadataMap);
+        }
+
+        return metadataList;
+    }
+
     public JSecurityAction createOpenAction() {
         JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("open_text"), ConsoleIconFactory.getSwingIcon("theme/tree/plastic/tree_open.png"), ConsoleLocaleFactory.getString("open_strategy_tooltip")) {
             private static final long serialVersionUID = 1L;
@@ -311,6 +362,8 @@ public class InspectorTopology extends AbstractTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
+                dataBox.clear();
+
                 String address = ComboBoxUtil.getSelectedValue(instanceComboBox);
                 String parameter = parameterTextField.getText().trim();
 
@@ -339,8 +392,15 @@ public class InspectorTopology extends AbstractTopology {
                 try {
                     for (int i = 0; i < times; i++) {
                         InspectorEntity resultInspectorEntity = ConsoleController.inspect(address, inspectorEntity);
-                        System.out.println(resultInspectorEntity.getResult());
+                        List<Map<String, String>> metadataList = convertToMetadataList(resultInspectorEntity);
+
+                        TNode node = null;
+                        for (Map<String, String> metadataMap : metadataList) {
+                            node = addNode(node, StrategyType.VERSION, metadataMap);
+                        }
                     }
+                    
+                    executeLayout();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -348,6 +408,39 @@ public class InspectorTopology extends AbstractTopology {
         };
 
         return action;
+    }
+
+    public TNode addNode(TNode previousNode, StrategyType strategyType, Map<String, String> metadataMap) {
+        String serviceId = metadataMap.get("ID");
+        String version = metadataMap.get("V");
+        String nodeName = ButtonManager.getHtmlText(serviceId + "\n" + strategyType + "=" + version);
+
+        TNode node = TElementManager.getNode(dataBox, nodeName);
+        if (node == null) {
+            node = addNode(nodeName, serviceBasicNodeUI);
+            Instance instance = new Instance();
+            instance.setServiceId(serviceId);
+            instance.setMetadata(metadataMap);
+            node.setToolTipText(nodeName);
+            node.setUserObject(instance);
+        }
+
+        if (previousNode != null) {
+            TLink link = addLink(previousNode, node, basicLinkUI);
+            Object userObject = link.getUserObject();
+            if (userObject == null) {
+                link.setName("1");
+                link.setToolTipText("1");
+                link.setUserObject(previousNode.getName() + " -> " + node.getName());
+            } else {
+                int times = Integer.parseInt(link.getName().toString()) + 1;
+                String timesText = String.valueOf(times);
+                link.setName(timesText);
+                link.setToolTipText(timesText);
+            }
+        }
+
+        return node;
     }
 
     public JSecurityAction createStopAction() {
