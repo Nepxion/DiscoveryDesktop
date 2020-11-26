@@ -29,7 +29,7 @@ public class ConsoleUIContext {
     private static final int FONT_LARGE_SIZE_EN_US = FONT_SMALL_SIZE_EN_US + 2;
 
     public static void initialize() {
-        String theme = ConsolePropertiesContext.getProperties().getTheme();
+        String theme = ConsolePropertiesContext.getProperties().getString(ConsoleConstant.THEME, ConsoleConstant.DEFAULT_THEME);
         if (StringUtils.equals(theme, ConsoleConstant.DEFAULT_THEME)) {
             setFont();
             setLookAndFeel(theme);

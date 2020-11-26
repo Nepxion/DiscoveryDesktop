@@ -41,8 +41,4 @@ public class ConsolePropertiesContext extends PropertiesConfiguration {
     public ConsolePropertiesContext(URL url) throws ConfigurationException {
         super(url);
     }
-
-    public String getTheme() {
-        return propertiesContext.getString(ConsoleConstant.THEME, ConsoleConstant.DEFAULT_THEME);
-    }
 }
