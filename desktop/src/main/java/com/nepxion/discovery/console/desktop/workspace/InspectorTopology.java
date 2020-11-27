@@ -404,18 +404,24 @@ public class InspectorTopology extends AbstractTopology {
         ElementNode portalElementNode = (ElementNode) portalComboBox.getSelectedItem();
         PortalType portalType = (PortalType) portalElementNode.getUserObject();
 
+        List<String> allServiceIds = null;
+        List<String> serviceIds = null;
+
         if (portalType == PortalType.GATEWAY) {
             String firstServiceId = conditionPanel.getFirstServiceId();
 
             address += "/" + firstServiceId + "/inspector/inspect?" + parameter;
+
+            allServiceIds = conditionPanel.getServiceIds(true);
+            serviceIds = conditionPanel.getServiceIds(false);
         } else {
             address += "/inspector/inspect?" + parameter;
+
+            allServiceIds = conditionPanel.getServiceIds(true);
+            serviceIds = allServiceIds;
         }
 
         LOG.info("Inspection URL={}", address);
-
-        List<String> allServiceIds = conditionPanel.getServiceIds(true);
-        List<String> serviceIds = conditionPanel.getServiceIds(false);
 
         LOG.info("Inspection Services={}", allServiceIds);
 
