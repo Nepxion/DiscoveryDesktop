@@ -475,12 +475,16 @@ public class InspectorTopology extends AbstractTopology {
                 index++;
             }
 
-            int i = progressBar.getModel().getValue() + 1;
-            progressBar.getModel().setValue(i);
-
-            spentTextField.setText(String.valueOf(System.currentTimeMillis() - currentTime));
+            setProgress();
 
             executeLayout();
+        }
+
+        public synchronized void setProgress() {
+            int progress = progressBar.getModel().getValue() + 1;
+            progressBar.getModel().setValue(progress);
+
+            spentTextField.setText(String.valueOf(System.currentTimeMillis() - currentTime));
         }
 
         public String getAddress() {
