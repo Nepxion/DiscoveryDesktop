@@ -312,7 +312,7 @@ public class InspectorTopology extends AbstractTopology {
         return null;
     }
 
-    public List<Map<String, String>> convertToMetadataList(InspectorEntity inspectorEntity) {
+    public List<Map<String, String>> convertToMetadatas(InspectorEntity inspectorEntity) {
         if (inspectorEntity == null) {
             throw new DiscoveryException("Inspector Entity is null");
         }
@@ -365,17 +365,15 @@ public class InspectorTopology extends AbstractTopology {
             link.getAlarmState().addNewAlarm(AlarmSeverity.WARNING);
             link.putAlarmBalloonOutlineColor(LinkUI.GRAY);
 
-            // Object userObject = link.getUserObject();
-            // if (userObject == null) {
-            //    link.setName("1");
-            //    link.setToolTipText("1");
-            //    link.setUserObject(previousNode.getName() + " -> " + node.getName());
-            // } else {
-            //    int times = Integer.parseInt(link.getName().toString()) + 1;
-            //    String timesText = String.valueOf(times);
-            //    link.setName(timesText);
-            //    link.setToolTipText(timesText);
-            // }
+            int times = 1;
+            Object userObject = link.getUserObject();
+            if (userObject != null) {
+                times = (int) userObject + 1;
+            }
+
+            link.setName("路由次数" + " : " + times);
+            link.setToolTipText("路由次数" + " : " + times);
+            link.setUserObject(times);
         }
 
         return node;
@@ -434,7 +432,7 @@ public class InspectorTopology extends AbstractTopology {
                 try {
                     for (int i = 0; i < times; i++) {
                         InspectorEntity resultInspectorEntity = ConsoleController.inspect(address, inspectorEntity);
-                        List<Map<String, String>> metadataList = convertToMetadataList(resultInspectorEntity);
+                        List<Map<String, String>> metadataList = convertToMetadatas(resultInspectorEntity);
 
                         TNode node = null;
                         int index = 0;
