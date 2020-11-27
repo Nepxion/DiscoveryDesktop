@@ -17,4 +17,5 @@ public class LinkUI {
     public static final Color GRAY = new Color(112, 112, 112);
     public static final Color BLUE = new Color(4, 144, 217);
     public static final Color GREEN = new Color(13, 164, 176);
+    public static final Color ORANGE = new Color(224, 98, 13);
 }

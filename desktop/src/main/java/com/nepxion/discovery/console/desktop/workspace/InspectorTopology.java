@@ -75,8 +75,9 @@ public class InspectorTopology extends AbstractTopology {
 
     private static final Logger LOG = LoggerFactory.getLogger(InspectorTopology.class);
 
-    protected NodeUI serviceBasicNodeUI = new NodeUI(NodeImageType.SERVICE_YELLOW, NodeSizeType.MIDDLE, true);
-    protected Color basicLinkUI = LinkUI.YELLOW;
+    protected NodeUI gatewayNodeUI = new NodeUI(NodeImageType.GATEWAY_BLUE, NodeSizeType.LARGE, true);
+    protected NodeUI serviceNodeUI = new NodeUI(NodeImageType.SERVICE_BLUE, NodeSizeType.MIDDLE, true);
+    protected Color linkUI = LinkUI.BLUE;
 
     protected JBasicComboBox portalComboBox;
     protected JBasicComboBox serviceIdComboBox;
@@ -339,6 +340,39 @@ public class InspectorTopology extends AbstractTopology {
         return metadataList;
     }
 
+    public TNode addNode(TNode previousNode, StrategyType strategyType, Map<String, String> metadataMap, NodeUI nodeUI) {
+        String serviceId = metadataMap.get("ID");
+        String version = metadataMap.get("V");
+        String nodeName = ButtonManager.getHtmlText(serviceId + "\n" + strategyType + "=" + version);
+
+        TNode node = TElementManager.getNode(dataBox, nodeName);
+        if (node == null) {
+            node = addNode(nodeName, nodeUI);
+            Instance instance = new Instance();
+            instance.setServiceId(serviceId);
+            instance.setMetadata(metadataMap);
+            node.setToolTipText(nodeName);
+            node.setUserObject(instance);
+        }
+
+        if (previousNode != null) {
+            TLink link = addLink(previousNode, node, linkUI);
+            Object userObject = link.getUserObject();
+            if (userObject == null) {
+                link.setName("1");
+                link.setToolTipText("1");
+                link.setUserObject(previousNode.getName() + " -> " + node.getName());
+            } else {
+                int times = Integer.parseInt(link.getName().toString()) + 1;
+                String timesText = String.valueOf(times);
+                link.setName(timesText);
+                link.setToolTipText(timesText);
+            }
+        }
+
+        return node;
+    }
+
     public JSecurityAction createOpenAction() {
         JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("open_text"), ConsoleIconFactory.getSwingIcon("theme/tree/plastic/tree_open.png"), ConsoleLocaleFactory.getString("open_strategy_tooltip")) {
             private static final long serialVersionUID = 1L;
@@ -395,11 +429,15 @@ public class InspectorTopology extends AbstractTopology {
                         List<Map<String, String>> metadataList = convertToMetadataList(resultInspectorEntity);
 
                         TNode node = null;
+                        int index = 0;
                         for (Map<String, String> metadataMap : metadataList) {
-                            node = addNode(node, StrategyType.VERSION, metadataMap);
+                            NodeUI nodeUI = index == 0 ? gatewayNodeUI : serviceNodeUI;
+                            node = addNode(node, StrategyType.VERSION, metadataMap, nodeUI);
+
+                            index++;
                         }
                     }
-                    
+
                     executeLayout();
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -408,39 +446,6 @@ public class InspectorTopology extends AbstractTopology {
         };
 
         return action;
-    }
-
-    public TNode addNode(TNode previousNode, StrategyType strategyType, Map<String, String> metadataMap) {
-        String serviceId = metadataMap.get("ID");
-        String version = metadataMap.get("V");
-        String nodeName = ButtonManager.getHtmlText(serviceId + "\n" + strategyType + "=" + version);
-
-        TNode node = TElementManager.getNode(dataBox, nodeName);
-        if (node == null) {
-            node = addNode(nodeName, serviceBasicNodeUI);
-            Instance instance = new Instance();
-            instance.setServiceId(serviceId);
-            instance.setMetadata(metadataMap);
-            node.setToolTipText(nodeName);
-            node.setUserObject(instance);
-        }
-
-        if (previousNode != null) {
-            TLink link = addLink(previousNode, node, basicLinkUI);
-            Object userObject = link.getUserObject();
-            if (userObject == null) {
-                link.setName("1");
-                link.setToolTipText("1");
-                link.setUserObject(previousNode.getName() + " -> " + node.getName());
-            } else {
-                int times = Integer.parseInt(link.getName().toString()) + 1;
-                String timesText = String.valueOf(times);
-                link.setName(timesText);
-                link.setToolTipText(timesText);
-            }
-        }
-
-        return node;
     }
 
     public JSecurityAction createStopAction() {

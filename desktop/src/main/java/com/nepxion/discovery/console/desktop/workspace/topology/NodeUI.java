@@ -42,6 +42,10 @@ public class NodeUI {
     public static final String SERVICE_GREEN_MIDDLE_IMAGE = TOPOLOGY_DIRECTORY + "service_green_48.png";
     public static final String SERVICE_GREEN_SMALL_IMAGE = TOPOLOGY_DIRECTORY + "service_green_32.png";
 
+    public static final String SERVICE_ORANGE_LARGE_IMAGE = TOPOLOGY_DIRECTORY + "service_orange_64.png";
+    public static final String SERVICE_ORANGE_MIDDLE_IMAGE = TOPOLOGY_DIRECTORY + "service_orange_48.png";
+    public static final String SERVICE_ORANGE_SMALL_IMAGE = TOPOLOGY_DIRECTORY + "service_orange_32.png";
+
     public static final String GATEWAY_BLACK_LARGE_IMAGE = TOPOLOGY_DIRECTORY + "gateway_black_64.png";
     public static final String GATEWAY_BLACK_MIDDLE_IMAGE = TOPOLOGY_DIRECTORY + "gateway_black_48.png";
     public static final String GATEWAY_BLACK_SMALL_IMAGE = TOPOLOGY_DIRECTORY + "gateway_black_32.png";
@@ -61,6 +65,10 @@ public class NodeUI {
     public static final String GATEWAY_GREEN_LARGE_IMAGE = TOPOLOGY_DIRECTORY + "gateway_green_64.png";
     public static final String GATEWAY_GREEN_MIDDLE_IMAGE = TOPOLOGY_DIRECTORY + "gateway_green_48.png";
     public static final String GATEWAY_GREEN_SMALL_IMAGE = TOPOLOGY_DIRECTORY + "gateway_green_32.png";
+
+    public static final String GATEWAY_ORANGE_LARGE_IMAGE = TOPOLOGY_DIRECTORY + "gateway_orange_64.png";
+    public static final String GATEWAY_ORANGE_MIDDLE_IMAGE = TOPOLOGY_DIRECTORY + "gateway_orange_48.png";
+    public static final String GATEWAY_ORANGE_SMALL_IMAGE = TOPOLOGY_DIRECTORY + "gateway_orange_32.png";
 
     private NodeImageType imageType;
     private NodeSizeType sizeType;
@@ -188,6 +196,19 @@ public class NodeUI {
                         break;
                 }
                 break;
+            case SERVICE_ORANGE:
+                switch (sizeType) {
+                    case LARGE:
+                        image = SERVICE_ORANGE_LARGE_IMAGE;
+                        break;
+                    case MIDDLE:
+                        image = SERVICE_ORANGE_MIDDLE_IMAGE;
+                        break;
+                    case SMALL:
+                        image = SERVICE_ORANGE_SMALL_IMAGE;
+                        break;
+                }
+                break;
             case GATEWAY:
                 switch (sizeType) {
                     case LARGE:
@@ -265,6 +286,21 @@ public class NodeUI {
                         image = GATEWAY_GREEN_SMALL_IMAGE;
                         break;
                 }
+                break;
+            case GATEWAY_ORANGE:
+                switch (sizeType) {
+                    case LARGE:
+                        image = GATEWAY_ORANGE_LARGE_IMAGE;
+                        break;
+                    case MIDDLE:
+                        image = GATEWAY_ORANGE_MIDDLE_IMAGE;
+                        break;
+                    case SMALL:
+                        image = GATEWAY_ORANGE_SMALL_IMAGE;
+                        break;
+                }
+                break;
+            default:
                 break;
         }
     }

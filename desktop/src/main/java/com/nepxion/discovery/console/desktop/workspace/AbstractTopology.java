@@ -32,9 +32,7 @@ import com.nepxion.discovery.console.desktop.workspace.panel.CacheSetPanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.LayouterSetPanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.SetManagePanel;
 import com.nepxion.discovery.console.desktop.workspace.topology.BasicTopology;
-import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeLocation;
-import com.nepxion.discovery.console.desktop.workspace.topology.NodeSizeType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeUI;
 import com.nepxion.discovery.console.entity.Instance;
 import com.nepxion.swing.action.JSecurityAction;
@@ -47,7 +45,6 @@ public abstract class AbstractTopology extends BasicTopology {
     private static final long serialVersionUID = 1L;
 
     protected NodeLocation nodeLocation = new NodeLocation(415, 100, 200, 0);
-    protected NodeUI gatewayBlackNodeUI = new NodeUI(NodeImageType.GATEWAY_BLACK, NodeSizeType.LARGE, true);
 
     protected TGraphBackground background;
 
