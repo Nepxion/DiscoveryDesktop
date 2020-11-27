@@ -95,6 +95,9 @@ public class InspectorTopology extends AbstractTopology {
     protected JBasicComboBox strategyComboBox;
     protected JBasicComboBox timesComboBox;
     protected JProgressBar progressBar;
+    protected JBasicTextField spentTextField;
+
+    protected long currentTime;
 
     protected Pattern pattern = Pattern.compile("\\[\\S+\\]");
 
@@ -131,15 +134,6 @@ public class InspectorTopology extends AbstractTopology {
         portalShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("inspector_portal"));
         portalShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
         portalShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString("inspector_portal"));
-
-        double[][] portalSize = {
-                { TableLayout.PREFERRED, TableLayout.FILL },
-                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
-        };
-
-        TableLayout portalTableLayout = new TableLayout(portalSize);
-        portalTableLayout.setHGap(0);
-        portalTableLayout.setVGap(5);
 
         List<ElementNode> portalElementNodes = new ArrayList<ElementNode>();
         PortalType[] portalTypes = PortalType.values();
@@ -178,6 +172,15 @@ public class InspectorTopology extends AbstractTopology {
         setServiceIds();
         setInstances();
 
+        double[][] portalSize = {
+                { TableLayout.PREFERRED, TableLayout.FILL },
+                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
+        };
+
+        TableLayout portalTableLayout = new TableLayout(portalSize);
+        portalTableLayout.setHGap(0);
+        portalTableLayout.setVGap(5);
+
         JPanel portalPanel = new JPanel();
         portalPanel.setLayout(portalTableLayout);
         portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("type")), 5), "0, 0");
@@ -201,15 +204,6 @@ public class InspectorTopology extends AbstractTopology {
         parameterShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
         parameterShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString("inspector_parameter"));
 
-        double[][] parameterSize = {
-                { TableLayout.PREFERRED, TableLayout.FILL },
-                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
-        };
-
-        TableLayout parameterTableLayout = new TableLayout(parameterSize);
-        parameterTableLayout.setHGap(0);
-        parameterTableLayout.setVGap(5);
-
         List<ElementNode> strategyElementNodes = new ArrayList<ElementNode>();
         StrategyType[] strategyTypes = StrategyType.values();
         for (int i = 0; i < strategyTypes.length; i++) {
@@ -221,11 +215,22 @@ public class InspectorTopology extends AbstractTopology {
 
         strategyComboBox = new JBasicComboBox(strategyElementNodes.toArray());
 
-        Integer[] times = new Integer[] { 10, 20, 50, 100, 200, 500, 1000, 2000 };
+        Integer[] times = new Integer[] { 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000 };
         timesComboBox = new JBasicComboBox(times);
 
         progressBar = new JProgressBar();
         progressBar.setStringPainted(true);
+
+        spentTextField = new JBasicTextField("0");
+
+        double[][] parameterSize = {
+                { TableLayout.PREFERRED, TableLayout.FILL },
+                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
+        };
+
+        TableLayout parameterTableLayout = new TableLayout(parameterSize);
+        parameterTableLayout.setHGap(0);
+        parameterTableLayout.setVGap(5);
 
         JPanel parameterPanel = new JPanel();
         parameterPanel.setLayout(parameterTableLayout);
@@ -235,6 +240,8 @@ public class InspectorTopology extends AbstractTopology {
         parameterPanel.add(timesComboBox, "1, 1");
         parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("progress")), 5), "0, 2");
         parameterPanel.add(DimensionUtil.addHeight(progressBar, 8), "1, 2");
+        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("spent")), 5), "0, 3");
+        parameterPanel.add(spentTextField, "1, 3");
 
         JPanel toolBar = new JPanel();
         toolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
@@ -420,6 +427,8 @@ public class InspectorTopology extends AbstractTopology {
         DefaultBoundedRangeModel boundedRangeModel = new DefaultBoundedRangeModel(0, 1, 0, times);
         progressBar.setModel(boundedRangeModel);
 
+        currentTime = System.currentTimeMillis();
+
         try {
             for (int i = 0; i < times; i++) {
                 InspectorSwingWorker inspectorSwingWorker = new InspectorSwingWorker();
@@ -462,6 +471,8 @@ public class InspectorTopology extends AbstractTopology {
 
             int i = progressBar.getModel().getValue() + 1;
             progressBar.getModel().setValue(i);
+
+            spentTextField.setText(String.valueOf(System.currentTimeMillis() - currentTime));
 
             executeLayout();
         }
