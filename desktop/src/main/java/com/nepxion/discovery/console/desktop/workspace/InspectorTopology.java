@@ -26,7 +26,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JToolBar;
 
 import org.apache.commons.lang3.StringUtils;
@@ -71,8 +73,8 @@ import com.nepxion.swing.layout.table.TableLayout;
 import com.nepxion.swing.locale.SwingLocale;
 import com.nepxion.swing.optionpane.JBasicOptionPane;
 import com.nepxion.swing.shrinkbar.JShrinkShortcut;
+import com.nepxion.swing.swingworker.JSwingWorker;
 import com.nepxion.swing.textfield.JBasicTextField;
-import com.nepxion.swing.timer.JTimerProgressBar;
 
 public class InspectorTopology extends AbstractTopology {
     private static final long serialVersionUID = 1L;
@@ -92,7 +94,7 @@ public class InspectorTopology extends AbstractTopology {
 
     protected JBasicComboBox strategyComboBox;
     protected JBasicComboBox timesComboBox;
-    protected JTimerProgressBar progressBar;
+    protected JProgressBar progressBar;
 
     protected Pattern pattern = Pattern.compile("\\[\\S+\\]");
 
@@ -222,7 +224,8 @@ public class InspectorTopology extends AbstractTopology {
         Integer[] times = new Integer[] { 10, 20, 50, 100, 200, 500, 1000, 2000 };
         timesComboBox = new JBasicComboBox(times);
 
-        progressBar = new JTimerProgressBar();
+        progressBar = new JProgressBar();
+        progressBar.setStringPainted(true);
 
         JPanel parameterPanel = new JPanel();
         parameterPanel.setLayout(parameterTableLayout);
@@ -231,7 +234,7 @@ public class InspectorTopology extends AbstractTopology {
         parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("times")), 5), "0, 1");
         parameterPanel.add(timesComboBox, "1, 1");
         parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("progress")), 5), "0, 2");
-        parameterPanel.add(DimensionUtil.addHeight(progressBar, 3), "1, 2");
+        parameterPanel.add(DimensionUtil.addHeight(progressBar, 8), "1, 2");
 
         JPanel toolBar = new JPanel();
         toolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
@@ -367,19 +370,19 @@ public class InspectorTopology extends AbstractTopology {
             link.putAlarmBalloonOutlineColor(LinkUI.GRAY);
             link.putLabelPosition(TWaverConst.POSITION_HOTSPOT);
 
-            int count = 1;
+            int counts = 1;
             Object userObject = link.getUserObject();
             if (userObject != null) {
-                count = (int) userObject + 1;
+                counts = (int) userObject + 1;
             }
 
             DecimalFormat format = new DecimalFormat("0.0000");
-            double percent = Double.valueOf(format.format((double) count * 100 / times));
+            double percent = Double.valueOf(format.format((double) counts * 100 / times));
 
             String text = ConsoleLocaleFactory.getString("weight") + "=" + percent + "%";
             link.setName(text);
             link.setToolTipText(text);
-            link.setUserObject(count);
+            link.setUserObject(counts);
         }
 
         return node;
@@ -413,24 +416,78 @@ public class InspectorTopology extends AbstractTopology {
         inspectorEntity.setServiceIdList(serviceIds);
 
         int times = Integer.valueOf(timesComboBox.getSelectedItem().toString());
+
+        DefaultBoundedRangeModel boundedRangeModel = new DefaultBoundedRangeModel(0, 1, 0, times);
+        progressBar.setModel(boundedRangeModel);
+
         try {
             for (int i = 0; i < times; i++) {
-                InspectorEntity resultInspectorEntity = ConsoleController.inspect(address, inspectorEntity);
-                List<Map<String, String>> metadataList = convertToMetadatas(resultInspectorEntity);
-
-                TNode node = null;
-                int index = 0;
-                for (Map<String, String> metadataMap : metadataList) {
-                    NodeUI nodeUI = index == 0 ? gatewayNodeUI : serviceNodeUI;
-                    node = addNode(node, StrategyType.VERSION, metadataMap, nodeUI, times);
-
-                    index++;
-                }
+                InspectorSwingWorker inspectorSwingWorker = new InspectorSwingWorker();
+                inspectorSwingWorker.setAddress(address);
+                inspectorSwingWorker.setInspectorEntity(inspectorEntity);
+                inspectorSwingWorker.setTimes(times);
+                inspectorSwingWorker.execute();
             }
-
-            executeLayout();
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    public class InspectorSwingWorker extends JSwingWorker {
+        protected String address;
+        protected InspectorEntity inspectorEntity;
+        protected int times;
+
+        @Override
+        protected Object loadBackground() throws Exception {
+            InspectorEntity resultInspectorEntity = ConsoleController.inspect(address, inspectorEntity);
+            List<Map<String, String>> metadatas = convertToMetadatas(resultInspectorEntity);
+
+            return metadatas;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void loadForeground(Object object) throws Exception {
+            List<Map<String, String>> metadatas = (List<Map<String, String>>) object;
+
+            TNode node = null;
+            int index = 0;
+            for (Map<String, String> metadataMap : metadatas) {
+                NodeUI nodeUI = index == 0 ? gatewayNodeUI : serviceNodeUI;
+                node = addNode(node, StrategyType.VERSION, metadataMap, nodeUI, times);
+
+                index++;
+            }
+
+            int i = progressBar.getModel().getValue() + 1;
+            progressBar.getModel().setValue(i);
+
+            executeLayout();
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+
+        public InspectorEntity getInspectorEntity() {
+            return inspectorEntity;
+        }
+
+        public void setInspectorEntity(InspectorEntity inspectorEntity) {
+            this.inspectorEntity = inspectorEntity;
+        }
+
+        public int getTimes() {
+            return times;
+        }
+
+        public void setTimes(int times) {
+            this.times = times;
         }
     }
 
