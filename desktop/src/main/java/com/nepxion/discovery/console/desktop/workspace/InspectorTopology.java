@@ -17,6 +17,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -343,7 +344,7 @@ public class InspectorTopology extends AbstractTopology {
         return metadataList;
     }
 
-    public TNode addNode(TNode previousNode, StrategyType strategyType, Map<String, String> metadataMap, NodeUI nodeUI) {
+    public TNode addNode(TNode previousNode, StrategyType strategyType, Map<String, String> metadataMap, NodeUI nodeUI, int times) {
         String serviceId = metadataMap.get("ID");
         String version = metadataMap.get("V");
         String nodeName = ButtonManager.getHtmlText(serviceId + "\n" + strategyType + "=" + version);
@@ -364,19 +365,73 @@ public class InspectorTopology extends AbstractTopology {
             TLink link = addLink(previousNode, node, linkUI);
             link.getAlarmState().addNewAlarm(AlarmSeverity.WARNING);
             link.putAlarmBalloonOutlineColor(LinkUI.GRAY);
+            link.putLabelPosition(TWaverConst.POSITION_HOTSPOT);
 
-            int times = 1;
+            int count = 1;
             Object userObject = link.getUserObject();
             if (userObject != null) {
-                times = (int) userObject + 1;
+                count = (int) userObject + 1;
             }
 
-            link.setName("路由次数" + " : " + times);
-            link.setToolTipText("路由次数" + " : " + times);
-            link.setUserObject(times);
+            DecimalFormat format = new DecimalFormat("0.0000");
+            double percent = Double.valueOf(format.format((double) count * 100 / times));
+
+            String text = ConsoleLocaleFactory.getString("weight") + "=" + percent + "%";
+            link.setName(text);
+            link.setToolTipText(text);
+            link.setUserObject(count);
         }
 
         return node;
+    }
+
+    public void start() {
+        dataBox.clear();
+
+        String address = ComboBoxUtil.getSelectedValue(instanceComboBox);
+        String parameter = parameterTextField.getText().trim();
+
+        ElementNode portalElementNode = (ElementNode) portalComboBox.getSelectedItem();
+        PortalType portalType = (PortalType) portalElementNode.getUserObject();
+
+        if (portalType == PortalType.GATEWAY) {
+            String firstServiceId = conditionPanel.getFirstServiceId();
+
+            address += "/" + firstServiceId + "/inspector/inspect?" + parameter;
+        } else {
+            address += "/inspector/inspect?" + parameter;
+        }
+
+        LOG.info("Inspection URL={}", address);
+
+        List<String> allServiceIds = conditionPanel.getServiceIds(true);
+        List<String> serviceIds = conditionPanel.getServiceIds(false);
+
+        LOG.info("Inspection Services={}", allServiceIds);
+
+        InspectorEntity inspectorEntity = new InspectorEntity();
+        inspectorEntity.setServiceIdList(serviceIds);
+
+        int times = Integer.valueOf(timesComboBox.getSelectedItem().toString());
+        try {
+            for (int i = 0; i < times; i++) {
+                InspectorEntity resultInspectorEntity = ConsoleController.inspect(address, inspectorEntity);
+                List<Map<String, String>> metadataList = convertToMetadatas(resultInspectorEntity);
+
+                TNode node = null;
+                int index = 0;
+                for (Map<String, String> metadataMap : metadataList) {
+                    NodeUI nodeUI = index == 0 ? gatewayNodeUI : serviceNodeUI;
+                    node = addNode(node, StrategyType.VERSION, metadataMap, nodeUI, times);
+
+                    index++;
+                }
+            }
+
+            executeLayout();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public JSecurityAction createOpenAction() {
@@ -402,52 +457,7 @@ public class InspectorTopology extends AbstractTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                dataBox.clear();
-
-                String address = ComboBoxUtil.getSelectedValue(instanceComboBox);
-                String parameter = parameterTextField.getText().trim();
-
-                ElementNode portalElementNode = (ElementNode) portalComboBox.getSelectedItem();
-                PortalType portalType = (PortalType) portalElementNode.getUserObject();
-
-                if (portalType == PortalType.GATEWAY) {
-                    String firstServiceId = conditionPanel.getFirstServiceId();
-
-                    address += "/" + firstServiceId + "/inspector/inspect?" + parameter;
-                } else {
-                    address += "/inspector/inspect?" + parameter;
-                }
-
-                LOG.info("Inspection URL={}", address);
-
-                List<String> allServiceIds = conditionPanel.getServiceIds(true);
-                List<String> serviceIds = conditionPanel.getServiceIds(false);
-
-                LOG.info("Inspection Services={}", allServiceIds);
-
-                InspectorEntity inspectorEntity = new InspectorEntity();
-                inspectorEntity.setServiceIdList(serviceIds);
-
-                int times = Integer.valueOf(timesComboBox.getSelectedItem().toString());
-                try {
-                    for (int i = 0; i < times; i++) {
-                        InspectorEntity resultInspectorEntity = ConsoleController.inspect(address, inspectorEntity);
-                        List<Map<String, String>> metadataList = convertToMetadatas(resultInspectorEntity);
-
-                        TNode node = null;
-                        int index = 0;
-                        for (Map<String, String> metadataMap : metadataList) {
-                            NodeUI nodeUI = index == 0 ? gatewayNodeUI : serviceNodeUI;
-                            node = addNode(node, StrategyType.VERSION, metadataMap, nodeUI);
-
-                            index++;
-                        }
-                    }
-
-                    executeLayout();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+                start();
             }
         };
 
