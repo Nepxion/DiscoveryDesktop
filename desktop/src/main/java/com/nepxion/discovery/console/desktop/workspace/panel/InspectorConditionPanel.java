@@ -61,7 +61,7 @@ public class InspectorConditionPanel extends JPanel {
 
     public List<String> getServiceIds() {
         try {
-            return ConsoleCache.getServices();
+            return ConsoleCache.getRealServices();
         } catch (Exception e) {
             JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
         }
