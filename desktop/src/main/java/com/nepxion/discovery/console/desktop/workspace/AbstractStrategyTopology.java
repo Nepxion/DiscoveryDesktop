@@ -9,6 +9,8 @@ package com.nepxion.discovery.console.desktop.workspace;
  * @version 1.0
  */
 
+import twaver.TWaverConst;
+
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -132,7 +134,7 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
         gatewayNode.setUserObject(gateway);
         gatewayNode.setBusinessObject(ElementType.PORTAL);
 
-        setNodeLabelBottom(gatewayNode, false);
+        setNodeLabelPosition(gatewayNode, TWaverConst.POSITION_TOP);
     }
 
     public void setServiceUI() {

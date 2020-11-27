@@ -25,9 +25,9 @@ import com.nepxion.swing.textfield.number.JNumberTextField;
 public class LayouterSetPanel extends SetPanel {
     private static final long serialVersionUID = 1L;
 
-    private static final String X_OFFSET = "125";
+    private static final String X_OFFSET = "50";
     private static final String Y_OFFSET = "100";
-    private static final String X_GAP = "200";
+    private static final String X_GAP = "250";
     private static final String Y_GAP = "60";
 
     private JNumberTextField xOffsetTextField;

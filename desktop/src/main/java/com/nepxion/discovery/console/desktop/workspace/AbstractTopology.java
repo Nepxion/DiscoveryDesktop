@@ -44,7 +44,7 @@ import com.nepxion.swing.optionpane.JBasicOptionPane;
 public abstract class AbstractTopology extends BasicTopology {
     private static final long serialVersionUID = 1L;
 
-    protected NodeLocation nodeLocation = new NodeLocation(415, 100, 200, 0);
+    protected NodeLocation nodeLocation = new NodeLocation(415, 100, 250, 60);
 
     protected TGraphBackground background;
 

@@ -9,6 +9,9 @@ package com.nepxion.discovery.console.desktop.workspace;
  * @version 1.0
  */
 
+import twaver.AlarmSeverity;
+import twaver.TWaverConst;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -348,6 +351,8 @@ public class InspectorTopology extends AbstractTopology {
         TNode node = TElementManager.getNode(dataBox, nodeName);
         if (node == null) {
             node = addNode(nodeName, nodeUI);
+            setNodeLabelPosition(node, TWaverConst.POSITION_RIGHT);
+
             Instance instance = new Instance();
             instance.setServiceId(serviceId);
             instance.setMetadata(metadataMap);
@@ -357,17 +362,20 @@ public class InspectorTopology extends AbstractTopology {
 
         if (previousNode != null) {
             TLink link = addLink(previousNode, node, linkUI);
-            Object userObject = link.getUserObject();
-            if (userObject == null) {
-                link.setName("1");
-                link.setToolTipText("1");
-                link.setUserObject(previousNode.getName() + " -> " + node.getName());
-            } else {
-                int times = Integer.parseInt(link.getName().toString()) + 1;
-                String timesText = String.valueOf(times);
-                link.setName(timesText);
-                link.setToolTipText(timesText);
-            }
+            link.getAlarmState().addNewAlarm(AlarmSeverity.WARNING);
+            link.putAlarmBalloonOutlineColor(LinkUI.GRAY);
+
+            // Object userObject = link.getUserObject();
+            // if (userObject == null) {
+            //    link.setName("1");
+            //    link.setToolTipText("1");
+            //    link.setUserObject(previousNode.getName() + " -> " + node.getName());
+            // } else {
+            //    int times = Integer.parseInt(link.getName().toString()) + 1;
+            //    String timesText = String.valueOf(times);
+            //    link.setName(timesText);
+            //    link.setToolTipText(timesText);
+            // }
         }
 
         return node;
