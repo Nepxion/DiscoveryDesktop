@@ -256,7 +256,7 @@ public class InspectorTopology extends AbstractTopology {
         parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("times")), 5), "0, 1");
         parameterPanel.add(timesComboBox, "1, 1");
         parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("progress")), 5), "0, 2");
-        parameterPanel.add(DimensionUtil.addHeight(progressBar, 8), "1, 2");
+        parameterPanel.add(DimensionUtil.addHeight(progressBar, 6), "1, 2");
         parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("spent")), 5), "0, 3");
         parameterPanel.add(spentTextField, "1, 3");
 
