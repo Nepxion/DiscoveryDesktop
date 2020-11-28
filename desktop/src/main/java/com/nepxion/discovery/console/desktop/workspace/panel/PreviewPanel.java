@@ -50,7 +50,7 @@ public class PreviewPanel extends JPanel {
         configPanel.add(new JBasicScrollPane(configTextArea), BorderLayout.CENTER);
 
         setLayout(new BorderLayout());
-        setPreferredSize(new Dimension(800, 400));
+        setPreferredSize(new Dimension(800, 450));
         add(keyPanel, BorderLayout.NORTH);
         add(configPanel, BorderLayout.CENTER);
     }
