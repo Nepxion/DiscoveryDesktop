@@ -52,6 +52,10 @@ public class TypeLocale {
         return getDescription(portalType, "_portal");
     }
 
+    public static String getDescription(DimensionType dimensionType) {
+        return getDescription(dimensionType, "_dimension");
+    }
+
     public static String getName(Object type) {
         return ConsoleLocaleFactory.getString(type.toString());
     }

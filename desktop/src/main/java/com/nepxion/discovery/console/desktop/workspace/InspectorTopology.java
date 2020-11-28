@@ -60,9 +60,9 @@ import com.nepxion.discovery.console.desktop.workspace.topology.LinkUI;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeSizeType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeUI;
+import com.nepxion.discovery.console.desktop.workspace.type.DimensionType;
 import com.nepxion.discovery.console.desktop.workspace.type.FeatureType;
 import com.nepxion.discovery.console.desktop.workspace.type.PortalType;
-import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
 import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.discovery.console.entity.Instance;
 import com.nepxion.swing.action.JSecurityAction;
@@ -96,7 +96,7 @@ public class InspectorTopology extends AbstractTopology {
 
     protected InspectorConditionPanel conditionPanel;
 
-    protected JBasicComboBox strategyComboBox;
+    protected JBasicComboBox dimensionComboBox;
     protected JBasicComboBox timesComboBox;
     protected JProgressBar progressBar;
     protected JBasicTextField spentTextField;
@@ -114,8 +114,6 @@ public class InspectorTopology extends AbstractTopology {
     public void initializeTopology() {
         super.initializeTopology();
 
-        background.setTitle(TypeLocale.getDescription(FeatureType.INSPECTOR));
-
         graph.setAlarmLabelGenerator(new Generator() {
             public Object generate(Object ui) {
                 ElementUI elementUI = (ElementUI) ui;
@@ -129,6 +127,8 @@ public class InspectorTopology extends AbstractTopology {
                 return null;
             }
         });
+
+        setTitle(null);
     }
 
     public void initializeToolBar() {
@@ -220,16 +220,14 @@ public class InspectorTopology extends AbstractTopology {
         parameterShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
         parameterShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString("inspector_parameter"));
 
-        List<ElementNode> strategyElementNodes = new ArrayList<ElementNode>();
-        StrategyType[] strategyTypes = StrategyType.values();
-        for (int i = 0; i < strategyTypes.length; i++) {
-            StrategyType strategyType = strategyTypes[i];
-            if (strategyType.getCategory() == 0) {
-                strategyElementNodes.add(new ElementNode(strategyType.toString(), TypeLocale.getDescription(strategyType), null, TypeLocale.getDescription(strategyType), strategyType));
-            }
+        List<ElementNode> dimensionElementNodes = new ArrayList<ElementNode>();
+        DimensionType[] dimensionTypes = DimensionType.values();
+        for (int i = 0; i < dimensionTypes.length; i++) {
+            DimensionType dimensionType = dimensionTypes[i];
+            dimensionElementNodes.add(new ElementNode(dimensionType.toString(), TypeLocale.getDescription(dimensionType), null, TypeLocale.getDescription(dimensionType), dimensionType));
         }
 
-        strategyComboBox = new JBasicComboBox(strategyElementNodes.toArray());
+        dimensionComboBox = new JBasicComboBox(dimensionElementNodes.toArray());
 
         Integer[] times = new Integer[] { 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000 };
         timesComboBox = new JBasicComboBox(times);
@@ -250,8 +248,8 @@ public class InspectorTopology extends AbstractTopology {
 
         JPanel parameterPanel = new JPanel();
         parameterPanel.setLayout(parameterTableLayout);
-        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("strategy")), 5), "0, 0");
-        parameterPanel.add(strategyComboBox, "1, 0");
+        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("dimension")), 5), "0, 0");
+        parameterPanel.add(dimensionComboBox, "1, 0");
         parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("times")), 5), "0, 1");
         parameterPanel.add(timesComboBox, "1, 1");
         parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("progress")), 5), "0, 2");
@@ -281,6 +279,10 @@ public class InspectorTopology extends AbstractTopology {
         operationBar.add(parameterShrinkShortcut, "0, 6");
         operationBar.add(parameterPanel, "0, 7");
         operationBar.add(toolBar, "0, 9");
+    }
+
+    public void setTitle(DimensionType dimensionType) {
+        background.setTitle(TypeLocale.getDescription(FeatureType.INSPECTOR) + (dimensionType != null ? " | " + TypeLocale.getDescription(dimensionType) : ""));
     }
 
     public void setServiceIds() {
@@ -370,10 +372,15 @@ public class InspectorTopology extends AbstractTopology {
         return metadataList;
     }
 
-    public TNode addNode(TNode previousNode, StrategyType strategyType, Map<String, String> metadataMap, NodeUI nodeUI, int times) {
+    public TNode addNode(TNode previousNode, Map<String, String> metadataMap, NodeUI nodeUI, int times) {
+        ElementNode dimensionElementNode = (ElementNode) dimensionComboBox.getSelectedItem();
+        DimensionType dimensionType = (DimensionType) dimensionElementNode.getUserObject();
+        String dimensionKey = dimensionType.getKey();
+        String dimensionValue = dimensionType.getValue();
+
         String serviceId = metadataMap.get("ID");
-        String version = metadataMap.get("V");
-        String nodeName = ButtonManager.getHtmlText(serviceId + "\n" + strategyType + "=" + version);
+        String metadata = metadataMap.get(dimensionKey);
+        String nodeName = ButtonManager.getHtmlText(serviceId + "\n" + dimensionValue + "=" + metadata);
 
         TNode node = TElementManager.getNode(dataBox, nodeName);
         if (node == null) {
@@ -409,6 +416,11 @@ public class InspectorTopology extends AbstractTopology {
 
     public void launch() {
         dataBox.clear();
+
+        ElementNode dimensionElementNode = (ElementNode) dimensionComboBox.getSelectedItem();
+        DimensionType dimensionType = (DimensionType) dimensionElementNode.getUserObject();
+
+        setTitle(dimensionType);
 
         String address = ComboBoxUtil.getSelectedValue(instanceComboBox);
         String parameter = parameterTextField.getText().trim();
@@ -482,7 +494,7 @@ public class InspectorTopology extends AbstractTopology {
             int index = 0;
             for (Map<String, String> metadataMap : metadatas) {
                 NodeUI nodeUI = index == 0 ? gatewayNodeUI : serviceNodeUI;
-                node = addNode(node, StrategyType.VERSION, metadataMap, nodeUI, times);
+                node = addNode(node, metadataMap, nodeUI, times);
 
                 index++;
             }
