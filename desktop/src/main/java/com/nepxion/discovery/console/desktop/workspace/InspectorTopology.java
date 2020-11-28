@@ -42,6 +42,7 @@ import com.nepxion.cots.twaver.element.TElementManager;
 import com.nepxion.cots.twaver.element.TLink;
 import com.nepxion.cots.twaver.element.TNode;
 import com.nepxion.cots.twaver.icon.TIconFactory;
+import com.nepxion.discovery.common.constant.DiscoveryConstant;
 import com.nepxion.discovery.common.entity.InspectorEntity;
 import com.nepxion.discovery.common.exception.DiscoveryException;
 import com.nepxion.discovery.common.util.StringUtil;
@@ -134,10 +135,8 @@ public class InspectorTopology extends AbstractTopology {
         JToolBar toolBar = getGraph().getToolbar();
         toolBar.addSeparator();
         // toolBar.add(ButtonUtil.createButton(createOpenAction()));
-        toolBar.add(ButtonUtil.createButton(createStartAction()));
-        toolBar.add(ButtonUtil.createButton(createStopAction()));
+        toolBar.add(ButtonUtil.createButton(createLaunchAction()));
         toolBar.addSeparator();
-        toolBar.add(ButtonUtil.createButton(createViewAction()));
         toolBar.add(ButtonUtil.createButton(createSetAction()));
         toolBar.addSeparator();
         toolBar.add(ButtonUtil.createButton(createLayoutAction()));
@@ -381,11 +380,7 @@ public class InspectorTopology extends AbstractTopology {
             node = addNode(nodeName, nodeUI);
             setNodeLabelPosition(node, TWaverConst.POSITION_RIGHT);
 
-            Instance instance = new Instance();
-            instance.setServiceId(serviceId);
-            instance.setMetadata(metadataMap);
             node.setToolTipText(nodeName);
-            node.setUserObject(instance);
         }
 
         if (previousNode != null) {
@@ -412,7 +407,7 @@ public class InspectorTopology extends AbstractTopology {
         return node;
     }
 
-    public void start() {
+    public void launch() {
         dataBox.clear();
 
         String address = ComboBoxUtil.getSelectedValue(instanceComboBox);
@@ -427,12 +422,12 @@ public class InspectorTopology extends AbstractTopology {
         if (portalType == PortalType.GATEWAY) {
             String firstServiceId = conditionPanel.getFirstServiceId();
 
-            address += "/" + firstServiceId + "/inspector/inspect?" + parameter;
+            address += "/" + firstServiceId + DiscoveryConstant.INSPECTOR_ENDPOINT_URL + "?" + parameter;
 
             allServiceIds = conditionPanel.getServiceIds(true);
             serviceIds = conditionPanel.getServiceIds(false);
         } else {
-            address += "/inspector/inspect?" + parameter;
+            address += DiscoveryConstant.INSPECTOR_ENDPOINT_URL + "?" + parameter;
 
             allServiceIds = conditionPanel.getServiceIds(true);
             serviceIds = allServiceIds;
@@ -547,36 +542,12 @@ public class InspectorTopology extends AbstractTopology {
         return action;
     }
 
-    public JSecurityAction createStartAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("start_text"), TIconFactory.getContextIcon("run.png"), ConsoleLocaleFactory.getString("start_inspector_tooltip")) {
+    public JSecurityAction createLaunchAction() {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("launch_text"), TIconFactory.getSwingIcon("theme/folder/deploy.png"), ConsoleLocaleFactory.getString("launch_inspector_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                start();
-            }
-        };
-
-        return action;
-    }
-
-    public JSecurityAction createStopAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("stop_text"), TIconFactory.getContextIcon("stop.png"), ConsoleLocaleFactory.getString("stop_inspector_tooltip")) {
-            private static final long serialVersionUID = 1L;
-
-            public void execute(ActionEvent e) {
-
-            }
-        };
-
-        return action;
-    }
-
-    public JSecurityAction createViewAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("view_text"), ConsoleIconFactory.getSwingIcon("ticket.png"), ConsoleLocaleFactory.getString("view_metadata_tooltip")) {
-            private static final long serialVersionUID = 1L;
-
-            public void execute(ActionEvent e) {
-
+                launch();
             }
         };
 
