@@ -10,7 +10,10 @@ package com.nepxion.discovery.console.desktop.workspace;
  */
 
 import twaver.AlarmSeverity;
+import twaver.Element;
+import twaver.Generator;
 import twaver.TWaverConst;
+import twaver.network.ui.ElementUI;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -111,6 +114,20 @@ public class InspectorTopology extends AbstractTopology {
         super.initializeTopology();
 
         background.setTitle(TypeLocale.getDescription(FeatureType.INSPECTOR));
+
+        graph.setAlarmLabelGenerator(new Generator() {
+            public Object generate(Object ui) {
+                ElementUI elementUI = (ElementUI) ui;
+                Element element = elementUI.getElement();
+                if (element instanceof TLink) {
+                    int alarmCount = element.getAlarmState().getAlarmCount();
+
+                    return "<html>" + ConsoleLocaleFactory.getString("times") + "=<font color=red>" + alarmCount + "</font></html>";
+                }
+
+                return null;
+            }
+        });
     }
 
     public void initializeToolBar() {
@@ -373,9 +390,9 @@ public class InspectorTopology extends AbstractTopology {
 
         if (previousNode != null) {
             TLink link = addLink(previousNode, node, linkUI);
+            link.putLabelPosition(TWaverConst.POSITION_HOTSPOT);
             link.getAlarmState().addNewAlarm(AlarmSeverity.WARNING);
             link.putAlarmBalloonOutlineColor(LinkUI.GRAY);
-            link.putLabelPosition(TWaverConst.POSITION_HOTSPOT);
 
             int counts = 1;
             Object userObject = link.getUserObject();
@@ -386,7 +403,7 @@ public class InspectorTopology extends AbstractTopology {
             DecimalFormat format = new DecimalFormat("0.0000");
             double percent = Double.valueOf(format.format((double) counts * 100 / times));
 
-            String text = ConsoleLocaleFactory.getString("weight") + "=" + percent + "%";
+            String text = ConsoleLocaleFactory.getString("percent") + "=" + percent + "%";
             link.setName(text);
             link.setToolTipText(text);
             link.setUserObject(counts);
