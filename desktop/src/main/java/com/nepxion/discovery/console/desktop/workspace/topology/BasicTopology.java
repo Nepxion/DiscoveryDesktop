@@ -319,9 +319,11 @@ public class BasicTopology extends JPanel {
                 break;
             case TWaverConst.POSITION_LEFT:
                 node.putLabelXOffset(-5);
+                node.putLabelYOffset(0);
                 break;
             case TWaverConst.POSITION_RIGHT:
                 node.putLabelXOffset(6);
+                node.putLabelYOffset(0);
                 break;
         }
     }
