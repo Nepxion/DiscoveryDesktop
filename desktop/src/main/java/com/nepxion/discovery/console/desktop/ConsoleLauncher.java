@@ -17,8 +17,8 @@ public class ConsoleLauncher {
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-//                ConsoleLogin consoleLogin = new ConsoleLogin();
-//                consoleLogin.launch();
+                ConsoleLogin consoleLogin = new ConsoleLogin();
+                consoleLogin.launch();
 
                 ConsoleFrame consoleFrame = new ConsoleFrame();
                 consoleFrame.launch();
