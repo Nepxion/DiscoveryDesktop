@@ -89,7 +89,6 @@ public class GrayTopology extends AbstractStrategyTopology {
         strategyProcessor.setGrayTopology(this);
     }
 
-    @SuppressWarnings("incomplete-switch")
     @Override
     public void initializeView() {
         super.initializeView();

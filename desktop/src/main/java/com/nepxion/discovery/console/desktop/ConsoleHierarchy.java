@@ -21,6 +21,7 @@ import com.nepxion.discovery.console.desktop.workspace.AbstractTopology;
 import com.nepxion.discovery.console.desktop.workspace.BlueGreenTopology;
 import com.nepxion.discovery.console.desktop.workspace.GrayTopology;
 import com.nepxion.discovery.console.desktop.workspace.InspectorTopology;
+import com.nepxion.discovery.console.desktop.workspace.type.AuthorityType;
 import com.nepxion.discovery.console.desktop.workspace.type.FeatureType;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
@@ -32,23 +33,20 @@ public class ConsoleHierarchy extends AbstractConsoleHierarchy {
     private static final long serialVersionUID = 1L;
 
     public static final String OUTLOOK_STYLE = "outlook/stereo/";
-    // public static final String OUTLOOK_STYLE = "outlook/flat/";
-
     public static final String NAVIGATOR_STYLE = "navigator/stereo/";
-    // public static final String NAVIGATOR_STYLE = "navigator/flat/";
 
     @Override
     public void initializeUI() {
         createServiceReleaseManageShrinkOutlook();
-        createMiddleWareReleaseManageShrinkOutlook();
+        createServiceAuthorityManageShrinkOutlook();
+        createMiddlewareReleaseManageShrinkOutlook();
     }
 
     private JShrinkOutlook createServiceReleaseManageShrinkOutlook() {
         List<ElementNode> elementNodes = new ArrayList<ElementNode>();
-        elementNodes.add(new ElementNode(ReleaseType.BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.BLUE_GREEN), ConsoleIconFactory.getContextIcon(OUTLOOK_STYLE + "blue_green.png"), TypeLocale.getDescription(ReleaseType.BLUE_GREEN), new BlueGreenTopology()));
-        elementNodes.add(new ElementNode(ReleaseType.GRAY.toString(), TypeLocale.getDescription(ReleaseType.GRAY), ConsoleIconFactory.getContextIcon(OUTLOOK_STYLE + "gray.png"), TypeLocale.getDescription(ReleaseType.GRAY), new GrayTopology()));
-        elementNodes.add(new ElementNode(FeatureType.INSPECTOR.toString(), TypeLocale.getDescription(FeatureType.INSPECTOR), ConsoleIconFactory.getContextIcon(OUTLOOK_STYLE + "inspector.png"), TypeLocale.getDescription(FeatureType.INSPECTOR), new InspectorTopology()));
-        elementNodes.add(new ElementNode(ReleaseType.BLACKLIST.toString(), TypeLocale.getDescription(ReleaseType.BLACKLIST), ConsoleIconFactory.getContextIcon(OUTLOOK_STYLE + "blacklist.png"), TypeLocale.getDescription(ReleaseType.BLACKLIST), null));
+        elementNodes.add(new ElementNode(ReleaseType.BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.BLUE_GREEN), ConsoleIconFactory.getContextIcon(OUTLOOK_STYLE + "service_blue_green.png"), TypeLocale.getDescription(ReleaseType.BLUE_GREEN), new BlueGreenTopology()));
+        elementNodes.add(new ElementNode(ReleaseType.GRAY.toString(), TypeLocale.getDescription(ReleaseType.GRAY), ConsoleIconFactory.getContextIcon(OUTLOOK_STYLE + "service_gray.png"), TypeLocale.getDescription(ReleaseType.GRAY), new GrayTopology()));
+        elementNodes.add(new ElementNode(FeatureType.INSPECTOR.toString(), TypeLocale.getDescription(FeatureType.INSPECTOR), ConsoleIconFactory.getContextIcon(OUTLOOK_STYLE + "service_inspector.png"), TypeLocale.getDescription(FeatureType.INSPECTOR), new InspectorTopology()));
 
         JBasicList toggleList = createToggleList(elementNodes);
         toggleList.setSelectedIndex(0);
@@ -60,10 +58,25 @@ public class ConsoleHierarchy extends AbstractConsoleHierarchy {
         return shrinkOutlook;
     }
 
-    private JShrinkOutlook createMiddleWareReleaseManageShrinkOutlook() {
+    private JShrinkOutlook createServiceAuthorityManageShrinkOutlook() {
         List<ElementNode> elementNodes = new ArrayList<ElementNode>();
-        elementNodes.add(new ElementNode(ReleaseType.DATABASE_BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.DATABASE_BLUE_GREEN), ConsoleIconFactory.getContextIcon(OUTLOOK_STYLE + "database.png"), TypeLocale.getDescription(ReleaseType.DATABASE_BLUE_GREEN), null));
-        elementNodes.add(new ElementNode(ReleaseType.MESSAGE_QUEUE_BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.MESSAGE_QUEUE_BLUE_GREEN), ConsoleIconFactory.getContextIcon(OUTLOOK_STYLE + "message_queue.png"), TypeLocale.getDescription(ReleaseType.MESSAGE_QUEUE_BLUE_GREEN), null));
+        elementNodes.add(new ElementNode(AuthorityType.STRATEGY.toString(), TypeLocale.getDescription(AuthorityType.STRATEGY), ConsoleIconFactory.getContextIcon(OUTLOOK_STYLE + "service_authority_strategy.png"), TypeLocale.getDescription(AuthorityType.STRATEGY), null));
+        elementNodes.add(new ElementNode(AuthorityType.DISCOVERY.toString(), TypeLocale.getDescription(AuthorityType.DISCOVERY), ConsoleIconFactory.getContextIcon(OUTLOOK_STYLE + "service_authority_discovery.png"), TypeLocale.getDescription(AuthorityType.DISCOVERY), null));
+        elementNodes.add(new ElementNode(AuthorityType.REGISTER.toString(), TypeLocale.getDescription(AuthorityType.REGISTER), ConsoleIconFactory.getContextIcon(OUTLOOK_STYLE + "service_authority_register.png"), TypeLocale.getDescription(AuthorityType.REGISTER), null));
+
+        JBasicList toggleList = createToggleList(elementNodes);
+
+        JShrinkOutlook shrinkOutlook = shrinkOutlookBar.addShrinkOutlook(ConsoleLocaleFactory.getString("service_authority_manage"), ConsoleIconFactory.getContextIcon(NAVIGATOR_STYLE + "close_16.png"), ConsoleIconFactory.getContextIcon(NAVIGATOR_STYLE + "open_favorite_16.png"), ConsoleLocaleFactory.getString("service_authority_manage"), new Font(ConsoleUIContext.getFontName(), Font.BOLD, ConsoleUIContext.getMiddleFontSize()));
+        shrinkOutlook.setContentPane(toggleList);
+        shrinkOutlook.addPropertyChangeListener(new OutlookSelectionListener());
+
+        return shrinkOutlook;
+    }
+
+    private JShrinkOutlook createMiddlewareReleaseManageShrinkOutlook() {
+        List<ElementNode> elementNodes = new ArrayList<ElementNode>();
+        elementNodes.add(new ElementNode(ReleaseType.DATABASE_BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.DATABASE_BLUE_GREEN), ConsoleIconFactory.getContextIcon(OUTLOOK_STYLE + "middleware_database_blue_green.png"), TypeLocale.getDescription(ReleaseType.DATABASE_BLUE_GREEN), null));
+        elementNodes.add(new ElementNode(ReleaseType.MESSAGE_QUEUE_BLUE_GREEN.toString(), TypeLocale.getDescription(ReleaseType.MESSAGE_QUEUE_BLUE_GREEN), ConsoleIconFactory.getContextIcon(OUTLOOK_STYLE + "middleware_message_queue_blue_green.png"), TypeLocale.getDescription(ReleaseType.MESSAGE_QUEUE_BLUE_GREEN), null));
 
         JBasicList toggleList = createToggleList(elementNodes);
 

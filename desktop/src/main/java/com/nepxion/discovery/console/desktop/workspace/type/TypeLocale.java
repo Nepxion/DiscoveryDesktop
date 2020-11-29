@@ -20,6 +20,10 @@ public class TypeLocale {
         return getDescription(releaseType, "_release");
     }
 
+    public static String getDescription(AuthorityType authorityType) {
+        return getDescription(authorityType, "_authority");
+    }
+
     public static String getDescription(StrategyType strategyType) {
         return getDescription(strategyType, "_strategy");
     }

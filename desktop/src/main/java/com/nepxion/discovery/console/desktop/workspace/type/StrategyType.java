@@ -14,17 +14,13 @@ import org.apache.commons.lang3.StringUtils;
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
 
 public enum StrategyType {
-    VERSION(DiscoveryConstant.VERSION, 0),
-    REGION(DiscoveryConstant.REGION, 0),
-    ID_BLACKLIST(DiscoveryConstant.ID_BLACKLIST, 1),
-    ADDRESS_BLACKLIST(DiscoveryConstant.ADDRESS_BLACKLIST, 1);
+    VERSION(DiscoveryConstant.VERSION),
+    REGION(DiscoveryConstant.REGION);
 
     private String value;
-    private int category;
 
-    private StrategyType(String value, int category) {
+    private StrategyType(String value) {
         this.value = value;
-        this.category = category;
     }
 
     public String getValue() {
@@ -33,10 +29,6 @@ public enum StrategyType {
 
     public String getCapitalizeValue() {
         return StringUtils.capitalize(value);
-    }
-
-    public int getCategory() {
-        return category;
     }
 
     public static StrategyType fromString(String value) {

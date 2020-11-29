@@ -193,15 +193,13 @@ public class StrategyCreatePanel extends JPanel {
         StrategyType[] strategyTypes = StrategyType.values();
         for (int i = 0; i < strategyTypes.length; i++) {
             StrategyType strategyType = strategyTypes[i];
-            if (strategyType.getCategory() == 0) {
-                JBasicRadioButton strategyRadioButton = new JBasicRadioButton(TypeLocale.getDescription(strategyType), TypeLocale.getDescription(strategyType));
-                strategyRadioButton.setName(strategyType.toString());
-                strategyPanel.add(strategyRadioButton);
-                strategyButtonGroup.add(strategyRadioButton);
+            JBasicRadioButton strategyRadioButton = new JBasicRadioButton(TypeLocale.getDescription(strategyType), TypeLocale.getDescription(strategyType));
+            strategyRadioButton.setName(strategyType.toString());
+            strategyPanel.add(strategyRadioButton);
+            strategyButtonGroup.add(strategyRadioButton);
 
-                if (i == 0) {
-                    strategyRadioButton.setSelected(true);
-                }
+            if (i == 0) {
+                strategyRadioButton.setSelected(true);
             }
         }
 

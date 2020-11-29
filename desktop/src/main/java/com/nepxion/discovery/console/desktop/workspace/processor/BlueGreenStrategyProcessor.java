@@ -42,7 +42,7 @@ import com.nepxion.discovery.console.entity.Instance;
 public class BlueGreenStrategyProcessor extends AbstractStrategyProcessor {
     private BlueGreenTopology blueGreenTopology;
 
-    @SuppressWarnings({ "incomplete-switch", "unchecked" })
+    @SuppressWarnings({ "unchecked" })
     @Override
     public void fromConfig(RuleEntity ruleEntity, StrategyType strategyType, TDataBox dataBox) throws Exception {
         StrategyEntity strategyEntity = ruleEntity.getStrategyEntity();

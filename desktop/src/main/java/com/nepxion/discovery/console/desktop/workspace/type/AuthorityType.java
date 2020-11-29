@@ -9,17 +9,16 @@ package com.nepxion.discovery.console.desktop.workspace.type;
  * @version 1.0
  */
 
-import com.nepxion.discovery.common.constant.DiscoveryConstant;
+import org.apache.commons.lang3.StringUtils;
 
-public enum ReleaseType {
-    BLUE_GREEN(DiscoveryConstant.BLUE_GREEN),
-    GRAY(DiscoveryConstant.GRAY),
-    DATABASE_BLUE_GREEN("database-blue-green"),
-    MESSAGE_QUEUE_BLUE_GREEN("message-queue-blue-green");
+public enum AuthorityType {
+    STRATEGY("strategy"),
+    REGISTER("register"),
+    DISCOVERY("discovery");
 
     private String value;
 
-    private ReleaseType(String value) {
+    private AuthorityType(String value) {
         this.value = value;
     }
 
@@ -27,8 +26,12 @@ public enum ReleaseType {
         return value;
     }
 
-    public static ReleaseType fromString(String value) {
-        for (ReleaseType type : ReleaseType.values()) {
+    public String getCapitalizeValue() {
+        return StringUtils.capitalize(value);
+    }
+
+    public static AuthorityType fromString(String value) {
+        for (AuthorityType type : AuthorityType.values()) {
             if (type.getValue().equalsIgnoreCase(value)) {
                 return type;
             }

@@ -42,7 +42,7 @@ import com.nepxion.discovery.console.entity.Instance;
 public class GrayStrategyProcessor extends AbstractStrategyProcessor {
     private GrayTopology grayTopology;
 
-    @SuppressWarnings({ "incomplete-switch", "unchecked" })
+    @SuppressWarnings({ "unchecked" })
     @Override
     public void fromConfig(RuleEntity ruleEntity, StrategyType strategyType, TDataBox dataBox) throws Exception {
         String grayConditionId = StrategyProcessorUtil.getStrategyGrayConditionId();
