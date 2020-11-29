@@ -99,8 +99,8 @@ public class InspectorTopology extends AbstractTopology {
 
     protected JBasicComboBox dimensionComboBox;
     protected JBasicComboBox timesComboBox;
-    protected JProgressBar progressBar;
-    protected JBasicTextField failureTextField;
+    protected JProgressBar successfulProgressBar;
+    protected JProgressBar failureProgressBar;
     protected JBasicTextField spentTextField;
 
     protected long currentTime;
@@ -234,11 +234,11 @@ public class InspectorTopology extends AbstractTopology {
         Integer[] times = new Integer[] { 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000 };
         timesComboBox = new JBasicComboBox(times);
 
-        progressBar = new JProgressBar();
-        progressBar.setStringPainted(true);
+        successfulProgressBar = new JProgressBar();
+        successfulProgressBar.setStringPainted(true);
 
-        failureTextField = new JBasicTextField("0");
-        failureTextField.setEditable(false);
+        failureProgressBar = new JProgressBar();
+        failureProgressBar.setStringPainted(true);
 
         spentTextField = new JBasicTextField("0");
         spentTextField.setEditable(false);
@@ -258,10 +258,10 @@ public class InspectorTopology extends AbstractTopology {
         parameterPanel.add(dimensionComboBox, "1, 0");
         parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("times")), 5), "0, 1");
         parameterPanel.add(timesComboBox, "1, 1");
-        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("progress")), 5), "0, 2");
-        parameterPanel.add(DimensionUtil.addHeight(progressBar, 6), "1, 2");
+        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("successful")), 5), "0, 2");
+        parameterPanel.add(DimensionUtil.addHeight(successfulProgressBar, 6), "1, 2");
         parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("failure")), 5), "0, 3");
-        parameterPanel.add(failureTextField, "1, 3");
+        parameterPanel.add(DimensionUtil.addHeight(failureProgressBar, 6), "1, 3");
         parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("spent")), 5), "0, 4");
         parameterPanel.add(spentTextField, "1, 4");
 
@@ -510,11 +510,12 @@ public class InspectorTopology extends AbstractTopology {
 
         int times = Integer.valueOf(timesComboBox.getSelectedItem().toString());
 
-        DefaultBoundedRangeModel boundedRangeModel = new DefaultBoundedRangeModel(0, 1, 0, times);
-        progressBar.setModel(boundedRangeModel);
+        DefaultBoundedRangeModel successfulBoundedRangeModel = new DefaultBoundedRangeModel(0, 1, 0, times);
+        successfulProgressBar.setModel(successfulBoundedRangeModel);
 
-        failureTextField.setText("0");
-        failureTextField.setBackground(Color.white);
+        DefaultBoundedRangeModel failureBoundedRangeModel = new DefaultBoundedRangeModel(0, 1, 0, times);
+        failureProgressBar.setModel(failureBoundedRangeModel);
+
         spentTextField.setText("0");
 
         currentTime = System.currentTimeMillis();
@@ -549,7 +550,7 @@ public class InspectorTopology extends AbstractTopology {
         @Override
         protected void loadForeground(Object object) throws Exception {
             if (object instanceof Exception) {
-                setFailure();
+                updateFailureProgress();
             } else {
                 List<Map<String, String>> metadatas = (List<Map<String, String>>) object;
 
@@ -561,26 +562,26 @@ public class InspectorTopology extends AbstractTopology {
 
                     index++;
                 }
+
+                updateSuccessfulProgress();
             }
 
-            setProgress();
+            updateSpent();
         }
 
-        public synchronized void setProgress() {
-            int progress = progressBar.getModel().getValue() + 1;
-            progressBar.getModel().setValue(progress);
+        public synchronized void updateSuccessfulProgress() {
+            int progress = successfulProgressBar.getModel().getValue() + 1;
+            successfulProgressBar.getModel().setValue(progress);
+        }
 
+        public synchronized void updateFailureProgress() {
+            int progress = failureProgressBar.getModel().getValue() + 1;
+            failureProgressBar.getModel().setValue(progress);
+        }
+
+        public synchronized void updateSpent() {
             long spentTime = System.currentTimeMillis() - currentTime;
             spentTextField.setText(String.valueOf(spentTime));
-        }
-
-        public synchronized void setFailure() {
-            int failureTimes = Integer.valueOf(failureTextField.getText());
-            failureTextField.setText(String.valueOf(failureTimes + 1));
-
-            if (failureTimes > 0) {
-                failureTextField.setBackground(Color.red);
-            }
         }
 
         public DimensionType getDimensionType() {
