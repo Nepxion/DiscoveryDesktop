@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,6 +34,7 @@ import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JToolBar;
+import javax.swing.SwingWorker;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -78,7 +80,6 @@ import com.nepxion.swing.layout.table.TableLayout;
 import com.nepxion.swing.locale.SwingLocale;
 import com.nepxion.swing.optionpane.JBasicOptionPane;
 import com.nepxion.swing.shrinkbar.JShrinkShortcut;
-import com.nepxion.swing.swingworker.JSwingWorker;
 import com.nepxion.swing.textfield.JBasicTextField;
 
 public class InspectorTopology extends AbstractTopology {
@@ -530,29 +531,64 @@ public class InspectorTopology extends AbstractTopology {
         }
     }
 
-    public class InspectorSwingWorker extends JSwingWorker {
+    public class InspectorResult {
+        protected List<Map<String, String>> metadatas;
+        protected Exception exception;
+
+        public List<Map<String, String>> getMetadatas() {
+            return metadatas;
+        }
+
+        public void setMetadatas(List<Map<String, String>> metadatas) {
+            this.metadatas = metadatas;
+        }
+
+        public Exception getException() {
+            return exception;
+        }
+
+        public void setException(Exception exception) {
+            this.exception = exception;
+        }
+    }
+
+    public class InspectorSwingWorker extends SwingWorker<InspectorResult, Void> {
         protected DimensionType dimensionType;
         protected String address;
         protected InspectorEntity inspectorEntity;
         protected int times;
 
         @Override
-        protected Object loadBackground() throws Exception {
-            InspectorEntity resultInspectorEntity = ConsoleController.inspect(address, inspectorEntity);
+        protected InspectorResult doInBackground() throws Exception {
+            InspectorResult inspectorResult = new InspectorResult();
+
             try {
-                return convertToMetadatas(resultInspectorEntity);
+                InspectorEntity resultInspectorEntity = ConsoleController.inspect(address, inspectorEntity);
+                List<Map<String, String>> metadatas = convertToMetadatas(resultInspectorEntity);
+
+                inspectorResult.setMetadatas(metadatas);
             } catch (Exception e) {
-                return e;
+                inspectorResult.setException(e);
             }
+
+            return inspectorResult;
         }
 
-        @SuppressWarnings("unchecked")
         @Override
-        protected void loadForeground(Object object) throws Exception {
-            if (object instanceof Exception) {
+        protected void done() {
+            InspectorResult inspectorResult = null;
+            try {
+                inspectorResult = get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
+            if (inspectorResult.getException() != null) {
                 updateFailureProgress();
             } else {
-                List<Map<String, String>> metadatas = (List<Map<String, String>>) object;
+                List<Map<String, String>> metadatas = inspectorResult.getMetadatas();
 
                 TNode node = null;
                 int index = 0;
