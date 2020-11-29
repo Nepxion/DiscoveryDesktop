@@ -419,8 +419,6 @@ public class GrayTopology extends AbstractStrategyTopology {
         }
 
         addNodes(serviceId, grayMetadata, stableMetadata, grayCondition, stableCondition);
-
-        executeLayout();
     }
 
     @Override

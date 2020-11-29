@@ -502,8 +502,6 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
         }
 
         addNodes(serviceId, blueMetadata, greenMetadata, basicMetadata, blueCondition, greenCondition);
-
-        executeLayout();
     }
 
     public JSecurityAction createModifyParameterAction() {

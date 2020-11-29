@@ -455,12 +455,8 @@ public class InspectorTopology extends AbstractTopology {
             return;
         }
 
-        dataBox.clear();
-
         ElementNode dimensionElementNode = (ElementNode) dimensionComboBox.getSelectedItem();
         DimensionType dimensionType = (DimensionType) dimensionElementNode.getUserObject();
-
-        setTitle(dimensionType);
 
         ElementNode portalElementNode = (ElementNode) portalComboBox.getSelectedItem();
         PortalType portalType = (PortalType) portalElementNode.getUserObject();
@@ -471,20 +467,38 @@ public class InspectorTopology extends AbstractTopology {
         if (portalType == PortalType.GATEWAY) {
             String firstServiceId = conditionPanel.getFirstServiceId();
 
-            address += "/" + firstServiceId + DiscoveryConstant.INSPECTOR_ENDPOINT_URL + "?" + parameter;
+            address += "/" + firstServiceId + DiscoveryConstant.INSPECTOR_ENDPOINT_URL + (StringUtils.isNotBlank(parameter) ? "?" + parameter : "");
 
             allServiceIds = conditionPanel.getServiceIds(true);
             serviceIds = conditionPanel.getServiceIds(false);
         } else {
-            address += DiscoveryConstant.INSPECTOR_ENDPOINT_URL + "?" + parameter;
+            address += DiscoveryConstant.INSPECTOR_ENDPOINT_URL + (StringUtils.isNotBlank(parameter) ? "?" + parameter : "");
 
             allServiceIds = conditionPanel.getServiceIds(true);
             serviceIds = allServiceIds;
         }
 
-        LOG.info("Inspection URL={}", address);
+        StringBuilder informationStringBuilder = new StringBuilder();
+        informationStringBuilder.append(ConsoleLocaleFactory.getString("inspector_url") + " : \n" + address + "\n" + ConsoleLocaleFactory.getString("inspector_services") + " : \n");
+        for (int i = 0; i < allServiceIds.size(); i++) {
+            String serviceId = allServiceIds.get(i);
 
+            informationStringBuilder.append(serviceId);
+            if (i < allServiceIds.size() - 1) {
+                informationStringBuilder.append("\n");
+            }
+        }
+
+        int selectedValue = JBasicOptionPane.showConfirmDialog(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("launch_confirm") + "\n" + informationStringBuilder.toString(), SwingLocale.getString("confirm"), JBasicOptionPane.YES_NO_OPTION);
+        if (selectedValue != JBasicOptionPane.OK_OPTION) {
+            return;
+        }
+
+        LOG.info("Inspection URL={}", address);
         LOG.info("Inspection Services={}", allServiceIds);
+
+        setTitle(dimensionType);
+        dataBox.clear();
 
         InspectorEntity inspectorEntity = new InspectorEntity();
         inspectorEntity.setServiceIdList(serviceIds);
@@ -537,8 +551,6 @@ public class InspectorTopology extends AbstractTopology {
             }
 
             setProgress();
-
-            executeLayout();
         }
 
         public synchronized void setProgress() {

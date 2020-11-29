@@ -91,8 +91,6 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         } catch (Exception e) {
             JBasicOptionPane.showMessageDialog(HandleManager.getFrame(this), e.getMessage(), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
         }
-
-        executeLayout();
     }
 
     public void showResult(Object result) {

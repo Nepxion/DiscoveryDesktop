@@ -9,6 +9,9 @@ package com.nepxion.discovery.console.desktop.workspace;
  * @version 1.0
  */
 
+import twaver.DataBoxEvent;
+import twaver.DataBoxListener;
+
 import twaver.Generator;
 
 import java.awt.Color;
@@ -59,9 +62,27 @@ public abstract class AbstractTopology extends BasicTopology {
 
     public void initializeTopology() {
         background = graph.getGraphBackground();
+
         graph.setElementStateOutlineColorGenerator(new Generator() {
             public Object generate(Object object) {
                 return null;
+            }
+        });
+
+        dataBox.addDataBoxListener(new DataBoxListener() {
+            @Override
+            public void elementAdded(DataBoxEvent arg0) {
+                executeLayout();
+            }
+
+            @Override
+            public void elementRemoved(DataBoxEvent arg0) {
+                executeLayout();
+            }
+
+            @Override
+            public void elementsCleared(DataBoxEvent arg0) {
+                executeLayout();
             }
         });
     }
