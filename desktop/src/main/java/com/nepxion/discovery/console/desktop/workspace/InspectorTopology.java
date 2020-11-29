@@ -107,6 +107,7 @@ public class InspectorTopology extends AbstractTopology {
     protected JProgressBar failureProgressBar;
     protected JBasicTextField spentTextField;
 
+    protected ExecutorService executorService;
     protected long currentTime;
 
     protected Pattern pattern = Pattern.compile("\\[\\S+\\]");
@@ -141,7 +142,8 @@ public class InspectorTopology extends AbstractTopology {
         JToolBar toolBar = getGraph().getToolbar();
         toolBar.addSeparator();
         // toolBar.add(ButtonUtil.createButton(createOpenAction()));
-        toolBar.add(ButtonUtil.createButton(createLaunchAction()));
+        toolBar.add(ButtonUtil.createButton(createStartAction()));
+        toolBar.add(ButtonUtil.createButton(createStopAction()));
         toolBar.addSeparator();
         toolBar.add(ButtonUtil.createButton(createSetAction()));
         toolBar.addSeparator();
@@ -450,98 +452,6 @@ public class InspectorTopology extends AbstractTopology {
         parameterTextField.showTip(ConsoleLocaleFactory.getString("parameter_invalid_format"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
     }
 
-    public void launch() {
-        String address = ComboBoxUtil.getSelectedValue(instanceComboBox);
-        if (StringUtils.isBlank(address)) {
-            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("address_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
-
-            return;
-        }
-
-        String parameter = getParameter();
-        if (parameter == null) {
-            return;
-        }
-
-        if (conditionPanel.isServiceIdInvalid()) {
-            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("service_id_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
-
-            return;
-        }
-
-        ElementNode dimensionElementNode = (ElementNode) dimensionComboBox.getSelectedItem();
-        DimensionType dimensionType = (DimensionType) dimensionElementNode.getUserObject();
-
-        ElementNode portalElementNode = (ElementNode) portalComboBox.getSelectedItem();
-        PortalType portalType = (PortalType) portalElementNode.getUserObject();
-
-        List<String> allServiceIds = null;
-        List<String> serviceIds = null;
-
-        if (portalType == PortalType.GATEWAY) {
-            String firstServiceId = conditionPanel.getFirstServiceId();
-
-            address += "/" + firstServiceId + DiscoveryConstant.INSPECTOR_ENDPOINT_URL + (StringUtils.isNotBlank(parameter) ? "?" + parameter : "");
-
-            allServiceIds = conditionPanel.getServiceIds(true);
-            serviceIds = conditionPanel.getServiceIds(false);
-        } else {
-            address += DiscoveryConstant.INSPECTOR_ENDPOINT_URL + (StringUtils.isNotBlank(parameter) ? "?" + parameter : "");
-
-            allServiceIds = conditionPanel.getServiceIds(true);
-            serviceIds = allServiceIds;
-        }
-
-        StringBuilder informationStringBuilder = new StringBuilder();
-        informationStringBuilder.append(ConsoleLocaleFactory.getString("inspector_url") + " : \n" + address + "\n" + ConsoleLocaleFactory.getString("inspector_services") + " : \n");
-        for (int i = 0; i < allServiceIds.size(); i++) {
-            String serviceId = allServiceIds.get(i);
-
-            informationStringBuilder.append(serviceId);
-            if (i < allServiceIds.size() - 1) {
-                informationStringBuilder.append("\n");
-            }
-        }
-
-        int selectedValue = JBasicOptionPane.showConfirmDialog(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("launch_confirm") + "\n" + informationStringBuilder.toString(), SwingLocale.getString("confirm"), JBasicOptionPane.YES_NO_OPTION);
-        if (selectedValue != JBasicOptionPane.OK_OPTION) {
-            return;
-        }
-
-        LOG.info("Inspection URL={}", address);
-        LOG.info("Inspection Services={}", allServiceIds);
-
-        setTitle(dimensionType);
-        dataBox.clear();
-
-        InspectorEntity inspectorEntity = new InspectorEntity();
-        inspectorEntity.setServiceIdList(serviceIds);
-
-        int times = (Integer) timesComboBox.getSelectedItem();
-        int concurrency = (Integer) concurrencyComboBox.getSelectedItem();
-
-        DefaultBoundedRangeModel successfulBoundedRangeModel = new DefaultBoundedRangeModel(0, 1, 0, times);
-        successfulProgressBar.setModel(successfulBoundedRangeModel);
-
-        DefaultBoundedRangeModel failureBoundedRangeModel = new DefaultBoundedRangeModel(0, 1, 0, times);
-        failureProgressBar.setModel(failureBoundedRangeModel);
-
-        spentTextField.setText("0");
-
-        currentTime = System.currentTimeMillis();
-
-        ExecutorService executorService = Executors.newFixedThreadPool(concurrency);
-        for (int i = 0; i < times; i++) {
-            InspectorSwingWorker inspectorSwingWorker = new InspectorSwingWorker();
-            inspectorSwingWorker.setDimensionType(dimensionType);
-            inspectorSwingWorker.setAddress(address);
-            inspectorSwingWorker.setInspectorEntity(inspectorEntity);
-            inspectorSwingWorker.setTimes(times);
-
-            executorService.execute(inspectorSwingWorker);
-        }
-    }
-
     public class InspectorResult {
         protected List<Map<String, String>> metadatas;
         protected Exception exception;
@@ -664,6 +574,111 @@ public class InspectorTopology extends AbstractTopology {
         }
     }
 
+    public void start() {
+        String address = ComboBoxUtil.getSelectedValue(instanceComboBox);
+        if (StringUtils.isBlank(address)) {
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("address_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+            return;
+        }
+
+        String parameter = getParameter();
+        if (parameter == null) {
+            return;
+        }
+
+        if (conditionPanel.isServiceIdInvalid()) {
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("service_id_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+            return;
+        }
+
+        ElementNode dimensionElementNode = (ElementNode) dimensionComboBox.getSelectedItem();
+        DimensionType dimensionType = (DimensionType) dimensionElementNode.getUserObject();
+
+        ElementNode portalElementNode = (ElementNode) portalComboBox.getSelectedItem();
+        PortalType portalType = (PortalType) portalElementNode.getUserObject();
+
+        List<String> allServiceIds = null;
+        List<String> serviceIds = null;
+
+        if (portalType == PortalType.GATEWAY) {
+            String firstServiceId = conditionPanel.getFirstServiceId();
+
+            address += "/" + firstServiceId + DiscoveryConstant.INSPECTOR_ENDPOINT_URL + (StringUtils.isNotBlank(parameter) ? "?" + parameter : "");
+
+            allServiceIds = conditionPanel.getServiceIds(true);
+            serviceIds = conditionPanel.getServiceIds(false);
+        } else {
+            address += DiscoveryConstant.INSPECTOR_ENDPOINT_URL + (StringUtils.isNotBlank(parameter) ? "?" + parameter : "");
+
+            allServiceIds = conditionPanel.getServiceIds(true);
+            serviceIds = allServiceIds;
+        }
+
+        StringBuilder informationStringBuilder = new StringBuilder();
+        informationStringBuilder.append(ConsoleLocaleFactory.getString("inspector_url") + " : \n" + address + "\n" + ConsoleLocaleFactory.getString("inspector_services") + " : \n");
+        for (int i = 0; i < allServiceIds.size(); i++) {
+            String serviceId = allServiceIds.get(i);
+
+            informationStringBuilder.append(serviceId);
+            if (i < allServiceIds.size() - 1) {
+                informationStringBuilder.append("\n");
+            }
+        }
+
+        int selectedValue = JBasicOptionPane.showConfirmDialog(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("start_confirm") + "\n" + informationStringBuilder.toString(), SwingLocale.getString("confirm"), JBasicOptionPane.YES_NO_OPTION);
+        if (selectedValue != JBasicOptionPane.OK_OPTION) {
+            return;
+        }
+
+        LOG.info("Inspection URL={}", address);
+        LOG.info("Inspection Services={}", allServiceIds);
+
+        setTitle(dimensionType);
+        dataBox.clear();
+
+        InspectorEntity inspectorEntity = new InspectorEntity();
+        inspectorEntity.setServiceIdList(serviceIds);
+
+        int times = (Integer) timesComboBox.getSelectedItem();
+        int concurrency = (Integer) concurrencyComboBox.getSelectedItem();
+
+        DefaultBoundedRangeModel successfulBoundedRangeModel = new DefaultBoundedRangeModel(0, 1, 0, times);
+        successfulProgressBar.setModel(successfulBoundedRangeModel);
+
+        DefaultBoundedRangeModel failureBoundedRangeModel = new DefaultBoundedRangeModel(0, 1, 0, times);
+        failureProgressBar.setModel(failureBoundedRangeModel);
+
+        spentTextField.setText("0");
+
+        currentTime = System.currentTimeMillis();
+
+        executorService = Executors.newFixedThreadPool(concurrency);
+        for (int i = 0; i < times; i++) {
+            InspectorSwingWorker inspectorSwingWorker = new InspectorSwingWorker();
+            inspectorSwingWorker.setDimensionType(dimensionType);
+            inspectorSwingWorker.setAddress(address);
+            inspectorSwingWorker.setInspectorEntity(inspectorEntity);
+            inspectorSwingWorker.setTimes(times);
+
+            executorService.execute(inspectorSwingWorker);
+        }
+    }
+
+    public void stop() {
+        if (executorService == null) {
+            return;
+        }
+
+        int selectedValue = JBasicOptionPane.showConfirmDialog(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("stop_confirm"), SwingLocale.getString("confirm"), JBasicOptionPane.YES_NO_OPTION);
+        if (selectedValue != JBasicOptionPane.OK_OPTION) {
+            return;
+        }
+
+        executorService.shutdownNow();
+    }
+
     public JSecurityAction createOpenAction() {
         JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("open_text"), ConsoleIconFactory.getSwingIcon("theme/tree/plastic/tree_open.png"), ConsoleLocaleFactory.getString("open_strategy_tooltip")) {
             private static final long serialVersionUID = 1L;
@@ -682,12 +697,24 @@ public class InspectorTopology extends AbstractTopology {
         return action;
     }
 
-    public JSecurityAction createLaunchAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("launch_text"), TIconFactory.getSwingIcon("theme/folder/deploy.png"), ConsoleLocaleFactory.getString("launch_inspector_tooltip")) {
+    public JSecurityAction createStartAction() {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("start_text"), TIconFactory.getContextIcon("run.png"), ConsoleLocaleFactory.getString("start_inspector_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                launch();
+                start();
+            }
+        };
+
+        return action;
+    }
+
+    public JSecurityAction createStopAction() {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("stop_text"), TIconFactory.getContextIcon("stop.png"), ConsoleLocaleFactory.getString("stop_inspector_tooltip")) {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+                stop();
             }
         };
 
