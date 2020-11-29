@@ -132,8 +132,6 @@ public class InspectorTopology extends AbstractTopology {
                 return null;
             }
         });
-
-        setTitle(null);
     }
 
     public void initializeToolBar() {
