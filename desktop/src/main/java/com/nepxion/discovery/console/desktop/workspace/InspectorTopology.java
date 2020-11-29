@@ -373,9 +373,7 @@ public class InspectorTopology extends AbstractTopology {
         return metadataList;
     }
 
-    public TNode addNode(TNode previousNode, Map<String, String> metadataMap, NodeUI nodeUI, int times) {
-        ElementNode dimensionElementNode = (ElementNode) dimensionComboBox.getSelectedItem();
-        DimensionType dimensionType = (DimensionType) dimensionElementNode.getUserObject();
+    public TNode addNode(TNode previousNode, DimensionType dimensionType, Map<String, String> metadataMap, NodeUI nodeUI, int times) {
         String dimensionKey = dimensionType.getKey();
         String dimensionValue = dimensionType.getValue();
 
@@ -513,6 +511,7 @@ public class InspectorTopology extends AbstractTopology {
         try {
             for (int i = 0; i < times; i++) {
                 InspectorSwingWorker inspectorSwingWorker = new InspectorSwingWorker();
+                inspectorSwingWorker.setDimensionType(dimensionType);
                 inspectorSwingWorker.setAddress(address);
                 inspectorSwingWorker.setInspectorEntity(inspectorEntity);
                 inspectorSwingWorker.setTimes(times);
@@ -524,6 +523,7 @@ public class InspectorTopology extends AbstractTopology {
     }
 
     public class InspectorSwingWorker extends JSwingWorker {
+        protected DimensionType dimensionType;
         protected String address;
         protected InspectorEntity inspectorEntity;
         protected int times;
@@ -545,7 +545,7 @@ public class InspectorTopology extends AbstractTopology {
             int index = 0;
             for (Map<String, String> metadataMap : metadatas) {
                 NodeUI nodeUI = index == 0 ? gatewayNodeUI : serviceNodeUI;
-                node = addNode(node, metadataMap, nodeUI, times);
+                node = addNode(node, dimensionType, metadataMap, nodeUI, times);
 
                 index++;
             }
@@ -558,6 +558,14 @@ public class InspectorTopology extends AbstractTopology {
             progressBar.getModel().setValue(progress);
 
             spentTextField.setText(String.valueOf(System.currentTimeMillis() - currentTime));
+        }
+
+        public DimensionType getDimensionType() {
+            return dimensionType;
+        }
+
+        public void setDimensionType(DimensionType dimensionType) {
+            this.dimensionType = dimensionType;
         }
 
         public String getAddress() {
