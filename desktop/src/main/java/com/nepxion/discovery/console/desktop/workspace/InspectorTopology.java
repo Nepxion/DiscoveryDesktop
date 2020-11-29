@@ -26,6 +26,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -100,6 +102,7 @@ public class InspectorTopology extends AbstractTopology {
 
     protected JBasicComboBox dimensionComboBox;
     protected JBasicComboBox timesComboBox;
+    protected JBasicComboBox concurrencyComboBox;
     protected JProgressBar successfulProgressBar;
     protected JProgressBar failureProgressBar;
     protected JBasicTextField spentTextField;
@@ -235,6 +238,9 @@ public class InspectorTopology extends AbstractTopology {
         Integer[] times = new Integer[] { 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000 };
         timesComboBox = new JBasicComboBox(times);
 
+        Integer[] concurrency = new Integer[] { 10, 20, 30, 50, 80, 100, 120, 150, 180, 200, 300, 500 };
+        concurrencyComboBox = new JBasicComboBox(concurrency);
+
         successfulProgressBar = new JProgressBar();
         successfulProgressBar.setStringPainted(true);
 
@@ -245,8 +251,8 @@ public class InspectorTopology extends AbstractTopology {
         spentTextField.setEditable(false);
 
         double[][] parameterSize = {
-                { TableLayout.PREFERRED, TableLayout.FILL },
-                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
+                { TableLayout.PREFERRED, TableLayout.FILL, 5, TableLayout.PREFERRED, TableLayout.FILL },
+                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
         };
 
         TableLayout parameterTableLayout = new TableLayout(parameterSize);
@@ -256,15 +262,17 @@ public class InspectorTopology extends AbstractTopology {
         JPanel parameterPanel = new JPanel();
         parameterPanel.setLayout(parameterTableLayout);
         parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("dimension")), 5), "0, 0");
-        parameterPanel.add(dimensionComboBox, "1, 0");
+        parameterPanel.add(dimensionComboBox, "1, 0, 4, 0");
         parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("times")), 5), "0, 1");
         parameterPanel.add(timesComboBox, "1, 1");
+        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("concurrency")), 5), "3, 1");
+        parameterPanel.add(concurrencyComboBox, "4, 1");
         parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("successful")), 5), "0, 2");
         parameterPanel.add(DimensionUtil.addHeight(successfulProgressBar, 6), "1, 2");
-        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("failure")), 5), "0, 3");
-        parameterPanel.add(DimensionUtil.addHeight(failureProgressBar, 6), "1, 3");
-        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("spent")), 5), "0, 4");
-        parameterPanel.add(spentTextField, "1, 4");
+        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("failure")), 5), "3, 2");
+        parameterPanel.add(DimensionUtil.addHeight(failureProgressBar, 6), "4, 2");
+        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("spent")), 5), "0, 3");
+        parameterPanel.add(spentTextField, "1, 3, 4, 3");
 
         JPanel toolBar = new JPanel();
         toolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
@@ -509,7 +517,8 @@ public class InspectorTopology extends AbstractTopology {
         InspectorEntity inspectorEntity = new InspectorEntity();
         inspectorEntity.setServiceIdList(serviceIds);
 
-        int times = Integer.valueOf(timesComboBox.getSelectedItem().toString());
+        int times = (Integer) timesComboBox.getSelectedItem();
+        int concurrency = (Integer) concurrencyComboBox.getSelectedItem();
 
         DefaultBoundedRangeModel successfulBoundedRangeModel = new DefaultBoundedRangeModel(0, 1, 0, times);
         successfulProgressBar.setModel(successfulBoundedRangeModel);
@@ -521,13 +530,15 @@ public class InspectorTopology extends AbstractTopology {
 
         currentTime = System.currentTimeMillis();
 
+        ExecutorService executorService = Executors.newFixedThreadPool(concurrency);
         for (int i = 0; i < times; i++) {
             InspectorSwingWorker inspectorSwingWorker = new InspectorSwingWorker();
             inspectorSwingWorker.setDimensionType(dimensionType);
             inspectorSwingWorker.setAddress(address);
             inspectorSwingWorker.setInspectorEntity(inspectorEntity);
             inspectorSwingWorker.setTimes(times);
-            inspectorSwingWorker.execute();
+
+            executorService.execute(inspectorSwingWorker);
         }
     }
 
