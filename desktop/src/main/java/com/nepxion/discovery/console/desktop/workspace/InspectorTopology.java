@@ -100,6 +100,7 @@ public class InspectorTopology extends AbstractTopology {
     protected JBasicComboBox dimensionComboBox;
     protected JBasicComboBox timesComboBox;
     protected JProgressBar progressBar;
+    protected JBasicTextField failureTextField;
     protected JBasicTextField spentTextField;
 
     protected long currentTime;
@@ -236,11 +237,15 @@ public class InspectorTopology extends AbstractTopology {
         progressBar = new JProgressBar();
         progressBar.setStringPainted(true);
 
+        failureTextField = new JBasicTextField("0");
+        failureTextField.setEditable(false);
+
         spentTextField = new JBasicTextField("0");
+        spentTextField.setEditable(false);
 
         double[][] parameterSize = {
                 { TableLayout.PREFERRED, TableLayout.FILL },
-                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
+                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
         };
 
         TableLayout parameterTableLayout = new TableLayout(parameterSize);
@@ -255,8 +260,10 @@ public class InspectorTopology extends AbstractTopology {
         parameterPanel.add(timesComboBox, "1, 1");
         parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("progress")), 5), "0, 2");
         parameterPanel.add(DimensionUtil.addHeight(progressBar, 6), "1, 2");
-        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("spent")), 5), "0, 3");
-        parameterPanel.add(spentTextField, "1, 3");
+        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("failure")), 5), "0, 3");
+        parameterPanel.add(failureTextField, "1, 3");
+        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("spent")), 5), "0, 4");
+        parameterPanel.add(spentTextField, "1, 4");
 
         JPanel toolBar = new JPanel();
         toolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
@@ -506,19 +513,19 @@ public class InspectorTopology extends AbstractTopology {
         DefaultBoundedRangeModel boundedRangeModel = new DefaultBoundedRangeModel(0, 1, 0, times);
         progressBar.setModel(boundedRangeModel);
 
+        failureTextField.setText("0");
+        failureTextField.setBackground(Color.white);
+        spentTextField.setText("0");
+
         currentTime = System.currentTimeMillis();
 
-        try {
-            for (int i = 0; i < times; i++) {
-                InspectorSwingWorker inspectorSwingWorker = new InspectorSwingWorker();
-                inspectorSwingWorker.setDimensionType(dimensionType);
-                inspectorSwingWorker.setAddress(address);
-                inspectorSwingWorker.setInspectorEntity(inspectorEntity);
-                inspectorSwingWorker.setTimes(times);
-                inspectorSwingWorker.execute();
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        for (int i = 0; i < times; i++) {
+            InspectorSwingWorker inspectorSwingWorker = new InspectorSwingWorker();
+            inspectorSwingWorker.setDimensionType(dimensionType);
+            inspectorSwingWorker.setAddress(address);
+            inspectorSwingWorker.setInspectorEntity(inspectorEntity);
+            inspectorSwingWorker.setTimes(times);
+            inspectorSwingWorker.execute();
         }
     }
 
@@ -531,23 +538,29 @@ public class InspectorTopology extends AbstractTopology {
         @Override
         protected Object loadBackground() throws Exception {
             InspectorEntity resultInspectorEntity = ConsoleController.inspect(address, inspectorEntity);
-            List<Map<String, String>> metadatas = convertToMetadatas(resultInspectorEntity);
-
-            return metadatas;
+            try {
+                return convertToMetadatas(resultInspectorEntity);
+            } catch (Exception e) {
+                return e;
+            }
         }
 
         @SuppressWarnings("unchecked")
         @Override
         protected void loadForeground(Object object) throws Exception {
-            List<Map<String, String>> metadatas = (List<Map<String, String>>) object;
+            if (object instanceof Exception) {
+                setFailure();
+            } else {
+                List<Map<String, String>> metadatas = (List<Map<String, String>>) object;
 
-            TNode node = null;
-            int index = 0;
-            for (Map<String, String> metadataMap : metadatas) {
-                NodeUI nodeUI = index == 0 ? gatewayNodeUI : serviceNodeUI;
-                node = addNode(node, dimensionType, metadataMap, nodeUI, times);
+                TNode node = null;
+                int index = 0;
+                for (Map<String, String> metadataMap : metadatas) {
+                    NodeUI nodeUI = index == 0 ? gatewayNodeUI : serviceNodeUI;
+                    node = addNode(node, dimensionType, metadataMap, nodeUI, times);
 
-                index++;
+                    index++;
+                }
             }
 
             setProgress();
@@ -557,7 +570,17 @@ public class InspectorTopology extends AbstractTopology {
             int progress = progressBar.getModel().getValue() + 1;
             progressBar.getModel().setValue(progress);
 
-            spentTextField.setText(String.valueOf(System.currentTimeMillis() - currentTime));
+            long spentTime = System.currentTimeMillis() - currentTime;
+            spentTextField.setText(String.valueOf(spentTime));
+        }
+
+        public synchronized void setFailure() {
+            int failureTimes = Integer.valueOf(failureTextField.getText());
+            failureTextField.setText(String.valueOf(failureTimes + 1));
+
+            if (failureTimes > 0) {
+                failureTextField.setBackground(Color.red);
+            }
         }
 
         public DimensionType getDimensionType() {
