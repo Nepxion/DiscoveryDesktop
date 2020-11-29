@@ -16,7 +16,6 @@ import twaver.TWaverConst;
 import twaver.network.ui.ElementUI;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -60,7 +59,6 @@ import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.common.util.TextFieldUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.InspectorConditionPanel;
-import com.nepxion.discovery.console.desktop.workspace.panel.StrategyOpenPanel;
 import com.nepxion.discovery.console.desktop.workspace.topology.LinkUI;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeSizeType;
@@ -141,7 +139,6 @@ public class InspectorTopology extends AbstractTopology {
     public void initializeToolBar() {
         JToolBar toolBar = getGraph().getToolbar();
         toolBar.addSeparator();
-        // toolBar.add(ButtonUtil.createButton(createOpenAction()));
         toolBar.add(ButtonUtil.createButton(createStartAction()));
         toolBar.add(ButtonUtil.createButton(createStopAction()));
         toolBar.addSeparator();
@@ -677,24 +674,6 @@ public class InspectorTopology extends AbstractTopology {
         }
 
         executorService.shutdownNow();
-    }
-
-    public JSecurityAction createOpenAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("open_text"), ConsoleIconFactory.getSwingIcon("theme/tree/plastic/tree_open.png"), ConsoleLocaleFactory.getString("open_strategy_tooltip")) {
-            private static final long serialVersionUID = 1L;
-
-            public void execute(ActionEvent e) {
-                StrategyOpenPanel openPanel = new StrategyOpenPanel();
-                openPanel.setPreferredSize(new Dimension(openPanel.getPreferredSize().width + 100, openPanel.getPreferredSize().height + 10));
-
-                int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(InspectorTopology.this), openPanel, ConsoleLocaleFactory.getString("open_strategy_tooltip"), JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
-                if (selectedOption != 0) {
-                    return;
-                }
-            }
-        };
-
-        return action;
     }
 
     public JSecurityAction createStartAction() {
