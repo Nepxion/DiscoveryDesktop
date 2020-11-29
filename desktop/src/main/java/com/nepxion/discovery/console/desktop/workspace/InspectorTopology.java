@@ -54,6 +54,7 @@ import com.nepxion.discovery.console.desktop.common.swing.dialog.JExceptionDialo
 import com.nepxion.discovery.console.desktop.common.util.ButtonUtil;
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
+import com.nepxion.discovery.console.desktop.common.util.TextFieldUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.InspectorConditionPanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.StrategyOpenPanel;
 import com.nepxion.discovery.console.desktop.workspace.topology.LinkUI;
@@ -183,7 +184,7 @@ public class InspectorTopology extends AbstractTopology {
         instanceComboBox.setEditable(true);
         ComboBoxUtil.installlAutoCompletion(instanceComboBox);
 
-        parameterTextField = new JBasicTextField("a=1&b=1");
+        parameterTextField = new JBasicTextField();
 
         setServiceIds();
         setInstances();
@@ -206,7 +207,7 @@ public class InspectorTopology extends AbstractTopology {
         portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("address")), 5), "0, 2");
         portalPanel.add(instanceComboBox, "1, 2");
         portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("parameter")), 5), "0, 3");
-        portalPanel.add(parameterTextField, "1, 3");
+        portalPanel.add(TextFieldUtil.setTip(parameterTextField, ConsoleLocaleFactory.getString("inspector_parameter_example")), "1, 3");
 
         JShrinkShortcut conditionShrinkShortcut = new JShrinkShortcut();
         conditionShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("inspector_link"));
@@ -414,16 +415,52 @@ public class InspectorTopology extends AbstractTopology {
         return node;
     }
 
+    public String getParameter() {
+        String parameter = parameterTextField.getText().trim();
+        if (StringUtils.equals(parameter, ConsoleLocaleFactory.getString("inspector_parameter_example"))) {
+            parameter = "";
+        }
+
+        try {
+            StringUtil.splitToMap(parameter);
+        } catch (Exception ex) {
+            showParameterInvalidFormatTip();
+
+            return null;
+        }
+
+        return parameter;
+    }
+
+    public void showParameterInvalidFormatTip() {
+        parameterTextField.showTip(ConsoleLocaleFactory.getString("parameter_invalid_format"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
+    }
+
     public void launch() {
+        String address = ComboBoxUtil.getSelectedValue(instanceComboBox);
+        if (StringUtils.isBlank(address)) {
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("address_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+            return;
+        }
+
+        String parameter = getParameter();
+        if (parameter == null) {
+            return;
+        }
+
+        if (conditionPanel.isServiceIdInvalid()) {
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("service_id_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+            return;
+        }
+
         dataBox.clear();
 
         ElementNode dimensionElementNode = (ElementNode) dimensionComboBox.getSelectedItem();
         DimensionType dimensionType = (DimensionType) dimensionElementNode.getUserObject();
 
         setTitle(dimensionType);
-
-        String address = ComboBoxUtil.getSelectedValue(instanceComboBox);
-        String parameter = parameterTextField.getText().trim();
 
         ElementNode portalElementNode = (ElementNode) portalComboBox.getSelectedItem();
         PortalType portalType = (PortalType) portalElementNode.getUserObject();

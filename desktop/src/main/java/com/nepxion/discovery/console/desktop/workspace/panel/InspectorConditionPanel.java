@@ -77,6 +77,10 @@ public class InspectorConditionPanel extends JPanel {
         return conditionBar.getServiceIds(isAll);
     }
 
+    public boolean isServiceIdInvalid() {
+        return conditionBar.isServiceIdInvalid();
+    }
+
     public class ConditionBar extends JPanel {
         private static final long serialVersionUID = 1L;
 
@@ -176,6 +180,17 @@ public class InspectorConditionPanel extends JPanel {
             }
 
             return serviceIds;
+        }
+
+        public boolean isServiceIdInvalid() {
+            for (ConditionItem conditionItem : conditionItems) {
+                String serviceId = ComboBoxUtil.getSelectedValue(conditionItem.serviceIdComboBox);
+                if (StringUtils.isBlank(serviceId)) {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public class ConditionItem {
