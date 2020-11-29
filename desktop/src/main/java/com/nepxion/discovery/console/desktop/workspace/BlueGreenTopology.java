@@ -100,6 +100,13 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
         strategyProcessor.setBlueGreenTopology(this);
     }
 
+    @Override
+    public void initializeTopology() {
+        super.initializeTopology();
+
+        background.setTitle(TypeLocale.getDescription(ReleaseType.BLUE_GREEN));
+    }
+
     public void initializeBlueGreenRouteType(BlueGreenRouteType blueGreenRouteType) {
         boolean enabled = blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC;
         orchestrationPanel.getComponent(6).setEnabled(enabled);

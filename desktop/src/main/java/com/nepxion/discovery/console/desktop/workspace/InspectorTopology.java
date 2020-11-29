@@ -132,6 +132,8 @@ public class InspectorTopology extends AbstractTopology {
                 return null;
             }
         });
+
+        background.setTitle(TypeLocale.getDescription(FeatureType.INSPECTOR));
     }
 
     public void initializeToolBar() {
