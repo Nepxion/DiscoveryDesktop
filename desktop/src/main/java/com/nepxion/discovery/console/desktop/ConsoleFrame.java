@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.nepxion.discovery.console.cache.ConsoleCache;
+import com.nepxion.discovery.console.desktop.common.context.ConsoleConstant;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.swing.frame.JBasicFrame;
@@ -31,7 +32,10 @@ public class ConsoleFrame extends JBasicFrame {
         ConsoleHierarchy consoleHierarchy = new ConsoleHierarchy();
         getContentPane().add(consoleHierarchy);
 
-        setExtendedState(ConsoleFrame.MAXIMIZED_BOTH);
+        Boolean fullscreenEnabled = Boolean.valueOf(System.getProperty(ConsoleConstant.FULLSCREEN_ENABLED, Boolean.TRUE.toString()));
+        if (fullscreenEnabled) {
+            setExtendedState(ConsoleFrame.MAXIMIZED_BOTH);
+        }
         setVisible(true);
         toFront();
     }

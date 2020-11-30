@@ -11,14 +11,19 @@ package com.nepxion.discovery.console.desktop;
 
 import javax.swing.SwingUtilities;
 
+import com.nepxion.discovery.console.desktop.common.context.ConsoleConstant;
+
 public class ConsoleLauncher {
     public static void main(String[] args) {
         ConsoleInitializer.initialize();
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                ConsoleLogin consoleLogin = new ConsoleLogin();
-                consoleLogin.launch();
+                Boolean loginEnabled = Boolean.valueOf(System.getProperty(ConsoleConstant.LOGIN_ENABLED, Boolean.TRUE.toString()));
+                if (loginEnabled) {
+                    ConsoleLogin consoleLogin = new ConsoleLogin();
+                    consoleLogin.launch();
+                }
 
                 ConsoleFrame consoleFrame = new ConsoleFrame();
                 consoleFrame.launch();

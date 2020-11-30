@@ -14,4 +14,7 @@ public class ConsoleConstant {
 
     public static final String THEME = "theme";
     public static final String DEFAULT_THEME = "NimbusLookAndFeel";
+
+    public static final String LOGIN_ENABLED = "login.enabled";
+    public static final String FULLSCREEN_ENABLED = "fullscreen.enabled";    
 }
