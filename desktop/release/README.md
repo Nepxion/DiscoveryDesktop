@@ -1,1 +1,3 @@
-执行maven clean install，将会在target目录下创建discovery-console-desktop-[version]-release和discovery-console-desktop-[version]-release.zip，点里面的bat运行即可
+① 在根目录下执行mvn clean install
+② target目录将创建discovery-desktop-[version]-release目录和discovery-desktop-[version]-release.zip，两者内容相同
+③ 在Windows操作系统中，双击startup.bat运行，在Mac和Linux操作系统中，双击startup.sh运行

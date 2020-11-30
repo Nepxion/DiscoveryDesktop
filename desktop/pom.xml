@@ -11,7 +11,7 @@
     <url>http://www.nepxion.com</url>
 
     <properties>
-        <discovery.version>6.3.3</discovery.version>
+        <discovery.version>6.4.0-SNAPSHOT</discovery.version>
 
         <commons.configuration.version>1.10</commons.configuration.version>
         <swing.worker.version>1.2</swing.worker.version>
@@ -23,6 +23,7 @@
         <nepxion.util.version>1.0.0</nepxion.util.version>
         <nepxion.cots.version>1.0.0</nepxion.cots.version>
         <twaver.version>3.7</twaver.version>
+        <alloy.version>1.4.4</alloy.version>
 
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -42,19 +43,19 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.nepxion</groupId>
+            <artifactId>discovery-plugin-framework-starter-parser</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>discovery-common</artifactId>
+            <artifactId>banner</artifactId>
         </dependency>
 
         <dependency>
             <groupId>commons-configuration</groupId>
             <artifactId>commons-configuration</artifactId>
             <version>${commons.configuration.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
         </dependency>
 
         <dependency>
@@ -148,6 +149,14 @@
             <version>${twaver.version}</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/twaver-layouter-${twaver.version}.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>com.incors</groupId>
+            <artifactId>alloy-skin</artifactId>
+            <version>${alloy.version}</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/alloy-skin-${alloy.version}.jar</systemPath>
         </dependency>
     </dependencies>
 

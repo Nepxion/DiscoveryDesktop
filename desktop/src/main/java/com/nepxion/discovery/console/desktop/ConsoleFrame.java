@@ -14,42 +14,39 @@ import java.awt.Dimension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.nepxion.discovery.console.desktop.controller.ServiceController;
-import com.nepxion.discovery.console.desktop.icon.ConsoleIconFactory;
-import com.nepxion.discovery.console.desktop.locale.ConsoleLocale;
+import com.nepxion.discovery.console.cache.ConsoleCache;
+import com.nepxion.discovery.console.desktop.common.context.ConsoleConstant;
+import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
+import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.swing.frame.JBasicFrame;
-import com.nepxion.swing.framework.reflection.JReflectionHierarchy;
-import com.nepxion.swing.style.texture.shrink.JBlackHeaderTextureStyle;
-import com.nepxion.swing.style.texture.shrink.JGreenOutlookTextureStyle;
 
 public class ConsoleFrame extends JBasicFrame {
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LoggerFactory.getLogger(ConsoleFrame.class);
 
     public ConsoleFrame() {
-        super(ConsoleLocale.getString("title") + " " + getSubTitle(), ConsoleIconFactory.getSwingIcon("ribbon/navigator_nepxion.png"), new Dimension(1280, 900));
+        super(ConsoleLocaleFactory.getString("title") + " " + getSubTitle(), ConsoleIconFactory.getSwingIcon("ribbon/navigator_nepxion.png"), new Dimension(1630, 1030));
     }
 
     public void launch() {
-        ConsoleHierarchy deployHierarchy = new ConsoleHierarchy(new JBlackHeaderTextureStyle(), new JGreenOutlookTextureStyle());
+        ConsoleHierarchy consoleHierarchy = new ConsoleHierarchy();
+        getContentPane().add(consoleHierarchy);
 
-        JReflectionHierarchy reflectionHierarchy = new JReflectionHierarchy(20, 20);
-        reflectionHierarchy.setContentPane(deployHierarchy);
-
-        getContentPane().add(reflectionHierarchy);
-
-        setExtendedState(ConsoleFrame.MAXIMIZED_BOTH);
+        Boolean fullscreenEnabled = Boolean.valueOf(System.getProperty(ConsoleConstant.FULLSCREEN_ENABLED, Boolean.TRUE.toString()));
+        if (fullscreenEnabled) {
+            setExtendedState(ConsoleFrame.MAXIMIZED_BOTH);
+        }
         setVisible(true);
         toFront();
     }
 
     private static String getSubTitle() {
         try {
-            return "[" + ServiceController.getDiscoveryType() + " " + ConsoleLocale.getString("discovery_center") + "] [" + ServiceController.getConfigType() + " " + ConsoleLocale.getString("config_center") + "]";
+            return "【" + ConsoleCache.getDiscoveryType() + " " + ConsoleLocaleFactory.getString("discovery_center") + "】【" + ConsoleCache.getConfigType() + " " + ConsoleLocaleFactory.getString("config_center") + "】";
         } catch (Exception e) {
             LOG.error("Not connnect to Discovery Console", e);
 
-            return "[" + ConsoleLocale.getString("not_connnect_to_console") + "]";
+            return "【" + ConsoleLocaleFactory.getString("not_connnect_to_console") + "】";
         }
     }
 }
