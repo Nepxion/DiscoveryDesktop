@@ -137,7 +137,7 @@ public class SubscriptionPanel extends JPanel {
         setGroups();
         setGatewayIds();
     }
-    
+
     public double[] getLayoutRow() {
         return new double[] { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED };
     }
