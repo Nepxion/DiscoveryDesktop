@@ -64,14 +64,14 @@ public class OpenPanel extends SubscriptionPanel {
         JBasicScrollPane configTextAreaScrollPane = new JBasicScrollPane(configTextArea);
         configTextAreaScrollPane.setPreferredSize(new Dimension(660, 330));
 
-        add(buttonBar, "0, 4, 1, 4");
-        add(previewShrinkShortcut, "0, 6, 1, 6");
-        add(configTextAreaScrollPane, "0, 7, 1, 7");
+        add(buttonBar, "0, 8, 1, 8");
+        add(previewShrinkShortcut, "0, 10, 1, 10");
+        add(configTextAreaScrollPane, "0, 11, 1, 11");
     }
 
     @Override
     public double[] getLayoutRow() {
-        return new double[] { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, 0, TableLayout.PREFERRED, TableLayout.FILL };
+        return new double[] { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, 0, TableLayout.PREFERRED, TableLayout.PREFERRED, 0, TableLayout.PREFERRED, 0, TableLayout.PREFERRED, TableLayout.FILL };
     }
 
     public String getConfig() {

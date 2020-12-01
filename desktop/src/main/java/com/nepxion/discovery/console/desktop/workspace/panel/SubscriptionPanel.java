@@ -13,14 +13,17 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.nepxion.discovery.common.entity.DeployType;
 import com.nepxion.discovery.common.entity.ServiceType;
 import com.nepxion.discovery.common.entity.SubscriptionType;
 import com.nepxion.discovery.console.cache.ConsoleCache;
@@ -51,6 +54,10 @@ public class SubscriptionPanel extends JPanel {
     protected JBasicComboBox gatewayIdComboBox;
     protected JBasicCheckBox showOnlyGatewayCheckBox;
     protected JPanel gatewayPanel;
+
+    protected JShrinkShortcut deployParameterShrinkShortcut;
+    protected ButtonGroup deployButtonGroup;
+    protected JPanel deployPanel;
 
     public SubscriptionPanel() {
         subscriptionParameterShrinkShortcut = new JShrinkShortcut();
@@ -116,6 +123,28 @@ public class SubscriptionPanel extends JPanel {
         gatewayPanel.add(gatewayIdComboBox, "0, 0");
         gatewayPanel.add(showOnlyGatewayCheckBox, "1, 0");
 
+        deployParameterShrinkShortcut = new JShrinkShortcut();
+        deployParameterShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("deploy_parameter_text"));
+        deployParameterShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
+        deployParameterShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString("deploy_parameter_text"));
+
+        deployPanel = new JPanel();
+        deployPanel.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
+        deployButtonGroup = new ButtonGroup();
+        DeployType[] deployTypes = DeployType.values();
+        for (int i = 0; i < deployTypes.length; i++) {
+            DeployType deployType = deployTypes[i];
+
+            JBasicRadioButton deployRadioButton = new JBasicRadioButton(TypeLocale.getDescription(deployType), TypeLocale.getDescription(deployType));
+            deployRadioButton.setName(deployType.toString());
+            deployPanel.add(deployRadioButton);
+            deployButtonGroup.add(deployRadioButton);
+
+            if (i == 0) {
+                deployRadioButton.setSelected(true);
+            }
+        }
+
         double[][] size = {
                 { TableLayout.PREFERRED, TableLayout.FILL },
                 getLayoutRow()
@@ -133,13 +162,16 @@ public class SubscriptionPanel extends JPanel {
         add(groupComboBox, "1, 2");
         add(new JBasicLabel(ConsoleLocaleFactory.getString("service_name_text")), "0, 3");
         add(gatewayPanel, "1, 3");
+        add(deployParameterShrinkShortcut, "0, 5, 1, 5");
+        add(new JBasicLabel(ConsoleLocaleFactory.getString("deploy_text")), "0, 6");
+        add(deployPanel, "1, 6");
 
         setGroups();
         setGatewayIds();
     }
 
     public double[] getLayoutRow() {
-        return new double[] { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED };
+        return new double[] { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, 0, TableLayout.PREFERRED, TableLayout.PREFERRED };
     }
 
     public void subscriptionRadioButtonItemStateChanged(ItemEvent e) {
@@ -152,6 +184,18 @@ public class SubscriptionPanel extends JPanel {
 
             if (showOnlyGatewayCheckBox != null) {
                 showOnlyGatewayCheckBox.setEnabled(!radioButton.isSelected());
+            }
+
+            if (deployButtonGroup != null) {
+                for (Enumeration<AbstractButton> enumeration = deployButtonGroup.getElements(); enumeration.hasMoreElements();) {
+                    AbstractButton button = enumeration.nextElement();
+                    button.setEnabled(!radioButton.isSelected());
+
+                    // 全局配置下，处理为非域网关模式
+                    if (StringUtils.equals(button.getName(), DeployType.NON_DOMAIN_GATEWAY.toString())) {
+                        button.setSelected(true);
+                    }
+                }
             }
         }
     }
@@ -187,6 +231,12 @@ public class SubscriptionPanel extends JPanel {
         String rationButtonName = ButtonUtil.getRationButtonName(subscriptionButtonGroup);
 
         return SubscriptionType.fromString(rationButtonName);
+    }
+
+    public DeployType getDeployType() {
+        String rationButtonName = ButtonUtil.getRationButtonName(deployButtonGroup);
+
+        return DeployType.fromString(rationButtonName);
     }
 
     public String getGroup() {

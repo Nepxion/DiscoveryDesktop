@@ -54,17 +54,6 @@ public class BlueGreenCreatePanel extends StrategyCreatePanel {
         return new double[] { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, 0, TableLayout.PREFERRED, TableLayout.PREFERRED, 0, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED };
     }
 
-    @Override
-    public void setNewMode(boolean isNewMode) {
-        super.setNewMode(isNewMode);
-
-        if (blueGreenRoutePanel != null) {
-            for (int i = 0; i < blueGreenRoutePanel.getComponentCount(); i++) {
-                blueGreenRoutePanel.getComponent(i).setEnabled(isNewMode);
-            }
-        }
-    }
-
     public BlueGreenRouteType getBlueGreenRouteType() {
         String rationButtonName = ButtonUtil.getRationButtonName(blueGreenRouteButtonGroup);
 

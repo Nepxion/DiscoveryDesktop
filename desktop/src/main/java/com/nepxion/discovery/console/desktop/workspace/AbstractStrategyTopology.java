@@ -180,42 +180,8 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
         }
 
         DeployType deployType = createPanel.getDeployType();
-        RuleEntity ruleEntity = null;
-        StrategyType strategyType = null;
-        boolean isNewMode = createPanel.isNewMode();
-        if (isNewMode) {
-            ruleEntity = new RuleEntity();
-            strategyType = createPanel.getStrategyType();
-        } else {
-            String config = getReleaseProcessor().getConfig(group, gatewayId);
-            try {
-                ruleEntity = getReleaseProcessor().parseConfig(config);
-            } catch (Exception e) {
-                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("config_not_existed_or_invalid"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
-
-                return;
-            }
-
-            if (ruleEntity == null) {
-                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("config_not_existed_or_invalid"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
-
-                return;
-            }
-
-            strategyType = ReleaseProcessorUtil.getStrategyType(ruleEntity);
-            if (strategyType == null) {
-                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("config_not_existed_or_invalid"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
-
-                return;
-            }
-
-            ReleaseType releaseType = ReleaseProcessorUtil.getReleaseType(ruleEntity);
-            if (releaseType != null && getReleaseType() != releaseType) {
-                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("config_not_matched") + "【" + TypeLocale.getDescription(releaseType) + "】", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
-
-                return;
-            }
-        }
+        RuleEntity ruleEntity = new RuleEntity();
+        StrategyType strategyType = createPanel.getStrategyType();
 
         Instance gateway = new Instance();
         gateway.setServiceId(subscriptionType == SubscriptionType.PARTIAL ? gatewayId : ConsoleLocaleFactory.getString("portal_type"));
@@ -224,9 +190,6 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
 
         initializeData(group, gateway, ruleEntity, strategyType, subscriptionType, deployType);
         initializeUI(createPanel);
-        if (!isNewMode) {
-            initializeView();
-        }
     }
 
     @Override
@@ -237,6 +200,65 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
         if (selectedOption != 0) {
             return;
         }
+
+        SubscriptionType subscriptionType = openPanel.getSubscriptionType();
+
+        String group = openPanel.getValidGroup();
+        if (StringUtils.isEmpty(group)) {
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("group_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+            return;
+        }
+
+        String gatewayId = openPanel.getValidGatewayId();
+        if (StringUtils.isEmpty(gatewayId)) {
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("service_id_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+            return;
+        }
+
+        DeployType deployType = openPanel.getDeployType();
+        RuleEntity ruleEntity = null;
+        StrategyType strategyType = null;
+
+        String config = openPanel.getConfig();
+
+        try {
+            ruleEntity = getReleaseProcessor().parseConfig(config);
+        } catch (Exception e) {
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("config_not_existed_or_invalid"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+            return;
+        }
+
+        if (ruleEntity == null) {
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("config_not_existed_or_invalid"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+            return;
+        }
+
+        strategyType = ReleaseProcessorUtil.getStrategyType(ruleEntity);
+        if (strategyType == null) {
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("config_not_existed_or_invalid"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+            return;
+        }
+
+        ReleaseType releaseType = ReleaseProcessorUtil.getReleaseType(ruleEntity);
+        if (releaseType != null && getReleaseType() != releaseType) {
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("config_not_matched") + "【" + TypeLocale.getDescription(releaseType) + "】", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+            return;
+        }
+
+        Instance gateway = new Instance();
+        gateway.setServiceId(subscriptionType == SubscriptionType.PARTIAL ? gatewayId : ConsoleLocaleFactory.getString("portal_type"));
+        Map<String, String> metadataMap = new HashMap<String, String>();
+        gateway.setMetadata(metadataMap);
+
+        initializeData(group, gateway, ruleEntity, strategyType, subscriptionType, deployType);
+        initializeUI(null);
+        initializeView();
     }
 
     @Override

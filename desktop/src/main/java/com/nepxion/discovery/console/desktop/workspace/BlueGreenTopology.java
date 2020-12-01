@@ -117,8 +117,12 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
 
     @Override
     public void initializeUI(StrategyCreatePanel createPanel) {
-        BlueGreenCreatePanel blueGreenCreatePanel = (BlueGreenCreatePanel) createPanel;
-        blueGreenRouteType = blueGreenCreatePanel.getBlueGreenRouteType();
+        if (createPanel != null) {
+            BlueGreenCreatePanel blueGreenCreatePanel = (BlueGreenCreatePanel) createPanel;
+            blueGreenRouteType = blueGreenCreatePanel.getBlueGreenRouteType();
+        } else {
+            blueGreenRouteType = ReleaseProcessorUtil.getBlueGreenRouteType(ruleEntity, strategyType);
+        }
 
         initializeBlueGreenRouteType(blueGreenRouteType);
 
