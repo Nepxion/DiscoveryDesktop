@@ -37,6 +37,7 @@ import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.swing.dialog.JExceptionDialog;
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
+import com.nepxion.discovery.console.desktop.workspace.panel.OpenPanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.StrategyCreatePanel;
 import com.nepxion.discovery.console.desktop.workspace.processor.ReleaseProcessorUtil;
 import com.nepxion.discovery.console.desktop.workspace.processor.strategy.StrategyReleaseProcessor;
@@ -225,6 +226,16 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
         initializeUI(createPanel);
         if (!isNewMode) {
             initializeView();
+        }
+    }
+
+    @Override
+    public void open() {
+        OpenPanel openPanel = new OpenPanel(getReleaseProcessor());
+
+        int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(this), openPanel, ConsoleLocaleFactory.getString("open_config_tooltip") + "【" + TypeLocale.getDescription(releaseType) + "】", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
+        if (selectedOption != 0) {
+            return;
         }
     }
 

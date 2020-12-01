@@ -27,10 +27,8 @@ import com.nepxion.discovery.console.desktop.common.swing.dialog.JExceptionDialo
 import com.nepxion.discovery.console.desktop.common.util.ButtonUtil;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.PreviewPanel;
-import com.nepxion.discovery.console.desktop.workspace.panel.SubscriptionPanel;
 import com.nepxion.discovery.console.desktop.workspace.processor.ReleaseProcessor;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
-import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.ButtonManager;
 import com.nepxion.swing.handle.HandleManager;
@@ -124,13 +122,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                SubscriptionPanel openPanel = new SubscriptionPanel();
-                DimensionUtil.addSize(openPanel, 100, 10);
-
-                int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractReleaseTopology.this), openPanel, ConsoleLocaleFactory.getString("open_config_tooltip") + "【" + TypeLocale.getDescription(releaseType) + "】", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
-                if (selectedOption != 0) {
-                    return;
-                }
+                open();
             }
         };
 
@@ -258,6 +250,8 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     public abstract String getClearTooltip();
 
     public abstract void create();
+
+    public abstract void open();
 
     public abstract void remove();
 
