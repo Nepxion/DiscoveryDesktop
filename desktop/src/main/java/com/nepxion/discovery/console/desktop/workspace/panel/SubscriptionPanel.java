@@ -95,7 +95,7 @@ public class SubscriptionPanel extends JPanel {
         gatewayIdComboBox.setEditable(true);
         ComboBoxUtil.installlAutoCompletion(gatewayIdComboBox);
 
-        showOnlyGatewayCheckBox = new JBasicCheckBox(ConsoleLocaleFactory.getString("show_only_gateway_text"), ConsoleLocaleFactory.getString("show_only_gateway_text"), true);
+        showOnlyGatewayCheckBox = new JBasicCheckBox(ConsoleLocaleFactory.getString("show_only_gateway_text"), ConsoleLocaleFactory.getString("show_only_gateway_text"), false);
         showOnlyGatewayCheckBox.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 showOnlyGatewayCheckBoxItemStateChanged(e);
@@ -178,6 +178,8 @@ public class SubscriptionPanel extends JPanel {
             if (gatewayIds != null) {
                 ComboBoxUtil.setSortableModel(gatewayIdComboBox, gatewayIds);
             }
+        } else {
+            ComboBoxUtil.setSortableModel(gatewayIdComboBox, new ArrayList<String>());
         }
     }
 
@@ -191,8 +193,34 @@ public class SubscriptionPanel extends JPanel {
         return ComboBoxUtil.getSelectedValue(groupComboBox);
     }
 
+    public String getValidGroup() {
+        String group = getGroup();
+
+        if (StringUtils.isBlank(group)) {
+            return null;
+        }
+
+        return group;
+    }
+
     public String getGatewayId() {
         return ComboBoxUtil.getSelectedValue(gatewayIdComboBox);
+    }
+
+    public String getValidGatewayId() {
+        String gatewayId = null;
+
+        SubscriptionType subscriptionType = getSubscriptionType();
+        if (subscriptionType == SubscriptionType.PARTIAL) {
+            gatewayId = getGatewayId();
+            if (StringUtils.isBlank(gatewayId)) {
+                return null;
+            }
+        } else {
+            gatewayId = getGroup();
+        }
+
+        return gatewayId;
     }
 
     public List<String> getGroups() {

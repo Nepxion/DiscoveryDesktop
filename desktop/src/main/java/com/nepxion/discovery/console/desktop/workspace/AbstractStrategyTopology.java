@@ -159,23 +159,18 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
 
         SubscriptionType subscriptionType = createPanel.getSubscriptionType();
 
-        String group = createPanel.getGroup();
-        if (StringUtils.isBlank(group)) {
-            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("group_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+        String group = createPanel.getValidGroup();
+        if (StringUtils.isEmpty(group)) {
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("group_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
             return;
         }
 
-        String gatewayId = null;
-        if (subscriptionType == SubscriptionType.PARTIAL) {
-            gatewayId = createPanel.getGatewayId();
-            if (StringUtils.isBlank(gatewayId)) {
-                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("service_id_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+        String gatewayId = createPanel.getValidGatewayId();
+        if (StringUtils.isEmpty(gatewayId)) {
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("service_id_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
-                return;
-            }
-        } else {
-            gatewayId = group;
+            return;
         }
 
         DeployType deployType = createPanel.getDeployType();
