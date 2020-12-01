@@ -12,7 +12,7 @@ package com.nepxion.discovery.console.desktop.workspace.processor;
 import com.nepxion.discovery.plugin.framework.parser.xml.XmlConfigDeparser;
 import com.nepxion.discovery.plugin.framework.parser.xml.XmlConfigParser;
 
-public class StrategyProcessorFactory {
+public class ConfigProcessorFactory {
     private static XmlConfigParser xmlConfigParser = new XmlConfigParser();
     private static XmlConfigDeparser xmlConfigDeparser = new XmlConfigDeparser();
 

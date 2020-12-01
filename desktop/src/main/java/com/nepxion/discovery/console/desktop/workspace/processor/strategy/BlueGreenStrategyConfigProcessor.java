@@ -1,4 +1,4 @@
-package com.nepxion.discovery.console.desktop.workspace.processor;
+package com.nepxion.discovery.console.desktop.workspace.processor.strategy;
 
 /**
  * <p>Title: Nepxion Discovery</p>
@@ -35,24 +35,24 @@ import com.nepxion.discovery.common.exception.DiscoveryException;
 import com.nepxion.discovery.common.util.JsonUtil;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.workspace.BlueGreenTopology;
-import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
+import com.nepxion.discovery.console.desktop.workspace.processor.ConfigProcessorUtil;
 import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.discovery.console.entity.Instance;
 
-public class BlueGreenStrategyProcessor extends AbstractStrategyProcessor {
+public class BlueGreenStrategyConfigProcessor extends AbstractStrategyConfigProcessor {
     private BlueGreenTopology blueGreenTopology;
 
     @SuppressWarnings({ "unchecked" })
     @Override
-    public void fromConfig(RuleEntity ruleEntity, StrategyType strategyType, TDataBox dataBox) throws Exception {
+    public void fromConfig(RuleEntity ruleEntity, TDataBox dataBox) throws Exception {
         StrategyEntity strategyEntity = ruleEntity.getStrategyEntity();
 
         BlueGreenRouteType blueGreenRouteType = blueGreenTopology.getBlueGreenRouteType();
 
-        String blueConditionId = StrategyProcessorUtil.getStrategyBlueConditionId();
-        String greenConditionId = StrategyProcessorUtil.getStrategyGreenConditionId();
-        String blueRouteId = StrategyProcessorUtil.getStrategyBlueRouteId(strategyType);
-        String greenRouteId = StrategyProcessorUtil.getStrategyGreenRouteId(strategyType);
+        String blueConditionId = ConfigProcessorUtil.getStrategyBlueConditionId();
+        String greenConditionId = ConfigProcessorUtil.getStrategyGreenConditionId();
+        String blueRouteId = ConfigProcessorUtil.getStrategyBlueRouteId(strategyType);
+        String greenRouteId = ConfigProcessorUtil.getStrategyGreenRouteId(strategyType);
 
         String basicStrategy = null;
         switch (strategyType) {
@@ -70,12 +70,12 @@ public class BlueGreenStrategyProcessor extends AbstractStrategyProcessor {
 
         Map<String, String> basicStrategyMap = JsonUtil.fromJson(basicStrategy, Map.class);
 
-        StrategyConditionBlueGreenEntity strategyConditionBlueEntity = StrategyProcessorUtil.getStrategyConditionBlueGreenEntity(ruleEntity, blueConditionId);
+        StrategyConditionBlueGreenEntity strategyConditionBlueEntity = ConfigProcessorUtil.getStrategyConditionBlueGreenEntity(ruleEntity, blueConditionId);
         if (strategyConditionBlueEntity == null) {
             throw new DiscoveryException(ConsoleLocaleFactory.getString("blue_condition_missing"));
         }
 
-        StrategyConditionBlueGreenEntity strategyConditionGreenEntity = StrategyProcessorUtil.getStrategyConditionBlueGreenEntity(ruleEntity, greenConditionId);
+        StrategyConditionBlueGreenEntity strategyConditionGreenEntity = ConfigProcessorUtil.getStrategyConditionBlueGreenEntity(ruleEntity, greenConditionId);
         if (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && strategyConditionGreenEntity == null) {
             throw new DiscoveryException(ConsoleLocaleFactory.getString("green_condition_missing"));
         }
@@ -93,12 +93,12 @@ public class BlueGreenStrategyProcessor extends AbstractStrategyProcessor {
             }
         }
 
-        StrategyRouteEntity strategyRouteBlueEntity = StrategyProcessorUtil.getStrategyRouteEntity(ruleEntity, blueRouteId);
+        StrategyRouteEntity strategyRouteBlueEntity = ConfigProcessorUtil.getStrategyRouteEntity(ruleEntity, blueRouteId);
         if (strategyRouteBlueEntity == null) {
             throw new DiscoveryException(ConsoleLocaleFactory.getString("blue_route_missing"));
         }
 
-        StrategyRouteEntity strategyRouteGreenEntity = StrategyProcessorUtil.getStrategyRouteEntity(ruleEntity, greenRouteId);
+        StrategyRouteEntity strategyRouteGreenEntity = ConfigProcessorUtil.getStrategyRouteEntity(ruleEntity, greenRouteId);
         if (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && strategyRouteGreenEntity == null) {
             throw new DiscoveryException(ConsoleLocaleFactory.getString("green_route_missing"));
         }
@@ -159,7 +159,7 @@ public class BlueGreenStrategyProcessor extends AbstractStrategyProcessor {
 
     @SuppressWarnings({ "unchecked", "incomplete-switch" })
     @Override
-    public String toConfig(RuleEntity ruleEntity, StrategyType strategyType, TDataBox dataBox) {
+    public String toConfig(RuleEntity ruleEntity, TDataBox dataBox) {
         if (strategyType == null) {
             return StringUtils.EMPTY;
         }
@@ -208,10 +208,10 @@ public class BlueGreenStrategyProcessor extends AbstractStrategyProcessor {
                 }
             }
 
-            String blueConditionId = StrategyProcessorUtil.getStrategyBlueConditionId();
-            String greenConditionId = StrategyProcessorUtil.getStrategyGreenConditionId();
-            String blueRouteId = StrategyProcessorUtil.getStrategyBlueRouteId(strategyType);
-            String greenRouteId = StrategyProcessorUtil.getStrategyGreenRouteId(strategyType);
+            String blueConditionId = ConfigProcessorUtil.getStrategyBlueConditionId();
+            String greenConditionId = ConfigProcessorUtil.getStrategyGreenConditionId();
+            String blueRouteId = ConfigProcessorUtil.getStrategyBlueRouteId(strategyType);
+            String greenRouteId = ConfigProcessorUtil.getStrategyGreenRouteId(strategyType);
 
             StrategyConditionBlueGreenEntity strategyConditionBlueEntity = new StrategyConditionBlueGreenEntity();
             strategyConditionBlueEntity.setId(blueConditionId);

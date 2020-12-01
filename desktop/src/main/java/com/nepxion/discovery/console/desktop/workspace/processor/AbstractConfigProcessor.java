@@ -12,15 +12,15 @@ package com.nepxion.discovery.console.desktop.workspace.processor;
 import com.nepxion.discovery.common.entity.RuleEntity;
 import com.nepxion.discovery.console.controller.ConsoleController;
 
-public abstract class AbstractStrategyProcessor implements StrategyProcessor {
+public abstract class AbstractConfigProcessor implements ConfigProcessor {
     @Override
     public RuleEntity parseConfig(String config) {
-        return StrategyProcessorFactory.getXmlConfigParser().parse(config);
+        return ConfigProcessorFactory.getXmlConfigParser().parse(config);
     }
 
     @Override
     public String deparseConfig(RuleEntity ruleEntity) {
-        return StrategyProcessorFactory.getXmlConfigDeparser().deparse(ruleEntity);
+        return ConfigProcessorFactory.getXmlConfigDeparser().deparse(ruleEntity);
     }
 
     @Override

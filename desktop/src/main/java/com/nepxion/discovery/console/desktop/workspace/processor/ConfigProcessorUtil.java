@@ -25,7 +25,7 @@ import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
 import com.nepxion.discovery.plugin.framework.parser.xml.XmlConfigConstant;
 
-public class StrategyProcessorUtil {
+public class ConfigProcessorUtil {
     public static ReleaseType getReleaseType(RuleEntity ruleEntity) {
         StrategyCustomizationEntity strategyCustomizationEntity = ruleEntity.getStrategyCustomizationEntity();
         if (strategyCustomizationEntity == null) {
@@ -133,11 +133,11 @@ public class StrategyProcessorUtil {
     }
 
     public static BlueGreenRouteType getBlueGreenRouteType(RuleEntity ruleEntity, StrategyType strategyType) {
-        String greenConditionId = StrategyProcessorUtil.getStrategyGreenConditionId();
-        StrategyConditionBlueGreenEntity strategyConditionGreenEntity = StrategyProcessorUtil.getStrategyConditionBlueGreenEntity(ruleEntity, greenConditionId);
+        String greenConditionId = getStrategyGreenConditionId();
+        StrategyConditionBlueGreenEntity strategyConditionGreenEntity = getStrategyConditionBlueGreenEntity(ruleEntity, greenConditionId);
 
-        String greenRouteId = StrategyProcessorUtil.getStrategyGreenRouteId(strategyType);
-        StrategyRouteEntity strategyRouteGreenEntity = StrategyProcessorUtil.getStrategyRouteEntity(ruleEntity, greenRouteId);
+        String greenRouteId = getStrategyGreenRouteId(strategyType);
+        StrategyRouteEntity strategyRouteGreenEntity = getStrategyRouteEntity(ruleEntity, greenRouteId);
 
         if (strategyConditionGreenEntity != null && strategyRouteGreenEntity != null) {
             return BlueGreenRouteType.BLUE_GREEN_BASIC;
