@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 
 import com.nepxion.discovery.common.entity.BlueGreenRouteType;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
+import com.nepxion.discovery.console.desktop.common.util.ButtonUtil;
 import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.swing.label.JBasicLabel;
 import com.nepxion.swing.layout.filed.FiledLayout;
@@ -44,28 +45,13 @@ public class BlueGreenCreatePanel extends StrategyCreatePanel {
             }
         }
 
-        add(new JBasicLabel(ConsoleLocaleFactory.getString("route_text")), "0, 12");
-        add(blueGreenRoutePanel, "1, 12");
-    }
-
-    public BlueGreenRouteType getBlueGreenRouteType() {
-        String rationButtonName = getRationButtonName(blueGreenRouteButtonGroup);
-
-        return BlueGreenRouteType.fromString(rationButtonName);
+        add(new JBasicLabel(ConsoleLocaleFactory.getString("route_text")), "0, 10");
+        add(blueGreenRoutePanel, "1, 10");
     }
 
     @Override
     public double[] getLayoutRow() {
-        double[] layoutRow = super.getLayoutRow();
-
-        double[] newLayoutRow = new double[layoutRow.length + 1];
-        for (int i = 0; i < layoutRow.length; i++) {
-            newLayoutRow[i] = layoutRow[i];
-        }
-
-        newLayoutRow[layoutRow.length] = TableLayout.PREFERRED;
-
-        return newLayoutRow;
+        return new double[] { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, 0, TableLayout.PREFERRED, TableLayout.PREFERRED, 0, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED };
     }
 
     @Override
@@ -77,5 +63,11 @@ public class BlueGreenCreatePanel extends StrategyCreatePanel {
                 blueGreenRoutePanel.getComponent(i).setEnabled(isNewMode);
             }
         }
+    }
+
+    public BlueGreenRouteType getBlueGreenRouteType() {
+        String rationButtonName = ButtonUtil.getRationButtonName(blueGreenRouteButtonGroup);
+
+        return BlueGreenRouteType.fromString(rationButtonName);
     }
 }

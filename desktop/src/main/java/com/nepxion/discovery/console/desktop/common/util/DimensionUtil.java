@@ -13,6 +13,12 @@ import java.awt.Component;
 import java.awt.Dimension;
 
 public class DimensionUtil {
+    public static Component addSize(Component Component, int width, int height) {
+        Component.setPreferredSize(new Dimension(Component.getPreferredSize().width + width, Component.getPreferredSize().height + height));
+
+        return Component;
+    }
+
     public static Component addWidth(Component Component, int width) {
         Component.setPreferredSize(new Dimension(Component.getPreferredSize().width + width, Component.getPreferredSize().height));
 

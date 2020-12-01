@@ -25,10 +25,13 @@ import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.swing.dialog.JExceptionDialog;
 import com.nepxion.discovery.console.desktop.common.util.ButtonUtil;
+import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.PreviewPanel;
+import com.nepxion.discovery.console.desktop.workspace.panel.SubscriptionPanel;
 import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessor;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
+import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.ButtonManager;
 import com.nepxion.swing.handle.HandleManager;
@@ -64,6 +67,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         JToolBar toolBar = getGraph().getToolbar();
         toolBar.addSeparator();
         toolBar.add(ButtonUtil.createButton(createCreateAction()));
+        toolBar.add(ButtonUtil.createButton(createOpenAction()));
         toolBar.add(ButtonUtil.createButton(createSaveAction()));
         toolBar.addSeparator();
         toolBar.add(ButtonUtil.createButton(createRemoveAction()));
@@ -99,18 +103,36 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         resultTextArea.setText(result.toString());
 
         JBasicScrollPane resultScrollPane = new JBasicScrollPane(resultTextArea);
-        resultScrollPane.setPreferredSize(new Dimension(resultScrollPane.getPreferredSize().width, resultScrollPane.getPreferredSize().height + 20));
         resultScrollPane.setMaximumSize(new Dimension(800, 600));
+        DimensionUtil.addHeight(resultScrollPane, 20);
 
         JBasicOptionPane.showOptionDialog(HandleManager.getFrame(this), resultScrollPane, ConsoleLocaleFactory.getString("execute_result"), JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/edit.png"), new Object[] { SwingLocale.getString("close") }, null, true);
     }
 
     public JSecurityAction createCreateAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("create_text"), ConsoleIconFactory.getSwingIcon("theme/folder/deploy.png"), ConsoleLocaleFactory.getString("create_strategy_tooltip")) {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("create_text"), ConsoleIconFactory.getSwingIcon("theme/tree/plastic/tree_leaf.png"), ConsoleLocaleFactory.getString("create_strategy_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
                 create();
+            }
+        };
+
+        return action;
+    }
+
+    public JSecurityAction createOpenAction() {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("open_text"), ConsoleIconFactory.getSwingIcon("theme/tree/plastic/tree_open.png"), ConsoleLocaleFactory.getString("open_strategy_tooltip")) {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+                SubscriptionPanel openPanel = new SubscriptionPanel();
+                DimensionUtil.addSize(openPanel, 100, 10);
+
+                int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractReleaseTopology.this), openPanel, ConsoleLocaleFactory.getString("open_strategy_tooltip") + "【" + TypeLocale.getDescription(releaseType) + "】", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
+                if (selectedOption != 0) {
+                    return;
+                }
             }
         };
 

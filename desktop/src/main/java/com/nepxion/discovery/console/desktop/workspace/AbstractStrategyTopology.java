@@ -36,6 +36,7 @@ import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.swing.dialog.JExceptionDialog;
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
+import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.StrategyCreatePanel;
 import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessorUtil;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
@@ -165,7 +166,7 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
     @Override
     public void create() {
         StrategyCreatePanel createPanel = getCreatePanel();
-        createPanel.setPreferredSize(new Dimension(createPanel.getPreferredSize().width + 100, createPanel.getPreferredSize().height + 10));
+        DimensionUtil.addSize(createPanel, 100, 10);
 
         int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractStrategyTopology.this), createPanel, ConsoleLocaleFactory.getString("create_strategy_tooltip") + "【" + TypeLocale.getDescription(releaseType) + "】", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
         if (selectedOption != 0) {
