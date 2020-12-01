@@ -38,7 +38,8 @@ import com.nepxion.discovery.console.desktop.common.swing.dialog.JExceptionDialo
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.StrategyCreatePanel;
-import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessorUtil;
+import com.nepxion.discovery.console.desktop.workspace.processor.ConfigProcessorUtil;
+import com.nepxion.discovery.console.desktop.workspace.processor.strategy.StrategyConfigProcessor;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeSizeType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeUI;
@@ -64,6 +65,7 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
 
     protected TNode gatewayNode;
 
+    protected StrategyType strategyType;
     protected DeployType deployType;
 
     protected Instance gateway;
@@ -80,6 +82,9 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
         this.strategyType = strategyType;
         this.subscriptionType = subscriptionType;
         this.deployType = deployType;
+
+        StrategyConfigProcessor strategyConfigProcessor = (StrategyConfigProcessor) getConfigProcessor();
+        strategyConfigProcessor.setStrategyType(strategyType);
 
         refreshData();
     }
@@ -152,7 +157,7 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
         StrategyCreatePanel createPanel = getCreatePanel();
         DimensionUtil.addSize(createPanel, 100, 10);
 
-        int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractStrategyTopology.this), createPanel, ConsoleLocaleFactory.getString("create_strategy_tooltip") + "【" + TypeLocale.getDescription(releaseType) + "】", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
+        int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractStrategyTopology.this), createPanel, ConsoleLocaleFactory.getString("create_config_tooltip") + "【" + TypeLocale.getDescription(releaseType) + "】", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
         if (selectedOption != 0) {
             return;
         }
@@ -181,31 +186,31 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
             ruleEntity = new RuleEntity();
             strategyType = createPanel.getStrategyType();
         } else {
-            String config = getStrategyProcessor().getConfig(group, gatewayId);
+            String config = getConfigProcessor().getConfig(group, gatewayId);
             try {
-                ruleEntity = getStrategyProcessor().parseConfig(config);
+                ruleEntity = getConfigProcessor().parseConfig(config);
             } catch (Exception e) {
-                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("strategy_not_existed_or_invalid"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("config_not_existed_or_invalid"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                 return;
             }
 
             if (ruleEntity == null) {
-                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("strategy_not_existed_or_invalid"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("config_not_existed_or_invalid"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                 return;
             }
 
-            strategyType = StrategyProcessorUtil.getStrategyType(ruleEntity);
+            strategyType = ConfigProcessorUtil.getStrategyType(ruleEntity);
             if (strategyType == null) {
-                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("strategy_not_existed_or_invalid"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("config_not_existed_or_invalid"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                 return;
             }
 
-            ReleaseType releaseType = StrategyProcessorUtil.getReleaseType(ruleEntity);
+            ReleaseType releaseType = ConfigProcessorUtil.getReleaseType(ruleEntity);
             if (releaseType != null && getReleaseType() != releaseType) {
-                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("strategy_not_matched") + "【" + TypeLocale.getDescription(releaseType) + "】", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("config_not_matched") + "【" + TypeLocale.getDescription(releaseType) + "】", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                 return;
             }
@@ -235,6 +240,11 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
     @Override
     public String getRemoveTooltip() {
         return ConsoleLocaleFactory.getString("remove_service_strategy_tooltip");
+    }
+
+    @Override
+    public String getClearTooltip() {
+        return ConsoleLocaleFactory.getString("clear_service_strategy_tooltip");
     }
 
     @Override

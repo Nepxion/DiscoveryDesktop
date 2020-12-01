@@ -28,9 +28,8 @@ import com.nepxion.discovery.console.desktop.common.util.ButtonUtil;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.PreviewPanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.SubscriptionPanel;
-import com.nepxion.discovery.console.desktop.workspace.processor.StrategyProcessor;
+import com.nepxion.discovery.console.desktop.workspace.processor.ConfigProcessor;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
-import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
 import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.ButtonManager;
@@ -48,11 +47,10 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     public static final String APOLLO = "Apollo";
 
     protected ReleaseType releaseType;
-    protected StrategyType strategyType;
     protected SubscriptionType subscriptionType;
 
-    protected String group;
     protected String configType;
+    protected String group;
     protected RuleEntity ruleEntity;
 
     public AbstractReleaseTopology(ReleaseType releaseType) {
@@ -91,7 +89,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
     public void initializeView() {
         try {
-            getStrategyProcessor().fromConfig(ruleEntity, strategyType, dataBox);
+            getConfigProcessor().fromConfig(ruleEntity, dataBox);
         } catch (Exception e) {
             JBasicOptionPane.showMessageDialog(HandleManager.getFrame(this), e.getMessage(), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
         }
@@ -110,7 +108,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     }
 
     public JSecurityAction createCreateAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("create_text"), ConsoleIconFactory.getSwingIcon("theme/tree/plastic/tree_leaf.png"), ConsoleLocaleFactory.getString("create_strategy_tooltip")) {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("create_text"), ConsoleIconFactory.getSwingIcon("theme/tree/plastic/tree_leaf.png"), ConsoleLocaleFactory.getString("create_config_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
@@ -122,14 +120,14 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     }
 
     public JSecurityAction createOpenAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("open_text"), ConsoleIconFactory.getSwingIcon("theme/tree/plastic/tree_open.png"), ConsoleLocaleFactory.getString("open_strategy_tooltip")) {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("open_text"), ConsoleIconFactory.getSwingIcon("theme/tree/plastic/tree_open.png"), ConsoleLocaleFactory.getString("open_config_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
                 SubscriptionPanel openPanel = new SubscriptionPanel();
                 DimensionUtil.addSize(openPanel, 100, 10);
 
-                int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractReleaseTopology.this), openPanel, ConsoleLocaleFactory.getString("open_strategy_tooltip") + "【" + TypeLocale.getDescription(releaseType) + "】", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
+                int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractReleaseTopology.this), openPanel, ConsoleLocaleFactory.getString("open_config_tooltip") + "【" + TypeLocale.getDescription(releaseType) + "】", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
                 if (selectedOption != 0) {
                     return;
                 }
@@ -140,13 +138,13 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     }
 
     public JSecurityAction createSaveAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("save_text"), ConsoleIconFactory.getSwingIcon("save.png"), ConsoleLocaleFactory.getString("save_strategy_tooltip")) {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("save_text"), ConsoleIconFactory.getSwingIcon("save.png"), ConsoleLocaleFactory.getString("save_config_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                String config = getStrategyProcessor().toConfig(ruleEntity, strategyType, dataBox);
+                String config = getConfigProcessor().toConfig(ruleEntity, dataBox);
                 if (StringUtils.isEmpty(config)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("strategy_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("config_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
                 }
@@ -176,7 +174,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     }
 
     public JSecurityAction createClearAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("clear_text"), ConsoleIconFactory.getSwingIcon("paint.png"), ConsoleLocaleFactory.getString("clear_strategy_tooltip")) {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("clear_text"), ConsoleIconFactory.getSwingIcon("paint.png"), getClearTooltip()) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
@@ -188,13 +186,13 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     }
 
     public JSecurityAction createPreviewAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("preview_text"), ConsoleIconFactory.getSwingIcon("ticket.png"), ConsoleLocaleFactory.getString("preview_strategy_tooltip")) {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("preview_text"), ConsoleIconFactory.getSwingIcon("ticket.png"), ConsoleLocaleFactory.getString("preview_config_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                String config = getStrategyProcessor().toConfig(ruleEntity, strategyType, dataBox);
+                String config = getConfigProcessor().toConfig(ruleEntity, dataBox);
                 if (StringUtils.isEmpty(config)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("strategy_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("config_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
                 }
@@ -206,14 +204,14 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
                 previewPanel.setKey(key);
                 previewPanel.setConfig(config);
 
-                int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractReleaseTopology.this), previewPanel, ConsoleLocaleFactory.getString("preview_strategy_tooltip"), JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/property.png"), new Object[] { ConsoleLocaleFactory.getString("save_config_text"), ConsoleLocaleFactory.getString("close_preview_text") }, null, true);
+                int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractReleaseTopology.this), previewPanel, ConsoleLocaleFactory.getString("preview_config_tooltip"), JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/property.png"), new Object[] { ConsoleLocaleFactory.getString("save_config_text"), ConsoleLocaleFactory.getString("close_preview_text") }, null, true);
                 if (selectedOption != 0) {
                     return;
                 }
 
                 config = previewPanel.getConfig();
                 if (StringUtils.isEmpty(config)) {
-                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("strategy_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("config_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                     return;
                 }
@@ -247,7 +245,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
         LOG.info("Save Config, key={}, config=\n{}", key, config);
 
-        String result = getStrategyProcessor().saveConfig(group, serviceId, config);
+        String result = getConfigProcessor().saveConfig(group, serviceId, config);
         showResult(result);
     }
 
@@ -257,11 +255,13 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
     public abstract String getRemoveTooltip();
 
+    public abstract String getClearTooltip();
+
     public abstract void create();
 
     public abstract void remove();
 
     public abstract void clear();
 
-    public abstract StrategyProcessor getStrategyProcessor();
+    public abstract ConfigProcessor getConfigProcessor();
 }
