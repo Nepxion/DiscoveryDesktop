@@ -36,9 +36,9 @@ import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.GrayCreatePanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.StrategyCreatePanel;
-import com.nepxion.discovery.console.desktop.workspace.processor.ConfigProcessor;
-import com.nepxion.discovery.console.desktop.workspace.processor.ConfigProcessorUtil;
-import com.nepxion.discovery.console.desktop.workspace.processor.strategy.GrayStrategyConfigProcessor;
+import com.nepxion.discovery.console.desktop.workspace.processor.ReleaseProcessor;
+import com.nepxion.discovery.console.desktop.workspace.processor.ReleaseProcessorUtil;
+import com.nepxion.discovery.console.desktop.workspace.processor.strategy.GrayStrategyReleaseProcessor;
 import com.nepxion.discovery.console.desktop.workspace.topology.LinkUI;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeSizeType;
@@ -81,12 +81,12 @@ public class GrayTopology extends AbstractStrategyTopology {
     protected boolean isGrayConditionTriggered = false;
     protected boolean isStableConditionTriggered = false;
 
-    protected GrayStrategyConfigProcessor configProcessor = new GrayStrategyConfigProcessor();
+    protected GrayStrategyReleaseProcessor releaseProcessor = new GrayStrategyReleaseProcessor();
 
     public GrayTopology() {
         super(ReleaseType.GRAY);
 
-        configProcessor.setGrayTopology(this);
+        releaseProcessor.setGrayTopology(this);
     }
 
     @Override
@@ -100,9 +100,9 @@ public class GrayTopology extends AbstractStrategyTopology {
     public void initializeView() {
         super.initializeView();
 
-        String grayConditionId = ConfigProcessorUtil.getStrategyGrayConditionId();
-        String grayRouteId = ConfigProcessorUtil.getStrategyGrayRouteId(strategyType);
-        StrategyConditionGrayEntity strategyConditionGrayEntity = ConfigProcessorUtil.getStrategyConditionGrayEntity(ruleEntity, grayConditionId);
+        String grayConditionId = ReleaseProcessorUtil.getStrategyGrayConditionId();
+        String grayRouteId = ReleaseProcessorUtil.getStrategyGrayRouteId(strategyType);
+        StrategyConditionGrayEntity strategyConditionGrayEntity = ReleaseProcessorUtil.getStrategyConditionGrayEntity(ruleEntity, grayConditionId);
 
         if (strategyConditionGrayEntity != null) {
             MapWeightEntity mapWeightEntity = null;
@@ -456,7 +456,7 @@ public class GrayTopology extends AbstractStrategyTopology {
     }
 
     @Override
-    public ConfigProcessor getConfigProcessor() {
-        return configProcessor;
+    public ReleaseProcessor getReleaseProcessor() {
+        return releaseProcessor;
     }
 }

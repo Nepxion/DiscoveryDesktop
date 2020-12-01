@@ -41,9 +41,9 @@ import com.nepxion.discovery.console.desktop.common.util.TextFieldUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.BlueGreenConditionPanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.BlueGreenCreatePanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.StrategyCreatePanel;
-import com.nepxion.discovery.console.desktop.workspace.processor.ConfigProcessor;
-import com.nepxion.discovery.console.desktop.workspace.processor.ConfigProcessorUtil;
-import com.nepxion.discovery.console.desktop.workspace.processor.strategy.BlueGreenStrategyConfigProcessor;
+import com.nepxion.discovery.console.desktop.workspace.processor.ReleaseProcessor;
+import com.nepxion.discovery.console.desktop.workspace.processor.ReleaseProcessorUtil;
+import com.nepxion.discovery.console.desktop.workspace.processor.strategy.BlueGreenStrategyReleaseProcessor;
 import com.nepxion.discovery.console.desktop.workspace.topology.LinkUI;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeSizeType;
@@ -92,12 +92,12 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
 
     protected BlueGreenRouteType blueGreenRouteType;
 
-    protected BlueGreenStrategyConfigProcessor configProcessor = new BlueGreenStrategyConfigProcessor();
+    protected BlueGreenStrategyReleaseProcessor releaseProcessor = new BlueGreenStrategyReleaseProcessor();
 
     public BlueGreenTopology() {
         super(ReleaseType.BLUE_GREEN);
 
-        configProcessor.setBlueGreenTopology(this);
+        releaseProcessor.setBlueGreenTopology(this);
     }
 
     @Override
@@ -127,16 +127,16 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
 
     @Override
     public void initializeView() {
-        blueGreenRouteType = ConfigProcessorUtil.getBlueGreenRouteType(ruleEntity, strategyType);
+        blueGreenRouteType = ReleaseProcessorUtil.getBlueGreenRouteType(ruleEntity, strategyType);
 
         initializeBlueGreenRouteType(blueGreenRouteType);
 
         super.initializeView();
 
-        String blueConditionId = ConfigProcessorUtil.getStrategyBlueConditionId();
-        String greenConditionId = ConfigProcessorUtil.getStrategyGreenConditionId();
-        StrategyConditionBlueGreenEntity strategyConditionBlueEntity = ConfigProcessorUtil.getStrategyConditionBlueGreenEntity(ruleEntity, blueConditionId);
-        StrategyConditionBlueGreenEntity strategyConditionGreenEntity = ConfigProcessorUtil.getStrategyConditionBlueGreenEntity(ruleEntity, greenConditionId);
+        String blueConditionId = ReleaseProcessorUtil.getStrategyBlueConditionId();
+        String greenConditionId = ReleaseProcessorUtil.getStrategyGreenConditionId();
+        StrategyConditionBlueGreenEntity strategyConditionBlueEntity = ReleaseProcessorUtil.getStrategyConditionBlueGreenEntity(ruleEntity, blueConditionId);
+        StrategyConditionBlueGreenEntity strategyConditionGreenEntity = ReleaseProcessorUtil.getStrategyConditionBlueGreenEntity(ruleEntity, greenConditionId);
 
         StrategyHeaderEntity strategyHeaderEntity = ruleEntity.getStrategyCustomizationEntity().getStrategyHeaderEntity();
 
@@ -599,7 +599,7 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
     }
 
     @Override
-    public ConfigProcessor getConfigProcessor() {
-        return configProcessor;
+    public ReleaseProcessor getReleaseProcessor() {
+        return releaseProcessor;
     }
 }

@@ -38,8 +38,8 @@ import com.nepxion.discovery.console.desktop.common.swing.dialog.JExceptionDialo
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.StrategyCreatePanel;
-import com.nepxion.discovery.console.desktop.workspace.processor.ConfigProcessorUtil;
-import com.nepxion.discovery.console.desktop.workspace.processor.strategy.StrategyConfigProcessor;
+import com.nepxion.discovery.console.desktop.workspace.processor.ReleaseProcessorUtil;
+import com.nepxion.discovery.console.desktop.workspace.processor.strategy.StrategyReleaseProcessor;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeSizeType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeUI;
@@ -83,8 +83,8 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
         this.subscriptionType = subscriptionType;
         this.deployType = deployType;
 
-        StrategyConfigProcessor strategyConfigProcessor = (StrategyConfigProcessor) getConfigProcessor();
-        strategyConfigProcessor.setStrategyType(strategyType);
+        StrategyReleaseProcessor releaseProcessor = (StrategyReleaseProcessor) getReleaseProcessor();
+        releaseProcessor.setStrategyType(strategyType);
 
         refreshData();
     }
@@ -186,9 +186,9 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
             ruleEntity = new RuleEntity();
             strategyType = createPanel.getStrategyType();
         } else {
-            String config = getConfigProcessor().getConfig(group, gatewayId);
+            String config = getReleaseProcessor().getConfig(group, gatewayId);
             try {
-                ruleEntity = getConfigProcessor().parseConfig(config);
+                ruleEntity = getReleaseProcessor().parseConfig(config);
             } catch (Exception e) {
                 JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("config_not_existed_or_invalid"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
@@ -201,14 +201,14 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
                 return;
             }
 
-            strategyType = ConfigProcessorUtil.getStrategyType(ruleEntity);
+            strategyType = ReleaseProcessorUtil.getStrategyType(ruleEntity);
             if (strategyType == null) {
                 JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("config_not_existed_or_invalid"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
                 return;
             }
 
-            ReleaseType releaseType = ConfigProcessorUtil.getReleaseType(ruleEntity);
+            ReleaseType releaseType = ReleaseProcessorUtil.getReleaseType(ruleEntity);
             if (releaseType != null && getReleaseType() != releaseType) {
                 JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("config_not_matched") + "【" + TypeLocale.getDescription(releaseType) + "】", SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 

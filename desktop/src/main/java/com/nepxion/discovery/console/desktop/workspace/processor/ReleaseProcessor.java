@@ -13,7 +13,7 @@ import twaver.TDataBox;
 
 import com.nepxion.discovery.common.entity.RuleEntity;
 
-public interface ConfigProcessor {
+public interface ReleaseProcessor {
     void fromConfig(RuleEntity ruleEntity, TDataBox dataBox) throws Exception;
 
     String toConfig(RuleEntity ruleEntity, TDataBox dataBox);

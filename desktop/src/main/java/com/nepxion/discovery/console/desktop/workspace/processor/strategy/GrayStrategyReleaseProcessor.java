@@ -35,21 +35,21 @@ import com.nepxion.discovery.common.exception.DiscoveryException;
 import com.nepxion.discovery.common.util.JsonUtil;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.workspace.GrayTopology;
-import com.nepxion.discovery.console.desktop.workspace.processor.ConfigProcessorUtil;
+import com.nepxion.discovery.console.desktop.workspace.processor.ReleaseProcessorUtil;
 import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.discovery.console.entity.Instance;
 
-public class GrayStrategyConfigProcessor extends AbstractStrategyConfigProcessor {
+public class GrayStrategyReleaseProcessor extends AbstractStrategyReleaseProcessor {
     private GrayTopology grayTopology;
 
     @SuppressWarnings({ "unchecked" })
     @Override
     public void fromConfig(RuleEntity ruleEntity, TDataBox dataBox) throws Exception {
-        String grayConditionId = ConfigProcessorUtil.getStrategyGrayConditionId();
-        String grayRouteId = ConfigProcessorUtil.getStrategyGrayRouteId(strategyType);
-        String stableRouteId = ConfigProcessorUtil.getStrategyStableRouteId(strategyType);
+        String grayConditionId = ReleaseProcessorUtil.getStrategyGrayConditionId();
+        String grayRouteId = ReleaseProcessorUtil.getStrategyGrayRouteId(strategyType);
+        String stableRouteId = ReleaseProcessorUtil.getStrategyStableRouteId(strategyType);
 
-        StrategyConditionGrayEntity strategyConditionGrayEntity = ConfigProcessorUtil.getStrategyConditionGrayEntity(ruleEntity, grayConditionId);
+        StrategyConditionGrayEntity strategyConditionGrayEntity = ReleaseProcessorUtil.getStrategyConditionGrayEntity(ruleEntity, grayConditionId);
         if (strategyConditionGrayEntity == null) {
             throw new DiscoveryException(ConsoleLocaleFactory.getString("gray_condition_missing"));
         }
@@ -73,12 +73,12 @@ public class GrayStrategyConfigProcessor extends AbstractStrategyConfigProcessor
         String grayWeight = String.valueOf(weightMap.get(grayRouteId));
         String stabledWeight = String.valueOf(weightMap.get(stableRouteId));
 
-        StrategyRouteEntity strategyRouteGrayEntity = ConfigProcessorUtil.getStrategyRouteEntity(ruleEntity, grayRouteId);
+        StrategyRouteEntity strategyRouteGrayEntity = ReleaseProcessorUtil.getStrategyRouteEntity(ruleEntity, grayRouteId);
         if (strategyRouteGrayEntity == null) {
             throw new DiscoveryException(ConsoleLocaleFactory.getString("gray_route_missing"));
         }
 
-        StrategyRouteEntity strategyRouteStableEntity = ConfigProcessorUtil.getStrategyRouteEntity(ruleEntity, stableRouteId);
+        StrategyRouteEntity strategyRouteStableEntity = ReleaseProcessorUtil.getStrategyRouteEntity(ruleEntity, stableRouteId);
         if (strategyRouteStableEntity == null) {
             throw new DiscoveryException(ConsoleLocaleFactory.getString("stable_route_missing"));
         }
@@ -164,9 +164,9 @@ public class GrayStrategyConfigProcessor extends AbstractStrategyConfigProcessor
                 }
             }
 
-            String grayConditionId = ConfigProcessorUtil.getStrategyGrayConditionId();
-            String grayRouteId = ConfigProcessorUtil.getStrategyGrayRouteId(strategyType);
-            String stableRouteId = ConfigProcessorUtil.getStrategyStableRouteId(strategyType);
+            String grayConditionId = ReleaseProcessorUtil.getStrategyGrayConditionId();
+            String grayRouteId = ReleaseProcessorUtil.getStrategyGrayRouteId(strategyType);
+            String stableRouteId = ReleaseProcessorUtil.getStrategyStableRouteId(strategyType);
 
             Map<String, Integer> weightMap = new LinkedHashMap<String, Integer>();
             weightMap.put(grayRouteId, Integer.valueOf(grayCondition));

@@ -28,7 +28,7 @@ import com.nepxion.discovery.console.desktop.common.util.ButtonUtil;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.PreviewPanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.SubscriptionPanel;
-import com.nepxion.discovery.console.desktop.workspace.processor.ConfigProcessor;
+import com.nepxion.discovery.console.desktop.workspace.processor.ReleaseProcessor;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.swing.action.JSecurityAction;
@@ -89,7 +89,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
     public void initializeView() {
         try {
-            getConfigProcessor().fromConfig(ruleEntity, dataBox);
+            getReleaseProcessor().fromConfig(ruleEntity, dataBox);
         } catch (Exception e) {
             JBasicOptionPane.showMessageDialog(HandleManager.getFrame(this), e.getMessage(), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
         }
@@ -142,7 +142,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                String config = getConfigProcessor().toConfig(ruleEntity, dataBox);
+                String config = getReleaseProcessor().toConfig(ruleEntity, dataBox);
                 if (StringUtils.isEmpty(config)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("config_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
@@ -190,7 +190,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
-                String config = getConfigProcessor().toConfig(ruleEntity, dataBox);
+                String config = getReleaseProcessor().toConfig(ruleEntity, dataBox);
                 if (StringUtils.isEmpty(config)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("config_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
@@ -245,7 +245,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
         LOG.info("Save Config, key={}, config=\n{}", key, config);
 
-        String result = getConfigProcessor().saveConfig(group, serviceId, config);
+        String result = getReleaseProcessor().saveConfig(group, serviceId, config);
         showResult(result);
     }
 
@@ -263,5 +263,5 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
     public abstract void clear();
 
-    public abstract ConfigProcessor getConfigProcessor();
+    public abstract ReleaseProcessor getReleaseProcessor();
 }

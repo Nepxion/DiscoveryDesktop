@@ -25,7 +25,7 @@ import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
 import com.nepxion.discovery.plugin.framework.parser.xml.XmlConfigConstant;
 
-public class ConfigProcessorUtil {
+public class ReleaseProcessorUtil {
     public static ReleaseType getReleaseType(RuleEntity ruleEntity) {
         StrategyCustomizationEntity strategyCustomizationEntity = ruleEntity.getStrategyCustomizationEntity();
         if (strategyCustomizationEntity == null) {

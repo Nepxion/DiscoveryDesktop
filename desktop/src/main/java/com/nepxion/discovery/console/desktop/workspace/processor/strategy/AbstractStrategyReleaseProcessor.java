@@ -9,10 +9,10 @@ package com.nepxion.discovery.console.desktop.workspace.processor.strategy;
  * @version 1.0
  */
 
-import com.nepxion.discovery.console.desktop.workspace.processor.AbstractConfigProcessor;
+import com.nepxion.discovery.console.desktop.workspace.processor.AbstractReleaseProcessor;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
 
-public abstract class AbstractStrategyConfigProcessor extends AbstractConfigProcessor implements StrategyConfigProcessor {
+public abstract class AbstractStrategyReleaseProcessor extends AbstractReleaseProcessor implements StrategyReleaseProcessor {
     protected StrategyType strategyType;
 
     @Override

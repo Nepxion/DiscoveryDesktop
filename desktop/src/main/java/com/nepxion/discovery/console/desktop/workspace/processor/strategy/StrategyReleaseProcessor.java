@@ -9,10 +9,10 @@ package com.nepxion.discovery.console.desktop.workspace.processor.strategy;
  * @version 1.0
  */
 
-import com.nepxion.discovery.console.desktop.workspace.processor.ConfigProcessor;
+import com.nepxion.discovery.console.desktop.workspace.processor.ReleaseProcessor;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
 
-public interface StrategyConfigProcessor extends ConfigProcessor {
+public interface StrategyReleaseProcessor extends ReleaseProcessor {
     StrategyType getStrategyType();
 
     void setStrategyType(StrategyType strategyType);
