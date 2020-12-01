@@ -43,9 +43,9 @@ import com.nepxion.swing.textarea.JBasicTextArea;
 public class OpenPanel extends SubscriptionPanel {
     private static final long serialVersionUID = -4561221242634636904L;
 
-    protected ReleaseProcessor releaseProcessor;
-
     protected JBasicTextArea configTextArea;
+
+    protected ReleaseProcessor releaseProcessor;
 
     public OpenPanel(ReleaseProcessor releaseProcessor) {
         this.releaseProcessor = releaseProcessor;
@@ -72,6 +72,10 @@ public class OpenPanel extends SubscriptionPanel {
     @Override
     public double[] getLayoutRow() {
         return new double[] { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, 0, TableLayout.PREFERRED, TableLayout.FILL };
+    }
+
+    public String getConfig() {
+        return configTextArea.getText().trim();
     }
 
     public JSecurityAction createOpenRemoteAction() {

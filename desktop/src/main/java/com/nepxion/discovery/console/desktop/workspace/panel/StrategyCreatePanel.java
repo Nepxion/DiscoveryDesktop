@@ -135,18 +135,6 @@ public class StrategyCreatePanel extends SubscriptionPanel {
         }
     }
 
-    public void setNewMode(boolean isNewMode) {
-        if (strategyPanel != null) {
-            for (int i = 0; i < strategyPanel.getComponentCount(); i++) {
-                strategyPanel.getComponent(i).setEnabled(isNewMode);
-            }
-        }
-    }
-
-    public boolean isNewMode() {
-        return true;
-    }
-
     public StrategyType getStrategyType() {
         String rationButtonName = ButtonUtil.getRationButtonName(strategyButtonGroup);
 
