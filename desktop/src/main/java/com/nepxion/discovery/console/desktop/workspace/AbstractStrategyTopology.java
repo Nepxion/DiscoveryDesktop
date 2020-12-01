@@ -96,20 +96,6 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
         }
     }
 
-    public List<Instance> getInstances(String serviceId) {
-        if (StringUtils.isBlank(serviceId)) {
-            return null;
-        }
-
-        try {
-            return ConsoleController.getInstanceList(serviceId);
-        } catch (Exception e) {
-            JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
-        }
-
-        return null;
-    }
-
     public void initializeUI(StrategyCreatePanel createPanel) {
         setTitle();
         setGatewayNode();
@@ -145,14 +131,12 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
     public void setMetadataUI() {
         List<String> metadatas = new ArrayList<String>();
         String serviceId = ComboBoxUtil.getSelectedValue(serviceIdComboBox);
-        if (StringUtils.isNotBlank(serviceId)) {
-            List<Instance> instances = getInstances(serviceId);
-            if (CollectionUtils.isNotEmpty(instances)) {
-                for (Instance instance : instances) {
-                    String metadata = instance.getMetadata().get(strategyType.toString());
-                    if (StringUtils.isNotBlank(metadata)) {
-                        metadatas.add(metadata);
-                    }
+        List<Instance> instances = getInstances(serviceId);
+        if (instances != null) {
+            for (Instance instance : instances) {
+                String metadata = instance.getMetadata().get(strategyType.toString());
+                if (StringUtils.isNotBlank(metadata)) {
+                    metadatas.add(metadata);
                 }
             }
         }

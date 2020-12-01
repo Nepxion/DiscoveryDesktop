@@ -11,7 +11,6 @@ package com.nepxion.discovery.console.desktop.workspace;
 
 import twaver.DataBoxEvent;
 import twaver.DataBoxListener;
-
 import twaver.Generator;
 
 import java.awt.Color;
@@ -29,8 +28,11 @@ import com.nepxion.cots.twaver.element.TLink;
 import com.nepxion.cots.twaver.element.TNode;
 import com.nepxion.cots.twaver.graph.TGraphBackground;
 import com.nepxion.cots.twaver.graph.TLayoutType;
+import com.nepxion.discovery.console.cache.ConsoleCache;
+import com.nepxion.discovery.console.controller.ConsoleController;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
+import com.nepxion.discovery.console.desktop.common.swing.dialog.JExceptionDialog;
 import com.nepxion.discovery.console.desktop.workspace.panel.CacheSetPanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.LayouterSetPanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.SetManagePanel;
@@ -193,5 +195,33 @@ public abstract class AbstractTopology extends BasicTopology {
         };
 
         return action;
+    }
+
+    public List<String> getServiceIds(boolean isGateway) {
+        try {
+            if (isGateway) {
+                return ConsoleCache.getGateways();
+            } else {
+                return ConsoleCache.getRealServices();
+            }
+        } catch (Exception e) {
+            JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
+        }
+
+        return null;
+    }
+
+    public List<Instance> getInstances(String serviceId) {
+        if (StringUtils.isBlank(serviceId)) {
+            return null;
+        }
+
+        try {
+            return ConsoleController.getInstanceList(serviceId);
+        } catch (Exception e) {
+            JExceptionDialog.traceException(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("operation_failure"), e);
+        }
+
+        return null;
     }
 }
