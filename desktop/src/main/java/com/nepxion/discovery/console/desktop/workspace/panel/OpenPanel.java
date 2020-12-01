@@ -56,13 +56,13 @@ public class OpenPanel extends SubscriptionPanel {
         buttonBar.add(new JClassicButton(createOpenLocalAction()));
 
         JShrinkShortcut previewShrinkShortcut = new JShrinkShortcut();
-        previewShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("preview_config_tooltip"));
+        previewShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("config_content_text"));
         previewShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
-        previewShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString("preview_config_tooltip"));
+        previewShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString("config_content_text"));
 
         configTextArea = new JBasicTextArea();
         JBasicScrollPane configTextAreaScrollPane = new JBasicScrollPane(configTextArea);
-        configTextAreaScrollPane.setPreferredSize(new Dimension(660, 330));
+        configTextAreaScrollPane.setPreferredSize(new Dimension(660, 340));
 
         add(buttonBar, "0, 8, 1, 8");
         add(previewShrinkShortcut, "0, 10, 1, 10");
@@ -99,6 +99,7 @@ public class OpenPanel extends SubscriptionPanel {
 
                 String config = releaseProcessor.getConfig(group, gatewayId);
                 configTextArea.setText(config);
+                configTextArea.setCaretPosition(0);
             }
         };
 

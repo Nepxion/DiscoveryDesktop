@@ -153,6 +153,15 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
         setMetadataUI(metadatas);
     }
 
+    public Instance createGatewayInstance(String gatewayId, SubscriptionType subscriptionType) {
+        Instance gateway = new Instance();
+        gateway.setServiceId(subscriptionType == SubscriptionType.PARTIAL ? gatewayId : ConsoleLocaleFactory.getString("portal_type"));
+        Map<String, String> metadataMap = new HashMap<String, String>();
+        gateway.setMetadata(metadataMap);
+
+        return gateway;
+    }
+
     @Override
     public void create() {
         StrategyCreatePanel createPanel = getCreatePanel();
@@ -182,11 +191,7 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
         DeployType deployType = createPanel.getDeployType();
         RuleEntity ruleEntity = new RuleEntity();
         StrategyType strategyType = createPanel.getStrategyType();
-
-        Instance gateway = new Instance();
-        gateway.setServiceId(subscriptionType == SubscriptionType.PARTIAL ? gatewayId : ConsoleLocaleFactory.getString("portal_type"));
-        Map<String, String> metadataMap = new HashMap<String, String>();
-        gateway.setMetadata(metadataMap);
+        Instance gateway = createGatewayInstance(gatewayId, subscriptionType);
 
         initializeData(group, gateway, ruleEntity, strategyType, subscriptionType, deployType);
         initializeUI(createPanel);
@@ -251,10 +256,7 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
             return;
         }
 
-        Instance gateway = new Instance();
-        gateway.setServiceId(subscriptionType == SubscriptionType.PARTIAL ? gatewayId : ConsoleLocaleFactory.getString("portal_type"));
-        Map<String, String> metadataMap = new HashMap<String, String>();
-        gateway.setMetadata(metadataMap);
+        Instance gateway = createGatewayInstance(gatewayId, subscriptionType);
 
         initializeData(group, gateway, ruleEntity, strategyType, subscriptionType, deployType);
         initializeUI(null);

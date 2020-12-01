@@ -14,9 +14,11 @@ import java.awt.Dimension;
 
 import javax.swing.JPanel;
 
+import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.swing.label.JBasicLabel;
 import com.nepxion.swing.scrollpane.JBasicScrollPane;
+import com.nepxion.swing.shrinkbar.JShrinkShortcut;
 import com.nepxion.swing.textarea.JBasicTextArea;
 import com.nepxion.swing.textfield.JBasicTextField;
 
@@ -44,16 +46,21 @@ public class PreviewPanel extends JPanel {
         keyPanel.add(new JBasicLabel(ConsoleLocaleFactory.getString("config_key_text")), BorderLayout.WEST);
         keyPanel.add(keyTextField, BorderLayout.CENTER);
 
+        JShrinkShortcut previewShrinkShortcut = new JShrinkShortcut();
+        previewShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("config_content_text"));
+        previewShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
+        previewShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString("config_content_text"));
+
         configTextArea = new JBasicTextArea();
         JBasicScrollPane configTextAreaScrollPane = new JBasicScrollPane(configTextArea);
-        configTextAreaScrollPane.setPreferredSize(new Dimension(660, 330));
+        configTextAreaScrollPane.setPreferredSize(new Dimension(660, 340));
 
         JPanel configPanel = new JPanel();
-        configPanel.setLayout(new BorderLayout());
-        configPanel.add(new JBasicLabel(ConsoleLocaleFactory.getString("config_content_text")), BorderLayout.NORTH);
+        configPanel.setLayout(new BorderLayout(0, 10));
+        configPanel.add(previewShrinkShortcut, BorderLayout.NORTH);
         configPanel.add(configTextAreaScrollPane, BorderLayout.CENTER);
 
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(0, 20));
         add(keyPanel, BorderLayout.NORTH);
         add(configPanel, BorderLayout.CENTER);
     }
