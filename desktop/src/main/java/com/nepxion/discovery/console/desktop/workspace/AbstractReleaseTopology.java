@@ -149,7 +149,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     }
 
     public JSecurityAction createResetAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("reset_text"), ConsoleIconFactory.getSwingIcon("save.png"), ConsoleLocaleFactory.getString("reset_config_tooltip")) {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("reset_text"), ConsoleIconFactory.getSwingIcon("modify.png"), ConsoleLocaleFactory.getString("reset_config_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
