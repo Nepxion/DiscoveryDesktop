@@ -232,8 +232,9 @@ public class InspectorTopology extends AbstractTopology {
 
         dimensionComboBox = new JBasicComboBox(dimensionElementNodes.toArray());
 
-        Integer[] times = new Integer[] { 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000 };
+        Integer[] times = new Integer[] { 1, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000 };
         timesComboBox = new JBasicComboBox(times);
+        timesComboBox.setSelectedIndex(2);
 
         Integer[] concurrency = new Integer[] { 10, 20, 30, 50, 80, 100, 120, 150, 180, 200, 300, 500 };
         concurrencyComboBox = new JBasicComboBox(concurrency);
