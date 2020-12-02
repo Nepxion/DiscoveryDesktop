@@ -24,6 +24,7 @@ import javax.swing.ComboBoxModel;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import com.nepxion.cots.twaver.element.TElementManager;
 import com.nepxion.cots.twaver.element.TNode;
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
 import com.nepxion.discovery.common.entity.DeployType;
@@ -151,6 +152,19 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
         }
 
         setMetadataUI(metadatas);
+    }
+
+    @SuppressWarnings("unchecked")
+    public boolean hasNodes(String serviceId) {
+        List<TNode> nodes = TElementManager.getNodes(dataBox);
+        for (TNode node : nodes) {
+            Instance instance = (Instance) node.getUserObject();
+            if (StringUtils.equalsIgnoreCase(instance.getServiceId(), serviceId)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public Instance createGatewayInstance(String gatewayId, SubscriptionType subscriptionType) {

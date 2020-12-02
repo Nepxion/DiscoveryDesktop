@@ -113,19 +113,6 @@ public abstract class AbstractTopology extends BasicTopology {
         return operationBar;
     }
 
-    @SuppressWarnings("unchecked")
-    public boolean hasNodes(String serviceId) {
-        List<TNode> nodes = TElementManager.getNodes(dataBox);
-        for (TNode node : nodes) {
-            Instance instance = (Instance) node.getUserObject();
-            if (StringUtils.equalsIgnoreCase(instance.getServiceId(), serviceId)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public TNode addNode(String name, NodeUI nodeUI) {
         TNode node = createNode(name, nodeUI, nodeLocation, 0);
 
