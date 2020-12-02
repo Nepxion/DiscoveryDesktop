@@ -65,6 +65,8 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
 
     protected JBasicComboBox serviceIdComboBox;
 
+    protected OpenPanel openPanel;
+
     protected TNode gatewayNode;
 
     protected StrategyType strategyType;
@@ -213,7 +215,9 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
 
     @Override
     public void open() {
-        OpenPanel openPanel = new OpenPanel(getReleaseProcessor());
+        if (openPanel == null) {
+            openPanel = new OpenPanel(getReleaseProcessor());
+        }
 
         int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(this), openPanel, ConsoleLocaleFactory.getString("open_config_tooltip") + "【" + TypeLocale.getDescription(releaseType) + "】", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
         if (selectedOption != 0) {

@@ -35,14 +35,14 @@ import com.nepxion.swing.style.buttonbar.ButtonBarUI;
 public class SetManagePanel extends JPanel {
     private static final long serialVersionUID = 1L;
 
-    protected static SetManagePanel configPanel;
+    protected static SetManagePanel setManagePanel;
 
     public static SetManagePanel getInstance() {
-        if (configPanel == null) {
-            configPanel = new SetManagePanel();
+        if (setManagePanel == null) {
+            setManagePanel = new SetManagePanel();
         }
 
-        return configPanel;
+        return setManagePanel;
     }
 
     private CacheSetPanel cacheSetPanel;
