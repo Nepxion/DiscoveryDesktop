@@ -252,6 +252,13 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
             return;
         }
 
+        boolean isEmptyStrategy = ReleaseProcessorUtil.isEmptyStrategy(ruleEntity);
+        if (isEmptyStrategy) {
+            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("config_not_empty"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+            return;
+        }
+
         if (ruleEntity == null) {
             JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractStrategyTopology.this), ConsoleLocaleFactory.getString("config_not_existed_or_invalid"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
@@ -308,6 +315,11 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
 
     @Override
     public boolean saveValidate() {
+        // 如果只有一个Node，表示空规则，不需要判断条件和参数
+        if (TElementManager.getNodes(dataBox).size() == 1) {
+            return true;
+        }
+
         if (!modifyCondition()) {
             return false;
         }

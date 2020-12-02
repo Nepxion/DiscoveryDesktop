@@ -145,4 +145,8 @@ public class ReleaseProcessorUtil {
             return BlueGreenRouteType.BLUE_BASIC;
         }
     }
+
+    public static boolean isEmptyStrategy(RuleEntity ruleEntity) {
+        return ruleEntity.getStrategyEntity() == null && ruleEntity.getStrategyCustomizationEntity() == null;
+    }
 }
