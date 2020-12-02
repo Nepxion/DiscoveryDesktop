@@ -23,7 +23,7 @@ import com.nepxion.swing.layout.table.TableLayout;
 import com.nepxion.swing.radiobutton.JBasicRadioButton;
 import com.nepxion.swing.shrinkbar.JShrinkShortcut;
 
-public class StrategyCreatePanel extends SubscriptionPanel {
+public class StrategyCreatePanel extends CreatePanel {
     private static final long serialVersionUID = 1L;
 
     protected ButtonGroup strategyButtonGroup;

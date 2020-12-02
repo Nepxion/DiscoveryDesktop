@@ -25,6 +25,7 @@ import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.swing.dialog.JExceptionDialog;
 import com.nepxion.discovery.console.desktop.common.util.ButtonUtil;
+import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.PreviewPanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.ResetPanel;
 import com.nepxion.discovery.console.desktop.workspace.processor.ReleaseProcessor;
@@ -154,6 +155,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
             public void execute(ActionEvent e) {
                 if (resetPanel == null) {
                     resetPanel = new ResetPanel();
+                    DimensionUtil.addSize(resetPanel, 100, 10);
                 }
 
                 int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractReleaseTopology.this), resetPanel, ConsoleLocaleFactory.getString("reset_config_tooltip") + "【" + TypeLocale.getDescription(releaseType) + "】", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);

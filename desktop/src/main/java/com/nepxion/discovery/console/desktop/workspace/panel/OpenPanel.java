@@ -40,7 +40,7 @@ import com.nepxion.swing.selector.file.JFileSelector;
 import com.nepxion.swing.shrinkbar.JShrinkShortcut;
 import com.nepxion.swing.textarea.JBasicTextArea;
 
-public class OpenPanel extends SubscriptionPanel {
+public class OpenPanel extends CreatePanel {
     private static final long serialVersionUID = 1L;
 
     protected JBasicTextArea configTextArea;
