@@ -425,12 +425,6 @@ public class GrayTopology extends AbstractStrategyTopology {
             return false;
         }
 
-        if (StringUtils.isBlank(grayCondition) || StringUtils.isBlank(stableCondition)) {
-            JBasicOptionPane.showMessageDialog(HandleManager.getFrame(GrayTopology.this), ConsoleLocaleFactory.getString("condition_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
-
-            return false;
-        }
-
         addNodes(serviceId, grayMetadata, stableMetadata, grayCondition, stableCondition);
 
         return true;

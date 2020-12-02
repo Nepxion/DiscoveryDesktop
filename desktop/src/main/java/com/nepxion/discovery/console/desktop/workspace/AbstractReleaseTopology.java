@@ -118,6 +118,10 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
+                if (!saveValidate()) {
+                    return;
+                }
+
                 String config = getReleaseProcessor().toConfig(ruleEntity, dataBox);
                 if (StringUtils.isEmpty(config)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("config_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
@@ -166,6 +170,10 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
+                if (!saveValidate()) {
+                    return;
+                }
+
                 String config = getReleaseProcessor().toConfig(ruleEntity, dataBox);
                 if (StringUtils.isEmpty(config)) {
                     JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("config_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
@@ -240,6 +248,8 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     public abstract void remove();
 
     public abstract void clear();
+
+    public abstract boolean saveValidate();
 
     public abstract ReleaseProcessor getReleaseProcessor();
 }

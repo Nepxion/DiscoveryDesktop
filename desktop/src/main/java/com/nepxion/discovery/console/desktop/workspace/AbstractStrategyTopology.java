@@ -306,6 +306,19 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
         reset();
     }
 
+    @Override
+    public boolean saveValidate() {
+        if (!modifyCondition()) {
+            return false;
+        }
+
+        if (!modifyParameter()) {
+            return false;
+        }
+
+        return true;
+    }
+
     public JSecurityAction createRefreshServiceIdAction() {
         JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("netbean/rotate_16.png"), ConsoleLocaleFactory.getString("refresh_service_list_tooltip")) {
             private static final long serialVersionUID = 1L;

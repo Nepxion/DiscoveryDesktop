@@ -491,34 +491,6 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
             return false;
         }
 
-        if (StringUtils.isBlank(blueCondition)) {
-            conditionPanel.showBlueConditionNotNullTip();
-
-            return false;
-        }
-
-        if (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && StringUtils.isBlank(greenCondition)) {
-            conditionPanel.showGreenConditionNotNullTip();
-
-            return false;
-        }
-
-        if (blueCondition.contains("#H['']")) {
-            conditionPanel.showBlueConditionInvalidFormatTip();
-
-            return false;
-        }
-
-        if (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && greenCondition.contains("#H['']")) {
-            conditionPanel.showGreenConditionInvalidFormatTip();
-
-            return false;
-        }
-
-        if (!modifyParameter()) {
-            return false;
-        }
-
         addNodes(serviceId, blueMetadata, greenMetadata, basicMetadata, blueCondition, greenCondition);
 
         return true;
