@@ -86,6 +86,8 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
     protected JBasicComboBox basicMetadataComboBox;
     protected JBasicTextField parameterTextField;
 
+    protected BlueGreenCreatePanel createPanel;
+
     protected TNode blueNode;
     protected TNode greenNode;
     protected TNode basicNode;
@@ -450,7 +452,12 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
 
     @Override
     public StrategyCreatePanel getCreatePanel() {
-        return new BlueGreenCreatePanel();
+        if (createPanel == null) {
+            createPanel = new BlueGreenCreatePanel();
+            DimensionUtil.addSize(createPanel, 100, 10);
+        }
+
+        return createPanel;
     }
 
     @Override

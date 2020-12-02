@@ -75,6 +75,8 @@ public class GrayTopology extends AbstractStrategyTopology {
     protected JBasicComboBox grayMetadataComboBox;
     protected JBasicComboBox stableMetadataComboBox;
 
+    protected GrayCreatePanel createPanel;
+
     protected TNode grayNode;
     protected TNode stableNode;
 
@@ -386,7 +388,12 @@ public class GrayTopology extends AbstractStrategyTopology {
 
     @Override
     public StrategyCreatePanel getCreatePanel() {
-        return new GrayCreatePanel();
+        if (createPanel == null) {
+            createPanel = new GrayCreatePanel();
+            DimensionUtil.addSize(createPanel, 100, 10);
+        }
+
+        return createPanel;
     }
 
     @Override

@@ -9,6 +9,7 @@ package com.nepxion.discovery.console.desktop.workspace.panel;
  * @version 1.0
  */
 
+import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
@@ -33,8 +34,11 @@ import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.swing.dialog.JExceptionDialog;
 import com.nepxion.discovery.console.desktop.common.util.ButtonUtil;
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
+import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.discovery.console.entity.Instance;
+import com.nepxion.swing.action.JSecurityAction;
+import com.nepxion.swing.button.JClassicButton;
 import com.nepxion.swing.checkbox.JBasicCheckBox;
 import com.nepxion.swing.combobox.JBasicComboBox;
 import com.nepxion.swing.handle.HandleManager;
@@ -51,6 +55,8 @@ public class SubscriptionPanel extends JPanel {
     protected ButtonGroup subscriptionButtonGroup;
     protected JPanel subscriptionRadioButtonPanel;
     protected JBasicComboBox groupComboBox;
+    protected JClassicButton refreshGroupButton;
+    protected JPanel groupPanel;
     protected JBasicComboBox gatewayIdComboBox;
     protected JBasicCheckBox showOnlyGatewayCheckBox;
     protected JPanel gatewayPanel;
@@ -97,6 +103,22 @@ public class SubscriptionPanel extends JPanel {
             }
         });
         ComboBoxUtil.installlAutoCompletion(groupComboBox);
+        refreshGroupButton = new JClassicButton(createRefreshGroupAction());
+        DimensionUtil.setWidth(refreshGroupButton, 30);
+
+        double[][] groupSize = {
+                { TableLayout.FILL, TableLayout.PREFERRED },
+                { TableLayout.PREFERRED }
+        };
+
+        TableLayout groupTableLayout = new TableLayout(groupSize);
+        groupTableLayout.setHGap(5);
+        groupTableLayout.setVGap(5);
+
+        groupPanel = new JPanel();
+        groupPanel.setLayout(groupTableLayout);
+        groupPanel.add(groupComboBox, "0, 0");
+        groupPanel.add(refreshGroupButton, "1, 0");
 
         gatewayIdComboBox = new JBasicComboBox();
         gatewayIdComboBox.setEditable(true);
@@ -159,7 +181,7 @@ public class SubscriptionPanel extends JPanel {
         add(new JBasicLabel(ConsoleLocaleFactory.getString("subscription_text")), "0, 1");
         add(subscriptionRadioButtonPanel, "1, 1");
         add(new JBasicLabel(ConsoleLocaleFactory.getString("group_name_text")), "0, 2");
-        add(groupComboBox, "1, 2");
+        add(groupPanel, "1, 2");
         add(new JBasicLabel(ConsoleLocaleFactory.getString("service_name_text")), "0, 3");
         add(gatewayPanel, "1, 3");
         add(deployParameterShrinkShortcut, "0, 5, 1, 5");
@@ -315,5 +337,18 @@ public class SubscriptionPanel extends JPanel {
         }
 
         return false;
+    }
+
+    public JSecurityAction createRefreshGroupAction() {
+        JSecurityAction action = new JSecurityAction(ConsoleIconFactory.getSwingIcon("netbean/rotate_16.png"), ConsoleLocaleFactory.getString("refresh_group_list_tooltip")) {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+                setGroups();
+                setGatewayIds();
+            }
+        };
+
+        return action;
     }
 }
