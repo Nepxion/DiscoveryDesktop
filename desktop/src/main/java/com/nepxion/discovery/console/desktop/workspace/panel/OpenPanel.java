@@ -41,7 +41,7 @@ import com.nepxion.swing.shrinkbar.JShrinkShortcut;
 import com.nepxion.swing.textarea.JBasicTextArea;
 
 public class OpenPanel extends SubscriptionPanel {
-    private static final long serialVersionUID = -4561221242634636904L;
+    private static final long serialVersionUID = 1L;
 
     protected JBasicTextArea configTextArea;
 

@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.nepxion.discovery.common.constant.DiscoveryConstant;
 import com.nepxion.discovery.common.entity.RuleEntity;
 import com.nepxion.discovery.common.entity.SubscriptionType;
 import com.nepxion.discovery.console.cache.ConsoleCache;
@@ -25,8 +26,10 @@ import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.swing.dialog.JExceptionDialog;
 import com.nepxion.discovery.console.desktop.common.util.ButtonUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.PreviewPanel;
+import com.nepxion.discovery.console.desktop.workspace.panel.ResetPanel;
 import com.nepxion.discovery.console.desktop.workspace.processor.ReleaseProcessor;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
+import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.ButtonManager;
 import com.nepxion.swing.handle.HandleManager;
@@ -39,6 +42,8 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractReleaseTopology.class);
 
     public static final String APOLLO = "Apollo";
+
+    protected ResetPanel resetPanel;
 
     protected ReleaseType releaseType;
     protected SubscriptionType subscriptionType;
@@ -61,6 +66,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         toolBar.add(ButtonUtil.createButton(createCreateAction()));
         toolBar.add(ButtonUtil.createButton(createOpenAction()));
         toolBar.add(ButtonUtil.createButton(createSaveAction()));
+        toolBar.add(ButtonUtil.createButton(createResetAction()));
         toolBar.addSeparator();
         toolBar.add(ButtonUtil.createButton(createRemoveAction()));
         toolBar.add(ButtonUtil.createButton(createClearAction()));
@@ -141,6 +147,41 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         return action;
     }
 
+    public JSecurityAction createResetAction() {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("reset_text"), ConsoleIconFactory.getSwingIcon("save.png"), ConsoleLocaleFactory.getString("reset_config_tooltip")) {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+                if (resetPanel == null) {
+                    resetPanel = new ResetPanel();
+                }
+
+                int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(AbstractReleaseTopology.this), resetPanel, ConsoleLocaleFactory.getString("reset_config_tooltip") + "【" + TypeLocale.getDescription(releaseType) + "】", JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
+                if (selectedOption != 0) {
+                    return;
+                }
+
+                String group = resetPanel.getValidGroup();
+                if (StringUtils.isEmpty(group)) {
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("group_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+                    return;
+                }
+
+                String gatewayId = resetPanel.getValidGatewayId();
+                if (StringUtils.isEmpty(gatewayId)) {
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("service_id_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+                    return;
+                }
+
+                save(group, gatewayId, DiscoveryConstant.DEFAULT_XML_RULE);
+            }
+        };
+
+        return action;
+    }
+
     public JSecurityAction createRemoveAction() {
         JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("remove_text"), ConsoleIconFactory.getSwingIcon("cut.png"), getRemoveTooltip()) {
             private static final long serialVersionUID = 1L;
@@ -207,30 +248,42 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         return action;
     }
 
-    public String getKey() {
-        String key = null;
-        if (StringUtils.equals(configType, APOLLO)) {
-            key = group + "-" + getServiceId();
-        } else {
-            key = "Data ID=" + getServiceId() + " | Group=" + group;
-        }
-
-        return key;
-    }
-
     public String getGroup() {
         return group;
     }
 
     public void save(String config) {
-        String key = getKey();
         String group = getGroup();
         String serviceId = getServiceId();
+
+        save(group, serviceId, config);
+    }
+
+    public void save(String group, String serviceId, String config) {
+        String key = getKey(group, serviceId);
 
         LOG.info("Save Config, key={}, config=\n{}", key, config);
 
         String result = getReleaseProcessor().saveConfig(group, serviceId, config);
         showResult(result);
+    }
+
+    public String getKey() {
+        String group = getGroup();
+        String serviceId = getServiceId();
+
+        return getKey(group, serviceId);
+    }
+
+    public String getKey(String group, String serviceId) {
+        String key = null;
+        if (StringUtils.equals(configType, APOLLO)) {
+            key = group + "-" + serviceId;
+        } else {
+            key = "Data ID=" + serviceId + " | Group=" + group;
+        }
+
+        return key;
     }
 
     public abstract ReleaseType getReleaseType();
