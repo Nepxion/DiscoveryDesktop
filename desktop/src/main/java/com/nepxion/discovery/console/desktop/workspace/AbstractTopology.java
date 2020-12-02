@@ -14,6 +14,7 @@ import twaver.DataBoxListener;
 import twaver.Generator;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.HierarchyEvent;
 import java.util.List;
@@ -33,6 +34,7 @@ import com.nepxion.discovery.console.controller.ConsoleController;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.swing.dialog.JExceptionDialog;
+import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.CacheSetPanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.LayouterSetPanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.SetManagePanel;
@@ -45,6 +47,8 @@ import com.nepxion.swing.handle.HandleManager;
 import com.nepxion.swing.listener.DisplayAbilityListener;
 import com.nepxion.swing.locale.SwingLocale;
 import com.nepxion.swing.optionpane.JBasicOptionPane;
+import com.nepxion.swing.scrollpane.JBasicScrollPane;
+import com.nepxion.swing.textarea.JBasicTextArea;
 
 public abstract class AbstractTopology extends BasicTopology {
     private static final long serialVersionUID = 1L;
@@ -141,6 +145,18 @@ public abstract class AbstractTopology extends BasicTopology {
         dataBox.addElement(link);
 
         return link;
+    }
+
+    public void showResult(Object result) {
+        JBasicTextArea resultTextArea = new JBasicTextArea();
+        resultTextArea.setLineWrap(true);
+        resultTextArea.setText(result.toString());
+
+        JBasicScrollPane resultScrollPane = new JBasicScrollPane(resultTextArea);
+        resultScrollPane.setMaximumSize(new Dimension(800, 600));
+        DimensionUtil.addHeight(resultScrollPane, 20);
+
+        JBasicOptionPane.showOptionDialog(HandleManager.getFrame(this), resultScrollPane, ConsoleLocaleFactory.getString("execute_result"), JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/edit.png"), new Object[] { SwingLocale.getString("close") }, null, true);
     }
 
     public void executeLayout() {

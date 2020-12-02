@@ -9,7 +9,6 @@ package com.nepxion.discovery.console.desktop.workspace;
  * @version 1.0
  */
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JToolBar;
@@ -25,7 +24,6 @@ import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.swing.dialog.JExceptionDialog;
 import com.nepxion.discovery.console.desktop.common.util.ButtonUtil;
-import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.PreviewPanel;
 import com.nepxion.discovery.console.desktop.workspace.processor.ReleaseProcessor;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
@@ -34,8 +32,6 @@ import com.nepxion.swing.button.ButtonManager;
 import com.nepxion.swing.handle.HandleManager;
 import com.nepxion.swing.locale.SwingLocale;
 import com.nepxion.swing.optionpane.JBasicOptionPane;
-import com.nepxion.swing.scrollpane.JBasicScrollPane;
-import com.nepxion.swing.textarea.JBasicTextArea;
 
 public abstract class AbstractReleaseTopology extends AbstractTopology {
     private static final long serialVersionUID = 1L;
@@ -91,18 +87,6 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         } catch (Exception e) {
             JBasicOptionPane.showMessageDialog(HandleManager.getFrame(this), e.getMessage(), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
         }
-    }
-
-    public void showResult(Object result) {
-        JBasicTextArea resultTextArea = new JBasicTextArea();
-        resultTextArea.setLineWrap(true);
-        resultTextArea.setText(result.toString());
-
-        JBasicScrollPane resultScrollPane = new JBasicScrollPane(resultTextArea);
-        resultScrollPane.setMaximumSize(new Dimension(800, 600));
-        DimensionUtil.addHeight(resultScrollPane, 20);
-
-        JBasicOptionPane.showOptionDialog(HandleManager.getFrame(this), resultScrollPane, ConsoleLocaleFactory.getString("execute_result"), JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/edit.png"), new Object[] { SwingLocale.getString("close") }, null, true);
     }
 
     public JSecurityAction createCreateAction() {
