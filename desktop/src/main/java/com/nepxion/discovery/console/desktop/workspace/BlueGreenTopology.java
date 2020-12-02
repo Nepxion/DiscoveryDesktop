@@ -478,7 +478,7 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
     }
 
     @Override
-    public void addServiceStrategy(String serviceId) {
+    public boolean addServiceStrategy(String serviceId) {
         String blueMetadata = ComboBoxUtil.getSelectedValue(blueMetadataComboBox);
         String greenMetadata = ComboBoxUtil.getSelectedValue(greenMetadataComboBox);
         String basicMetadata = ComboBoxUtil.getSelectedValue(basicMetadataComboBox);
@@ -488,38 +488,40 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
         if (StringUtils.isBlank(blueMetadata) || (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && StringUtils.isBlank(greenMetadata)) || StringUtils.isBlank(basicMetadata)) {
             JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), TypeLocale.getName(strategyType) + " " + ConsoleLocaleFactory.getString("not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
-            return;
+            return false;
         }
 
         if (StringUtils.isBlank(blueCondition)) {
             conditionPanel.showBlueConditionNotNullTip();
 
-            return;
+            return false;
         }
 
         if (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && StringUtils.isBlank(greenCondition)) {
             conditionPanel.showGreenConditionNotNullTip();
 
-            return;
+            return false;
         }
 
         if (blueCondition.contains("#H['']")) {
             conditionPanel.showBlueConditionInvalidFormatTip();
 
-            return;
+            return false;
         }
 
         if (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && greenCondition.contains("#H['']")) {
             conditionPanel.showGreenConditionInvalidFormatTip();
 
-            return;
+            return false;
         }
 
         if (!modifyParameter()) {
-            return;
+            return false;
         }
 
         addNodes(serviceId, blueMetadata, greenMetadata, basicMetadata, blueCondition, greenCondition);
+
+        return true;
     }
 
     public JSecurityAction createModifyParameterAction() {
@@ -535,7 +537,7 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
     }
 
     @Override
-    public void modifyServiceStrategy(String serviceId) {
+    public boolean modifyServiceStrategy(String serviceId) {
         String blueMetadata = ComboBoxUtil.getSelectedValue(blueMetadataComboBox);
         String greenMetadata = ComboBoxUtil.getSelectedValue(greenMetadataComboBox);
         String basicMetadata = ComboBoxUtil.getSelectedValue(basicMetadataComboBox);
@@ -543,10 +545,12 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
         if (StringUtils.isBlank(blueMetadata) || (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && StringUtils.isBlank(greenMetadata)) || StringUtils.isBlank(basicMetadata)) {
             JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), TypeLocale.getName(strategyType) + " " + ConsoleLocaleFactory.getString("not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
-            return;
+            return false;
         }
 
         modifyNodes(serviceId, blueMetadata, greenMetadata, basicMetadata);
+
+        return true;
     }
 
     @Override

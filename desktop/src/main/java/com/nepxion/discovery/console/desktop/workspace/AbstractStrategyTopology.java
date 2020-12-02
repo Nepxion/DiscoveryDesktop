@@ -441,9 +441,9 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
 
     public abstract void setMetadataUI(List<String> metadatas);
 
-    public abstract void addServiceStrategy(String serviceId);
+    public abstract boolean addServiceStrategy(String serviceId);
 
-    public abstract void modifyServiceStrategy(String serviceId);
+    public abstract boolean modifyServiceStrategy(String serviceId);
 
     public abstract boolean modifyCondition();
 

@@ -413,7 +413,7 @@ public class GrayTopology extends AbstractStrategyTopology {
     }
 
     @Override
-    public void addServiceStrategy(String serviceId) {
+    public boolean addServiceStrategy(String serviceId) {
         String grayMetadata = ComboBoxUtil.getSelectedValue(grayMetadataComboBox);
         String stableMetadata = ComboBoxUtil.getSelectedValue(stableMetadataComboBox);
         String grayCondition = ComboBoxUtil.getSelectedValue(grayConditionComboBox);
@@ -422,30 +422,34 @@ public class GrayTopology extends AbstractStrategyTopology {
         if (StringUtils.isBlank(grayMetadata) || StringUtils.isBlank(stableMetadata)) {
             JBasicOptionPane.showMessageDialog(HandleManager.getFrame(GrayTopology.this), TypeLocale.getName(strategyType) + " " + ConsoleLocaleFactory.getString("not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
-            return;
+            return false;
         }
 
         if (StringUtils.isBlank(grayCondition) || StringUtils.isBlank(stableCondition)) {
             JBasicOptionPane.showMessageDialog(HandleManager.getFrame(GrayTopology.this), ConsoleLocaleFactory.getString("condition_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
-            return;
+            return false;
         }
 
         addNodes(serviceId, grayMetadata, stableMetadata, grayCondition, stableCondition);
+
+        return true;
     }
 
     @Override
-    public void modifyServiceStrategy(String serviceId) {
+    public boolean modifyServiceStrategy(String serviceId) {
         String grayMetadata = ComboBoxUtil.getSelectedValue(grayMetadataComboBox);
         String stableMetadata = ComboBoxUtil.getSelectedValue(stableMetadataComboBox);
 
         if (StringUtils.isBlank(grayMetadata) || StringUtils.isBlank(stableMetadata)) {
             JBasicOptionPane.showMessageDialog(HandleManager.getFrame(GrayTopology.this), TypeLocale.getName(strategyType) + " " + ConsoleLocaleFactory.getString("not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
-            return;
+            return false;
         }
 
         modifyNodes(serviceId, grayMetadata, stableMetadata);
+
+        return true;
     }
 
     @Override
