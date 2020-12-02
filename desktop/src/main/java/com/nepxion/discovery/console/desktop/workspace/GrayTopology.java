@@ -449,17 +449,24 @@ public class GrayTopology extends AbstractStrategyTopology {
     }
 
     @Override
-    public void modifyCondition() {
+    public boolean modifyCondition() {
         String grayCondition = ComboBoxUtil.getSelectedValue(grayConditionComboBox);
         String stableCondition = ComboBoxUtil.getSelectedValue(stableConditionComboBox);
 
         if (StringUtils.isBlank(grayCondition) || StringUtils.isBlank(stableCondition)) {
             JBasicOptionPane.showMessageDialog(HandleManager.getFrame(GrayTopology.this), ConsoleLocaleFactory.getString("condition_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
-            return;
+            return false;
         }
 
         modifyLinks(grayCondition, stableCondition);
+
+        return true;
+    }
+
+    @Override
+    public boolean modifyParameter() {
+        return true;
     }
 
     @Override

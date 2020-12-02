@@ -515,7 +515,7 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
             return;
         }
 
-        if (!addParameter()) {
+        if (!modifyParameter()) {
             return;
         }
 
@@ -550,38 +550,41 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
     }
 
     @Override
-    public void modifyCondition() {
+    public boolean modifyCondition() {
         String blueCondition = conditionPanel.getBlueCondition();
         String greenCondition = conditionPanel.getGreenCondition();
 
         if (StringUtils.isBlank(blueCondition)) {
             conditionPanel.showBlueConditionNotNullTip();
 
-            return;
+            return false;
         }
 
         if (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && StringUtils.isBlank(greenCondition)) {
             conditionPanel.showGreenConditionNotNullTip();
 
-            return;
+            return false;
         }
 
         if (blueCondition.contains("#H['']")) {
             conditionPanel.showBlueConditionInvalidFormatTip();
 
-            return;
+            return false;
         }
 
         if (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && greenCondition.contains("#H['']")) {
             conditionPanel.showGreenConditionInvalidFormatTip();
 
-            return;
+            return false;
         }
 
         modifyLinks(blueCondition, greenCondition);
+
+        return true;
     }
 
-    public boolean addParameter() {
+    @Override
+    public boolean modifyParameter() {
         String parameter = parameterTextField.getText().trim();
         if (StringUtils.equals(parameter, ConsoleLocaleFactory.getString("blue-green_parameter_example"))) {
             parameter = "";
@@ -599,10 +602,6 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
         dataBox.setID(map);
 
         return true;
-    }
-
-    public void modifyParameter() {
-        addParameter();
     }
 
     public void showParameterInvalidFormatTip() {

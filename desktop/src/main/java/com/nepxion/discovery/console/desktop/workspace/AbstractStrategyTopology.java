@@ -445,5 +445,7 @@ public abstract class AbstractStrategyTopology extends AbstractReleaseTopology {
 
     public abstract void modifyServiceStrategy(String serviceId);
 
-    public abstract void modifyCondition();
+    public abstract boolean modifyCondition();
+
+    public abstract boolean modifyParameter();
 }
