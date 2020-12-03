@@ -578,7 +578,7 @@ public class InspectorTopology extends AbstractTopology {
         if (portalType == PortalType.GATEWAY) {
             String firstServiceId = conditionPanel.getFirstServiceId();
 
-            address += "/" + firstServiceId + DiscoveryConstant.INSPECTOR_ENDPOINT_URL + parameter;
+            address += "/" + firstServiceId + "/" + DiscoveryConstant.INSPECTOR_ENDPOINT_URL + parameter;
 
             serviceIds = conditionPanel.getServiceIds(false);
         } else {
