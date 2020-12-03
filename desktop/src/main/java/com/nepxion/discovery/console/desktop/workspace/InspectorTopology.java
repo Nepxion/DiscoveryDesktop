@@ -47,6 +47,7 @@ import com.nepxion.cots.twaver.element.TNode;
 import com.nepxion.cots.twaver.icon.TIconFactory;
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
 import com.nepxion.discovery.common.entity.InspectorEntity;
+import com.nepxion.discovery.common.entity.ServiceType;
 import com.nepxion.discovery.common.exception.DiscoveryException;
 import com.nepxion.discovery.common.util.StringUtil;
 import com.nepxion.discovery.console.controller.ConsoleController;
@@ -484,12 +485,11 @@ public class InspectorTopology extends AbstractTopology {
                 List<Map<String, String>> metadatas = inspectorResult.getMetadatas();
 
                 TNode node = null;
-                int index = 0;
                 for (Map<String, String> metadataMap : metadatas) {
-                    NodeUI nodeUI = index == 0 ? gatewayNodeUI : serviceNodeUI;
-                    node = addNode(node, dimensionType, metadataMap, nodeUI, times);
+                    String serviceType = metadataMap.get("T");
 
-                    index++;
+                    NodeUI nodeUI = ServiceType.fromString(serviceType) == ServiceType.GATEWAY ? gatewayNodeUI : serviceNodeUI;
+                    node = addNode(node, dimensionType, metadataMap, nodeUI, times);
                 }
 
                 updateSuccessfulProgress();
