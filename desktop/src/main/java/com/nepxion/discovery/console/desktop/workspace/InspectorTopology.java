@@ -582,7 +582,7 @@ public class InspectorTopology extends AbstractTopology {
 
             serviceIds = conditionPanel.getServiceIds(false);
         } else {
-            address += DiscoveryConstant.INSPECTOR_ENDPOINT_URL + parameter;
+            address += "/" + DiscoveryConstant.INSPECTOR_ENDPOINT_URL + parameter;
 
             serviceIds = allServiceIds;
         }
