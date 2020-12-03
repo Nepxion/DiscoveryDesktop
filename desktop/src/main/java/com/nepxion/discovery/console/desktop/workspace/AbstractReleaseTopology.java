@@ -23,7 +23,6 @@ import com.nepxion.discovery.common.entity.SubscriptionType;
 import com.nepxion.discovery.console.cache.ConsoleCache;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
-import com.nepxion.discovery.console.desktop.common.swing.dialog.JExceptionDialog;
 import com.nepxion.discovery.console.desktop.common.util.ButtonUtil;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.PreviewPanel;
@@ -45,11 +44,11 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     public static final String APOLLO = "Apollo";
 
     protected ResetPanel resetPanel;
+    protected PreviewPanel previewPanel;
 
     protected ReleaseType releaseType;
     protected SubscriptionType subscriptionType;
 
-    protected String configType;
     protected String group;
     protected RuleEntity ruleEntity;
 
@@ -58,7 +57,6 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
         initializeToolBar();
         initializeOperationBar();
-        initializeData();
     }
 
     public void initializeToolBar() {
@@ -78,14 +76,6 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         toolBar.add(ButtonUtil.createButton(createLayoutAction()));
 
         ButtonManager.updateUI(toolBar);
-    }
-
-    public void initializeData() {
-        try {
-            configType = ConsoleCache.getConfigType();
-        } catch (Exception ex) {
-            JExceptionDialog.traceException(HandleManager.getFrame(AbstractReleaseTopology.this), ConsoleLocaleFactory.getString("operation_failure"), ex);
-        }
     }
 
     public void initializeView() {
@@ -224,7 +214,9 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
                     return;
                 }
 
-                PreviewPanel previewPanel = PreviewPanel.getInstance();
+                if (previewPanel == null) {
+                    previewPanel = new PreviewPanel();
+                }
 
                 String key = getKey();
 
@@ -278,6 +270,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     }
 
     public String getKey(String group, String serviceId) {
+        String configType = ConsoleCache.getConfigType();
         String key = null;
         if (StringUtils.equals(configType, APOLLO)) {
             key = group + "-" + serviceId;

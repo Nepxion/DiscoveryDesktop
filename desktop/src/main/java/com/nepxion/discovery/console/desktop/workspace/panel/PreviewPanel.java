@@ -25,20 +25,10 @@ import com.nepxion.swing.textfield.JBasicTextField;
 public class PreviewPanel extends JPanel {
     private static final long serialVersionUID = 1L;
 
-    protected static PreviewPanel previewPanel;
-
-    public static PreviewPanel getInstance() {
-        if (previewPanel == null) {
-            previewPanel = new PreviewPanel();
-        }
-
-        return previewPanel;
-    }
-
     protected JBasicTextField keyTextField;
     protected JBasicTextArea configTextArea;
 
-    private PreviewPanel() {
+    public PreviewPanel() {
         keyTextField = new JBasicTextField();
 
         JPanel keyPanel = new JPanel();

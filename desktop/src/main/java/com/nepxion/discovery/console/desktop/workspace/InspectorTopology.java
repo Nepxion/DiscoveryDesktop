@@ -50,6 +50,7 @@ import com.nepxion.discovery.common.entity.InspectorEntity;
 import com.nepxion.discovery.common.entity.ServiceType;
 import com.nepxion.discovery.common.exception.DiscoveryException;
 import com.nepxion.discovery.common.util.StringUtil;
+import com.nepxion.discovery.console.cache.ConsoleCache;
 import com.nepxion.discovery.console.controller.ConsoleController;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
@@ -58,6 +59,7 @@ import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.common.util.TextFieldUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.InspectorConditionPanel;
+import com.nepxion.discovery.console.desktop.workspace.panel.MultiPreviewPanel;
 import com.nepxion.discovery.console.desktop.workspace.topology.LinkUI;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeSizeType;
@@ -86,6 +88,8 @@ public class InspectorTopology extends AbstractTopology {
 
     private static final Logger LOG = LoggerFactory.getLogger(InspectorTopology.class);
 
+    public static final String APOLLO = "Apollo";
+
     protected NodeUI gatewayNodeUI = new NodeUI(NodeImageType.GATEWAY_BLUE, NodeSizeType.LARGE, true);
     protected NodeUI serviceNodeUI = new NodeUI(NodeImageType.SERVICE_BLUE, NodeSizeType.MIDDLE, true);
     protected Color linkUI = LinkUI.BLUE;
@@ -96,6 +100,7 @@ public class InspectorTopology extends AbstractTopology {
     protected JBasicTextField parameterTextField;
 
     protected InspectorConditionPanel conditionPanel;
+    protected MultiPreviewPanel multiPreviewPanel;
 
     protected JBasicComboBox dimensionComboBox;
     protected JBasicComboBox timesComboBox;
@@ -141,6 +146,7 @@ public class InspectorTopology extends AbstractTopology {
         toolBar.add(ButtonUtil.createButton(createStartAction()));
         toolBar.add(ButtonUtil.createButton(createStopAction()));
         toolBar.addSeparator();
+        toolBar.add(ButtonUtil.createButton(createViewAction()));
         toolBar.add(ButtonUtil.createButton(createSetAction()));
         toolBar.addSeparator();
         toolBar.add(ButtonUtil.createButton(createLayoutAction()));
@@ -377,6 +383,7 @@ public class InspectorTopology extends AbstractTopology {
             node = addNode(nodeName, nodeUI);
             setNodeLabelPosition(node, TWaverConst.POSITION_RIGHT);
 
+            node.setUserObject(metadataMap);
             node.setToolTipText(nodeName);
         }
 
@@ -637,6 +644,18 @@ public class InspectorTopology extends AbstractTopology {
         }
     }
 
+    public String getKey(String group, String serviceId) {
+        String configType = ConsoleCache.getConfigType();
+        String key = null;
+        if (StringUtils.equals(configType, APOLLO)) {
+            key = group + "-" + serviceId;
+        } else {
+            key = "Data ID=" + serviceId + " | Group=" + group;
+        }
+
+        return key;
+    }
+
     public void stop() {
         if (executorService == null) {
             return;
@@ -668,6 +687,42 @@ public class InspectorTopology extends AbstractTopology {
 
             public void execute(ActionEvent e) {
                 stop();
+            }
+        };
+
+        return action;
+    }
+
+    public JSecurityAction createViewAction() {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("view_text"), ConsoleIconFactory.getSwingIcon("ticket.png"), ConsoleLocaleFactory.getString("view_config_tooltip")) {
+            private static final long serialVersionUID = 1L;
+
+            @SuppressWarnings("unchecked")
+            public void execute(ActionEvent e) {
+                if (multiPreviewPanel == null) {
+                    multiPreviewPanel = new MultiPreviewPanel();
+                }
+
+                TNode node = TElementManager.getSelectedNode(dataBox);
+                if (node == null) {
+                    JBasicOptionPane.showMessageDialog(HandleManager.getFrame(InspectorTopology.this), ConsoleLocaleFactory.getString("service_or_gateway_selected"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
+
+                    return;
+                }
+
+                Map<String, String> metadataMap = (Map<String, String>) node.getUserObject();
+                String group = metadataMap.get("G");
+                String serviceId = metadataMap.get("ID");
+
+                String partialConfig = ConsoleController.remoteConfigView(group, serviceId);
+                multiPreviewPanel.getPartialPreviewPanel().setKey(getKey(group, serviceId));
+                multiPreviewPanel.getPartialPreviewPanel().setConfig(partialConfig);
+
+                String globalConfig = ConsoleController.remoteConfigView(group, group);
+                multiPreviewPanel.getGlobalPreviewPanel().setKey(getKey(group, group));
+                multiPreviewPanel.getGlobalPreviewPanel().setConfig(globalConfig);
+
+                JBasicOptionPane.showOptionDialog(HandleManager.getFrame(InspectorTopology.this), multiPreviewPanel, ConsoleLocaleFactory.getString("view_config_tooltip"), JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/property.png"), new Object[] { SwingLocale.getString("close") }, null, true);
             }
         };
 
