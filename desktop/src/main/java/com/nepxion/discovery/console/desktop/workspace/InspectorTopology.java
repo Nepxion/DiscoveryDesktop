@@ -571,20 +571,19 @@ public class InspectorTopology extends AbstractTopology {
         ElementNode portalElementNode = (ElementNode) portalComboBox.getSelectedItem();
         PortalType portalType = (PortalType) portalElementNode.getUserObject();
 
-        List<String> allServiceIds = null;
+        parameter = StringUtils.isNotBlank(parameter) ? "?" + parameter : "";
+        List<String> allServiceIds = conditionPanel.getServiceIds(true);
         List<String> serviceIds = null;
 
         if (portalType == PortalType.GATEWAY) {
             String firstServiceId = conditionPanel.getFirstServiceId();
 
-            address += "/" + firstServiceId + DiscoveryConstant.INSPECTOR_ENDPOINT_URL + (StringUtils.isNotBlank(parameter) ? "?" + parameter : "");
+            address += "/" + firstServiceId + DiscoveryConstant.INSPECTOR_ENDPOINT_URL + parameter;
 
-            allServiceIds = conditionPanel.getServiceIds(true);
             serviceIds = conditionPanel.getServiceIds(false);
         } else {
-            address += DiscoveryConstant.INSPECTOR_ENDPOINT_URL + (StringUtils.isNotBlank(parameter) ? "?" + parameter : "");
+            address += DiscoveryConstant.INSPECTOR_ENDPOINT_URL + parameter;
 
-            allServiceIds = conditionPanel.getServiceIds(true);
             serviceIds = allServiceIds;
         }
 
