@@ -295,7 +295,7 @@ public class InspectorTopology extends AbstractTopology {
         JPanel toolBar = new JPanel();
         toolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
         toolBar.add(new JClassicButton(createRefreshServiceListAction()));
-        toolBar.add(new JClassicButton(createViewFailureListAction()));
+        // toolBar.add(new JClassicButton(createViewFailureListAction()));
 
         double[][] size = {
                 { TableLayout.FILL },
