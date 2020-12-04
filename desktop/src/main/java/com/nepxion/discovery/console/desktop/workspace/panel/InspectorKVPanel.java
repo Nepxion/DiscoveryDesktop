@@ -154,6 +154,8 @@ public class InspectorKVPanel extends JPanel {
             public KVItem(String uuid) {
                 this.uuid = uuid;
 
+                // DimensionUtil.setWidth(keyTextField, 136);
+
                 addButton.setName(uuid);
                 removeButton.setName(uuid);
 

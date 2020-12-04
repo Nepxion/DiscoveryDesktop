@@ -617,8 +617,8 @@ public class InspectorTopology extends AbstractTopology {
 
         StringBuilder informationStringBuilder = new StringBuilder();
         informationStringBuilder.append("① " + ConsoleLocaleFactory.getString("inspector_url") + " : \n" + url + "\n");
-        informationStringBuilder.append("② " + ConsoleLocaleFactory.getString("inspector_parameter") + " : \n" + parameterType + " - " + parameterMap + "\n");
-        informationStringBuilder.append("③ " + ConsoleLocaleFactory.getString("inspector_services") + " : \n");
+        // informationStringBuilder.append("② " + ConsoleLocaleFactory.getString("inspector_parameter") + " : \n" + parameterType + " - " + parameterMap + "\n");
+        informationStringBuilder.append("② " + ConsoleLocaleFactory.getString("inspector_services") + " : \n");
         for (int i = 0; i < allServiceIds.size(); i++) {
             String serviceId = allServiceIds.get(i);
 
