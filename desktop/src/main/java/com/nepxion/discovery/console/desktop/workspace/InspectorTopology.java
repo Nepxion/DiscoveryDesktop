@@ -58,7 +58,7 @@ import com.nepxion.discovery.console.desktop.common.util.ButtonUtil;
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.InspectorConditionPanel;
-import com.nepxion.discovery.console.desktop.workspace.panel.InspectorKVPanel;
+import com.nepxion.discovery.console.desktop.workspace.panel.InspectorParameterPanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.MultiPreviewPanel;
 import com.nepxion.discovery.console.desktop.workspace.topology.LinkUI;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
@@ -97,7 +97,7 @@ public class InspectorTopology extends AbstractTopology {
     protected JBasicComboBox serviceIdComboBox;
     protected JBasicComboBox instanceComboBox;
     protected JBasicComboBox parameterComboBox;
-    protected InspectorKVPanel kvPanel;
+    protected InspectorParameterPanel parameterPanel;
 
     protected InspectorConditionPanel conditionPanel;
     protected MultiPreviewPanel multiPreviewPanel;
@@ -203,7 +203,7 @@ public class InspectorTopology extends AbstractTopology {
 
         parameterComboBox = new JBasicComboBox(parameterElementNodes.toArray());
 
-        kvPanel = new InspectorKVPanel();
+        parameterPanel = new InspectorParameterPanel();
 
         setServiceIds();
         setInstances();
@@ -227,7 +227,7 @@ public class InspectorTopology extends AbstractTopology {
         portalPanel.add(instanceComboBox, "1, 2");
         portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("parameter")), 5), "0, 3");
         portalPanel.add(parameterComboBox, "1, 3");
-        portalPanel.add(kvPanel, "0, 4, 1, 4");
+        portalPanel.add(parameterPanel, "0, 4, 1, 4");
 
         JShrinkShortcut conditionShrinkShortcut = new JShrinkShortcut();
         conditionShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("inspector_link"));
@@ -236,10 +236,10 @@ public class InspectorTopology extends AbstractTopology {
 
         conditionPanel = new InspectorConditionPanel();
 
-        JShrinkShortcut parameterShrinkShortcut = new JShrinkShortcut();
-        parameterShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("inspector_parameter"));
-        parameterShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
-        parameterShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString("inspector_parameter"));
+        JShrinkShortcut executorShrinkShortcut = new JShrinkShortcut();
+        executorShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("inspector_executor"));
+        executorShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
+        executorShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString("inspector_executor"));
 
         List<ElementNode> dimensionElementNodes = new ArrayList<ElementNode>();
         DimensionType[] dimensionTypes = DimensionType.values();
@@ -266,29 +266,29 @@ public class InspectorTopology extends AbstractTopology {
         spentTextField = new JBasicTextField("0");
         spentTextField.setEditable(false);
 
-        double[][] parameterSize = {
+        double[][] executorSize = {
                 { TableLayout.PREFERRED, TableLayout.FILL, 5, TableLayout.PREFERRED, TableLayout.FILL, 5, TableLayout.PREFERRED, TableLayout.FILL },
                 { TableLayout.PREFERRED, TableLayout.PREFERRED }
         };
 
-        TableLayout parameterTableLayout = new TableLayout(parameterSize);
-        parameterTableLayout.setHGap(0);
-        parameterTableLayout.setVGap(5);
+        TableLayout executorTableLayout = new TableLayout(executorSize);
+        executorTableLayout.setHGap(0);
+        executorTableLayout.setVGap(5);
 
-        JPanel parameterPanel = new JPanel();
-        parameterPanel.setLayout(parameterTableLayout);
-        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("dimension")), 5), "0, 0");
-        parameterPanel.add(dimensionComboBox, "1, 0");
-        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("times")), 5), "3, 0");
-        parameterPanel.add(timesComboBox, "4, 0");
-        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("concurrency")), 5), "6, 0");
-        parameterPanel.add(concurrencyComboBox, "7, 0");
-        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("successful")), 5), "0, 1");
-        parameterPanel.add(DimensionUtil.addHeight(successfulProgressBar, 6), "1, 1");
-        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("failure")), 5), "3, 1");
-        parameterPanel.add(DimensionUtil.addHeight(failureProgressBar, 6), "4, 1");
-        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("spent")), 5), "6, 1");
-        parameterPanel.add(spentTextField, "7, 1");
+        JPanel executorPanel = new JPanel();
+        executorPanel.setLayout(executorTableLayout);
+        executorPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("dimension")), 5), "0, 0");
+        executorPanel.add(dimensionComboBox, "1, 0");
+        executorPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("times")), 5), "3, 0");
+        executorPanel.add(timesComboBox, "4, 0");
+        executorPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("concurrency")), 5), "6, 0");
+        executorPanel.add(concurrencyComboBox, "7, 0");
+        executorPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("successful")), 5), "0, 1");
+        executorPanel.add(DimensionUtil.addHeight(successfulProgressBar, 6), "1, 1");
+        executorPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("failure")), 5), "3, 1");
+        executorPanel.add(DimensionUtil.addHeight(failureProgressBar, 6), "4, 1");
+        executorPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("spent")), 5), "6, 1");
+        executorPanel.add(spentTextField, "7, 1");
 
         double[][] size = {
                 { TableLayout.FILL },
@@ -305,8 +305,8 @@ public class InspectorTopology extends AbstractTopology {
         operationBar.add(portalPanel, "0, 1");
         operationBar.add(conditionShrinkShortcut, "0, 3");
         operationBar.add(conditionPanel, "0, 4");
-        operationBar.add(parameterShrinkShortcut, "0, 6");
-        operationBar.add(parameterPanel, "0, 7");
+        operationBar.add(executorShrinkShortcut, "0, 6");
+        operationBar.add(executorPanel, "0, 7");
     }
 
     public void setTitle(DimensionType dimensionType, int linkCount) {
@@ -608,7 +608,7 @@ public class InspectorTopology extends AbstractTopology {
             serviceIds = allServiceIds;
         }
 
-        Map<String, String> parameterMap = kvPanel.getMap();
+        Map<String, String> parameterMap = parameterPanel.getParameterMap();
 
         StringBuilder informationStringBuilder = new StringBuilder();
         informationStringBuilder.append("① " + ConsoleLocaleFactory.getString("inspector_url") + " : \n" + url + "\n");
