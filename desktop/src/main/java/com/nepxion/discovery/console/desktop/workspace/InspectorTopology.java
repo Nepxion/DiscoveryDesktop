@@ -468,10 +468,10 @@ public class InspectorTopology extends AbstractTopology {
     }
 
     public class InspectorSwingWorker extends SwingWorker<InspectorResult, Void> {
-        protected DimensionType dimensionType;
-        protected ParameterType parameterType;
         protected String url;
         protected String parameter;
+        protected ParameterType parameterType;
+        protected DimensionType dimensionType;
         protected InspectorEntity inspectorEntity;
         protected int times;
 
@@ -548,22 +548,6 @@ public class InspectorTopology extends AbstractTopology {
             spentTextField.setText(String.valueOf(spentTime));
         }
 
-        public DimensionType getDimensionType() {
-            return dimensionType;
-        }
-
-        public void setDimensionType(DimensionType dimensionType) {
-            this.dimensionType = dimensionType;
-        }
-
-        public ParameterType getParameterType() {
-            return parameterType;
-        }
-
-        public void setParameterType(ParameterType parameterType) {
-            this.parameterType = parameterType;
-        }
-
         public String getUrl() {
             return url;
         }
@@ -578,6 +562,22 @@ public class InspectorTopology extends AbstractTopology {
 
         public void setParameter(String parameter) {
             this.parameter = parameter;
+        }
+
+        public ParameterType getParameterType() {
+            return parameterType;
+        }
+
+        public void setParameterType(ParameterType parameterType) {
+            this.parameterType = parameterType;
+        }
+
+        public DimensionType getDimensionType() {
+            return dimensionType;
+        }
+
+        public void setDimensionType(DimensionType dimensionType) {
+            this.dimensionType = dimensionType;
         }
 
         public InspectorEntity getInspectorEntity() {
@@ -616,14 +616,14 @@ public class InspectorTopology extends AbstractTopology {
             return;
         }
 
-        ElementNode dimensionElementNode = (ElementNode) dimensionComboBox.getSelectedItem();
-        DimensionType dimensionType = (DimensionType) dimensionElementNode.getUserObject();
+        ElementNode portalElementNode = (ElementNode) portalComboBox.getSelectedItem();
+        PortalType portalType = (PortalType) portalElementNode.getUserObject();
 
         ElementNode parameterElementNode = (ElementNode) parameterComboBox.getSelectedItem();
         ParameterType parameterType = (ParameterType) parameterElementNode.getUserObject();
 
-        ElementNode portalElementNode = (ElementNode) portalComboBox.getSelectedItem();
-        PortalType portalType = (PortalType) portalElementNode.getUserObject();
+        ElementNode dimensionElementNode = (ElementNode) dimensionComboBox.getSelectedItem();
+        DimensionType dimensionType = (DimensionType) dimensionElementNode.getUserObject();
 
         List<String> allServiceIds = conditionPanel.getServiceIds(true);
         List<String> serviceIds = null;
@@ -684,10 +684,10 @@ public class InspectorTopology extends AbstractTopology {
         executorService = Executors.newFixedThreadPool(concurrency);
         for (int i = 0; i < times; i++) {
             InspectorSwingWorker inspectorSwingWorker = new InspectorSwingWorker();
-            inspectorSwingWorker.setDimensionType(dimensionType);
-            inspectorSwingWorker.setParameterType(parameterType);
             inspectorSwingWorker.setUrl(url);
             inspectorSwingWorker.setParameter(parameter);
+            inspectorSwingWorker.setParameterType(parameterType);
+            inspectorSwingWorker.setDimensionType(dimensionType);
             inspectorSwingWorker.setInspectorEntity(inspectorEntity);
             inspectorSwingWorker.setTimes(times);
 
