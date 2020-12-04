@@ -9,12 +9,10 @@ package com.nepxion.discovery.console.desktop.workspace.type;
  * @version 1.0
  */
 
-import org.apache.commons.lang3.StringUtils;
-
 public enum ParameterType {
-    HEADER("header"),
-    PARAMETER("parameter"),
-    COOKIE("cookie");
+    HEADER("Http Header"),
+    PARAMETER("Http Parameter"),
+    COOKIE("Http Cookie");
 
     private String value;
 
@@ -24,10 +22,6 @@ public enum ParameterType {
 
     public String getValue() {
         return value;
-    }
-
-    public String getCapitalizeValue() {
-        return StringUtils.capitalize(value);
     }
 
     public static ParameterType fromString(String value) {

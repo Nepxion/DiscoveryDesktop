@@ -199,7 +199,7 @@ public class InspectorTopology extends AbstractTopology {
         ParameterType[] parameterTypes = ParameterType.values();
         for (int i = 0; i < parameterTypes.length; i++) {
             ParameterType parameterType = parameterTypes[i];
-            parameterElementNodes.add(new ElementNode(parameterType.toString(), parameterType.getCapitalizeValue(), null, parameterType.getCapitalizeValue(), parameterType));
+            parameterElementNodes.add(new ElementNode(parameterType.toString(), parameterType.toString(), null, parameterType.toString(), parameterType));
         }
 
         parameterComboBox = new JBasicComboBox(parameterElementNodes.toArray());
@@ -469,7 +469,9 @@ public class InspectorTopology extends AbstractTopology {
 
     public class InspectorSwingWorker extends SwingWorker<InspectorResult, Void> {
         protected DimensionType dimensionType;
-        protected String address;
+        protected ParameterType parameterType;
+        protected String url;
+        protected String parameter;
         protected InspectorEntity inspectorEntity;
         protected int times;
 
@@ -478,7 +480,19 @@ public class InspectorTopology extends AbstractTopology {
             InspectorResult inspectorResult = new InspectorResult();
 
             try {
-                InspectorEntity resultInspectorEntity = ConsoleController.inspect(address, inspectorEntity);
+                InspectorEntity resultInspectorEntity = null;
+                switch (parameterType) {
+                    case HEADER:
+                        resultInspectorEntity = ConsoleController.inspectByHeader(url, parameter, inspectorEntity);
+                        break;
+                    case PARAMETER:
+                        resultInspectorEntity = ConsoleController.inspectByParameter(url, parameter, inspectorEntity);
+                        break;
+                    case COOKIE:
+                        resultInspectorEntity = ConsoleController.inspectByCookie(url, parameter, inspectorEntity);
+                        break;
+                }
+
                 List<Map<String, String>> metadatas = convertToMetadatas(resultInspectorEntity);
 
                 inspectorResult.setMetadatas(metadatas);
@@ -542,12 +556,28 @@ public class InspectorTopology extends AbstractTopology {
             this.dimensionType = dimensionType;
         }
 
-        public String getAddress() {
-            return address;
+        public ParameterType getParameterType() {
+            return parameterType;
         }
 
-        public void setAddress(String address) {
-            this.address = address;
+        public void setParameterType(ParameterType parameterType) {
+            this.parameterType = parameterType;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public String getParameter() {
+            return parameter;
+        }
+
+        public void setParameter(String parameter) {
+            this.parameter = parameter;
         }
 
         public InspectorEntity getInspectorEntity() {
@@ -568,8 +598,8 @@ public class InspectorTopology extends AbstractTopology {
     }
 
     public void start() {
-        String address = ComboBoxUtil.getSelectedValue(instanceComboBox);
-        if (StringUtils.isBlank(address)) {
+        String url = ComboBoxUtil.getSelectedValue(instanceComboBox);
+        if (StringUtils.isBlank(url)) {
             JBasicOptionPane.showMessageDialog(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("address_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
             return;
@@ -589,27 +619,31 @@ public class InspectorTopology extends AbstractTopology {
         ElementNode dimensionElementNode = (ElementNode) dimensionComboBox.getSelectedItem();
         DimensionType dimensionType = (DimensionType) dimensionElementNode.getUserObject();
 
+        ElementNode parameterElementNode = (ElementNode) parameterComboBox.getSelectedItem();
+        ParameterType parameterType = (ParameterType) parameterElementNode.getUserObject();
+
         ElementNode portalElementNode = (ElementNode) portalComboBox.getSelectedItem();
         PortalType portalType = (PortalType) portalElementNode.getUserObject();
 
-        parameter = StringUtils.isNotBlank(parameter) ? "?" + parameter : "";
         List<String> allServiceIds = conditionPanel.getServiceIds(true);
         List<String> serviceIds = null;
 
         if (portalType == PortalType.GATEWAY) {
             String firstServiceId = conditionPanel.getFirstServiceId();
 
-            address += "/" + firstServiceId + "/" + DiscoveryConstant.INSPECTOR_ENDPOINT_URL + parameter;
+            url += "/" + firstServiceId + "/" + DiscoveryConstant.INSPECTOR_ENDPOINT_URL;
 
             serviceIds = conditionPanel.getServiceIds(false);
         } else {
-            address += "/" + DiscoveryConstant.INSPECTOR_ENDPOINT_URL + parameter;
+            url += "/" + DiscoveryConstant.INSPECTOR_ENDPOINT_URL;
 
             serviceIds = allServiceIds;
         }
 
         StringBuilder informationStringBuilder = new StringBuilder();
-        informationStringBuilder.append(ConsoleLocaleFactory.getString("inspector_url") + " : \n" + address + "\n" + ConsoleLocaleFactory.getString("inspector_services") + " : \n");
+        informationStringBuilder.append("① " + ConsoleLocaleFactory.getString("inspector_url") + " : \n" + url + "\n");
+        informationStringBuilder.append("② " + ConsoleLocaleFactory.getString("inspector_parameter") + " : \n" + parameterType + " - " + (StringUtils.isNotEmpty(parameter) ? parameter : ConsoleLocaleFactory.getString("none")) + "\n");
+        informationStringBuilder.append("③ " + ConsoleLocaleFactory.getString("inspector_services") + " : \n");
         for (int i = 0; i < allServiceIds.size(); i++) {
             String serviceId = allServiceIds.get(i);
 
@@ -624,8 +658,9 @@ public class InspectorTopology extends AbstractTopology {
             return;
         }
 
-        LOG.info("Inspection URL={}", address);
-        LOG.info("Inspection Services={}", allServiceIds);
+        LOG.info("Inspection URL : {}", url);
+        LOG.info("Inspection Paramter : {} - {}", parameterType, StringUtils.isNotEmpty(parameter) ? parameter : ConsoleLocaleFactory.getString("none"));
+        LOG.info("Inspection Services : {}", allServiceIds);
 
         setTitle(dimensionType);
         dataBox.clear();
@@ -650,7 +685,9 @@ public class InspectorTopology extends AbstractTopology {
         for (int i = 0; i < times; i++) {
             InspectorSwingWorker inspectorSwingWorker = new InspectorSwingWorker();
             inspectorSwingWorker.setDimensionType(dimensionType);
-            inspectorSwingWorker.setAddress(address);
+            inspectorSwingWorker.setParameterType(parameterType);
+            inspectorSwingWorker.setUrl(url);
+            inspectorSwingWorker.setParameter(parameter);
             inspectorSwingWorker.setInspectorEntity(inspectorEntity);
             inspectorSwingWorker.setTimes(times);
 
@@ -759,7 +796,7 @@ public class InspectorTopology extends AbstractTopology {
     }
 
     public JSecurityAction createViewFailureListAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("view_failure_list_tooltip"), ConsoleIconFactory.getSwingIcon("netbean/rotate_16.png"), ConsoleLocaleFactory.getString("view_failure_list_tooltip")) {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("view_failure_list_tooltip"), ConsoleIconFactory.getSwingIcon("netbean/lighting_16.png"), ConsoleLocaleFactory.getString("view_failure_list_tooltip")) {
             private static final long serialVersionUID = 1L;
 
             public void execute(ActionEvent e) {
