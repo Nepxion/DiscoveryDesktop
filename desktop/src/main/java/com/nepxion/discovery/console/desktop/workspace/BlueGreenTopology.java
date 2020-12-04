@@ -198,18 +198,12 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
 
         blueMetadataComboBox = new JBasicComboBox();
         blueMetadataComboBox.setEditable(true);
-        JClassicButton blueMetadataButton = new JClassicButton(createMetadataSelectorAction(blueMetadataComboBox));
-        DimensionUtil.setWidth(blueMetadataButton, 30);
 
         greenMetadataComboBox = new JBasicComboBox();
         greenMetadataComboBox.setEditable(true);
-        JClassicButton greenMetadataButton = new JClassicButton(createMetadataSelectorAction(greenMetadataComboBox));
-        DimensionUtil.setWidth(greenMetadataButton, 30);
 
         basicMetadataComboBox = new JBasicComboBox();
         basicMetadataComboBox.setEditable(true);
-        JClassicButton basicMetadataButton = new JClassicButton(createMetadataSelectorAction(basicMetadataComboBox));
-        DimensionUtil.setWidth(basicMetadataButton, 30);
 
         double[][] orchestrationSize = {
                 { TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },
@@ -227,13 +221,13 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
         orchestrationPanel.add(DimensionUtil.setWidth(new JClassicButton(createRefreshServiceListAction()), 30), "2, 0");
         orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(TypeLocale.getDescription(ElementType.BLUE)), 5), "0, 1");
         orchestrationPanel.add(blueMetadataComboBox, "1, 1");
-        orchestrationPanel.add(blueMetadataButton, "2, 1");
+        orchestrationPanel.add(DimensionUtil.setWidth(new JClassicButton(createMetadataSelectorAction(blueMetadataComboBox)), 30), "2, 1");
         orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(TypeLocale.getDescription(ElementType.GREEN)), 5), "0, 2");
         orchestrationPanel.add(greenMetadataComboBox, "1, 2");
-        orchestrationPanel.add(greenMetadataButton, "2, 2");
+        orchestrationPanel.add(DimensionUtil.setWidth(new JClassicButton(createMetadataSelectorAction(greenMetadataComboBox)), 30), "2, 2");
         orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(TypeLocale.getDescription(ElementType.BASIC)), 5), "0, 3");
         orchestrationPanel.add(basicMetadataComboBox, "1, 3");
-        orchestrationPanel.add(basicMetadataButton, "2, 3");
+        orchestrationPanel.add(DimensionUtil.setWidth(new JClassicButton(createMetadataSelectorAction(basicMetadataComboBox)), 30), "2, 3");
 
         orchestrationToolBar = new JPanel();
         orchestrationToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));

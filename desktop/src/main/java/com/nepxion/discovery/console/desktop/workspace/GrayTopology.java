@@ -199,13 +199,9 @@ public class GrayTopology extends AbstractStrategyTopology {
 
         grayMetadataComboBox = new JBasicComboBox();
         grayMetadataComboBox.setEditable(true);
-        JClassicButton grayMetadataButton = new JClassicButton(createMetadataSelectorAction(grayMetadataComboBox));
-        DimensionUtil.setWidth(grayMetadataButton, 30);
 
         stableMetadataComboBox = new JBasicComboBox();
         stableMetadataComboBox.setEditable(true);
-        JClassicButton stableMetadataButton = new JClassicButton(createMetadataSelectorAction(stableMetadataComboBox));
-        DimensionUtil.setWidth(stableMetadataButton, 30);
 
         double[][] orchestrationSize = {
                 { TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED },
@@ -223,10 +219,10 @@ public class GrayTopology extends AbstractStrategyTopology {
         orchestrationPanel.add(DimensionUtil.setWidth(new JClassicButton(createRefreshServiceListAction()), 30), "2, 0");
         orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(TypeLocale.getDescription(ElementType.GRAY)), 5), "0, 1");
         orchestrationPanel.add(grayMetadataComboBox, "1, 1");
-        orchestrationPanel.add(grayMetadataButton, "2, 1");
+        orchestrationPanel.add(DimensionUtil.setWidth(new JClassicButton(createMetadataSelectorAction(grayMetadataComboBox)), 30), "2, 1");
         orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(TypeLocale.getDescription(ElementType.STABLE)), 5), "0, 2");
         orchestrationPanel.add(stableMetadataComboBox, "1, 2");
-        orchestrationPanel.add(stableMetadataButton, "2, 2");
+        orchestrationPanel.add(DimensionUtil.setWidth(new JClassicButton(createMetadataSelectorAction(stableMetadataComboBox)), 30), "2, 2");
 
         orchestrationToolBar = new JPanel();
         orchestrationToolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
