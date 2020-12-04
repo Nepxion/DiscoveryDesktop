@@ -159,6 +159,7 @@ public abstract class AbstractTopology extends BasicTopology {
             resultScrollPane.setMaximumSize(new Dimension(800, 600));
             DimensionUtil.addHeight(resultScrollPane, 20);
         }
+
         resultTextArea.setText(result.toString());
 
         JBasicOptionPane.showOptionDialog(HandleManager.getFrame(this), resultScrollPane, ConsoleLocaleFactory.getString("execute_result"), JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/edit.png"), new Object[] { SwingLocale.getString("close") }, null, true);
