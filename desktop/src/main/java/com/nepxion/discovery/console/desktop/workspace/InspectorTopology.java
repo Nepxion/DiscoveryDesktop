@@ -72,12 +72,10 @@ import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.discovery.console.entity.Instance;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.ButtonManager;
-import com.nepxion.swing.button.JClassicButton;
 import com.nepxion.swing.combobox.JBasicComboBox;
 import com.nepxion.swing.element.ElementNode;
 import com.nepxion.swing.handle.HandleManager;
 import com.nepxion.swing.label.JBasicLabel;
-import com.nepxion.swing.layout.filed.FiledLayout;
 import com.nepxion.swing.layout.table.TableLayout;
 import com.nepxion.swing.locale.SwingLocale;
 import com.nepxion.swing.optionpane.JBasicOptionPane;
@@ -148,6 +146,7 @@ public class InspectorTopology extends AbstractTopology {
         toolBar.add(ButtonUtil.createButton(createStartAction()));
         toolBar.add(ButtonUtil.createButton(createStopAction()));
         toolBar.addSeparator();
+        toolBar.add(ButtonUtil.createButton(createRefreshServiceListAction()));
         toolBar.add(ButtonUtil.createButton(createViewAction()));
         toolBar.add(ButtonUtil.createButton(createSetAction()));
         toolBar.addSeparator();
@@ -220,7 +219,7 @@ public class InspectorTopology extends AbstractTopology {
 
         JPanel portalPanel = new JPanel();
         portalPanel.setLayout(portalTableLayout);
-        portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("type")), 5), "0, 0");
+        portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("portal_type")), 5), "0, 0");
         portalPanel.add(portalComboBox, "1, 0");
         portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("name")), 5), "0, 1");
         portalPanel.add(serviceIdComboBox, "1, 1");
@@ -268,8 +267,8 @@ public class InspectorTopology extends AbstractTopology {
         spentTextField.setEditable(false);
 
         double[][] parameterSize = {
-                { TableLayout.PREFERRED, TableLayout.FILL, 5, TableLayout.PREFERRED, TableLayout.FILL },
-                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
+                { TableLayout.PREFERRED, TableLayout.FILL, 5, TableLayout.PREFERRED, TableLayout.FILL, 5, TableLayout.PREFERRED, TableLayout.FILL },
+                { TableLayout.PREFERRED, TableLayout.PREFERRED }
         };
 
         TableLayout parameterTableLayout = new TableLayout(parameterSize);
@@ -279,26 +278,21 @@ public class InspectorTopology extends AbstractTopology {
         JPanel parameterPanel = new JPanel();
         parameterPanel.setLayout(parameterTableLayout);
         parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("dimension")), 5), "0, 0");
-        parameterPanel.add(dimensionComboBox, "1, 0, 4, 0");
-        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("times")), 5), "0, 1");
-        parameterPanel.add(timesComboBox, "1, 1");
-        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("concurrency")), 5), "3, 1");
-        parameterPanel.add(concurrencyComboBox, "4, 1");
-        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("successful")), 5), "0, 2");
-        parameterPanel.add(DimensionUtil.addHeight(successfulProgressBar, 6), "1, 2");
-        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("failure")), 5), "3, 2");
-        parameterPanel.add(DimensionUtil.addHeight(failureProgressBar, 6), "4, 2");
-        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("spent")), 5), "0, 3");
-        parameterPanel.add(spentTextField, "1, 3, 4, 3");
-
-        JPanel toolBar = new JPanel();
-        toolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
-        toolBar.add(new JClassicButton(createRefreshServiceListAction()));
-        // toolBar.add(new JClassicButton(createViewFailureListAction()));
+        parameterPanel.add(dimensionComboBox, "1, 0");
+        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("times")), 5), "3, 0");
+        parameterPanel.add(timesComboBox, "4, 0");
+        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("concurrency")), 5), "6, 0");
+        parameterPanel.add(concurrencyComboBox, "7, 0");
+        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("successful")), 5), "0, 1");
+        parameterPanel.add(DimensionUtil.addHeight(successfulProgressBar, 6), "1, 1");
+        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("failure")), 5), "3, 1");
+        parameterPanel.add(DimensionUtil.addHeight(failureProgressBar, 6), "4, 1");
+        parameterPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("spent")), 5), "6, 1");
+        parameterPanel.add(spentTextField, "7, 1");
 
         double[][] size = {
                 { TableLayout.FILL },
-                { TableLayout.PREFERRED, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, TableLayout.PREFERRED, 10, TableLayout.PREFERRED }
+                { TableLayout.PREFERRED, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, TableLayout.PREFERRED }
         };
 
         TableLayout tableLayout = new TableLayout(size);
@@ -313,11 +307,10 @@ public class InspectorTopology extends AbstractTopology {
         operationBar.add(conditionPanel, "0, 4");
         operationBar.add(parameterShrinkShortcut, "0, 6");
         operationBar.add(parameterPanel, "0, 7");
-        operationBar.add(toolBar, "0, 9");
     }
 
-    public void setTitle(DimensionType dimensionType) {
-        background.setTitle(TypeLocale.getDescription(FeatureType.INSPECTOR) + (dimensionType != null ? " | " + TypeLocale.getDescription(dimensionType) : ""));
+    public void setTitle(DimensionType dimensionType, int linkCount) {
+        background.setTitle(TypeLocale.getDescription(FeatureType.INSPECTOR) + " | " + ConsoleLocaleFactory.getString(dimensionType.toString() + "_dimension_full") + " | " + linkCount + " " + ConsoleLocaleFactory.getString("link_count"));
     }
 
     public void setServiceIds() {
@@ -349,6 +342,8 @@ public class InspectorTopology extends AbstractTopology {
                 addresses.add("http://" + instance.getHost() + ":" + instance.getPort());
             }
             ComboBoxUtil.setSortableModel(instanceComboBox, addresses);
+        } else {
+            ComboBoxUtil.setSortableModel(instanceComboBox, new ArrayList<String>());
         }
     }
 
@@ -637,7 +632,7 @@ public class InspectorTopology extends AbstractTopology {
         LOG.info("Inspection Paramter : {} - {}", parameterType, parameterMap);
         LOG.info("Inspection Services : {}", allServiceIds);
 
-        setTitle(dimensionType);
+        setTitle(dimensionType, allServiceIds.size() + 1);
         dataBox.clear();
 
         InspectorEntity inspectorEntity = new InspectorEntity();
@@ -764,18 +759,6 @@ public class InspectorTopology extends AbstractTopology {
                 setInstances();
 
                 conditionPanel.setServiceIds();
-            }
-        };
-
-        return action;
-    }
-
-    public JSecurityAction createViewFailureListAction() {
-        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("view_failure_list_tooltip"), ConsoleIconFactory.getSwingIcon("netbean/lighting_16.png"), ConsoleLocaleFactory.getString("view_failure_list_tooltip")) {
-            private static final long serialVersionUID = 1L;
-
-            public void execute(ActionEvent e) {
-
             }
         };
 
