@@ -196,8 +196,6 @@ public class GrayTopology extends AbstractStrategyTopology {
             }
         });
         ComboBoxUtil.installlAutoCompletion(serviceIdComboBox);
-        JClassicButton refreshServiceIdButton = new JClassicButton(createRefreshServiceIdAction());
-        DimensionUtil.setWidth(refreshServiceIdButton, 30);
 
         grayMetadataComboBox = new JBasicComboBox();
         grayMetadataComboBox.setEditable(true);
@@ -222,7 +220,7 @@ public class GrayTopology extends AbstractStrategyTopology {
         orchestrationPanel.setLayout(orchestrationTableLayout);
         orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("service")), 5), "0, 0");
         orchestrationPanel.add(serviceIdComboBox, "1, 0");
-        orchestrationPanel.add(refreshServiceIdButton, "2, 0");
+        orchestrationPanel.add(DimensionUtil.setWidth(new JClassicButton(createRefreshServiceListAction()), 30), "2, 0");
         orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(TypeLocale.getDescription(ElementType.GRAY)), 5), "0, 1");
         orchestrationPanel.add(grayMetadataComboBox, "1, 1");
         orchestrationPanel.add(grayMetadataButton, "2, 1");

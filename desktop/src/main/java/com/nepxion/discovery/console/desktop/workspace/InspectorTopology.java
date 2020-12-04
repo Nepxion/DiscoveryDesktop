@@ -294,7 +294,7 @@ public class InspectorTopology extends AbstractTopology {
 
         JPanel toolBar = new JPanel();
         toolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
-        toolBar.add(new JClassicButton(createRefreshServiceIdAction()));
+        toolBar.add(new JClassicButton(createRefreshServiceListAction()));
         toolBar.add(new JClassicButton(createViewFailureListAction()));
 
         double[][] size = {
@@ -743,7 +743,7 @@ public class InspectorTopology extends AbstractTopology {
         return action;
     }
 
-    public JSecurityAction createRefreshServiceIdAction() {
+    public JSecurityAction createRefreshServiceListAction() {
         JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("refresh_service_list_tooltip"), ConsoleIconFactory.getSwingIcon("netbean/rotate_16.png"), ConsoleLocaleFactory.getString("refresh_service_list_tooltip")) {
             private static final long serialVersionUID = 1L;
 

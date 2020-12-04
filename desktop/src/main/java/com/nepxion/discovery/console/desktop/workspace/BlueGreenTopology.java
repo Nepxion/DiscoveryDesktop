@@ -195,8 +195,6 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
             }
         });
         ComboBoxUtil.installlAutoCompletion(serviceIdComboBox);
-        JClassicButton refreshServiceIdButton = new JClassicButton(createRefreshServiceIdAction());
-        DimensionUtil.setWidth(refreshServiceIdButton, 30);
 
         blueMetadataComboBox = new JBasicComboBox();
         blueMetadataComboBox.setEditable(true);
@@ -226,7 +224,7 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
         orchestrationPanel.setLayout(orchestrationTableLayout);
         orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("service")), 5), "0, 0");
         orchestrationPanel.add(serviceIdComboBox, "1, 0");
-        orchestrationPanel.add(refreshServiceIdButton, "2, 0");
+        orchestrationPanel.add(DimensionUtil.setWidth(new JClassicButton(createRefreshServiceListAction()), 30), "2, 0");
         orchestrationPanel.add(DimensionUtil.addWidth(new JBasicLabel(TypeLocale.getDescription(ElementType.BLUE)), 5), "0, 1");
         orchestrationPanel.add(blueMetadataComboBox, "1, 1");
         orchestrationPanel.add(blueMetadataButton, "2, 1");
