@@ -57,8 +57,8 @@ import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.ButtonUtil;
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
-import com.nepxion.discovery.console.desktop.common.util.TextFieldUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.InspectorConditionPanel;
+import com.nepxion.discovery.console.desktop.workspace.panel.InspectorKVPanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.MultiPreviewPanel;
 import com.nepxion.discovery.console.desktop.workspace.topology.LinkUI;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeImageType;
@@ -99,7 +99,7 @@ public class InspectorTopology extends AbstractTopology {
     protected JBasicComboBox serviceIdComboBox;
     protected JBasicComboBox instanceComboBox;
     protected JBasicComboBox parameterComboBox;
-    protected JBasicTextField parameterTextField;
+    protected InspectorKVPanel kvPanel;
 
     protected InspectorConditionPanel conditionPanel;
     protected MultiPreviewPanel multiPreviewPanel;
@@ -204,7 +204,7 @@ public class InspectorTopology extends AbstractTopology {
 
         parameterComboBox = new JBasicComboBox(parameterElementNodes.toArray());
 
-        parameterTextField = new JBasicTextField();
+        kvPanel = new InspectorKVPanel();
 
         setServiceIds();
         setInstances();
@@ -228,8 +228,7 @@ public class InspectorTopology extends AbstractTopology {
         portalPanel.add(instanceComboBox, "1, 2");
         portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("parameter")), 5), "0, 3");
         portalPanel.add(parameterComboBox, "1, 3");
-        portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("value")), 5), "0, 4");
-        portalPanel.add(TextFieldUtil.setTip(parameterTextField, ConsoleLocaleFactory.getString("inspector_parameter_example")), "1, 4");
+        portalPanel.add(kvPanel, "0, 4, 1, 4");
 
         JShrinkShortcut conditionShrinkShortcut = new JShrinkShortcut();
         conditionShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("inspector_link"));
@@ -425,27 +424,6 @@ public class InspectorTopology extends AbstractTopology {
         return node;
     }
 
-    public String getParameter() {
-        String parameter = parameterTextField.getText().trim();
-        if (StringUtils.equals(parameter, ConsoleLocaleFactory.getString("inspector_parameter_example"))) {
-            parameter = "";
-        }
-
-        try {
-            StringUtil.splitToMap(parameter);
-        } catch (Exception ex) {
-            showParameterInvalidFormatTip();
-
-            return null;
-        }
-
-        return parameter;
-    }
-
-    public void showParameterInvalidFormatTip() {
-        parameterTextField.showTip(ConsoleLocaleFactory.getString("parameter_invalid_format"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
-    }
-
     public class InspectorResult {
         protected List<Map<String, String>> metadatas;
         protected Exception exception;
@@ -469,7 +447,7 @@ public class InspectorTopology extends AbstractTopology {
 
     public class InspectorSwingWorker extends SwingWorker<InspectorResult, Void> {
         protected String url;
-        protected String parameter;
+        protected Map<String, String> parameterMap;
         protected ParameterType parameterType;
         protected DimensionType dimensionType;
         protected InspectorEntity inspectorEntity;
@@ -483,13 +461,13 @@ public class InspectorTopology extends AbstractTopology {
                 InspectorEntity resultInspectorEntity = null;
                 switch (parameterType) {
                     case HEADER:
-                        resultInspectorEntity = ConsoleController.inspectByHeader(url, parameter, inspectorEntity);
+                        resultInspectorEntity = ConsoleController.inspectByHeader(url, parameterMap, inspectorEntity);
                         break;
                     case PARAMETER:
-                        resultInspectorEntity = ConsoleController.inspectByParameter(url, parameter, inspectorEntity);
+                        resultInspectorEntity = ConsoleController.inspectByParameter(url, parameterMap, inspectorEntity);
                         break;
                     case COOKIE:
-                        resultInspectorEntity = ConsoleController.inspectByCookie(url, parameter, inspectorEntity);
+                        resultInspectorEntity = ConsoleController.inspectByCookie(url, parameterMap, inspectorEntity);
                         break;
                 }
 
@@ -556,12 +534,12 @@ public class InspectorTopology extends AbstractTopology {
             this.url = url;
         }
 
-        public String getParameter() {
-            return parameter;
+        public Map<String, String> getParameterMap() {
+            return parameterMap;
         }
 
-        public void setParameter(String parameter) {
-            this.parameter = parameter;
+        public void setParameterMap(Map<String, String> parameterMap) {
+            this.parameterMap = parameterMap;
         }
 
         public ParameterType getParameterType() {
@@ -605,11 +583,6 @@ public class InspectorTopology extends AbstractTopology {
             return;
         }
 
-        String parameter = getParameter();
-        if (parameter == null) {
-            return;
-        }
-
         if (conditionPanel.isServiceIdInvalid()) {
             JBasicOptionPane.showMessageDialog(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("service_id_not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
 
@@ -640,9 +613,11 @@ public class InspectorTopology extends AbstractTopology {
             serviceIds = allServiceIds;
         }
 
+        Map<String, String> parameterMap = kvPanel.getMap();
+
         StringBuilder informationStringBuilder = new StringBuilder();
         informationStringBuilder.append("① " + ConsoleLocaleFactory.getString("inspector_url") + " : \n" + url + "\n");
-        informationStringBuilder.append("② " + ConsoleLocaleFactory.getString("inspector_parameter") + " : \n" + parameterType + " - " + (StringUtils.isNotEmpty(parameter) ? parameter : ConsoleLocaleFactory.getString("none")) + "\n");
+        informationStringBuilder.append("② " + ConsoleLocaleFactory.getString("inspector_parameter") + " : \n" + parameterType + " - " + parameterMap + "\n");
         informationStringBuilder.append("③ " + ConsoleLocaleFactory.getString("inspector_services") + " : \n");
         for (int i = 0; i < allServiceIds.size(); i++) {
             String serviceId = allServiceIds.get(i);
@@ -659,7 +634,7 @@ public class InspectorTopology extends AbstractTopology {
         }
 
         LOG.info("Inspection URL : {}", url);
-        LOG.info("Inspection Paramter : {} - {}", parameterType, StringUtils.isNotEmpty(parameter) ? parameter : ConsoleLocaleFactory.getString("none"));
+        LOG.info("Inspection Paramter : {} - {}", parameterType, parameterMap);
         LOG.info("Inspection Services : {}", allServiceIds);
 
         setTitle(dimensionType);
@@ -685,7 +660,7 @@ public class InspectorTopology extends AbstractTopology {
         for (int i = 0; i < times; i++) {
             InspectorSwingWorker inspectorSwingWorker = new InspectorSwingWorker();
             inspectorSwingWorker.setUrl(url);
-            inspectorSwingWorker.setParameter(parameter);
+            inspectorSwingWorker.setParameterMap(parameterMap);
             inspectorSwingWorker.setParameterType(parameterType);
             inspectorSwingWorker.setDimensionType(dimensionType);
             inspectorSwingWorker.setInspectorEntity(inspectorEntity);

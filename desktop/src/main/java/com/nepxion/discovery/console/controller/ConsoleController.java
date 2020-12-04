@@ -9,10 +9,11 @@ package com.nepxion.discovery.console.controller;
  * @version 1.0
  */
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -149,14 +150,14 @@ public class ConsoleController {
         });
     }
 
-    public static InspectorEntity inspectByHeader(String url, String headers, InspectorEntity inspectorEntity) {
+    public static InspectorEntity inspectByHeader(String url, Map<String, String> map, InspectorEntity inspectorEntity) {
         HttpHeaders httpHeaders = new HttpHeaders();
 
-        if (StringUtils.isNotEmpty(headers)) {
-            String[] separateArray = StringUtils.splitByWholeSeparator(headers, DiscoveryConstant.SEPARATE);
-            for (String separateValue : separateArray) {
-                String[] equalsArray = StringUtils.splitByWholeSeparator(separateValue, DiscoveryConstant.EQUALS);
-                httpHeaders.add(equalsArray[0].trim(), equalsArray[1].trim());
+        if (MapUtils.isNotEmpty(map)) {
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
+                httpHeaders.add(key, value);
             }
         }
 
@@ -167,22 +168,43 @@ public class ConsoleController {
         return resultInspectorEntity;
     }
 
-    public static InspectorEntity inspectByParameter(String url, String parameter, InspectorEntity inspectorEntity) {
-        parameter = StringUtils.isNotBlank(parameter) ? "?" + parameter : "";
-        parameter = parameter.replace(DiscoveryConstant.SEPARATE, "&");
+    public static InspectorEntity inspectByParameter(String url, Map<String, String> map, InspectorEntity inspectorEntity) {
+        StringBuilder parameterStringBuilder = new StringBuilder();
+        int index = 0;
+        if (MapUtils.isNotEmpty(map)) {
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
+
+                parameterStringBuilder.append(key + DiscoveryConstant.EQUALS + value);
+                if (index < map.size() - 1) {
+                    parameterStringBuilder.append("&");
+                }
+
+                index++;
+            }
+        }
+
+        String parameter = parameterStringBuilder.toString();
+        parameter = StringUtils.isNotEmpty(parameter) ? "?" + parameter : "";
 
         InspectorEntity resultInspectorEntity = restTemplate.postForEntity(url + parameter, inspectorEntity, InspectorEntity.class).getBody();
 
         return resultInspectorEntity;
     }
 
-    public static InspectorEntity inspectByCookie(String url, String cookies, InspectorEntity inspectorEntity) {
+    public static InspectorEntity inspectByCookie(String url, Map<String, String> map, InspectorEntity inspectorEntity) {
         HttpHeaders httpHeaders = new HttpHeaders();
 
-        if (StringUtils.isNotEmpty(cookies)) {
-            String[] separateArray = StringUtils.splitByWholeSeparator(cookies, DiscoveryConstant.SEPARATE);
+        if (MapUtils.isNotEmpty(map)) {
+            List<String> cookieList = new ArrayList<String>();
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
 
-            List<String> cookieList = Arrays.asList(separateArray);
+                cookieList.add(key + DiscoveryConstant.EQUALS + value);
+            }
+
             httpHeaders.put("Cookie", cookieList);
         }
 
