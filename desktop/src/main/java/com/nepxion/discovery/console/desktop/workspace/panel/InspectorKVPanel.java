@@ -94,7 +94,7 @@ public class InspectorKVPanel extends JPanel {
                 row[i] = TableLayout.PREFERRED;
             }
             double[][] size = {
-                    { TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, TableLayout.PREFERRED },
+                    { TableLayout.PREFERRED, 136, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, TableLayout.PREFERRED },
                     row
             };
 
@@ -153,8 +153,6 @@ public class InspectorKVPanel extends JPanel {
 
             public KVItem(String uuid) {
                 this.uuid = uuid;
-
-                // DimensionUtil.setWidth(keyTextField, 136);
 
                 addButton.setName(uuid);
                 removeButton.setName(uuid);
