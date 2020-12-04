@@ -66,6 +66,7 @@ import com.nepxion.discovery.console.desktop.workspace.topology.NodeSizeType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeUI;
 import com.nepxion.discovery.console.desktop.workspace.type.DimensionType;
 import com.nepxion.discovery.console.desktop.workspace.type.FeatureType;
+import com.nepxion.discovery.console.desktop.workspace.type.ParameterType;
 import com.nepxion.discovery.console.desktop.workspace.type.PortalType;
 import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.discovery.console.entity.Instance;
@@ -97,6 +98,7 @@ public class InspectorTopology extends AbstractTopology {
     protected JBasicComboBox portalComboBox;
     protected JBasicComboBox serviceIdComboBox;
     protected JBasicComboBox instanceComboBox;
+    protected JBasicComboBox parameterComboBox;
     protected JBasicTextField parameterTextField;
 
     protected InspectorConditionPanel conditionPanel;
@@ -193,6 +195,15 @@ public class InspectorTopology extends AbstractTopology {
         instanceComboBox.setEditable(true);
         ComboBoxUtil.installlAutoCompletion(instanceComboBox);
 
+        List<ElementNode> parameterElementNodes = new ArrayList<ElementNode>();
+        ParameterType[] parameterTypes = ParameterType.values();
+        for (int i = 0; i < parameterTypes.length; i++) {
+            ParameterType parameterType = parameterTypes[i];
+            parameterElementNodes.add(new ElementNode(parameterType.toString(), parameterType.getCapitalizeValue(), null, parameterType.getCapitalizeValue(), parameterType));
+        }
+
+        parameterComboBox = new JBasicComboBox(parameterElementNodes.toArray());
+
         parameterTextField = new JBasicTextField();
 
         setServiceIds();
@@ -200,7 +211,7 @@ public class InspectorTopology extends AbstractTopology {
 
         double[][] portalSize = {
                 { TableLayout.PREFERRED, TableLayout.FILL },
-                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
+                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
         };
 
         TableLayout portalTableLayout = new TableLayout(portalSize);
@@ -216,7 +227,9 @@ public class InspectorTopology extends AbstractTopology {
         portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("address")), 5), "0, 2");
         portalPanel.add(instanceComboBox, "1, 2");
         portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("parameter")), 5), "0, 3");
-        portalPanel.add(TextFieldUtil.setTip(parameterTextField, ConsoleLocaleFactory.getString("inspector_parameter_example")), "1, 3");
+        portalPanel.add(parameterComboBox, "1, 3");
+        portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("value")), 5), "0, 4");
+        portalPanel.add(TextFieldUtil.setTip(parameterTextField, ConsoleLocaleFactory.getString("inspector_parameter_example")), "1, 4");
 
         JShrinkShortcut conditionShrinkShortcut = new JShrinkShortcut();
         conditionShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("inspector_link"));
@@ -282,6 +295,7 @@ public class InspectorTopology extends AbstractTopology {
         JPanel toolBar = new JPanel();
         toolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 0));
         toolBar.add(new JClassicButton(createRefreshServiceIdAction()));
+        toolBar.add(new JClassicButton(createViewFailureListAction()));
 
         double[][] size = {
                 { TableLayout.FILL },
@@ -738,6 +752,18 @@ public class InspectorTopology extends AbstractTopology {
                 setInstances();
 
                 conditionPanel.setServiceIds();
+            }
+        };
+
+        return action;
+    }
+
+    public JSecurityAction createViewFailureListAction() {
+        JSecurityAction action = new JSecurityAction(ConsoleLocaleFactory.getString("view_failure_list_tooltip"), ConsoleIconFactory.getSwingIcon("netbean/rotate_16.png"), ConsoleLocaleFactory.getString("view_failure_list_tooltip")) {
+            private static final long serialVersionUID = 1L;
+
+            public void execute(ActionEvent e) {
+
             }
         };
 

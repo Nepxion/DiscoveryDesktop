@@ -50,10 +50,10 @@ public class OpenPanel extends CreatePanel {
     public OpenPanel(ReleaseProcessor releaseProcessor) {
         this.releaseProcessor = releaseProcessor;
 
-        JPanel buttonBar = new JPanel();
-        buttonBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
-        buttonBar.add(new JClassicButton(createOpenRemoteAction()));
-        buttonBar.add(new JClassicButton(createOpenLocalAction()));
+        JPanel toolBar = new JPanel();
+        toolBar.setLayout(new FiledLayout(FiledLayout.ROW, FiledLayout.FULL, 10));
+        toolBar.add(new JClassicButton(createOpenRemoteAction()));
+        toolBar.add(new JClassicButton(createOpenLocalAction()));
 
         JShrinkShortcut previewShrinkShortcut = new JShrinkShortcut();
         previewShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("config_content_text"));
@@ -64,7 +64,7 @@ public class OpenPanel extends CreatePanel {
         JBasicScrollPane configTextAreaScrollPane = new JBasicScrollPane(configTextArea);
         configTextAreaScrollPane.setPreferredSize(new Dimension(660, 340));
 
-        add(buttonBar, "0, 8, 1, 8");
+        add(toolBar, "0, 8, 1, 8");
         add(previewShrinkShortcut, "0, 10, 1, 10");
         add(configTextAreaScrollPane, "0, 11, 1, 11");
     }
