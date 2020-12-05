@@ -171,7 +171,6 @@ public class BlueGreenConditionPanel extends JPanel {
 
             setLayout(new BorderLayout());
             setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
-            // add(shrinkShortcut, BorderLayout.NORTH);
             add(conditionItemBar, BorderLayout.CENTER);
             add(conditionBar, BorderLayout.SOUTH);
 

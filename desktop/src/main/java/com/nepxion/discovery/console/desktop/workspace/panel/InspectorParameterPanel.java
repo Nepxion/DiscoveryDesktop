@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 
 import org.apache.commons.lang3.StringUtils;
@@ -25,9 +26,12 @@ import org.apache.commons.lang3.StringUtils;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
+import com.nepxion.discovery.console.desktop.workspace.type.ParameterType;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.JClassicButton;
+import com.nepxion.swing.combobox.JBasicComboBox;
 import com.nepxion.swing.container.ContainerManager;
+import com.nepxion.swing.element.ElementNode;
 import com.nepxion.swing.handle.HandleManager;
 import com.nepxion.swing.label.JBasicLabel;
 import com.nepxion.swing.layout.filed.FiledLayout;
@@ -48,8 +52,16 @@ public class InspectorParameterPanel extends JPanel {
         add(parameterBar);
     }
 
+    public Map<String, String> getHeaderMap() {
+        return parameterBar.getMap(ParameterType.HEADER);
+    }
+
     public Map<String, String> getParameterMap() {
-        return parameterBar.getParameterMap();
+        return parameterBar.getMap(ParameterType.PARAMETER);
+    }
+
+    public Map<String, String> getCookieMap() {
+        return parameterBar.getMap(ParameterType.COOKIE);
     }
 
     public class ParameterBar extends JPanel {
@@ -94,7 +106,7 @@ public class InspectorParameterPanel extends JPanel {
                 row[i] = TableLayout.PREFERRED;
             }
             double[][] size = {
-                    { TableLayout.PREFERRED, 136, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, TableLayout.PREFERRED },
+                    { TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, TableLayout.PREFERRED },
                     row
             };
 
@@ -106,7 +118,7 @@ public class InspectorParameterPanel extends JPanel {
 
             parameterItemBar.setLayout(tableLayout);
             for (ParameterItem parameterItem : parameterItems) {
-                parameterItemBar.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("key-value")), 5), "0, " + index);
+                parameterItemBar.add(parameterItem.parameterComboBox, "0, " + index);
                 parameterItemBar.add(parameterItem.keyTextField, "1, " + index);
                 parameterItemBar.add(new JBasicLabel("="), "2, " + index);
                 parameterItemBar.add(parameterItem.valueTextField, "3, " + index);
@@ -119,18 +131,22 @@ public class InspectorParameterPanel extends JPanel {
             ContainerManager.update(parameterItemBar);
         }
 
-        public Map<String, String> getParameterMap() {
-            Map<String, String> parameterMap = new LinkedHashMap<String, String>();
+        public Map<String, String> getMap(ParameterType parameterType) {
+            Map<String, String> map = new LinkedHashMap<String, String>();
 
             for (ParameterItem parameterItem : parameterItems) {
-                String key = parameterItem.keyTextField.getText().trim();
-                String value = parameterItem.valueTextField.getText().trim();
-                if (StringUtils.isNotBlank(key) && StringUtils.isNotBlank(value)) {
-                    parameterMap.put(key, value);
+                ElementNode elementNode = (ElementNode) parameterItem.parameterComboBox.getSelectedItem();
+                ParameterType type = (ParameterType) elementNode.getUserObject();
+                if (type == parameterType) {
+                    String key = parameterItem.keyTextField.getText().trim();
+                    String value = parameterItem.valueTextField.getText().trim();
+                    if (StringUtils.isNotBlank(key) && StringUtils.isNotBlank(value)) {
+                        map.put(key, value);
+                    }
                 }
             }
 
-            return parameterMap;
+            return map;
         }
 
         public ParameterItem getParameterItem(String uuid) {
@@ -144,6 +160,7 @@ public class InspectorParameterPanel extends JPanel {
         }
 
         public class ParameterItem {
+            protected JBasicComboBox parameterComboBox = new JBasicComboBox();
             protected JBasicTextField keyTextField = new JBasicTextField();
             protected JBasicTextField valueTextField = new JBasicTextField();
             protected JClassicButton addButton = new JClassicButton(createAddParameterItemAction());
@@ -151,8 +168,18 @@ public class InspectorParameterPanel extends JPanel {
 
             protected String uuid;
 
+            @SuppressWarnings("unchecked")
             public ParameterItem(String uuid) {
                 this.uuid = uuid;
+
+                List<ElementNode> parameterElementNodes = new ArrayList<ElementNode>();
+                ParameterType[] parameterTypes = ParameterType.values();
+                for (int i = 0; i < parameterTypes.length; i++) {
+                    ParameterType parameterType = parameterTypes[i];
+                    parameterElementNodes.add(new ElementNode(parameterType.toString(), parameterType.toString(), null, parameterType.toString(), parameterType));
+                }
+
+                parameterComboBox.setModel(new DefaultComboBoxModel<>(parameterElementNodes.toArray()));
 
                 addButton.setName(uuid);
                 removeButton.setName(uuid);

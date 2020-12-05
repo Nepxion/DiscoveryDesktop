@@ -66,7 +66,6 @@ import com.nepxion.discovery.console.desktop.workspace.topology.NodeSizeType;
 import com.nepxion.discovery.console.desktop.workspace.topology.NodeUI;
 import com.nepxion.discovery.console.desktop.workspace.type.DimensionType;
 import com.nepxion.discovery.console.desktop.workspace.type.FeatureType;
-import com.nepxion.discovery.console.desktop.workspace.type.ParameterType;
 import com.nepxion.discovery.console.desktop.workspace.type.PortalType;
 import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.discovery.console.entity.Instance;
@@ -96,7 +95,6 @@ public class InspectorTopology extends AbstractTopology {
     protected JBasicComboBox portalComboBox;
     protected JBasicComboBox serviceIdComboBox;
     protected JBasicComboBox instanceComboBox;
-    protected JBasicComboBox parameterComboBox;
     protected InspectorParameterPanel parameterPanel;
 
     protected InspectorConditionPanel conditionPanel;
@@ -194,23 +192,12 @@ public class InspectorTopology extends AbstractTopology {
         instanceComboBox.setEditable(true);
         ComboBoxUtil.installlAutoCompletion(instanceComboBox);
 
-        List<ElementNode> parameterElementNodes = new ArrayList<ElementNode>();
-        ParameterType[] parameterTypes = ParameterType.values();
-        for (int i = 0; i < parameterTypes.length; i++) {
-            ParameterType parameterType = parameterTypes[i];
-            parameterElementNodes.add(new ElementNode(parameterType.toString(), parameterType.toString(), null, parameterType.toString(), parameterType));
-        }
-
-        parameterComboBox = new JBasicComboBox(parameterElementNodes.toArray());
-
-        parameterPanel = new InspectorParameterPanel();
-
         setServiceIds();
         setInstances();
 
         double[][] portalSize = {
                 { TableLayout.PREFERRED, TableLayout.FILL },
-                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
+                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
         };
 
         TableLayout portalTableLayout = new TableLayout(portalSize);
@@ -225,9 +212,13 @@ public class InspectorTopology extends AbstractTopology {
         portalPanel.add(serviceIdComboBox, "1, 1");
         portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("address")), 5), "0, 2");
         portalPanel.add(instanceComboBox, "1, 2");
-        portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("parameter")), 5), "0, 3");
-        portalPanel.add(parameterComboBox, "1, 3");
-        portalPanel.add(parameterPanel, "0, 4, 1, 4");
+
+        JShrinkShortcut parameterShrinkShortcut = new JShrinkShortcut();
+        parameterShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("inspector_parameter"));
+        parameterShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
+        parameterShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString("inspector_parameter"));
+
+        parameterPanel = new InspectorParameterPanel();
 
         JShrinkShortcut conditionShrinkShortcut = new JShrinkShortcut();
         conditionShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("inspector_link"));
@@ -292,7 +283,7 @@ public class InspectorTopology extends AbstractTopology {
 
         double[][] size = {
                 { TableLayout.FILL },
-                { TableLayout.PREFERRED, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, TableLayout.PREFERRED }
+                { TableLayout.PREFERRED, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, TableLayout.PREFERRED }
         };
 
         TableLayout tableLayout = new TableLayout(size);
@@ -303,10 +294,12 @@ public class InspectorTopology extends AbstractTopology {
         operationBar.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         operationBar.add(portalShrinkShortcut, "0, 0");
         operationBar.add(portalPanel, "0, 1");
-        operationBar.add(conditionShrinkShortcut, "0, 3");
-        operationBar.add(conditionPanel, "0, 4");
-        operationBar.add(executorShrinkShortcut, "0, 6");
-        operationBar.add(executorPanel, "0, 7");
+        operationBar.add(parameterShrinkShortcut, "0, 3");
+        operationBar.add(parameterPanel, "0, 4");
+        operationBar.add(conditionShrinkShortcut, "0, 6");
+        operationBar.add(conditionPanel, "0, 7");
+        operationBar.add(executorShrinkShortcut, "0, 9");
+        operationBar.add(executorPanel, "0, 10");
     }
 
     public void setTitle(DimensionType dimensionType, int linkCount) {
@@ -442,8 +435,9 @@ public class InspectorTopology extends AbstractTopology {
 
     public class InspectorSwingWorker extends SwingWorker<InspectorResult, Void> {
         protected String url;
+        protected Map<String, String> headerMap;
         protected Map<String, String> parameterMap;
-        protected ParameterType parameterType;
+        protected Map<String, String> cookieMap;
         protected DimensionType dimensionType;
         protected InspectorEntity inspectorEntity;
         protected int times;
@@ -453,18 +447,7 @@ public class InspectorTopology extends AbstractTopology {
             InspectorResult inspectorResult = new InspectorResult();
 
             try {
-                InspectorEntity resultInspectorEntity = null;
-                switch (parameterType) {
-                    case HEADER:
-                        resultInspectorEntity = ConsoleController.inspectByHeader(url, parameterMap, inspectorEntity);
-                        break;
-                    case PARAMETER:
-                        resultInspectorEntity = ConsoleController.inspectByParameter(url, parameterMap, inspectorEntity);
-                        break;
-                    case COOKIE:
-                        resultInspectorEntity = ConsoleController.inspectByCookie(url, parameterMap, inspectorEntity);
-                        break;
-                }
+                InspectorEntity resultInspectorEntity = ConsoleController.inspect(url, headerMap, parameterMap, cookieMap, inspectorEntity);
 
                 List<Map<String, String>> metadatas = convertToMetadatas(resultInspectorEntity);
 
@@ -529,6 +512,14 @@ public class InspectorTopology extends AbstractTopology {
             this.url = url;
         }
 
+        public Map<String, String> getHeaderMap() {
+            return headerMap;
+        }
+
+        public void setHeaderMap(Map<String, String> headerMap) {
+            this.headerMap = headerMap;
+        }
+
         public Map<String, String> getParameterMap() {
             return parameterMap;
         }
@@ -537,12 +528,12 @@ public class InspectorTopology extends AbstractTopology {
             this.parameterMap = parameterMap;
         }
 
-        public ParameterType getParameterType() {
-            return parameterType;
+        public Map<String, String> getCookieMap() {
+            return cookieMap;
         }
 
-        public void setParameterType(ParameterType parameterType) {
-            this.parameterType = parameterType;
+        public void setCookieMap(Map<String, String> cookieMap) {
+            this.cookieMap = cookieMap;
         }
 
         public DimensionType getDimensionType() {
@@ -587,8 +578,9 @@ public class InspectorTopology extends AbstractTopology {
         ElementNode portalElementNode = (ElementNode) portalComboBox.getSelectedItem();
         PortalType portalType = (PortalType) portalElementNode.getUserObject();
 
-        ElementNode parameterElementNode = (ElementNode) parameterComboBox.getSelectedItem();
-        ParameterType parameterType = (ParameterType) parameterElementNode.getUserObject();
+        Map<String, String> headerMap = parameterPanel.getHeaderMap();
+        Map<String, String> parameterMap = parameterPanel.getParameterMap();
+        Map<String, String> cookieMap = parameterPanel.getCookieMap();
 
         ElementNode dimensionElementNode = (ElementNode) dimensionComboBox.getSelectedItem();
         DimensionType dimensionType = (DimensionType) dimensionElementNode.getUserObject();
@@ -608,11 +600,8 @@ public class InspectorTopology extends AbstractTopology {
             serviceIds = allServiceIds;
         }
 
-        Map<String, String> parameterMap = parameterPanel.getParameterMap();
-
         StringBuilder informationStringBuilder = new StringBuilder();
         informationStringBuilder.append("① " + ConsoleLocaleFactory.getString("inspector_url") + " : \n" + url + "\n");
-        // informationStringBuilder.append("② " + ConsoleLocaleFactory.getString("inspector_parameter") + " : \n" + parameterType + " - " + parameterMap + "\n");
         informationStringBuilder.append("② " + ConsoleLocaleFactory.getString("inspector_services") + " : \n");
         for (int i = 0; i < allServiceIds.size(); i++) {
             String serviceId = allServiceIds.get(i);
@@ -629,7 +618,9 @@ public class InspectorTopology extends AbstractTopology {
         }
 
         LOG.info("Inspection URL : {}", url);
-        LOG.info("Inspection Paramter : {} - {}", parameterType, parameterMap);
+        LOG.info("Inspection Headers : {}", headerMap);
+        LOG.info("Inspection Parameters : {}", parameterMap);
+        LOG.info("Inspection Cookies : {}", cookieMap);
         LOG.info("Inspection Services : {}", allServiceIds);
 
         setTitle(dimensionType, allServiceIds.size() + 1);
@@ -655,8 +646,9 @@ public class InspectorTopology extends AbstractTopology {
         for (int i = 0; i < times; i++) {
             InspectorSwingWorker inspectorSwingWorker = new InspectorSwingWorker();
             inspectorSwingWorker.setUrl(url);
+            inspectorSwingWorker.setHeaderMap(headerMap);
             inspectorSwingWorker.setParameterMap(parameterMap);
-            inspectorSwingWorker.setParameterType(parameterType);
+            inspectorSwingWorker.setCookieMap(cookieMap);
             inspectorSwingWorker.setDimensionType(dimensionType);
             inspectorSwingWorker.setInspectorEntity(inspectorEntity);
             inspectorSwingWorker.setTimes(times);

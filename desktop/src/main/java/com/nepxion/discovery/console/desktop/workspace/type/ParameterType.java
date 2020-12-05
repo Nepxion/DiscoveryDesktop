@@ -10,9 +10,9 @@ package com.nepxion.discovery.console.desktop.workspace.type;
  */
 
 public enum ParameterType {
-    HEADER("Http Header"),
-    PARAMETER("Http Parameter"),
-    COOKIE("Http Cookie");
+    HEADER("Header"),
+    PARAMETER("Parameter"),
+    COOKIE("Cookie");
 
     private String value;
 
