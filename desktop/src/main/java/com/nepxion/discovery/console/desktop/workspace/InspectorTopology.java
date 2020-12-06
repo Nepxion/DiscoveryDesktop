@@ -206,11 +206,11 @@ public class InspectorTopology extends AbstractTopology {
 
         JPanel portalPanel = new JPanel();
         portalPanel.setLayout(portalTableLayout);
-        portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("portal_type")), 5), "0, 0");
+        portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("type")), 5), "0, 0");
         portalPanel.add(portalComboBox, "1, 0");
-        portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("name")), 5), "0, 1");
+        portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("service")), 5), "0, 1");
         portalPanel.add(serviceIdComboBox, "1, 1");
-        portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("address")), 5), "0, 2");
+        portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("instance")), 5), "0, 2");
         portalPanel.add(instanceComboBox, "1, 2");
 
         JShrinkShortcut parameterShrinkShortcut = new JShrinkShortcut();
