@@ -67,6 +67,7 @@ import com.nepxion.discovery.console.desktop.workspace.topology.NodeUI;
 import com.nepxion.discovery.console.desktop.workspace.type.DimensionType;
 import com.nepxion.discovery.console.desktop.workspace.type.FeatureType;
 import com.nepxion.discovery.console.desktop.workspace.type.PortalType;
+import com.nepxion.discovery.console.desktop.workspace.type.ProtocolType;
 import com.nepxion.discovery.console.desktop.workspace.type.TypeLocale;
 import com.nepxion.discovery.console.entity.Instance;
 import com.nepxion.swing.action.JSecurityAction;
@@ -93,6 +94,7 @@ public class InspectorTopology extends AbstractTopology {
     protected Color linkUI = LinkUI.BLUE;
 
     protected JBasicComboBox portalComboBox;
+    protected JBasicComboBox protocolComboBox;
     protected JBasicComboBox serviceIdComboBox;
     protected JBasicComboBox instanceComboBox;
     protected InspectorParameterPanel parameterPanel;
@@ -177,6 +179,8 @@ public class InspectorTopology extends AbstractTopology {
             }
         });
 
+        protocolComboBox = new JBasicComboBox(ProtocolType.values());
+
         serviceIdComboBox = new JBasicComboBox();
         serviceIdComboBox.setEditable(true);
         serviceIdComboBox.addItemListener(new ItemListener() {
@@ -196,7 +200,7 @@ public class InspectorTopology extends AbstractTopology {
         setInstances();
 
         double[][] portalSize = {
-                { TableLayout.PREFERRED, TableLayout.FILL },
+                { TableLayout.PREFERRED, TableLayout.FILL, 5, TableLayout.PREFERRED, TableLayout.FILL },
                 { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED }
         };
 
@@ -208,10 +212,12 @@ public class InspectorTopology extends AbstractTopology {
         portalPanel.setLayout(portalTableLayout);
         portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("type")), 5), "0, 0");
         portalPanel.add(portalComboBox, "1, 0");
+        portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("protocol")), 5), "3, 0");
+        portalPanel.add(protocolComboBox, "4, 0");
         portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("service")), 5), "0, 1");
-        portalPanel.add(serviceIdComboBox, "1, 1");
+        portalPanel.add(serviceIdComboBox, "1, 1, 4, 1");
         portalPanel.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("instance")), 5), "0, 2");
-        portalPanel.add(instanceComboBox, "1, 2");
+        portalPanel.add(instanceComboBox, "1, 2, 4, 2");
 
         JShrinkShortcut parameterShrinkShortcut = new JShrinkShortcut();
         parameterShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("inspector_parameter"));
@@ -332,7 +338,7 @@ public class InspectorTopology extends AbstractTopology {
         if (instances != null) {
             List<String> addresses = new ArrayList<String>();
             for (Instance instance : instances) {
-                addresses.add("http://" + instance.getHost() + ":" + instance.getPort());
+                addresses.add(instance.getHost() + ":" + instance.getPort());
             }
             ComboBoxUtil.setSortableModel(instanceComboBox, addresses);
         } else {
@@ -578,6 +584,8 @@ public class InspectorTopology extends AbstractTopology {
         ElementNode portalElementNode = (ElementNode) portalComboBox.getSelectedItem();
         PortalType portalType = (PortalType) portalElementNode.getUserObject();
 
+        ProtocolType protocolType = (ProtocolType) protocolComboBox.getSelectedItem();
+
         Map<String, String> headerMap = parameterPanel.getHeaderMap();
         Map<String, String> parameterMap = parameterPanel.getParameterMap();
         Map<String, String> cookieMap = parameterPanel.getCookieMap();
@@ -591,11 +599,11 @@ public class InspectorTopology extends AbstractTopology {
         if (portalType == PortalType.GATEWAY) {
             String firstServiceId = conditionPanel.getFirstServiceId();
 
-            url += "/" + firstServiceId + "/" + DiscoveryConstant.INSPECTOR_ENDPOINT_URL;
+            url = protocolType + url + "/" + firstServiceId + "/" + DiscoveryConstant.INSPECTOR_ENDPOINT_URL;
 
             serviceIds = conditionPanel.getServiceIds(false);
         } else {
-            url += "/" + DiscoveryConstant.INSPECTOR_ENDPOINT_URL;
+            url = protocolType + url + "/" + DiscoveryConstant.INSPECTOR_ENDPOINT_URL;
 
             serviceIds = allServiceIds;
         }
