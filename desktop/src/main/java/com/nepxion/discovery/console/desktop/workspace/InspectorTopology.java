@@ -50,6 +50,7 @@ import com.nepxion.discovery.common.entity.InspectorEntity;
 import com.nepxion.discovery.common.entity.ServiceType;
 import com.nepxion.discovery.common.exception.DiscoveryException;
 import com.nepxion.discovery.common.util.StringUtil;
+import com.nepxion.discovery.common.util.UrlUtil;
 import com.nepxion.discovery.console.cache.ConsoleCache;
 import com.nepxion.discovery.console.controller.ConsoleController;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
@@ -599,11 +600,13 @@ public class InspectorTopology extends AbstractTopology {
         if (portalType == PortalType.GATEWAY) {
             String firstServiceId = conditionPanel.getFirstServiceId();
 
-            url = protocolType + url + "/" + firstServiceId + "/" + DiscoveryConstant.INSPECTOR_ENDPOINT_URL;
+            url = protocolType + url + "/" + firstServiceId + getContextPath(firstServiceId) + DiscoveryConstant.INSPECTOR_ENDPOINT_URL;
 
             serviceIds = conditionPanel.getServiceIds(false);
         } else {
-            url = protocolType + url + "/" + DiscoveryConstant.INSPECTOR_ENDPOINT_URL;
+            String serviceId = ComboBoxUtil.getSelectedValue(serviceIdComboBox);
+
+            url = protocolType + url + getContextPath(serviceId) + DiscoveryConstant.INSPECTOR_ENDPOINT_URL;
 
             serviceIds = allServiceIds;
         }
@@ -662,6 +665,16 @@ public class InspectorTopology extends AbstractTopology {
             inspectorSwingWorker.setTimes(times);
 
             executorService.execute(inspectorSwingWorker);
+        }
+    }
+
+    public String getContextPath(String serviceId) {
+        try {
+            String contextPath = ConsoleController.getInstanceList(serviceId).get(0).getMetadata().get(DiscoveryConstant.SPRING_APPLICATION_CONTEXT_PATH);
+
+            return UrlUtil.formatContextPath(contextPath);
+        } catch (Exception e) {
+            return "/";
         }
     }
 
