@@ -9,14 +9,13 @@ package com.nepxion.discovery.console.desktop.workspace.panel;
  * @version 1.0
  */
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 
 import javax.swing.JPanel;
 
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
-import com.nepxion.swing.label.JBasicLabel;
+import com.nepxion.swing.layout.table.TableLayout;
 import com.nepxion.swing.scrollpane.JBasicScrollPane;
 import com.nepxion.swing.shrinkbar.JShrinkShortcut;
 import com.nepxion.swing.textarea.JBasicTextArea;
@@ -29,30 +28,36 @@ public class PreviewPanel extends JPanel {
     protected JBasicTextArea configTextArea;
 
     public PreviewPanel() {
+        JShrinkShortcut keyShrinkShortcut = new JShrinkShortcut();
+        keyShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("config_key_text"));
+        keyShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
+        keyShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString("config_key_text"));
+
         keyTextField = new JBasicTextField();
 
-        JPanel keyPanel = new JPanel();
-        keyPanel.setLayout(new BorderLayout(10, 0));
-        keyPanel.add(new JBasicLabel(ConsoleLocaleFactory.getString("config_key_text")), BorderLayout.WEST);
-        keyPanel.add(keyTextField, BorderLayout.CENTER);
-
-        JShrinkShortcut previewShrinkShortcut = new JShrinkShortcut();
-        previewShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("config_content_text"));
-        previewShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
-        previewShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString("config_content_text"));
+        JShrinkShortcut contentShrinkShortcut = new JShrinkShortcut();
+        contentShrinkShortcut.setTitle(ConsoleLocaleFactory.getString("config_content_text"));
+        contentShrinkShortcut.setIcon(ConsoleIconFactory.getSwingIcon("stereo/paste_16.png"));
+        contentShrinkShortcut.setToolTipText(ConsoleLocaleFactory.getString("config_content_text"));
 
         configTextArea = new JBasicTextArea();
         JBasicScrollPane configTextAreaScrollPane = new JBasicScrollPane(configTextArea);
         configTextAreaScrollPane.setPreferredSize(new Dimension(660, 340));
 
-        JPanel configPanel = new JPanel();
-        configPanel.setLayout(new BorderLayout(0, 10));
-        configPanel.add(previewShrinkShortcut, BorderLayout.NORTH);
-        configPanel.add(configTextAreaScrollPane, BorderLayout.CENTER);
+        double[][] size = {
+                { TableLayout.FILL },
+                { TableLayout.PREFERRED, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, TableLayout.FILL }
+        };
 
-        setLayout(new BorderLayout(0, 20));
-        add(keyPanel, BorderLayout.NORTH);
-        add(configPanel, BorderLayout.CENTER);
+        TableLayout tableLayout = new TableLayout(size);
+        tableLayout.setHGap(0);
+        tableLayout.setVGap(5);
+
+        setLayout(tableLayout);
+        add(keyShrinkShortcut, "0, 0");
+        add(keyTextField, "0, 1");
+        add(contentShrinkShortcut, "0, 3");
+        add(configTextAreaScrollPane, "0, 4");
     }
 
     public void setKey(String key) {

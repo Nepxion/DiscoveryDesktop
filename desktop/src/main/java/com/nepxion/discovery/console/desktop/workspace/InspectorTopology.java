@@ -59,6 +59,7 @@ import com.nepxion.discovery.console.desktop.common.util.ButtonUtil;
 import com.nepxion.discovery.console.desktop.common.util.ComboBoxUtil;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
 import com.nepxion.discovery.console.desktop.workspace.panel.InspectorConditionPanel;
+import com.nepxion.discovery.console.desktop.workspace.panel.InspectorConfirmPanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.InspectorParameterPanel;
 import com.nepxion.discovery.console.desktop.workspace.panel.MultiPreviewPanel;
 import com.nepxion.discovery.console.desktop.workspace.topology.LinkUI;
@@ -109,6 +110,8 @@ public class InspectorTopology extends AbstractTopology {
     protected JProgressBar successfulProgressBar;
     protected JProgressBar failureProgressBar;
     protected JBasicTextField spentTextField;
+
+    protected InspectorConfirmPanel confirmPanel;
 
     protected ExecutorService executorService;
     protected long currentTime;
@@ -611,22 +614,19 @@ public class InspectorTopology extends AbstractTopology {
             serviceIds = allServiceIds;
         }
 
-        StringBuilder informationStringBuilder = new StringBuilder();
-        informationStringBuilder.append("① " + ConsoleLocaleFactory.getString("inspector_url") + " : \n" + url + "\n");
-        informationStringBuilder.append("② " + ConsoleLocaleFactory.getString("inspector_services") + " : \n");
-        for (int i = 0; i < allServiceIds.size(); i++) {
-            String serviceId = allServiceIds.get(i);
-
-            informationStringBuilder.append(serviceId);
-            if (i < allServiceIds.size() - 1) {
-                informationStringBuilder.append("\n");
-            }
+        if (confirmPanel == null) {
+            confirmPanel = new InspectorConfirmPanel();
         }
 
-        int selectedValue = JBasicOptionPane.showConfirmDialog(HandleManager.getFrame(this), ConsoleLocaleFactory.getString("start_confirm") + "\n" + informationStringBuilder.toString(), SwingLocale.getString("confirm"), JBasicOptionPane.YES_NO_OPTION);
-        if (selectedValue != JBasicOptionPane.OK_OPTION) {
+        confirmPanel.setUrl(url);
+        confirmPanel.setServiceIds(allServiceIds);
+
+        int selectedOption = JBasicOptionPane.showOptionDialog(HandleManager.getFrame(this), confirmPanel, ConsoleLocaleFactory.getString("start_inspector_tooltip"), JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/net.png"), new Object[] { SwingLocale.getString("confirm"), SwingLocale.getString("cancel") }, null, true);
+        if (selectedOption != 0) {
             return;
         }
+
+        url = confirmPanel.getUrl();
 
         LOG.info("Inspection URL : {}", url);
         LOG.info("Inspection Headers : {}", headerMap);
