@@ -41,7 +41,7 @@ public class TypeLocale {
     }
 
     public static String getDescription(ElementType elementType) {
-        return getDescription(elementType, "_type");
+        return getDescription(elementType, "_element");
     }
 
     public static String getDescription(FeatureType featureType) {
