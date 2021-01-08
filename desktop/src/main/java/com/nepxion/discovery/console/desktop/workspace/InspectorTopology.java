@@ -46,6 +46,7 @@ import com.nepxion.cots.twaver.element.TLink;
 import com.nepxion.cots.twaver.element.TNode;
 import com.nepxion.cots.twaver.icon.TIconFactory;
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
+import com.nepxion.discovery.common.constant.DiscoveryMetaDataConstant;
 import com.nepxion.discovery.common.entity.InspectorEntity;
 import com.nepxion.discovery.common.entity.ServiceType;
 import com.nepxion.discovery.common.exception.DiscoveryException;
@@ -670,7 +671,7 @@ public class InspectorTopology extends AbstractTopology {
 
     public String getContextPath(String serviceId) {
         try {
-            String contextPath = ConsoleController.getInstanceList(serviceId).get(0).getMetadata().get(DiscoveryConstant.SPRING_APPLICATION_CONTEXT_PATH);
+            String contextPath = ConsoleController.getInstanceList(serviceId).get(0).getMetadata().get(DiscoveryMetaDataConstant.SPRING_APPLICATION_CONTEXT_PATH);
 
             return UrlUtil.formatContextPath(contextPath);
         } catch (Exception e) {
