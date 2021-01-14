@@ -41,8 +41,6 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractReleaseTopology.class);
 
-    public static final String APOLLO = "Apollo";
-
     protected ResetPanel resetPanel;
     protected PreviewPanel previewPanel;
 
@@ -254,7 +252,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
     }
 
     public void save(String group, String serviceId, String config) {
-        String key = getKey(group, serviceId);
+        String key = ConsoleCache.getKey(group, serviceId);
 
         LOG.info("Save Config, key={}, config=\n{}", key, config);
 
@@ -266,19 +264,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
         String group = getGroup();
         String serviceId = getServiceId();
 
-        return getKey(group, serviceId);
-    }
-
-    public String getKey(String group, String serviceId) {
-        String configType = ConsoleCache.getConfigType();
-        String key = null;
-        if (StringUtils.equals(configType, APOLLO)) {
-            key = group + "-" + serviceId;
-        } else {
-            key = "Data ID=" + serviceId + " | Group=" + group;
-        }
-
-        return key;
+        return ConsoleCache.getKey(group, serviceId);
     }
 
     public abstract ReleaseType getReleaseType();

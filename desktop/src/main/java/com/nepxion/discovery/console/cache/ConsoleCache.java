@@ -13,10 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.nepxion.discovery.console.controller.ConsoleController;
 
 public class ConsoleCache {
+    public static final String APOLLO = "Apollo";
+    public static final String CONSUL = "Consul";
+    public static final String ETCD = "Etcd";
+
     private static String discoveryType;
     private static String configType;
 
@@ -116,6 +121,18 @@ public class ConsoleCache {
         }
 
         return realServices;
+    }
+
+    public static String getKey(String group, String serviceId) {
+        String configType = getConfigType();
+        String key = null;
+        if (StringUtils.equals(configType, APOLLO) || StringUtils.equals(configType, CONSUL) || StringUtils.equals(configType, ETCD)) {
+            key = group + "-" + serviceId;
+        } else {
+            key = "Data ID=" + serviceId + " | Group=" + group;
+        }
+
+        return key;
     }
 
     public static boolean isCacheEnabled() {

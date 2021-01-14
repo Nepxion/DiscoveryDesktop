@@ -90,8 +90,6 @@ public class InspectorTopology extends AbstractTopology {
 
     private static final Logger LOG = LoggerFactory.getLogger(InspectorTopology.class);
 
-    public static final String APOLLO = "Apollo";
-
     protected NodeUI gatewayNodeUI = new NodeUI(NodeImageType.GATEWAY_BLUE, NodeSizeType.LARGE, true);
     protected NodeUI serviceNodeUI = new NodeUI(NodeImageType.SERVICE_BLUE, NodeSizeType.MIDDLE, true);
     protected Color linkUI = LinkUI.BLUE;
@@ -679,18 +677,6 @@ public class InspectorTopology extends AbstractTopology {
         }
     }
 
-    public String getKey(String group, String serviceId) {
-        String configType = ConsoleCache.getConfigType();
-        String key = null;
-        if (StringUtils.equals(configType, APOLLO)) {
-            key = group + "-" + serviceId;
-        } else {
-            key = "Data ID=" + serviceId + " | Group=" + group;
-        }
-
-        return key;
-    }
-
     public void stop() {
         if (executorService == null) {
             return;
@@ -750,11 +736,11 @@ public class InspectorTopology extends AbstractTopology {
                 String serviceId = metadataMap.get("ID");
 
                 String partialConfig = ConsoleController.remoteConfigView(group, serviceId);
-                multiPreviewPanel.getPartialPreviewPanel().setKey(getKey(group, serviceId));
+                multiPreviewPanel.getPartialPreviewPanel().setKey(ConsoleCache.getKey(group, serviceId));
                 multiPreviewPanel.getPartialPreviewPanel().setConfig(partialConfig);
 
                 String globalConfig = ConsoleController.remoteConfigView(group, group);
-                multiPreviewPanel.getGlobalPreviewPanel().setKey(getKey(group, group));
+                multiPreviewPanel.getGlobalPreviewPanel().setKey(ConsoleCache.getKey(group, group));
                 multiPreviewPanel.getGlobalPreviewPanel().setConfig(globalConfig);
 
                 JBasicOptionPane.showOptionDialog(HandleManager.getFrame(InspectorTopology.this), multiPreviewPanel, ConsoleLocaleFactory.getString("view_config_tooltip"), JBasicOptionPane.DEFAULT_OPTION, JBasicOptionPane.PLAIN_MESSAGE, ConsoleIconFactory.getSwingIcon("banner/property.png"), new Object[] { SwingLocale.getString("close") }, null, true);
