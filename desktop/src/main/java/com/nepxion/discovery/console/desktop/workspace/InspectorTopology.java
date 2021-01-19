@@ -670,6 +670,9 @@ public class InspectorTopology extends AbstractTopology {
     public String getContextPath(String serviceId) {
         try {
             String contextPath = ConsoleController.getInstanceList(serviceId).get(0).getMetadata().get(DiscoveryMetaDataConstant.SPRING_APPLICATION_CONTEXT_PATH);
+            if (StringUtils.isEmpty(contextPath)) {
+                contextPath = "/";
+            }
 
             return UrlUtil.formatContextPath(contextPath);
         } catch (Exception e) {
