@@ -147,14 +147,14 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
         StrategyHeaderEntity strategyHeaderEntity = ruleEntity.getStrategyCustomizationEntity().getStrategyHeaderEntity();
 
         if (strategyConditionBlueEntity != null) {
-            String blueCondition = strategyConditionBlueEntity.getConditionHeader();
+            String blueCondition = strategyConditionBlueEntity.getExpression();
             if (blueCondition != null) {
                 conditionPanel.setBlueCondition(blueCondition);
             }
         }
 
         if (strategyConditionGreenEntity != null) {
-            String greenCondition = strategyConditionGreenEntity.getConditionHeader();
+            String greenCondition = strategyConditionGreenEntity.getExpression();
             if (greenCondition != null) {
                 conditionPanel.setGreenCondition(greenCondition);
             }

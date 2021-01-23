@@ -80,14 +80,14 @@ public class BlueGreenStrategyReleaseProcessor extends AbstractStrategyReleasePr
             throw new DiscoveryException(ConsoleLocaleFactory.getString("green_condition_missing"));
         }
 
-        String blueCondition = strategyConditionBlueEntity.getConditionHeader();
+        String blueCondition = strategyConditionBlueEntity.getExpression();
         if (StringUtils.isBlank(blueCondition)) {
             throw new DiscoveryException(ConsoleLocaleFactory.getString("blue_condition_expression_missing"));
         }
 
         String greenCondition = null;
         if (strategyConditionGreenEntity != null) {
-            greenCondition = strategyConditionGreenEntity.getConditionHeader();
+            greenCondition = strategyConditionGreenEntity.getExpression();
             if (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && StringUtils.isBlank(greenCondition)) {
                 throw new DiscoveryException(ConsoleLocaleFactory.getString("green_condition_expression_missing"));
             }
@@ -215,11 +215,11 @@ public class BlueGreenStrategyReleaseProcessor extends AbstractStrategyReleasePr
 
             StrategyConditionBlueGreenEntity strategyConditionBlueEntity = new StrategyConditionBlueGreenEntity();
             strategyConditionBlueEntity.setId(blueConditionId);
-            strategyConditionBlueEntity.setConditionHeader(blueCondition);
+            strategyConditionBlueEntity.setExpression(blueCondition);
 
             StrategyConditionBlueGreenEntity strategyConditionGreenEntity = new StrategyConditionBlueGreenEntity();
             strategyConditionGreenEntity.setId(greenConditionId);
-            strategyConditionGreenEntity.setConditionHeader(greenCondition);
+            strategyConditionGreenEntity.setExpression(greenCondition);
 
             StrategyRouteEntity blueStrategyRouteEntity = new StrategyRouteEntity();
             blueStrategyRouteEntity.setId(blueRouteId);
