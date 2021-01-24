@@ -80,15 +80,15 @@ public class BlueGreenStrategyReleaseProcessor extends AbstractStrategyReleasePr
             throw new DiscoveryException(ConsoleLocaleFactory.getString("green_condition_missing"));
         }
 
-        String blueCondition = strategyConditionBlueEntity.getExpression();
-        if (StringUtils.isBlank(blueCondition)) {
+        String blueExpression = strategyConditionBlueEntity.getExpression();
+        if (StringUtils.isBlank(blueExpression)) {
             throw new DiscoveryException(ConsoleLocaleFactory.getString("blue_condition_expression_missing"));
         }
 
-        String greenCondition = null;
+        String greenExpression = null;
         if (strategyConditionGreenEntity != null) {
-            greenCondition = strategyConditionGreenEntity.getExpression();
-            if (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && StringUtils.isBlank(greenCondition)) {
+            greenExpression = strategyConditionGreenEntity.getExpression();
+            if (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && StringUtils.isBlank(greenExpression)) {
                 throw new DiscoveryException(ConsoleLocaleFactory.getString("green_condition_expression_missing"));
             }
         }
@@ -153,7 +153,7 @@ public class BlueGreenStrategyReleaseProcessor extends AbstractStrategyReleasePr
                 throw new DiscoveryException(ConsoleLocaleFactory.getString("service") + "【" + serviceId + "】" + TypeLocale.getDescription(ElementType.GREEN) + "【" + TypeLocale.getName(strategyType) + "】" + ConsoleLocaleFactory.getString("missing"));
             }
 
-            blueGreenTopology.addNodes(serviceId, blueMetadata, greenMetadata, basicMetadata, blueCondition, greenCondition);
+            blueGreenTopology.addNodes(serviceId, blueMetadata, greenMetadata, basicMetadata, blueExpression, greenExpression);
         }
     }
 

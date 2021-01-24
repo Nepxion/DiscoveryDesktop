@@ -90,20 +90,20 @@ public class BlueGreenConditionPanel extends JPanel {
         }
     }
 
-    public String getBlueCondition() {
+    public String getBlueExpression() {
         return blueConditionBar.getCondition();
     }
 
-    public void setBlueCondition(String blueCondition) {
-        blueConditionBar.setCondition(blueCondition);
+    public void setBlueExpression(String blueExpression) {
+        blueConditionBar.setCondition(blueExpression);
     }
 
-    public String getGreenCondition() {
+    public String getGreenExpression() {
         return greenConditionBar.getCondition();
     }
 
-    public void setGreenCondition(String greenCondition) {
-        greenConditionBar.setCondition(greenCondition);
+    public void setGreenExpression(String greenExpression) {
+        greenConditionBar.setCondition(greenExpression);
     }
 
     public void showBlueConditionNotNullTip() {
