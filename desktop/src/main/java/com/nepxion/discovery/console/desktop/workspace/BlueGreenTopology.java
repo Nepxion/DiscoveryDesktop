@@ -147,16 +147,16 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
         StrategyHeaderEntity strategyHeaderEntity = ruleEntity.getStrategyCustomizationEntity().getStrategyHeaderEntity();
 
         if (strategyConditionBlueEntity != null) {
-            String blueExpression = strategyConditionBlueEntity.getExpression();
-            if (blueExpression != null) {
-                conditionPanel.setBlueExpression(blueExpression);
+            String blueCondition = strategyConditionBlueEntity.getExpression();
+            if (blueCondition != null) {
+                conditionPanel.setBlueCondition(blueCondition);
             }
         }
 
         if (strategyConditionGreenEntity != null) {
-            String greenExpression = strategyConditionGreenEntity.getExpression();
-            if (greenExpression != null) {
-                conditionPanel.setGreenExpression(greenExpression);
+            String greenCondition = strategyConditionGreenEntity.getExpression();
+            if (greenCondition != null) {
+                conditionPanel.setGreenCondition(greenCondition);
             }
         }
 
@@ -474,8 +474,8 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
         String blueMetadata = ComboBoxUtil.getSelectedValue(blueMetadataComboBox);
         String greenMetadata = ComboBoxUtil.getSelectedValue(greenMetadataComboBox);
         String basicMetadata = ComboBoxUtil.getSelectedValue(basicMetadataComboBox);
-        String blueCondition = conditionPanel.getBlueExpression();
-        String greenCondition = conditionPanel.getGreenExpression();
+        String blueCondition = conditionPanel.getBlueCondition();
+        String greenCondition = conditionPanel.getGreenCondition();
 
         if (StringUtils.isBlank(blueMetadata) || (blueGreenRouteType == BlueGreenRouteType.BLUE_GREEN_BASIC && StringUtils.isBlank(greenMetadata)) || StringUtils.isBlank(basicMetadata)) {
             JBasicOptionPane.showMessageDialog(HandleManager.getFrame(BlueGreenTopology.this), TypeLocale.getName(strategyType) + " " + ConsoleLocaleFactory.getString("not_null"), SwingLocale.getString("warning"), JBasicOptionPane.WARNING_MESSAGE);
@@ -519,8 +519,8 @@ public class BlueGreenTopology extends AbstractStrategyTopology {
 
     @Override
     public boolean modifyCondition() {
-        String blueCondition = conditionPanel.getBlueExpression();
-        String greenCondition = conditionPanel.getGreenExpression();
+        String blueCondition = conditionPanel.getBlueCondition();
+        String greenCondition = conditionPanel.getGreenCondition();
 
         if (StringUtils.isBlank(blueCondition)) {
             conditionPanel.showBlueConditionNotNullTip();

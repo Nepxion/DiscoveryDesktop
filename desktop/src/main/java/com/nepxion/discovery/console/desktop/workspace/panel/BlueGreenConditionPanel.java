@@ -90,20 +90,20 @@ public class BlueGreenConditionPanel extends JPanel {
         }
     }
 
-    public String getBlueExpression() {
+    public String getBlueCondition() {
         return blueConditionBar.getCondition();
     }
 
-    public void setBlueExpression(String blueExpression) {
-        blueConditionBar.setCondition(blueExpression);
+    public void setBlueCondition(String blueCondition) {
+        blueConditionBar.setCondition(blueCondition);
     }
 
-    public String getGreenExpression() {
+    public String getGreenCondition() {
         return greenConditionBar.getCondition();
     }
 
-    public void setGreenExpression(String greenExpression) {
-        greenConditionBar.setCondition(greenExpression);
+    public void setGreenCondition(String greenCondition) {
+        greenConditionBar.setCondition(greenCondition);
     }
 
     public void showBlueConditionNotNullTip() {
@@ -133,7 +133,7 @@ public class BlueGreenConditionPanel extends JPanel {
         protected List<ConditionItem> conditionItems = new ArrayList<ConditionItem>();
 
         protected JPanel conditionItemBar;
-        protected JBasicTextField expressionTextField;
+        protected JBasicTextField conditionTextField;
         protected JClassicButton aggregateButton;
         protected JBasicTextField validateTextField;
         protected JClassicButton validateButton;
@@ -145,7 +145,7 @@ public class BlueGreenConditionPanel extends JPanel {
             shrinkShortcut.setToolTipText(TypeLocale.getDescription(nodeType));
 
             conditionItemBar = new JPanel();
-            expressionTextField = new JBasicTextField();
+            conditionTextField = new JBasicTextField();
             validateTextField = new JBasicTextField();
 
             aggregateButton = new JClassicButton(createAggregateConditionAction());
@@ -163,7 +163,7 @@ public class BlueGreenConditionPanel extends JPanel {
             JPanel conditionBar = new JPanel();
             conditionBar.setLayout(tableLayout);
             conditionBar.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("aggregate_text")), 5), "0, 0");
-            conditionBar.add(expressionTextField, "1, 0");
+            conditionBar.add(conditionTextField, "1, 0");
             conditionBar.add(DimensionUtil.setWidth(aggregateButton, 30), "2, 0");
             conditionBar.add(DimensionUtil.addWidth(new JBasicLabel(ConsoleLocaleFactory.getString("validate_text")), 5), "0, 1");
             conditionBar.add(TextFieldUtil.setTip(validateTextField, ConsoleLocaleFactory.getString("validate_condition_example")), "1, 1");
@@ -233,19 +233,19 @@ public class BlueGreenConditionPanel extends JPanel {
         }
 
         public String getCondition() {
-            return expressionTextField.getText().trim();
+            return conditionTextField.getText().trim();
         }
 
         public void setCondition(String condition) {
-            expressionTextField.setText(condition);
+            conditionTextField.setText(condition);
         }
 
         public void showConditionNotNullTip() {
-            expressionTextField.showTip(ConsoleLocaleFactory.getString("condition_not_null"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
+            conditionTextField.showTip(ConsoleLocaleFactory.getString("condition_not_null"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 12);
         }
 
         public void showConditionInvalidFormatTip() {
-            expressionTextField.showTip(ConsoleLocaleFactory.getString("condition_invalid_format"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 16);
+            conditionTextField.showTip(ConsoleLocaleFactory.getString("condition_invalid_format"), ConsoleIconFactory.getSwingIcon("error_message.png"), 1, 16);
         }
 
         public void showValidationInvalidFormatTip() {
@@ -399,7 +399,7 @@ public class BlueGreenConditionPanel extends JPanel {
                         index++;
                     }
 
-                    expressionTextField.setText(stringBuilder.toString());
+                    conditionTextField.setText(stringBuilder.toString());
                 }
             };
 
@@ -411,7 +411,7 @@ public class BlueGreenConditionPanel extends JPanel {
                 private static final long serialVersionUID = 1L;
 
                 public void execute(ActionEvent e) {
-                    String condition = expressionTextField.getText().trim();
+                    String condition = conditionTextField.getText().trim();
                     String validation = validateTextField.getText().trim();
 
                     if (StringUtils.isBlank(condition)) {
