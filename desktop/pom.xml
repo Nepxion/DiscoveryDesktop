@@ -6,7 +6,7 @@
     <name>Nepxion Discovery Desktop</name>
     <packaging>jar</packaging>
     <modelVersion>4.0.0</modelVersion>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <description>Nepxion DiscoveryDesktop is a desktop for Nepxion Discovery with service governance, blue green and gray release orchestration, modelling, flow inspection</description>
     <url>http://www.nepxion.com</url>
 
