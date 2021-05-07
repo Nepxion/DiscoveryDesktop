@@ -205,7 +205,7 @@ public class ConsoleController {
 
         String result = restTemplate.postForEntity(url, entity, String.class).getBody();
 
-        if (!StringUtils.equals(result, DiscoveryConstant.OK) && !StringUtils.equals(result, DiscoveryConstant.NO)) {
+        if (!StringUtils.equals(result, "true") && !StringUtils.equals(result, "false")) {
             result = RestUtil.getCause(restTemplate);
         }
 
@@ -217,7 +217,7 @@ public class ConsoleController {
 
         String result = restTemplate.postForEntity(url, null, String.class).getBody();
 
-        if (!StringUtils.equals(result, DiscoveryConstant.OK) && !StringUtils.equals(result, DiscoveryConstant.NO)) {
+        if (!StringUtils.equals(result, "true") && !StringUtils.equals(result, "false")) {
             result = RestUtil.getCause(restTemplate);
         }
 
@@ -256,7 +256,7 @@ public class ConsoleController {
 
         String result = restTemplate.postForEntity(url, entity, String.class).getBody();
 
-        if (!StringUtils.equals(result, DiscoveryConstant.OK)) {
+        if (!StringUtils.equals(result, "true")) {
             result = RestUtil.getCause(restTemplate);
         }
 
@@ -277,7 +277,7 @@ public class ConsoleController {
 
         String result = restTemplate.postForEntity(url, null, String.class).getBody();
 
-        if (!StringUtils.equals(result, DiscoveryConstant.OK)) {
+        if (!StringUtils.equals(result, "true")) {
             result = RestUtil.getCause(restTemplate);
         }
 
@@ -298,7 +298,7 @@ public class ConsoleController {
 
         String result = restTemplate.postForEntity(url, version, String.class).getBody();
 
-        if (!StringUtils.equals(result, DiscoveryConstant.OK)) {
+        if (!StringUtils.equals(result, "true")) {
             result = RestUtil.getCause(restTemplate);
         }
 
@@ -319,7 +319,7 @@ public class ConsoleController {
 
         String result = restTemplate.postForEntity(url, null, String.class).getBody();
 
-        if (!StringUtils.equals(result, DiscoveryConstant.OK)) {
+        if (!StringUtils.equals(result, "true")) {
             result = RestUtil.getCause(restTemplate);
         }
 
