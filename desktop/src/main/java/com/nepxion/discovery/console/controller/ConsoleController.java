@@ -206,8 +206,9 @@ public class ConsoleController {
 
         String result = restTemplate.postForEntity(url, entity, String.class).getBody();
 
-        if (!StringUtils.equals(result, "true") && !StringUtils.equals(result, "false")) {
-            result = RestUtil.getCause(restTemplate);
+        String cause = RestUtil.getCause(restTemplate);
+        if (StringUtils.isNotEmpty(cause)) {
+            result = cause;
         }
 
         return result;
@@ -218,8 +219,9 @@ public class ConsoleController {
 
         String result = restTemplate.postForEntity(url, null, String.class).getBody();
 
-        if (!StringUtils.equals(result, "true") && !StringUtils.equals(result, "false")) {
-            result = RestUtil.getCause(restTemplate);
+        String cause = RestUtil.getCause(restTemplate);
+        if (StringUtils.isNotEmpty(cause)) {
+            result = cause;
         }
 
         return result;
@@ -257,8 +259,9 @@ public class ConsoleController {
 
         String result = restTemplate.postForEntity(url, entity, String.class).getBody();
 
-        if (!StringUtils.equals(result, "true")) {
-            result = RestUtil.getCause(restTemplate);
+        String cause = RestUtil.getCause(restTemplate);
+        if (StringUtils.isNotEmpty(cause)) {
+            result = cause;
         }
 
         return result;
@@ -278,8 +281,9 @@ public class ConsoleController {
 
         String result = restTemplate.postForEntity(url, null, String.class).getBody();
 
-        if (!StringUtils.equals(result, "true")) {
-            result = RestUtil.getCause(restTemplate);
+        String cause = RestUtil.getCause(restTemplate);
+        if (StringUtils.isNotEmpty(cause)) {
+            result = cause;
         }
 
         return result;
@@ -299,8 +303,9 @@ public class ConsoleController {
 
         String result = restTemplate.postForEntity(url, version, String.class).getBody();
 
-        if (!StringUtils.equals(result, "true")) {
-            result = RestUtil.getCause(restTemplate);
+        String cause = RestUtil.getCause(restTemplate);
+        if (StringUtils.isNotEmpty(cause)) {
+            result = cause;
         }
 
         return result;
@@ -320,8 +325,9 @@ public class ConsoleController {
 
         String result = restTemplate.postForEntity(url, null, String.class).getBody();
 
-        if (!StringUtils.equals(result, "true")) {
-            result = RestUtil.getCause(restTemplate);
+        String cause = RestUtil.getCause(restTemplate);
+        if (StringUtils.isNotEmpty(cause)) {
+            result = cause;
         }
 
         return result;
