@@ -46,12 +46,11 @@ import com.nepxion.cots.twaver.element.TLink;
 import com.nepxion.cots.twaver.element.TNode;
 import com.nepxion.cots.twaver.icon.TIconFactory;
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
-import com.nepxion.discovery.common.constant.DiscoveryMetaDataConstant;
 import com.nepxion.discovery.common.entity.InspectorEntity;
+import com.nepxion.discovery.common.entity.InstanceEntityWrapper;
 import com.nepxion.discovery.common.entity.ServiceType;
 import com.nepxion.discovery.common.exception.DiscoveryException;
 import com.nepxion.discovery.common.util.StringUtil;
-import com.nepxion.discovery.common.util.UrlUtil;
 import com.nepxion.discovery.console.cache.ConsoleCache;
 import com.nepxion.discovery.console.controller.ConsoleController;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
@@ -669,12 +668,9 @@ public class InspectorTopology extends AbstractTopology {
 
     public String getContextPath(String serviceId) {
         try {
-            String contextPath = ConsoleController.getInstanceList(serviceId).get(0).getMetadata().get(DiscoveryMetaDataConstant.SPRING_APPLICATION_CONTEXT_PATH);
-            if (StringUtils.isEmpty(contextPath)) {
-                contextPath = "/";
-            }
+            Instance instance = ConsoleController.getInstanceList(serviceId).get(0);
 
-            return UrlUtil.formatContextPath(contextPath);
+            return InstanceEntityWrapper.getFormatContextPath(instance);
         } catch (Exception e) {
             return "/";
         }

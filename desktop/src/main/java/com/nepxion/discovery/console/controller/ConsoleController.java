@@ -8,6 +8,7 @@ package com.nepxion.discovery.console.controller;
  * @author Haojun Ren
  * @version 1.0
  */
+
 import java.util.List;
 import java.util.Map;
 
@@ -342,13 +343,13 @@ public class ConsoleController {
     }
 
     private static String getUrl(Instance instance) {
-        String url = "http://" + instance.getHost() + ":" + instance.getPort() + UrlUtil.formatContextPath(InstanceEntityWrapper.getContextPath(instance));
+        String url = InstanceEntityWrapper.getProtocol(instance) + "://" + instance.getHost() + ":" + instance.getPort() + InstanceEntityWrapper.getFormatContextPath(instance);
 
         return url;
     }
 
     private static String getUrl(RouterEntity routerEntity) {
-        String url = "http://" + routerEntity.getHost() + ":" + routerEntity.getPort() + UrlUtil.formatContextPath(routerEntity.getContextPath());
+        String url = routerEntity.getProtocol() + "://" + routerEntity.getHost() + ":" + routerEntity.getPort() + routerEntity.getContextPath();
 
         return url;
     }
