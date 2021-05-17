@@ -9,6 +9,7 @@ package com.nepxion.discovery.console.controller;
  * @version 1.0
  */
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
+import com.nepxion.discovery.common.entity.AuthenticationEntity;
 import com.nepxion.discovery.common.entity.InspectorEntity;
 import com.nepxion.discovery.common.entity.InstanceEntityWrapper;
 import com.nepxion.discovery.common.entity.ResultEntity;
@@ -37,10 +39,21 @@ public class ConsoleController {
     public static RestTemplate restTemplate;
 
     private static String consoleUrl;
+    private static String accessToken;
 
     static {
         restTemplate = new RestTemplate();
         restTemplate.setErrorHandler(new DiscoveryResponseErrorHandler());
+    }
+
+    public static HttpHeaders getHeaders() {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        if (StringUtils.isNotEmpty(accessToken)) {
+            httpHeaders.add(DiscoveryConstant.ACCESS_TOKEN, accessToken);
+        }
+
+        return httpHeaders;
     }
 
     public static boolean authenticate(UserEntity userEntity) {
@@ -48,13 +61,22 @@ public class ConsoleController {
 
         String result = restTemplate.postForEntity(url, userEntity, String.class).getBody();
 
-        return Boolean.valueOf(result);
+        AuthenticationEntity authenticationEntity = RestUtil.fromJson(restTemplate, result, new TypeReference<AuthenticationEntity>() {
+        });
+
+        boolean isPassed = authenticationEntity.isPassed();
+        accessToken = authenticationEntity.getToken();
+
+        return isPassed;
     }
 
     public static String getDiscoveryType() {
         String url = getUrl() + "console/discovery-type";
 
-        String result = restTemplate.getForEntity(url, String.class).getBody();
+        HttpHeaders httpHeaders = getHeaders();
+        HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
+
+        String result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class, new HashMap<String, String>()).getBody();
 
         return result;
     }
@@ -62,7 +84,10 @@ public class ConsoleController {
     public static String getConfigType() {
         String url = getUrl() + "console/config-type";
 
-        String result = restTemplate.getForEntity(url, String.class).getBody();
+        HttpHeaders httpHeaders = getHeaders();
+        HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
+
+        String result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class, new HashMap<String, String>()).getBody();
 
         return result;
     }
@@ -70,7 +95,10 @@ public class ConsoleController {
     public static List<String> getGroups() {
         String url = getUrl() + "console/groups";
 
-        String result = restTemplate.getForEntity(url, String.class).getBody();
+        HttpHeaders httpHeaders = getHeaders();
+        HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
+
+        String result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class, new HashMap<String, String>()).getBody();
 
         return RestUtil.fromJson(restTemplate, result, new TypeReference<List<String>>() {
         });
@@ -79,7 +107,10 @@ public class ConsoleController {
     public static List<String> getServices() {
         String url = getUrl() + "console/services";
 
-        String result = restTemplate.getForEntity(url, String.class).getBody();
+        HttpHeaders httpHeaders = getHeaders();
+        HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
+
+        String result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class, new HashMap<String, String>()).getBody();
 
         return RestUtil.fromJson(restTemplate, result, new TypeReference<List<String>>() {
         });
@@ -88,7 +119,10 @@ public class ConsoleController {
     public static List<String> getGateways() {
         String url = getUrl() + "console/gateways";
 
-        String result = restTemplate.getForEntity(url, String.class).getBody();
+        HttpHeaders httpHeaders = getHeaders();
+        HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
+
+        String result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class, new HashMap<String, String>()).getBody();
 
         return RestUtil.fromJson(restTemplate, result, new TypeReference<List<String>>() {
         });
@@ -97,7 +131,10 @@ public class ConsoleController {
     public static List<Instance> getInstanceList(String serviceId) {
         String url = getUrl() + "console/instance-list/" + serviceId;
 
-        String result = restTemplate.getForEntity(url, String.class).getBody();
+        HttpHeaders httpHeaders = getHeaders();
+        HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
+
+        String result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class, new HashMap<String, String>()).getBody();
 
         return RestUtil.fromJson(restTemplate, result, new TypeReference<List<Instance>>() {
         });
@@ -106,7 +143,10 @@ public class ConsoleController {
     public static Map<String, List<Instance>> getInstanceMap(List<String> groups) {
         String url = getUrl() + "console/instance-map";
 
-        String result = restTemplate.postForEntity(url, groups, String.class).getBody();
+        HttpHeaders httpHeaders = getHeaders();
+        HttpEntity<List<String>> httpEntity = new HttpEntity<List<String>>(groups, httpHeaders);
+
+        String result = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
 
         return RestUtil.fromJson(restTemplate, result, new TypeReference<Map<String, List<Instance>>>() {
         });
@@ -115,7 +155,10 @@ public class ConsoleController {
     public static List<String> getVersions(Instance instance) {
         String url = getUrl(instance) + "version/view";
 
-        String result = restTemplate.getForEntity(url, String.class).getBody();
+        HttpHeaders httpHeaders = getHeaders();
+        HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
+
+        String result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class, new HashMap<String, String>()).getBody();
 
         return RestUtil.fromJson(restTemplate, result, new TypeReference<List<String>>() {
         });
@@ -124,7 +167,10 @@ public class ConsoleController {
     public static List<String> getRules(Instance instance) {
         String url = getUrl(instance) + "config/view";
 
-        String result = restTemplate.getForEntity(url, String.class).getBody();
+        HttpHeaders httpHeaders = getHeaders();
+        HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
+
+        String result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class, new HashMap<String, String>()).getBody();
 
         return RestUtil.fromJson(restTemplate, result, new TypeReference<List<String>>() {
         });
@@ -133,7 +179,10 @@ public class ConsoleController {
     public static List<String> getRules(RouterEntity routerEntity) {
         String url = getUrl(routerEntity) + "config/view";
 
-        String result = restTemplate.getForEntity(url, String.class).getBody();
+        HttpHeaders httpHeaders = getHeaders();
+        HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
+
+        String result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class, new HashMap<String, String>()).getBody();
 
         return RestUtil.fromJson(restTemplate, result, new TypeReference<List<String>>() {
         });
@@ -142,14 +191,17 @@ public class ConsoleController {
     public static RouterEntity routes(Instance instance, String routeServiceIds) {
         String url = getUrl(instance) + "router/routes";
 
-        String result = restTemplate.postForEntity(url, routeServiceIds, String.class).getBody();
+        HttpHeaders httpHeaders = getHeaders();
+        HttpEntity<String> httpEntity = new HttpEntity<String>(routeServiceIds, httpHeaders);
+
+        String result = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
 
         return RestUtil.fromJson(restTemplate, result, new TypeReference<RouterEntity>() {
         });
     }
 
     public static InspectorEntity inspect(String url, Map<String, String> headerMap, Map<String, String> parameterMap, Map<String, String> cookieMap, InspectorEntity inspectorEntity) {
-        HttpHeaders httpHeaders = new HttpHeaders();
+        HttpHeaders httpHeaders = getHeaders();
 
         RestUtil.processHeader(httpHeaders, headerMap);
 
@@ -157,41 +209,45 @@ public class ConsoleController {
 
         RestUtil.processCookie(httpHeaders, cookieMap);
 
-        HttpEntity<InspectorEntity> requestEntity = new HttpEntity<InspectorEntity>(inspectorEntity, httpHeaders);
+        HttpEntity<InspectorEntity> httpEntity = new HttpEntity<InspectorEntity>(inspectorEntity, httpHeaders);
 
-        InspectorEntity resultInspectorEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, InspectorEntity.class).getBody();
+        InspectorEntity resultInspectorEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, InspectorEntity.class).getBody();
 
         return resultInspectorEntity;
     }
 
     public static InspectorEntity inspectByHeader(String url, Map<String, String> headerMap, InspectorEntity inspectorEntity) {
-        HttpHeaders httpHeaders = new HttpHeaders();
+        HttpHeaders httpHeaders = getHeaders();
 
         RestUtil.processHeader(httpHeaders, headerMap);
 
-        HttpEntity<InspectorEntity> requestEntity = new HttpEntity<InspectorEntity>(inspectorEntity, httpHeaders);
+        HttpEntity<InspectorEntity> httpEntity = new HttpEntity<InspectorEntity>(inspectorEntity, httpHeaders);
 
-        InspectorEntity resultInspectorEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, InspectorEntity.class).getBody();
+        InspectorEntity resultInspectorEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, InspectorEntity.class).getBody();
 
         return resultInspectorEntity;
     }
 
     public static InspectorEntity inspectByParameter(String url, Map<String, String> parameterMap, InspectorEntity inspectorEntity) {
+        HttpHeaders httpHeaders = getHeaders();
+
         url = RestUtil.processParameter(url, parameterMap);
 
-        InspectorEntity resultInspectorEntity = restTemplate.postForEntity(url, inspectorEntity, InspectorEntity.class).getBody();
+        HttpEntity<InspectorEntity> httpEntity = new HttpEntity<InspectorEntity>(inspectorEntity, httpHeaders);
+
+        InspectorEntity resultInspectorEntity = restTemplate.postForEntity(url, httpEntity, InspectorEntity.class).getBody();
 
         return resultInspectorEntity;
     }
 
     public static InspectorEntity inspectByCookie(String url, Map<String, String> cookieMap, InspectorEntity inspectorEntity) {
-        HttpHeaders httpHeaders = new HttpHeaders();
+        HttpHeaders httpHeaders = getHeaders();
 
         RestUtil.processCookie(httpHeaders, cookieMap);
 
-        HttpEntity<InspectorEntity> requestEntity = new HttpEntity<InspectorEntity>(inspectorEntity, httpHeaders);
+        HttpEntity<InspectorEntity> httpEntity = new HttpEntity<InspectorEntity>(inspectorEntity, httpHeaders);
 
-        InspectorEntity resultInspectorEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, InspectorEntity.class).getBody();
+        InspectorEntity resultInspectorEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, InspectorEntity.class).getBody();
 
         return resultInspectorEntity;
     }
@@ -199,12 +255,10 @@ public class ConsoleController {
     public static String remoteConfigUpdate(String group, String serviceId, String config) {
         String url = getUrl() + "console/remote-config/update/" + group + "/" + serviceId;
 
-        // 解决中文乱码
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-        HttpEntity<String> entity = new HttpEntity<String>(config, headers);
+        HttpHeaders httpHeaders = getHeaders();
+        HttpEntity<String> httpEntity = new HttpEntity<String>(config, httpHeaders);
 
-        String result = restTemplate.postForEntity(url, entity, String.class).getBody();
+        String result = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
 
         String cause = RestUtil.getCause(restTemplate);
         if (StringUtils.isNotEmpty(cause)) {
@@ -217,7 +271,10 @@ public class ConsoleController {
     public static String remoteConfigClear(String group, String serviceId) {
         String url = getUrl() + "console/remote-config/clear/" + group + "/" + serviceId;
 
-        String result = restTemplate.postForEntity(url, null, String.class).getBody();
+        HttpHeaders httpHeaders = getHeaders();
+        HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
+
+        String result = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
 
         String cause = RestUtil.getCause(restTemplate);
         if (StringUtils.isNotEmpty(cause)) {
@@ -230,7 +287,10 @@ public class ConsoleController {
     public static String remoteConfigView(String group, String serviceId) {
         String url = getUrl() + "console/remote-config/view/" + group + "/" + serviceId;
 
-        String result = restTemplate.getForEntity(url, String.class).getBody();
+        HttpHeaders httpHeaders = getHeaders();
+        HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
+
+        String result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class, new HashMap<String, String>()).getBody();
 
         return result;
     }
@@ -238,12 +298,10 @@ public class ConsoleController {
     public static List<ResultEntity> configUpdate(String serviceId, String config, boolean async) {
         String url = getUrl() + "console/config/update-" + getInvokeType(async) + "/" + serviceId;
 
-        // 解决中文乱码
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-        HttpEntity<String> entity = new HttpEntity<String>(config, headers);
+        HttpHeaders httpHeaders = getHeaders();
+        HttpEntity<String> httpEntity = new HttpEntity<String>(config, httpHeaders);
 
-        String result = restTemplate.postForEntity(url, entity, String.class).getBody();
+        String result = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
 
         return RestUtil.fromJson(restTemplate, result, new TypeReference<List<ResultEntity>>() {
         });
@@ -252,12 +310,10 @@ public class ConsoleController {
     public static String configUpdate(Instance instance, String config, boolean async) {
         String url = getUrl(instance) + "config/update-" + getInvokeType(async);
 
-        // 解决中文乱码
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-        HttpEntity<String> entity = new HttpEntity<String>(config, headers);
+        HttpHeaders httpHeaders = getHeaders();
+        HttpEntity<String> httpEntity = new HttpEntity<String>(config, httpHeaders);
 
-        String result = restTemplate.postForEntity(url, entity, String.class).getBody();
+        String result = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
 
         String cause = RestUtil.getCause(restTemplate);
         if (StringUtils.isNotEmpty(cause)) {
@@ -270,7 +326,10 @@ public class ConsoleController {
     public static List<ResultEntity> configClear(String serviceId, boolean async) {
         String url = getUrl() + "console/config/clear-" + getInvokeType(async) + "/" + serviceId;
 
-        String result = restTemplate.postForEntity(url, null, String.class).getBody();
+        HttpHeaders httpHeaders = getHeaders();
+        HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
+
+        String result = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
 
         return RestUtil.fromJson(restTemplate, result, new TypeReference<List<ResultEntity>>() {
         });
@@ -279,7 +338,10 @@ public class ConsoleController {
     public static String configClear(Instance instance, boolean async) {
         String url = getUrl(instance) + "config/clear-" + getInvokeType(async);
 
-        String result = restTemplate.postForEntity(url, null, String.class).getBody();
+        HttpHeaders httpHeaders = getHeaders();
+        HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
+
+        String result = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
 
         String cause = RestUtil.getCause(restTemplate);
         if (StringUtils.isNotEmpty(cause)) {
@@ -292,7 +354,10 @@ public class ConsoleController {
     public static List<ResultEntity> versionUpdate(String serviceId, String version, boolean async) {
         String url = getUrl() + "console/version/update-" + getInvokeType(async) + "/" + serviceId;
 
-        String result = restTemplate.postForEntity(url, version, String.class).getBody();
+        HttpHeaders httpHeaders = getHeaders();
+        HttpEntity<String> httpEntity = new HttpEntity<String>(version, httpHeaders);
+
+        String result = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
 
         return RestUtil.fromJson(restTemplate, result, new TypeReference<List<ResultEntity>>() {
         });
@@ -301,7 +366,10 @@ public class ConsoleController {
     public static String versionUpdate(Instance instance, String version, boolean async) {
         String url = getUrl(instance) + "version/update-" + getInvokeType(async);
 
-        String result = restTemplate.postForEntity(url, version, String.class).getBody();
+        HttpHeaders httpHeaders = getHeaders();
+        HttpEntity<String> httpEntity = new HttpEntity<String>(version, httpHeaders);
+
+        String result = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
 
         String cause = RestUtil.getCause(restTemplate);
         if (StringUtils.isNotEmpty(cause)) {
@@ -314,7 +382,10 @@ public class ConsoleController {
     public static List<ResultEntity> versionClear(String serviceId, boolean async) {
         String url = getUrl() + "console/version/clear-" + getInvokeType(async) + "/" + serviceId;
 
-        String result = restTemplate.postForEntity(url, null, String.class).getBody();
+        HttpHeaders httpHeaders = getHeaders();
+        HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
+
+        String result = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
 
         return RestUtil.fromJson(restTemplate, result, new TypeReference<List<ResultEntity>>() {
         });
@@ -323,7 +394,10 @@ public class ConsoleController {
     public static String versionClear(Instance instance, boolean async) {
         String url = getUrl(instance) + "version/clear-" + getInvokeType(async);
 
-        String result = restTemplate.postForEntity(url, null, String.class).getBody();
+        HttpHeaders httpHeaders = getHeaders();
+        HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
+
+        String result = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
 
         String cause = RestUtil.getCause(restTemplate);
         if (StringUtils.isNotEmpty(cause)) {

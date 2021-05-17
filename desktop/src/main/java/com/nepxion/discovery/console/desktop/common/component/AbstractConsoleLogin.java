@@ -38,13 +38,13 @@ public abstract class AbstractConsoleLogin extends JLoginDialog {
 
     public AbstractConsoleLogin() {
         super(null);
-        
+
         initializeUI();
     }
 
     public AbstractConsoleLogin(Frame parent) {
         super(parent);
-        
+
         initializeUI();
     }
 
@@ -128,6 +128,6 @@ public abstract class AbstractConsoleLogin extends JLoginDialog {
         setVisible(true);
         toFront();
     }
-    
+
     public abstract void initializeUI();
 }
