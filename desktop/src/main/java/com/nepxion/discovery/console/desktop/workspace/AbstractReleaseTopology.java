@@ -165,7 +165,7 @@ public abstract class AbstractReleaseTopology extends AbstractTopology {
                     return;
                 }
 
-                save(group, gatewayId, DiscoveryConstant.DEFAULT_XML_RULE);
+                save(group, gatewayId, DiscoveryConstant.EMPTY_XML_RULE);
             }
         };
 
