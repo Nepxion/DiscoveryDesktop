@@ -29,7 +29,6 @@ import com.nepxion.discovery.common.entity.ResultEntity;
 import com.nepxion.discovery.common.entity.RouterEntity;
 import com.nepxion.discovery.common.entity.UserEntity;
 import com.nepxion.discovery.common.handler.DiscoveryResponseErrorHandler;
-import com.nepxion.discovery.common.util.ResponseUtil;
 import com.nepxion.discovery.common.util.RestUtil;
 import com.nepxion.discovery.common.util.UrlUtil;
 import com.nepxion.discovery.console.desktop.common.context.ConsoleConstant;
@@ -79,6 +78,11 @@ public class ConsoleController {
 
         String result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class, new HashMap<String, String>()).getBody();
 
+        String cause = RestUtil.getCause(restTemplate);
+        if (StringUtils.isNotEmpty(cause)) {
+            result = cause;
+        }
+
         return result;
     }
 
@@ -89,6 +93,11 @@ public class ConsoleController {
         HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
 
         String result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class, new HashMap<String, String>()).getBody();
+
+        String cause = RestUtil.getCause(restTemplate);
+        if (StringUtils.isNotEmpty(cause)) {
+            result = cause;
+        }
 
         return result;
     }
@@ -212,9 +221,10 @@ public class ConsoleController {
 
         HttpEntity<InspectorEntity> httpEntity = new HttpEntity<InspectorEntity>(inspectorEntity, httpHeaders);
 
-        InspectorEntity resultInspectorEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, InspectorEntity.class).getBody();
+        String result = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class).getBody();
 
-        return resultInspectorEntity;
+        return RestUtil.fromJson(restTemplate, result, new TypeReference<InspectorEntity>() {
+        });
     }
 
     public static InspectorEntity inspectByHeader(String url, Map<String, String> headerMap, InspectorEntity inspectorEntity) {
@@ -224,9 +234,10 @@ public class ConsoleController {
 
         HttpEntity<InspectorEntity> httpEntity = new HttpEntity<InspectorEntity>(inspectorEntity, httpHeaders);
 
-        InspectorEntity resultInspectorEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, InspectorEntity.class).getBody();
+        String result = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class).getBody();
 
-        return resultInspectorEntity;
+        return RestUtil.fromJson(restTemplate, result, new TypeReference<InspectorEntity>() {
+        });
     }
 
     public static InspectorEntity inspectByParameter(String url, Map<String, String> parameterMap, InspectorEntity inspectorEntity) {
@@ -236,9 +247,10 @@ public class ConsoleController {
 
         HttpEntity<InspectorEntity> httpEntity = new HttpEntity<InspectorEntity>(inspectorEntity, httpHeaders);
 
-        InspectorEntity resultInspectorEntity = restTemplate.postForEntity(url, httpEntity, InspectorEntity.class).getBody();
+        String result = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
 
-        return resultInspectorEntity;
+        return RestUtil.fromJson(restTemplate, result, new TypeReference<InspectorEntity>() {
+        });
     }
 
     public static InspectorEntity inspectByCookie(String url, Map<String, String> cookieMap, InspectorEntity inspectorEntity) {
@@ -248,9 +260,10 @@ public class ConsoleController {
 
         HttpEntity<InspectorEntity> httpEntity = new HttpEntity<InspectorEntity>(inspectorEntity, httpHeaders);
 
-        InspectorEntity resultInspectorEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, InspectorEntity.class).getBody();
+        String result = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class).getBody();
 
-        return resultInspectorEntity;
+        return RestUtil.fromJson(restTemplate, result, new TypeReference<InspectorEntity>() {
+        });
     }
 
     public static String remoteConfigUpdate(String group, String serviceId, String config) {
@@ -261,9 +274,9 @@ public class ConsoleController {
 
         String result = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
 
-        Exception error = RestUtil.getError(restTemplate);
-        if (error != null) {
-            result = ResponseUtil.getFailureMessage(error);
+        String cause = RestUtil.getCause(restTemplate);
+        if (StringUtils.isNotEmpty(cause)) {
+            result = cause;
         }
 
         return result;
@@ -277,9 +290,9 @@ public class ConsoleController {
 
         String result = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
 
-        Exception error = RestUtil.getError(restTemplate);
-        if (error != null) {
-            result = ResponseUtil.getFailureMessage(error);
+        String cause = RestUtil.getCause(restTemplate);
+        if (StringUtils.isNotEmpty(cause)) {
+            result = cause;
         }
 
         return result;
@@ -316,9 +329,9 @@ public class ConsoleController {
 
         String result = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
 
-        Exception error = RestUtil.getError(restTemplate);
-        if (error != null) {
-            result = ResponseUtil.getFailureMessage(error);
+        String cause = RestUtil.getCause(restTemplate);
+        if (StringUtils.isNotEmpty(cause)) {
+            result = cause;
         }
 
         return result;
@@ -344,9 +357,9 @@ public class ConsoleController {
 
         String result = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
 
-        Exception error = RestUtil.getError(restTemplate);
-        if (error != null) {
-            result = ResponseUtil.getFailureMessage(error);
+        String cause = RestUtil.getCause(restTemplate);
+        if (StringUtils.isNotEmpty(cause)) {
+            result = cause;
         }
 
         return result;
@@ -372,9 +385,9 @@ public class ConsoleController {
 
         String result = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
 
-        Exception error = RestUtil.getError(restTemplate);
-        if (error != null) {
-            result = ResponseUtil.getFailureMessage(error);
+        String cause = RestUtil.getCause(restTemplate);
+        if (StringUtils.isNotEmpty(cause)) {
+            result = cause;
         }
 
         return result;
@@ -400,9 +413,9 @@ public class ConsoleController {
 
         String result = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
 
-        Exception error = RestUtil.getError(restTemplate);
-        if (error != null) {
-            result = ResponseUtil.getFailureMessage(error);
+        String cause = RestUtil.getCause(restTemplate);
+        if (StringUtils.isNotEmpty(cause)) {
+            result = cause;
         }
 
         return result;
