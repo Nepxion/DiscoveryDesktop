@@ -78,9 +78,9 @@ public class ConsoleController {
 
         String result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class, new HashMap<String, String>()).getBody();
 
-        String cause = RestUtil.getCause(restTemplate);
-        if (StringUtils.isNotEmpty(cause)) {
-            result = cause;
+        String error = RestUtil.getError(restTemplate);
+        if (StringUtils.isNotEmpty(error)) {
+            result = error;
         }
 
         return result;
@@ -94,9 +94,9 @@ public class ConsoleController {
 
         String result = restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class, new HashMap<String, String>()).getBody();
 
-        String cause = RestUtil.getCause(restTemplate);
-        if (StringUtils.isNotEmpty(cause)) {
-            result = cause;
+        String error = RestUtil.getError(restTemplate);
+        if (StringUtils.isNotEmpty(error)) {
+            result = error;
         }
 
         return result;
@@ -274,9 +274,9 @@ public class ConsoleController {
 
         String result = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
 
-        String cause = RestUtil.getCause(restTemplate);
-        if (StringUtils.isNotEmpty(cause)) {
-            result = cause;
+        String error = RestUtil.getError(restTemplate);
+        if (StringUtils.isNotEmpty(error)) {
+            result = error;
         }
 
         return result;
@@ -290,9 +290,9 @@ public class ConsoleController {
 
         String result = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
 
-        String cause = RestUtil.getCause(restTemplate);
-        if (StringUtils.isNotEmpty(cause)) {
-            result = cause;
+        String error = RestUtil.getError(restTemplate);
+        if (StringUtils.isNotEmpty(error)) {
+            result = error;
         }
 
         return result;
@@ -329,9 +329,9 @@ public class ConsoleController {
 
         String result = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
 
-        String cause = RestUtil.getCause(restTemplate);
-        if (StringUtils.isNotEmpty(cause)) {
-            result = cause;
+        String error = RestUtil.getError(restTemplate);
+        if (StringUtils.isNotEmpty(error)) {
+            result = error;
         }
 
         return result;
@@ -357,9 +357,9 @@ public class ConsoleController {
 
         String result = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
 
-        String cause = RestUtil.getCause(restTemplate);
-        if (StringUtils.isNotEmpty(cause)) {
-            result = cause;
+        String error = RestUtil.getError(restTemplate);
+        if (StringUtils.isNotEmpty(error)) {
+            result = error;
         }
 
         return result;
@@ -385,9 +385,9 @@ public class ConsoleController {
 
         String result = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
 
-        String cause = RestUtil.getCause(restTemplate);
-        if (StringUtils.isNotEmpty(cause)) {
-            result = cause;
+        String error = RestUtil.getError(restTemplate);
+        if (StringUtils.isNotEmpty(error)) {
+            result = error;
         }
 
         return result;
@@ -413,9 +413,9 @@ public class ConsoleController {
 
         String result = restTemplate.postForEntity(url, httpEntity, String.class).getBody();
 
-        String cause = RestUtil.getCause(restTemplate);
-        if (StringUtils.isNotEmpty(cause)) {
-            result = cause;
+        String error = RestUtil.getError(restTemplate);
+        if (StringUtils.isNotEmpty(error)) {
+            result = error;
         }
 
         return result;
