@@ -57,7 +57,7 @@ public class ConsoleController {
     }
 
     public static boolean authenticate(UserEntity userEntity) {
-        String url = getUrl() + "console/authenticate";
+        String url = getUrl() + "authentication/authenticate";
 
         String result = restTemplate.postForEntity(url, userEntity, String.class).getBody();
 
@@ -71,7 +71,7 @@ public class ConsoleController {
     }
 
     public static String getDiscoveryType() {
-        String url = getUrl() + "console/discovery-type";
+        String url = getUrl() + "service/discovery-type";
 
         HttpHeaders httpHeaders = getHeaders();
         HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
@@ -87,7 +87,7 @@ public class ConsoleController {
     }
 
     public static String getConfigType() {
-        String url = getUrl() + "console/config-type";
+        String url = getUrl() + "config/config-type";
 
         HttpHeaders httpHeaders = getHeaders();
         HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
@@ -103,7 +103,7 @@ public class ConsoleController {
     }
 
     public static List<String> getGroups() {
-        String url = getUrl() + "console/groups";
+        String url = getUrl() + "service/groups";
 
         HttpHeaders httpHeaders = getHeaders();
         HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
@@ -115,7 +115,7 @@ public class ConsoleController {
     }
 
     public static List<String> getServices() {
-        String url = getUrl() + "console/services";
+        String url = getUrl() + "service/services";
 
         HttpHeaders httpHeaders = getHeaders();
         HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
@@ -127,7 +127,7 @@ public class ConsoleController {
     }
 
     public static List<String> getGateways() {
-        String url = getUrl() + "console/gateways";
+        String url = getUrl() + "service/gateways";
 
         HttpHeaders httpHeaders = getHeaders();
         HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
@@ -139,7 +139,7 @@ public class ConsoleController {
     }
 
     public static List<Instance> getInstanceList(String serviceId) {
-        String url = getUrl() + "console/instance-list/" + serviceId;
+        String url = getUrl() + "service/instance-list/" + serviceId;
 
         HttpHeaders httpHeaders = getHeaders();
         HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
@@ -151,7 +151,7 @@ public class ConsoleController {
     }
 
     public static Map<String, List<Instance>> getInstanceMap(List<String> groups) {
-        String url = getUrl() + "console/instance-map";
+        String url = getUrl() + "service/instance-map";
 
         HttpHeaders httpHeaders = getHeaders();
         HttpEntity<List<String>> httpEntity = new HttpEntity<List<String>>(groups, httpHeaders);
@@ -267,7 +267,7 @@ public class ConsoleController {
     }
 
     public static String remoteConfigUpdate(String group, String serviceId, String config) {
-        String url = getUrl() + "console/remote-config/update/" + group + "/" + serviceId;
+        String url = getUrl() + "config/remote/update/" + group + "/" + serviceId;
 
         HttpHeaders httpHeaders = getHeaders();
         HttpEntity<String> httpEntity = new HttpEntity<String>(config, httpHeaders);
@@ -283,7 +283,7 @@ public class ConsoleController {
     }
 
     public static String remoteConfigClear(String group, String serviceId) {
-        String url = getUrl() + "console/remote-config/clear/" + group + "/" + serviceId;
+        String url = getUrl() + "config/remote/clear/" + group + "/" + serviceId;
 
         HttpHeaders httpHeaders = getHeaders();
         HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
@@ -299,7 +299,7 @@ public class ConsoleController {
     }
 
     public static String remoteConfigView(String group, String serviceId) {
-        String url = getUrl() + "console/remote-config/view/" + group + "/" + serviceId;
+        String url = getUrl() + "config/remote/view/" + group + "/" + serviceId;
 
         HttpHeaders httpHeaders = getHeaders();
         HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
@@ -310,7 +310,7 @@ public class ConsoleController {
     }
 
     public static List<ResultEntity> configUpdate(String serviceId, String config, boolean async) {
-        String url = getUrl() + "console/config/update-" + getInvokeType(async) + "/" + serviceId;
+        String url = getUrl() + "config/update-" + getInvokeType(async) + "/" + serviceId;
 
         HttpHeaders httpHeaders = getHeaders();
         HttpEntity<String> httpEntity = new HttpEntity<String>(config, httpHeaders);
@@ -338,7 +338,7 @@ public class ConsoleController {
     }
 
     public static List<ResultEntity> configClear(String serviceId, boolean async) {
-        String url = getUrl() + "console/config/clear-" + getInvokeType(async) + "/" + serviceId;
+        String url = getUrl() + "config/clear-" + getInvokeType(async) + "/" + serviceId;
 
         HttpHeaders httpHeaders = getHeaders();
         HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
@@ -366,7 +366,7 @@ public class ConsoleController {
     }
 
     public static List<ResultEntity> versionUpdate(String serviceId, String version, boolean async) {
-        String url = getUrl() + "console/version/update-" + getInvokeType(async) + "/" + serviceId;
+        String url = getUrl() + "version/update-" + getInvokeType(async) + "/" + serviceId;
 
         HttpHeaders httpHeaders = getHeaders();
         HttpEntity<String> httpEntity = new HttpEntity<String>(version, httpHeaders);
@@ -394,7 +394,7 @@ public class ConsoleController {
     }
 
     public static List<ResultEntity> versionClear(String serviceId, boolean async) {
-        String url = getUrl() + "console/version/clear-" + getInvokeType(async) + "/" + serviceId;
+        String url = getUrl() + "version/clear-" + getInvokeType(async) + "/" + serviceId;
 
         HttpHeaders httpHeaders = getHeaders();
         HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
