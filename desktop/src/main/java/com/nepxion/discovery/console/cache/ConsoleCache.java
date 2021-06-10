@@ -13,17 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 
+import com.nepxion.discovery.common.entity.ConfigType;
+import com.nepxion.discovery.common.entity.DiscoveryType;
 import com.nepxion.discovery.console.controller.ConsoleController;
 
 public class ConsoleCache {
-    public static final String APOLLO = "Apollo";
-    public static final String CONSUL = "Consul";
-    public static final String ETCD = "Etcd";
-
-    private static String discoveryType;
-    private static String configType;
+    private static DiscoveryType discoveryType;
+    private static ConfigType configType;
 
     private static List<String> groups;
     private static List<String> gateways;
@@ -31,17 +28,17 @@ public class ConsoleCache {
 
     private static boolean cacheEnabled = true;
 
-    public static String getDiscoveryType() {
+    public static DiscoveryType getDiscoveryType() {
         if (discoveryType == null) {
-            discoveryType = ConsoleController.getDiscoveryType();
+            discoveryType = DiscoveryType.fromString(ConsoleController.getDiscoveryType());
         }
 
         return discoveryType;
     }
 
-    public static String getConfigType() {
+    public static ConfigType getConfigType() {
         if (configType == null) {
-            configType = ConsoleController.getConfigType();
+            configType = ConfigType.fromString(ConsoleController.getConfigType());
         }
 
         return configType;
@@ -124,9 +121,9 @@ public class ConsoleCache {
     }
 
     public static String getKey(String group, String serviceId) {
-        String configType = getConfigType();
+        ConfigType configType = getConfigType();
         String key = null;
-        if (StringUtils.equals(configType, APOLLO) || StringUtils.equals(configType, CONSUL) || StringUtils.equals(configType, ETCD)) {
+        if (ConfigType.isSingleKey(configType)) {
             key = group + "-" + serviceId;
         } else {
             key = "Data ID=" + serviceId + " | Group=" + group;
