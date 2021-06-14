@@ -23,10 +23,10 @@ import javax.swing.JPanel;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.nepxion.discovery.common.entity.ParameterType;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 import com.nepxion.discovery.console.desktop.common.util.DimensionUtil;
-import com.nepxion.discovery.console.desktop.workspace.type.ParameterType;
 import com.nepxion.swing.action.JSecurityAction;
 import com.nepxion.swing.button.JClassicButton;
 import com.nepxion.swing.combobox.JBasicComboBox;

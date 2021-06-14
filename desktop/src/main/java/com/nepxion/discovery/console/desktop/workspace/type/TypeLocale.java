@@ -12,6 +12,7 @@ package com.nepxion.discovery.console.desktop.workspace.type;
 import com.nepxion.discovery.common.entity.BlueGreenRouteType;
 import com.nepxion.discovery.common.entity.DeployType;
 import com.nepxion.discovery.common.entity.ElementType;
+import com.nepxion.discovery.common.entity.PortalType;
 import com.nepxion.discovery.common.entity.SubscriptionType;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
 

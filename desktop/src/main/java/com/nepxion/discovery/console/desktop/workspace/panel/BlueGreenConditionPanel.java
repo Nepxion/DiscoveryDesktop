@@ -28,7 +28,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.expression.TypeComparator;
 
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
+import com.nepxion.discovery.common.entity.ArithmeticType;
 import com.nepxion.discovery.common.entity.ElementType;
+import com.nepxion.discovery.common.entity.RelationalType;
 import com.nepxion.discovery.common.expression.DiscoveryExpressionResolver;
 import com.nepxion.discovery.common.expression.DiscoveryTypeComparor;
 import com.nepxion.discovery.common.util.StringUtil;
@@ -258,9 +260,9 @@ public class BlueGreenConditionPanel extends JPanel {
 
         public class ConditionItem {
             protected JBasicTextField parameterTextField = new JBasicTextField();
-            protected JBasicComboBox arithmeticComboBox = new JBasicComboBox(new String[] { "==", "!=", ">", ">=", "<", "<=", "matches" });
+            protected JBasicComboBox arithmeticComboBox = new JBasicComboBox(ArithmeticType.values());
             protected JBasicTextField valueTextField = new JBasicTextField();
-            protected JBasicComboBox relationalComboBox = new JBasicComboBox(new String[] { "&&", "||" });
+            protected JBasicComboBox relationalComboBox = new JBasicComboBox(RelationalType.values());
             protected JClassicButton addButton = new JClassicButton(createAddConditionItemAction());
             protected JClassicButton removeButton = new JClassicButton(createRemoveConditionItemAction());
 
