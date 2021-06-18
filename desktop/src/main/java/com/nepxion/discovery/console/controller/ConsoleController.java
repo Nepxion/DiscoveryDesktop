@@ -23,6 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.nepxion.discovery.common.constant.DiscoveryConstant;
 import com.nepxion.discovery.common.entity.AuthenticationEntity;
+import com.nepxion.discovery.common.entity.FormatType;
 import com.nepxion.discovery.common.entity.InspectorEntity;
 import com.nepxion.discovery.common.entity.InstanceEntityWrapper;
 import com.nepxion.discovery.common.entity.ResultEntity;
@@ -266,8 +267,8 @@ public class ConsoleController {
         });
     }
 
-    public static String remoteConfigUpdate(String group, String serviceId, String config) {
-        String url = getUrl() + "config/remote/update/" + group + "/" + serviceId;
+    public static String remoteConfigUpdate(String group, String serviceId, String config, FormatType formatType) {
+        String url = getUrl() + "config/remote/update/" + group + "/" + serviceId + "/" + formatType;
 
         HttpHeaders httpHeaders = getHeaders();
         HttpEntity<String> httpEntity = new HttpEntity<String>(config, httpHeaders);

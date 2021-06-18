@@ -9,6 +9,7 @@ package com.nepxion.discovery.console.desktop.workspace.processor;
  * @version 1.0
  */
 
+import com.nepxion.discovery.common.entity.FormatType;
 import com.nepxion.discovery.common.entity.RuleEntity;
 import com.nepxion.discovery.console.controller.ConsoleController;
 
@@ -30,6 +31,6 @@ public abstract class AbstractReleaseProcessor implements ReleaseProcessor {
 
     @Override
     public String saveConfig(String group, String serviceId, String config) {
-        return ConsoleController.remoteConfigUpdate(group, serviceId, config);
+        return ConsoleController.remoteConfigUpdate(group, serviceId, config, FormatType.XML_FORMAT);
     }
 }
