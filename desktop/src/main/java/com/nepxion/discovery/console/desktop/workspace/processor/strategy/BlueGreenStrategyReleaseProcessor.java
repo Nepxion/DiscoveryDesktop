@@ -26,9 +26,9 @@ import com.nepxion.discovery.common.entity.BlueGreenRouteType;
 import com.nepxion.discovery.common.entity.ElementType;
 import com.nepxion.discovery.common.entity.RuleEntity;
 import com.nepxion.discovery.common.entity.StrategyConditionBlueGreenEntity;
-import com.nepxion.discovery.common.entity.StrategyCustomizationEntity;
 import com.nepxion.discovery.common.entity.StrategyEntity;
 import com.nepxion.discovery.common.entity.StrategyHeaderEntity;
+import com.nepxion.discovery.common.entity.StrategyReleaseEntity;
 import com.nepxion.discovery.common.entity.StrategyRouteEntity;
 import com.nepxion.discovery.common.entity.StrategyRouteType;
 import com.nepxion.discovery.common.exception.DiscoveryException;
@@ -165,7 +165,7 @@ public class BlueGreenStrategyReleaseProcessor extends AbstractStrategyReleasePr
         }
 
         StrategyEntity strategyEntity = new StrategyEntity();
-        StrategyCustomizationEntity strategyCustomizationEntity = new StrategyCustomizationEntity();
+        StrategyReleaseEntity strategyReleaseEntity = new StrategyReleaseEntity();
 
         if (TElementManager.getNodes(dataBox).size() > 1) {
             Map<String, String> blueStrategyMap = new LinkedHashMap<String, String>();
@@ -262,13 +262,13 @@ public class BlueGreenStrategyReleaseProcessor extends AbstractStrategyReleasePr
             StrategyHeaderEntity strategyHeaderEntity = new StrategyHeaderEntity();
             strategyHeaderEntity.setHeaderMap(strategyHeaderMap);
 
-            strategyCustomizationEntity.setStrategyConditionBlueGreenEntityList(strategyConditionBlueGreenEntityList);
-            strategyCustomizationEntity.setStrategyRouteEntityList(strategyRouteEntityList);
-            strategyCustomizationEntity.setStrategyHeaderEntity(strategyHeaderEntity);
+            strategyReleaseEntity.setStrategyConditionBlueGreenEntityList(strategyConditionBlueGreenEntityList);
+            strategyReleaseEntity.setStrategyRouteEntityList(strategyRouteEntityList);
+            strategyReleaseEntity.setStrategyHeaderEntity(strategyHeaderEntity);
         }
 
         ruleEntity.setStrategyEntity(strategyEntity);
-        ruleEntity.setStrategyCustomizationEntity(strategyCustomizationEntity);
+        ruleEntity.setStrategyReleaseEntity(strategyReleaseEntity);
 
         return deparseConfig(ruleEntity);
     }

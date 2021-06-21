@@ -26,7 +26,7 @@ import com.nepxion.discovery.common.entity.MapWeightEntity;
 import com.nepxion.discovery.common.entity.RegionWeightEntity;
 import com.nepxion.discovery.common.entity.RuleEntity;
 import com.nepxion.discovery.common.entity.StrategyConditionGrayEntity;
-import com.nepxion.discovery.common.entity.StrategyCustomizationEntity;
+import com.nepxion.discovery.common.entity.StrategyReleaseEntity;
 import com.nepxion.discovery.common.entity.StrategyEntity;
 import com.nepxion.discovery.common.entity.StrategyRouteEntity;
 import com.nepxion.discovery.common.entity.StrategyRouteType;
@@ -125,7 +125,7 @@ public class GrayStrategyReleaseProcessor extends AbstractStrategyReleaseProcess
         }
 
         StrategyEntity strategyEntity = new StrategyEntity();
-        StrategyCustomizationEntity strategyCustomizationEntity = new StrategyCustomizationEntity();
+        StrategyReleaseEntity strategyReleaseEntity = new StrategyReleaseEntity();
 
         if (TElementManager.getNodes(dataBox).size() > 1) {
             Map<String, String> grayStrategyMap = new LinkedHashMap<String, String>();
@@ -207,12 +207,12 @@ public class GrayStrategyReleaseProcessor extends AbstractStrategyReleaseProcess
             strategyRouteEntityList.add(grayStrategyRouteEntity);
             strategyRouteEntityList.add(stableStrategyRouteEntity);
 
-            strategyCustomizationEntity.setStrategyConditionGrayEntityList(strategyConditionGrayEntityList);
-            strategyCustomizationEntity.setStrategyRouteEntityList(strategyRouteEntityList);
+            strategyReleaseEntity.setStrategyConditionGrayEntityList(strategyConditionGrayEntityList);
+            strategyReleaseEntity.setStrategyRouteEntityList(strategyRouteEntityList);
         }
 
         ruleEntity.setStrategyEntity(strategyEntity);
-        ruleEntity.setStrategyCustomizationEntity(strategyCustomizationEntity);
+        ruleEntity.setStrategyReleaseEntity(strategyReleaseEntity);
 
         return deparseConfig(ruleEntity);
     }

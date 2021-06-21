@@ -19,7 +19,7 @@ import com.nepxion.discovery.common.entity.ElementType;
 import com.nepxion.discovery.common.entity.RuleEntity;
 import com.nepxion.discovery.common.entity.StrategyConditionBlueGreenEntity;
 import com.nepxion.discovery.common.entity.StrategyConditionGrayEntity;
-import com.nepxion.discovery.common.entity.StrategyCustomizationEntity;
+import com.nepxion.discovery.common.entity.StrategyReleaseEntity;
 import com.nepxion.discovery.common.entity.StrategyRouteEntity;
 import com.nepxion.discovery.console.desktop.workspace.type.ReleaseType;
 import com.nepxion.discovery.console.desktop.workspace.type.StrategyType;
@@ -27,17 +27,17 @@ import com.nepxion.discovery.plugin.framework.parser.xml.XmlConfigConstant;
 
 public class ReleaseProcessorUtil {
     public static ReleaseType getReleaseType(RuleEntity ruleEntity) {
-        StrategyCustomizationEntity strategyCustomizationEntity = ruleEntity.getStrategyCustomizationEntity();
-        if (strategyCustomizationEntity == null) {
+        StrategyReleaseEntity strategyReleaseEntity = ruleEntity.getStrategyReleaseEntity();
+        if (strategyReleaseEntity == null) {
             return null;
         }
 
-        List<StrategyConditionBlueGreenEntity> strategyConditionBlueGreenEntityList = strategyCustomizationEntity.getStrategyConditionBlueGreenEntityList();
+        List<StrategyConditionBlueGreenEntity> strategyConditionBlueGreenEntityList = strategyReleaseEntity.getStrategyConditionBlueGreenEntityList();
         if (CollectionUtils.isNotEmpty(strategyConditionBlueGreenEntityList)) {
             return ReleaseType.BLUE_GREEN;
         }
 
-        List<StrategyConditionGrayEntity> strategyConditionGrayEntityList = strategyCustomizationEntity.getStrategyConditionGrayEntityList();
+        List<StrategyConditionGrayEntity> strategyConditionGrayEntityList = strategyReleaseEntity.getStrategyConditionGrayEntityList();
         if (CollectionUtils.isNotEmpty(strategyConditionGrayEntityList)) {
             return ReleaseType.GRAY;
         }
@@ -47,12 +47,12 @@ public class ReleaseProcessorUtil {
 
     @SuppressWarnings("incomplete-switch")
     public static StrategyType getStrategyType(RuleEntity ruleEntity) {
-        StrategyCustomizationEntity strategyCustomizationEntity = ruleEntity.getStrategyCustomizationEntity();
-        if (strategyCustomizationEntity == null) {
+        StrategyReleaseEntity strategyReleaseEntity = ruleEntity.getStrategyReleaseEntity();
+        if (strategyReleaseEntity == null) {
             return null;
         }
 
-        List<StrategyRouteEntity> strategyRouteEntityList = strategyCustomizationEntity.getStrategyRouteEntityList();
+        List<StrategyRouteEntity> strategyRouteEntityList = strategyReleaseEntity.getStrategyRouteEntityList();
         for (StrategyRouteEntity strategyRouteEntity : strategyRouteEntityList) {
             switch (strategyRouteEntity.getType()) {
                 case VERSION:
@@ -94,8 +94,8 @@ public class ReleaseProcessorUtil {
     }
 
     public static StrategyConditionBlueGreenEntity getStrategyConditionBlueGreenEntity(RuleEntity ruleEntity, String strategyConditionBlueGreenId) {
-        StrategyCustomizationEntity strategyCustomizationEntity = ruleEntity.getStrategyCustomizationEntity();
-        List<StrategyConditionBlueGreenEntity> strategyConditionBlueGreenEntityList = strategyCustomizationEntity.getStrategyConditionBlueGreenEntityList();
+        StrategyReleaseEntity strategyReleaseEntity = ruleEntity.getStrategyReleaseEntity();
+        List<StrategyConditionBlueGreenEntity> strategyConditionBlueGreenEntityList = strategyReleaseEntity.getStrategyConditionBlueGreenEntityList();
         for (StrategyConditionBlueGreenEntity strategyConditionBlueGreenEntity : strategyConditionBlueGreenEntityList) {
             String conditionId = strategyConditionBlueGreenEntity.getId();
             if (StringUtils.equals(conditionId, strategyConditionBlueGreenId)) {
@@ -107,8 +107,8 @@ public class ReleaseProcessorUtil {
     }
 
     public static StrategyConditionGrayEntity getStrategyConditionGrayEntity(RuleEntity ruleEntity, String strategyConditionGrayId) {
-        StrategyCustomizationEntity strategyCustomizationEntity = ruleEntity.getStrategyCustomizationEntity();
-        List<StrategyConditionGrayEntity> strategyConditionGrayEntityList = strategyCustomizationEntity.getStrategyConditionGrayEntityList();
+        StrategyReleaseEntity strategyReleaseEntity = ruleEntity.getStrategyReleaseEntity();
+        List<StrategyConditionGrayEntity> strategyConditionGrayEntityList = strategyReleaseEntity.getStrategyConditionGrayEntityList();
         for (StrategyConditionGrayEntity strategyConditionGrayEntity : strategyConditionGrayEntityList) {
             String conditionId = strategyConditionGrayEntity.getId();
             if (StringUtils.equals(conditionId, strategyConditionGrayId)) {
@@ -120,8 +120,8 @@ public class ReleaseProcessorUtil {
     }
 
     public static StrategyRouteEntity getStrategyRouteEntity(RuleEntity ruleEntity, String strategyRouteId) {
-        StrategyCustomizationEntity strategyCustomizationEntity = ruleEntity.getStrategyCustomizationEntity();
-        List<StrategyRouteEntity> strategyRouteEntityList = strategyCustomizationEntity.getStrategyRouteEntityList();
+        StrategyReleaseEntity strategyReleaseEntity = ruleEntity.getStrategyReleaseEntity();
+        List<StrategyRouteEntity> strategyRouteEntityList = strategyReleaseEntity.getStrategyRouteEntityList();
         for (StrategyRouteEntity strategyRouteEntity : strategyRouteEntityList) {
             String routeId = strategyRouteEntity.getId();
             if (StringUtils.equals(routeId, strategyRouteId)) {
@@ -147,6 +147,6 @@ public class ReleaseProcessorUtil {
     }
 
     public static boolean isEmptyStrategy(RuleEntity ruleEntity) {
-        return ruleEntity.getStrategyEntity() == null && ruleEntity.getStrategyCustomizationEntity() == null;
+        return ruleEntity.getStrategyEntity() == null && ruleEntity.getStrategyReleaseEntity() == null;
     }
 }
