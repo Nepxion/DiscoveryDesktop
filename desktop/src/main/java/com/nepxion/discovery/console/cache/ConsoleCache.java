@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
 
+import com.nepxion.discovery.common.constant.DiscoveryConstant;
 import com.nepxion.discovery.common.entity.ConfigType;
 import com.nepxion.discovery.common.entity.DiscoveryType;
 import com.nepxion.discovery.console.controller.ConsoleController;
@@ -44,7 +45,7 @@ public class ConsoleCache {
     }
 
     public static void setAccessToken(String accessToken) {
-        ConsoleCache.accessToken = accessToken;
+        ConsoleCache.accessToken = DiscoveryConstant.BEARER + " " + accessToken;
     }
 
     public static DiscoveryType getDiscoveryType() {
