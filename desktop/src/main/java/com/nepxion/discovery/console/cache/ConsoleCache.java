@@ -19,6 +19,9 @@ import com.nepxion.discovery.common.entity.DiscoveryType;
 import com.nepxion.discovery.console.controller.ConsoleController;
 
 public class ConsoleCache {
+    private static String consoleUrl;
+    private static String accessToken;
+
     private static DiscoveryType discoveryType;
     private static ConfigType configType;
 
@@ -27,6 +30,22 @@ public class ConsoleCache {
     private static List<String> services;
 
     private static boolean cacheEnabled = true;
+
+    public static String getConsoleUrl() {
+        return consoleUrl;
+    }
+
+    public static void setConsoleUrl(String consoleUrl) {
+        ConsoleCache.consoleUrl = consoleUrl;
+    }
+
+    public static String getAccessToken() {
+        return accessToken;
+    }
+
+    public static void setAccessToken(String accessToken) {
+        ConsoleCache.accessToken = accessToken;
+    }
 
     public static DiscoveryType getDiscoveryType() {
         if (discoveryType == null) {

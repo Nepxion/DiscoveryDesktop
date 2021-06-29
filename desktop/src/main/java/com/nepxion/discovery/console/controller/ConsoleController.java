@@ -32,6 +32,7 @@ import com.nepxion.discovery.common.entity.UserEntity;
 import com.nepxion.discovery.common.handler.DiscoveryResponseErrorHandler;
 import com.nepxion.discovery.common.util.RestUtil;
 import com.nepxion.discovery.common.util.UrlUtil;
+import com.nepxion.discovery.console.cache.ConsoleCache;
 import com.nepxion.discovery.console.desktop.common.context.ConsoleConstant;
 import com.nepxion.discovery.console.desktop.common.context.ConsolePropertiesContext;
 import com.nepxion.discovery.console.entity.Instance;
@@ -39,19 +40,19 @@ import com.nepxion.discovery.console.entity.Instance;
 public class ConsoleController {
     public static RestTemplate restTemplate;
 
-    private static String consoleUrl;
-    private static String accessToken;
-
     static {
         restTemplate = new RestTemplate();
+        restTemplate.getInterceptors().add(new ConsoleInterceptor());
         restTemplate.setErrorHandler(new DiscoveryResponseErrorHandler());
     }
 
     public static HttpHeaders getHeaders() {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
+
+        String accessToken = ConsoleCache.getAccessToken();
         if (StringUtils.isNotEmpty(accessToken)) {
-            httpHeaders.add(DiscoveryConstant.ACCESS_TOKEN, accessToken);
+            httpHeaders.add(DiscoveryConstant.N_D_ACCESS_TOKEN, accessToken);
         }
 
         return httpHeaders;
@@ -66,7 +67,9 @@ public class ConsoleController {
         });
 
         boolean isPassed = authenticationEntity.isPassed();
-        accessToken = authenticationEntity.getToken();
+        String accessToken = authenticationEntity.getToken();
+
+        ConsoleCache.setAccessToken(accessToken);
 
         return isPassed;
     }
@@ -423,6 +426,8 @@ public class ConsoleController {
     }
 
     public static String getUrl() {
+        String consoleUrl = ConsoleCache.getConsoleUrl();
+
         String url = null;
         if (StringUtils.isNotEmpty(consoleUrl)) {
             url = consoleUrl;
@@ -434,7 +439,7 @@ public class ConsoleController {
     }
 
     public static void setUrl(String url) {
-        consoleUrl = url;
+        ConsoleCache.setConsoleUrl(url);
     }
 
     private static String getUrl(Instance instance) {
