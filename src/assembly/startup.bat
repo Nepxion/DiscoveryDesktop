@@ -33,7 +33,7 @@ echo «Î…Ë÷√JAVA_HOME
 goto EXIT
 
 :SET_CLASSPATH_AND_RUN
-"%JAVA_HOME%\bin\java" -Dfile.encoding=GBK -Ddefault.client.encoding=GBK -Duser.language=zh -Duser.region=CN -Djava.security.policy=java.policy -Djava.library.path=%PATH% -Xms128m -Xmx512m -classpath %CLASSPATH% com.nepxion.discovery.console.desktop.ConsoleLauncher
+"%JAVA_HOME%\bin\java" -Dfile.encoding=GBK -Ddefault.client.encoding=GBK -Duser.language=zh -Duser.region=CN -Djava.security.policy=java.policy -Djava.library.path=%PATH% -Xms128m -Xmx512m -classpath %CLASSPATH% -Dnepxion.banner.shown.ansi.mode=true com.nepxion.discovery.console.desktop.ConsoleLauncher
 
 :PAUSE
 pause;
