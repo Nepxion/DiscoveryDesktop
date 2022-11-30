@@ -32,7 +32,7 @@ import com.nepxion.discovery.common.entity.ArithmeticType;
 import com.nepxion.discovery.common.entity.ElementType;
 import com.nepxion.discovery.common.entity.RelationalType;
 import com.nepxion.discovery.common.expression.DiscoveryExpressionResolver;
-import com.nepxion.discovery.common.expression.DiscoveryTypeComparor;
+import com.nepxion.discovery.common.expression.DiscoveryTypeComparator;
 import com.nepxion.discovery.common.util.StringUtil;
 import com.nepxion.discovery.console.desktop.common.icon.ConsoleIconFactory;
 import com.nepxion.discovery.console.desktop.common.locale.ConsoleLocaleFactory;
@@ -61,7 +61,7 @@ public class BlueGreenConditionPanel extends JPanel {
 
     protected JBasicTabbedPane conditionTabbedPane;
 
-    protected TypeComparator typeComparator = new DiscoveryTypeComparor();
+    protected TypeComparator typeComparator = new DiscoveryTypeComparator();
 
     public BlueGreenConditionPanel() {
         blueConditionBar = new ConditionBar(ElementType.BLUE);
