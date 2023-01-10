@@ -11,7 +11,7 @@
     <url>http://www.nepxion.com</url>
 
     <properties>
-        <discovery.version>6.20.0-SNAPSHOT</discovery.version>
+        <discovery.version>6.20.0</discovery.version>
 
         <commons.configuration.version>1.10</commons.configuration.version>
         <swing.worker.version>1.2</swing.worker.version>
