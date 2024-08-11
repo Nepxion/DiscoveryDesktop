@@ -82,7 +82,7 @@ Polaris为Discovery高级定制版，特色功能
     - [极简版非域网关部署指南示例](https://github.com/Nepxion/DiscoveryGuide/tree/6.x.x-simple-non-domain-gateway)，分支为6.x.x-simple-non-domain-gateway
     - [集成版指南示例](https://github.com/Nepxion/DiscoveryGuide/tree/6.x.x)，分支为6.x.x
     - [高级版指南示例](https://github.com/Nepxion/DiscoveryGuide/tree/6.x.x-complex)，分支为6.x.x-complex
-- Spring Cloud 202x版本
+- Spring Cloud 20xx版本
     - [极简版指南示例](https://github.com/Nepxion/DiscoveryGuide/tree/master-simple)，分支为master-simple
     - [极简版本地化指南示例](https://github.com/Nepxion/DiscoveryGuide/tree/master-simple-native)，分支为master-simple-native
     - [集成版指南示例](https://github.com/Nepxion/DiscoveryGuide/tree/master)，分支为master
@@ -103,7 +103,7 @@ Polaris为Discovery高级定制版，特色功能
 ④ 指南示例说明
 - Spring Cloud Finchley ~ Hoxton版本
     - [指南示例](https://github.com/polaris-paas/polaris-guide/tree/1.x.x)，分支为1.x.x
-- Spring Cloud 202x版本
+- Spring Cloud 20xx版本
     - [指南示例](https://github.com/polaris-paas/polaris-guide/tree/master)，分支为master
 
 ### 请联系我
