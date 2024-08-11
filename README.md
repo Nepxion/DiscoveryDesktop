@@ -30,7 +30,7 @@
 | 框架名称 | 框架版本 | 支持Spring Cloud版本 | 使用许可 |
 | --- | --- | --- | --- |
 | Discovery | 1.x.x ~ 6.x.x | Camden ~ Hoxton | 开源，永久免费 |
-| DiscoveryX | 7.x.x + | 2020 +| 闭源，商业许可 |
+| DiscoveryX | 7.x.x + | 2020 + | 闭源，商业许可 |
 
 ② Polaris系列
 
