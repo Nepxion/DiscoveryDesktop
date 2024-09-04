@@ -160,13 +160,13 @@ Polaris为Discovery高级定制版，特色功能
 ### 登录图形化桌面端
 登录认证，用户名和密码为admin/admin或者nepxion/nepxion。控制台支持简单的认证，用户名和密码配置在上述控制台的bootstrap.properties中，使用者可以自己扩展AuthenticationResource并注入，实现更专业的认证功能
 
- ![](https://nepxion.github.io/Discovery/docs/discovery-doc/DiscoveryDesktop8.jpg)
+ ![](https://nepxion.github.io/DiscoveryDesktop/docs/discovery-doc/DiscoveryDesktop8.jpg)
 
 ## 全链路编排建模
 全链路编排建模工具，只提供最经典和最常用的蓝绿灰度发布场景功能，并不覆盖框架所有的功能
 
 ### 全链路蓝绿发布编排建模
-![](https://nepxion.github.io/Discovery/docs/discovery-doc/DiscoveryDesktop9.jpg)
+![](https://nepxion.github.io/DiscoveryDesktop/docs/discovery-doc/DiscoveryDesktop9.jpg)
 
 ① 导航栏上选择〔全链路服务蓝绿发布〕
 
@@ -189,13 +189,13 @@ Polaris为Discovery高级定制版，特色功能
 - 服务discovery-guide-service-a，〔蓝版本〕=1.1，〔绿版本〕=1.0，〔兜底版本〕=1.0
 - 服务discovery-guide-service-b，〔蓝版本〕=1.1，〔绿版本〕=1.0，〔兜底版本〕=1.0
 
-![](https://nepxion.github.io/Discovery/docs/discovery-doc/DiscoveryDesktop10.jpg)
+![](https://nepxion.github.io/DiscoveryDesktop/docs/discovery-doc/DiscoveryDesktop10.jpg)
 
 ⑤ 如果希望内置Header参数，可以〔蓝绿参数〕的文本框中输入
 
 ⑥ 全链路编排建模完毕，点击工具栏上【保存】按钮进行保存，也可以先点击【预览】按钮，在弹出的【预览配置】对话框中，确认规则策略无误后再保存。使用者可以访问Nacos界面查看相关的规则策略是否已经存在
 
-![](https://nepxion.github.io/Discovery/docs/discovery-doc/DiscoveryDesktop11.jpg)
+![](https://nepxion.github.io/DiscoveryDesktop/docs/discovery-doc/DiscoveryDesktop11.jpg)
 
 ⑦ 对于已经存在的策略配置，可以通过点击工具栏上【打开】按钮，在弹出的【打开配置】对话框中，根据上述逻辑相似，确定〔订阅参数〕项后，选择〔打开远程配置〕（载入Nacos上对应的规则策略）或者〔打开本地配置〕（载入本地硬盘上规则策略文件rule.xml）
 
@@ -204,13 +204,13 @@ Polaris为Discovery高级定制版，特色功能
 ### 全链路灰度发布编排建模
 ① 导航栏上选择〔全链路服务灰度发布〕
 
-![](https://nepxion.github.io/Discovery/docs/discovery-doc/DiscoveryDesktop13.jpg)
+![](https://nepxion.github.io/DiscoveryDesktop/docs/discovery-doc/DiscoveryDesktop13.jpg)
 
 ② 在〔灰度条件〕中，〔灰度条件〕（灰度流量占比）选择95%，〔稳定条件〕（稳定流量占比）会自动切换成5%
 
 其它步骤跟[全链路蓝绿发布编排建模](#全链路蓝绿发布编排建模)相似，但比其简单
 
-![](https://nepxion.github.io/Discovery/docs/discovery-doc/DiscoveryDesktop14.jpg)
+![](https://nepxion.github.io/DiscoveryDesktop/docs/discovery-doc/DiscoveryDesktop14.jpg)
 
 ## 全链路流量侦测
 
@@ -247,7 +247,7 @@ Polaris为Discovery高级定制版，特色功能
 
 ⑥ 点击工具栏上【开始】按钮开始侦测，在侦测执行过程中，可以点击工具栏上【停止】按钮停止侦测
 
-![](https://nepxion.github.io/Discovery/docs/discovery-doc/DiscoveryDesktop15.jpg)
+![](https://nepxion.github.io/DiscoveryDesktop/docs/discovery-doc/DiscoveryDesktop15.jpg)
 
 从上述截图中，可以看到
 
@@ -255,11 +255,11 @@ Polaris为Discovery高级定制版，特色功能
 
 ⑦ 点击工具栏上【查看】按钮查看拓扑图上所有节点配置的规则策略，包括局部配置和全局配置
 
-![](https://nepxion.github.io/Discovery/docs/discovery-doc/DiscoveryDesktop16.jpg)
+![](https://nepxion.github.io/DiscoveryDesktop/docs/discovery-doc/DiscoveryDesktop16.jpg)
 
 ⑧ 支持直接n-d-version策略路由Header驱动的蓝绿发布流量侦测
 
-![](https://nepxion.github.io/Discovery/docs/discovery-doc/DiscoveryDesktop7.jpg)
+![](https://nepxion.github.io/DiscoveryDesktop/docs/discovery-doc/DiscoveryDesktop7.jpg)
 
 ### 全链路灰度发布流量侦测
 ① 导航栏上选择〔全链路服务流量侦测〕
@@ -274,7 +274,7 @@ Polaris为Discovery高级定制版，特色功能
 
 其它步骤跟[全链路蓝绿发布流量侦测](#全链路蓝绿发布流量侦测)相似，但比其简单
 
-![](https://nepxion.github.io/Discovery/docs/discovery-doc/DiscoveryDesktop17.jpg)
+![](https://nepxion.github.io/DiscoveryDesktop/docs/discovery-doc/DiscoveryDesktop17.jpg)
 
 从上述截图中，可以看到
 
@@ -286,13 +286,13 @@ Polaris为Discovery高级定制版，特色功能
 
 在网关上配置了蓝绿发布规则策略，在a服务上配置了灰度发布规则策略
 
-![](https://nepxion.github.io/Discovery/docs/discovery-doc/DiscoveryDesktop5.jpg)
+![](https://nepxion.github.io/DiscoveryDesktop/docs/discovery-doc/DiscoveryDesktop5.jpg)
 
 ② 全链路灰度发布 + 蓝绿发布混合模式下流量侦测
 
 在网关上配置了灰度发布规则策略，在a服务上配置了蓝绿发布规则策略
 
-![](https://nepxion.github.io/Discovery/docs/discovery-doc/DiscoveryDesktop6.jpg)
+![](https://nepxion.github.io/DiscoveryDesktop/docs/discovery-doc/DiscoveryDesktop6.jpg)
 
 ## Star走势图
 [![Stargazers over time](https://starchart.cc/Nepxion/Discovery.svg)](https://starchart.cc/Nepxion/Discovery)
