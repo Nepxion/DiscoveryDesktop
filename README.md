@@ -120,8 +120,9 @@ Polaris为Discovery高级定制版，特色功能
     - [郑重致谢](#郑重致谢)
     - [请联系我](#请联系我)
 - [环境搭建](#环境搭建)
-    - [获取图形化桌面端](#获取图形化桌面端)
+    - [获取控制台](#获取控制台)
     - [启动控制台](#启动控制台)
+    - [获取图形化桌面端](#获取图形化桌面端)
     - [启动图形化桌面端](#启动图形化桌面端)
     - [登录图形化桌面端](#登录图形化桌面端)
 - [全链路编排建模](#全链路编排建模)
@@ -135,23 +136,27 @@ Polaris为Discovery高级定制版，特色功能
 
 ## 环境搭建
 
-### 获取图形化桌面端
-
-桌面端获取方式有两种方式
-- 通过[https://github.com/Nepxion/DiscoveryDesktop/releases](https://github.com/Nepxion/DiscoveryDesktop/releases)下载最新版本的discovery-desktop-release
-- 编译[https://github.com/Nepxion/DiscoveryDesktop](https://github.com/Nepxion/DiscoveryDesktop)，在target目录下产生discovery-desktop-release
+### 获取控制台
+控制台获取方式有两种方式
+- 通过[https://github.com/Nepxion/DiscoveryTool/releases](https://github.com/Nepxion/DiscoveryTool/releases)下载最新版本的console
+- 编译[https://github.com/Nepxion/DiscoveryTool](https://github.com/Nepxion/DiscoveryTool)，拉取对应Spring Boot版本的分支，在target目录下产生discovery-console-release
 
 ### 启动控制台
-- 通过[https://github.com/Nepxion/DiscoveryTool](https://github.com/Nepxion/DiscoveryTool)下载最新版本的控制台
 - 导入IDE或者编译成Spring Boot程序运行
 - 运行之前，先修改src/main/resources/bootstrap.properties的相关配置，包括注册中心和配置中心的地址等
+- 在Windows操作系统下，运行startup.bat，在Mac或者Linux操作系统下，运行startup.sh
+
+### 获取图形化桌面端
+桌面端获取方式有两种方式
+- 通过[https://github.com/Nepxion/DiscoveryDesktop/releases](https://github.com/Nepxion/DiscoveryDesktop/releases)下载最新版本的desktop
+- 编译[https://github.com/Nepxion/DiscoveryDesktop](https://github.com/Nepxion/DiscoveryDesktop)，在target目录下产生discovery-desktop-release
 
 ### 启动图形化桌面端
+- 导入IDE或者编译成应用程序运行
 - 修改config/console.properties中的url，指向控制台的地址
 - 在Windows操作系统下，运行startup.bat，在Mac或者Linux操作系统下，运行startup.sh
 
 ### 登录图形化桌面端
-
 登录认证，用户名和密码为admin/admin或者nepxion/nepxion。控制台支持简单的认证，用户名和密码配置在上述控制台的bootstrap.properties中，使用者可以自己扩展AuthenticationResource并注入，实现更专业的认证功能
 
  ![](https://nepxion.github.io/Discovery/docs/discovery-doc/DiscoveryDesktop8.jpg)
@@ -170,8 +175,6 @@ Polaris为Discovery高级定制版，特色功能
 - 〔部署参数〕项。选择〔域网关模式〕（发布界面上提供只属于〔订阅组〕下的服务列表）或者〔非域网模式〕（发布界面上提供所有服务列表）
 - 〔发布策略〕项。选择〔版本策略〕或者〔区域策略〕
 - 〔路由类型〕项。选择〔蓝 | 绿 | 兜底〕或者〔蓝 | 兜底〕
-
-根据[全链路版本条件匹配蓝绿发布](#全链路版本条件匹配蓝绿发布)示例中的场景
 
 ③ 在〔蓝绿条件〕中，分别输入〔蓝条件〕和〔绿条件〕
 
@@ -201,8 +204,6 @@ Polaris为Discovery高级定制版，特色功能
 ① 导航栏上选择〔全链路服务灰度发布〕
 
 ![](https://nepxion.github.io/Discovery/docs/discovery-doc/DiscoveryDesktop13.jpg)
-
-根据[全链路版本条件权重灰度发布](#全链路版本条件权重灰度发布)示例中的场景
 
 ② 在〔灰度条件〕中，〔灰度条件〕（灰度流量占比）选择95%，〔稳定条件〕（稳定流量占比）会自动切换成5%
 
