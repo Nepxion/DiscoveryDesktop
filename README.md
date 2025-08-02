@@ -9,9 +9,12 @@
 
 如果您觉得本框架具有一定的参考价值和借鉴意义，请帮忙在页面右上角 [**Star**]
 
-## 入门必读
-请访问[Discovery Desktop WIKI](https://nepxion.github.io/DiscoveryDesktop)
+## 全链路蓝绿灰度发布图形化桌面
 
+### 资料文档
+[Discovery Desktop WIKI](https://nepxion.github.io/DiscoveryDesktop)
+
+### 界面截图
 ![](https://nepxion.github.io/DiscoveryDesktop/docs/discovery-doc/DiscoveryDesktop10.jpg)
 
 ![](https://nepxion.github.io/DiscoveryDesktop/docs/discovery-doc/DiscoveryDesktop14.jpg)
